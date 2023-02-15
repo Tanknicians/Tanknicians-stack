@@ -3,7 +3,8 @@ Full stack web application, mobile application, and data analysis platform for T
 
 
 Sponsor:
-Tommy Yannopolous, owner/operator of Tanknicians, LLC., located at 844 Park Ave, Lake Park, FL 33403
+
+Tommy Yannopolous, owner/operator of [Tanknicians, LLC.](https://tanknicians.com/), located at 844 Park Ave, Lake Park, FL 33403
 
 Developers:
 
@@ -12,6 +13,11 @@ Developers:
 - Carlos Martinez, *frontend*
 - Will Mitchell, *frontend*
 - Justice Smith, *project manager*
+
+Project Supervisor:
+
+[Professor Richard Leinecker, UCF Lecturer](https://www.cecs.ucf.edu/faculty/richard-leinecker/)
+
 
 Project consists of 3 major components:
 
