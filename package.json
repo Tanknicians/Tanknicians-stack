@@ -1,0 +1,25 @@
+{
+  "name": "tanknicians-stack",
+  "version": "1.0.0",
+  "description": "Full stack web application, mobile application, and data analysis platform for Tanknicians, LLC",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jcode94/Tanknicians-stack.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jcode94/Tanknicians-stack/issues"
+  },
+  "homepage": "https://github.com/jcode94/Tanknicians-stack#readme",
+  "devDependencies": {
+    "@types/node": "^18.14.0",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.9.5"
+  }
+}
