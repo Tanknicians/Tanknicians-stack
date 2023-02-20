@@ -16,6 +16,7 @@ model Login {
   username  String  @unique
   password  String
   user_id   Int     @unique
+  auth_key  Int
 }
 
 model Employee {
