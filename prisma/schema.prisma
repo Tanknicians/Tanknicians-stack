@@ -12,15 +12,19 @@ datasource db {
 
 
 model Login {
-  id        Int     @id @default(autoincrement())
-  username  String  @unique
-  password  String
-  user_id   Int     @unique
-  auth_key  Int
+  id            Int     @id @default(autoincrement())
+  username      String  @unique
+  password      String
+  user_id       Int     @unique
+  auth_key      Int
+  employee      Employee?
+  customer      Customer?
 }
 
 model Employee {
   id            Int      @id @default(autoincrement())
+  login         Login    @relation(fields: login_id, references: id)
+  login_id      Int      @unique
   email         String   @unique
   first_name    String
   middle_name   String?
@@ -29,11 +33,14 @@ model Employee {
 }
 
 model Customer {
-  id Int @id @default(autoincrement())
-  first_name String
-  middle_name String?
-  last_name String
-  address String
-  email String?
-
+  id            Int       @id @default(autoincrement())
+  login         Login?    @relation(fields: login_id, references: id)
+  login_id      Int?      @unique
+  first_name    String
+  middle_name   String?
+  last_name     String
+  address       String
+  email         String?
 }
+
+
