@@ -1,5 +1,4 @@
 import {Customer, PrismaClient} from '@prisma/client'
-
 const prisma = new PrismaClient()
 
 async function queryAllCustomers() {

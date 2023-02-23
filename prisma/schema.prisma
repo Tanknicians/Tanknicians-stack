@@ -10,37 +10,60 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
 model Login {
-  id            Int     @id @default(autoincrement())
-  username      String  @unique
-  password      String
-  user_id       Int     @unique
-  auth_key      Int
-  employee      Employee?
-  customer      Customer?
+  id Int @id @default(autoincrement()) // DB id value for the LOGIN table
+
+  username String    @unique
+  password String
+  auth_key Int // where the JWT token would go to auth who-is-who
+  // Prisma relations
+  employee Employee?
+  customer Customer?
 }
 
 model Employee {
-  id            Int      @id @default(autoincrement())
-  login         Login    @relation(fields: login_id, references: id)
-  login_id      Int      @unique
-  email         String   @unique
-  first_name    String
-  middle_name   String?
-  last_name     String
-  phone         Int      @unique
+  id      Int   @id @default(autoincrement())
+  login   Login @relation(fields: loginId, references: id)
+  loginId Int   @unique
+
+  firstName  String
+  middleName String?
+  lastName   String
+  email      String  @unique
+  phone      Int     @unique
 }
 
 model Customer {
-  id            Int       @id @default(autoincrement())
-  login         Login?    @relation(fields: login_id, references: id)
-  login_id      Int?      @unique
-  first_name    String
-  middle_name   String?
-  last_name     String
-  address       String
-  email         String?
+  id      Int    @id @default(autoincrement())
+  login   Login? @relation(fields: loginId, references: id)
+  loginId Int?   @unique
+  Tanks   Tank[]
+  Images      Image[]
+
+  firstName  String
+  middleName String?
+  lastName   String
+  address    String
+  email      String?
+  phone      Int?
 }
 
+model Image {
+  id  Int    @id @default(autoincrement())
+  url String @unique
 
+  Tank   Tank? @relation(fields: [tankId], references: [id])
+  tankId Int?
+
+  Customer   Customer? @relation(fields: [customerId], references: [id])
+  customerId Int?
+}
+
+model Tank {
+  id      Int      @id @default(autoincrement())
+  owner   Customer @relation(fields: ownerId, references: id)
+  ownerId Int
+
+  name   String?
+  images Image[]
+}
