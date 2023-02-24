@@ -26,14 +26,16 @@ model Employee {
   login   Login @relation(fields: loginId, references: id)
   loginId Int   @unique
 
-  firstName   String
-  middleName  String?
-  lastName    String
-  email       String        @unique
-  phone       Int           @unique
+  firstName  String
+  middleName String?
+  lastName   String
+  email      String  @unique
+  phone      Int     @unique
+
   Request     Request[]
   Appointment Appointment[]
   Parameter   Parameter[]
+  Husbandry   Husbandry[]
 }
 
 model Customer {
@@ -43,12 +45,13 @@ model Customer {
   Tanks   Tank[]
   Images  Image[]
 
-  firstName   String
-  middleName  String?
-  lastName    String
-  address     String
-  email       String?
-  phone       Int?
+  firstName  String
+  middleName String?
+  lastName   String
+  address    String
+  email      String?
+  phone      Int?
+
   Request     Request[]
   Appointment Appointment[]
 }
@@ -69,9 +72,15 @@ model Tank {
   owner   Customer @relation(fields: ownerId, references: id)
   ownerId Int
 
-  name      String?
+  name String?
+
   images    Image[]
   Parameter Parameter[]
+  Fish      Fish[]
+  Coral     Coral[]
+  Plant     Plant[]
+  Pest      Pest[]
+  Husbandry Husbandry[]
 }
 
 model Request {
@@ -109,16 +118,17 @@ model Appointment {
 }
 
 model Inventory {
-  id          Int       @id @default(autoincrement())
+  id          Int     @id @default(autoincrement())
   sku         Int?
   stock       Int?
   price       Float?
   description String?
-  Request     Request[]
+
+  Request Request[]
 }
 
 model Parameter {
-  id               Int      @id @default(autoincrement())
+  id Int @id @default(autoincrement())
 
   name             String?
   value            Float?
@@ -126,6 +136,72 @@ model Parameter {
 
   loggedBy   Employee @relation(fields: employeeId, references: id)
   employeeId Int
+
+  forTank Tank @relation(fields: tankId, references: id)
+  tankId  Int
+}
+
+model Fish {
+  id          Int      @id @default(autoincrement())
+  species     String?
+  condition   String?
+  description String?
+  isSaltwater Boolean?
+
+  inTank Tank   @relation(fields: tankId, references: id)
+  tankId Int
+  Pest   Pest[]
+}
+
+model Coral {
+  id          Int      @id @default(autoincrement())
+  species     String?
+  condition   String?
+  description String?
+  isSaltwater Boolean?
+
+  inTank Tank   @relation(fields: tankId, references: id)
+  tankId Int
+  Pest   Pest[]
+}
+
+model Plant {
+  id          Int      @id @default(autoincrement())
+  species     String?
+  condition   String?
+  description String?
+  isSaltwater Boolean?
+
+  inTank Tank   @relation(fields: tankId, references: id)
+  tankId Int
+  Pest   Pest[]
+}
+
+model Pest {
+  id          Int      @id @default(autoincrement())
+  species     String?
+  description String?
+  isSaltwater Boolean?
+
+  onFish Fish? @relation(fields: fishId, references: id)
+  fishId Int?
+
+  onCoral Coral? @relation(fields: coralId, references: id)
+  coralId Int?
+
+  onPlant Plant? @relation(fields: plantId, references: id)
+  plantId Int?
+
+  inTank Tank @relation(fields: tankId, references: id)
+  tankId Int
+}
+
+model Husbandry {
+  id          Int     @id @default(autoincrement())
+  description String?
+
+  completedBy Employee @relation(fields: employeeId, references: id)
+  employeeId  Int
 
   forTank Tank @relation(fields: tankId, references: id)
   tankId  Int
