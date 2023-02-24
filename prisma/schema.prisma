@@ -26,26 +26,31 @@ model Employee {
   login   Login @relation(fields: loginId, references: id)
   loginId Int   @unique
 
-  firstName  String
-  middleName String?
-  lastName   String
-  email      String  @unique
-  phone      Int     @unique
+  firstName   String
+  middleName  String?
+  lastName    String
+  email       String        @unique
+  phone       Int           @unique
+  Request     Request[]
+  Appointment Appointment[]
+  Parameter   Parameter[]
 }
 
 model Customer {
-  id      Int    @id @default(autoincrement())
-  login   Login? @relation(fields: loginId, references: id)
-  loginId Int?   @unique
+  id      Int     @id @default(autoincrement())
+  login   Login?  @relation(fields: loginId, references: id)
+  loginId Int?    @unique
   Tanks   Tank[]
-  Images      Image[]
+  Images  Image[]
 
-  firstName  String
-  middleName String?
-  lastName   String
-  address    String
-  email      String?
-  phone      Int?
+  firstName   String
+  middleName  String?
+  lastName    String
+  address     String
+  email       String?
+  phone       Int?
+  Request     Request[]
+  Appointment Appointment[]
 }
 
 model Image {
@@ -64,6 +69,64 @@ model Tank {
   owner   Customer @relation(fields: ownerId, references: id)
   ownerId Int
 
-  name   String?
-  images Image[]
+  name      String?
+  images    Image[]
+  Parameter Parameter[]
+}
+
+model Request {
+  id             Int       @id @default(autoincrement())
+  requestCreated DateTime  @default(now())
+  requiredBy     DateTime?
+
+  requestedBy Employee @relation(fields: employeeId, references: id)
+  employeeId  Int
+
+  forCustomer Customer? @relation(fields: customerId, references: id)
+  customerId  Int?
+
+  fromInventory Inventory? @relation(fields: inventoryId, references: id)
+  inventoryId   Int?
+
+  amount      Int?
+  cost        Int?
+  description String?
+}
+
+model Appointment {
+  id Int @id @default(autoincrement())
+
+  assignedTo Employee @relation(fields: employeeId, references: id)
+  employeeId Int
+
+  forCustomer Customer @relation(fields: customerId, references: id)
+  customerId  Int
+
+  appointmentScheduled DateTime
+  appointmentCompleted DateTime?
+
+  description String?
+}
+
+model Inventory {
+  id          Int       @id @default(autoincrement())
+  sku         Int?
+  stock       Int?
+  price       Float?
+  description String?
+  Request     Request[]
+}
+
+model Parameter {
+  id               Int      @id @default(autoincrement())
+
+  name             String?
+  value            Float?
+  recordedDateTime DateTime @default(now())
+
+  loggedBy   Employee @relation(fields: employeeId, references: id)
+  employeeId Int
+
+  forTank Tank @relation(fields: tankId, references: id)
+  tankId  Int
 }
