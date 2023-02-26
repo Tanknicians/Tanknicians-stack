@@ -1,10 +1,10 @@
-// Import the express in typescript file
-import express from 'express';
+// Import Express
+import express, { Request, Response, NextFunction } from 'express';
 
-// Initialize the express engine
+// Initialize the express app
 const app: express.Application = express();
 
-// Take a port 3000 for running server.
+// Run on port 3000; change this to .ENV file later on.
 const port: number = 3000;
 
 // Handling '/' Request
