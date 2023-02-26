@@ -15,7 +15,7 @@ model Login {
 
   username String    @unique
   password String
-  auth_key Int // where the JWT token would go to auth who-is-who
+  token    String // where the JWT token would go to auth who-is-who
   // Prisma relations
   employee Employee?
   customer Customer?

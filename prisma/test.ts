@@ -1,4 +1,6 @@
-import {Customer, PrismaClient} from '@prisma/client'
+import {Customer, Employee, Login, PrismaClient} from '@prisma/client'
+import test from "node:test";
+
 const prisma = new PrismaClient()
 
 async function queryAllCustomers() {
@@ -9,26 +11,63 @@ async function queryAllCustomers() {
 async function createTestCustomer(customer: Customer) {
     await prisma.customer.create({
         data: {
-            first_name: customer.first_name,
-            middle_name: customer.middle_name,
-            last_name: customer.last_name,
+            firstName: customer.firstName,
+            middleName: customer.middleName,
+            lastName: customer.lastName,
             address: customer.address,
             email: customer.email,
+            phone: customer.phone
         }
     })
+}
+
+async function createTestLogin(login: Login, customer: Customer) {
+
+        await prisma.login.create({
+            data: {
+                password: login.password,
+                token: login.token,
+                username: login.username,
+
+                customer: {
+                    connectOrCreate: {
+                        where: {
+                            id: customer.id
+                        },
+                        create: {
+                            address: customer.address,
+                            email: customer.email,
+                            firstName: customer.firstName,
+                            id: customer.id,
+                            lastName: customer.lastName,
+                            middleName: customer.middleName,
+                            phone: customer.phone
+                        }
+                    }
+                }
+            }
+        })
 }
 
 let testCustomer: Customer = {
     address: "this place is not real",
     email: null,
-    first_name: "person name",
+    firstName: "first",
     id: 0,
-    last_name: "last name",
-    middle_name: null,
-    login_id: null
+    lastName: "last",
+    loginId: null,
+    middleName: null,
+    phone: 1234567890
 }
 
-createTestCustomer(testCustomer)
+let testLogin: Login = {
+    id: 0,
+    password: "butt",
+    token: "it's a secret",
+    username: "newbutt" // this has to be unique each time else it won't create a login or customer!
+}
+
+createTestLogin(testLogin, testCustomer)
     .then(async () => {
         await prisma.$disconnect()
     })
@@ -37,7 +76,6 @@ createTestCustomer(testCustomer)
         await prisma.$disconnect()
         process.exit(1)
     })
-
 
 queryAllCustomers()
     .then(async () => {
