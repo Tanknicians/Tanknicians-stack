@@ -7,12 +7,11 @@ const app: express.Application = express();
 // Run on port 3000; change this to .ENV file later on.
 const port: number = 3000;
 
-// Handling '/' Request
 app.get('/', (req, res) => {
     res.send("TypeScript With Express");
 });
 
-// Server setup
+// Server startup
 app.listen(port, () => {
     console.log(`TypeScript with Express
 		http://localhost:${port}/`);
