@@ -1,25 +1,33 @@
+import { json } from "body-parser";
+import {findUser} from "../../prisma/db/Login";
+
 import express, {Request, Response} from "express";
-import {queryLogin} from "../../prisma/db/Login";
-import { loginUser } from "../controllers/UserController";
+
 const userRouter = express.Router()
 
-userRouter.post('/auth/login', async (req: Request, res: Response) => {
+// REQUIRED TO INTERPRET BODY
+userRouter.use(express.json());
+
+userRouter.post('/login', async (req: Request, res: Response) => {
+    res.send("Login!")
+})
+
+
+userRouter.post('/find', async (req: Request, res: Response) => {
+    let {email} = req.body;
     try {
-        let user = {
-            email: req.body.email,
-            password: req.body.password
-        }
-        let dbUser = await queryLogin(user.email);
-
-        if (dbUser != null) {
-            res.status(200).json({
-                email: dbUser.email
-            })
+        // using PRISMA db function
+        let user = await findUser(email)
+        if (user != null) {
+            res.send(user)
         } else {
-            return res.status(400).send("Cannot find user.");
+            throw console.error("No user found.");
         }
-
     } catch (error) {
-        return res.status(400).send("Cannot find user.");
+        res.send(error)
     }
 })
+
+
+// export the routes
+ export = userRouter;

@@ -13,12 +13,15 @@ export async function createLogin(login: Login) {
 }
 
 // find user object based on email
-export async function queryLogin(email: string) {
-    return prisma.login.findUnique({
+export async function findUser(email: string) {
+    
+    let user = await prisma.login.findUnique({
         where: {
             email: email
         }
     });
+    console.log(user)
+    return user;
 }
 
 

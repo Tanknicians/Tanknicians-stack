@@ -12,6 +12,7 @@ let testLogin: Login = {
     email: "email@mail.com" // this has to be unique each time else it won't create a login!
 }
 
+/*
 loginDB.createLogin(testLogin)
     .then(async () => {
         await prisma.$disconnect()
@@ -21,5 +22,14 @@ loginDB.createLogin(testLogin)
         await prisma.$disconnect()
         process.exit(1)
     })
+*/
 
-
+loginDB.queryLogin("email@mail.com")
+    .then(async () => {
+        await prisma.$disconnect()
+    })
+    .catch(async (e) => {
+        console.error(e)
+        await prisma.$disconnect()
+        process.exit(1)
+    })
