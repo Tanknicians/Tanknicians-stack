@@ -1,6 +1,29 @@
-import {Customer, Employee, Login, PrismaClient} from "@prisma/client";
+import {Login, PrismaClient} from "@prisma/client";
 const prisma = new PrismaClient()
 
+// create a new login for the database
+export async function createLogin(login: Login) {
+    await prisma.login.create({
+        data: {
+            email: login.email,
+            password: login.password,
+            token: login.token
+        }
+    })
+}
+
+// find user object based on email
+export async function queryLogin(email: string) {
+    return prisma.login.findUnique({
+        where: {
+            email: email
+        }
+    });
+}
+
+
+// currently unused functions
+/* 
 export async function createCustomerLogin(login: Login, customer: Customer) {
     await prisma.login.create({
         data: {
@@ -53,5 +76,6 @@ export async function createEmployeeLogin(login: Login, employee: Employee) {
         }
     })
 }
+*/
 
 export * as loginDB from './Login'

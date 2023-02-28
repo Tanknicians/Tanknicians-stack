@@ -13,18 +13,14 @@ datasource db {
 model Login {
   id Int @id @default(autoincrement()) // DB id value for the LOGIN table
 
-  username String    @unique
+  email    String @unique // username and where to send to reset password
   password String
   token    String // where the JWT token would go to auth who-is-who
-  // Prisma relations
-  employee Employee?
-  customer Customer?
 }
 
 model Employee {
-  id      Int   @id @default(autoincrement())
-  login   Login @relation(fields: loginId, references: id)
-  loginId Int   @unique
+  id         Int @id @default(autoincrement())
+  employeeId Int @unique // their POS-style identifier
 
   firstName  String
   middleName String?
@@ -32,18 +28,14 @@ model Employee {
   email      String  @unique
   phone      Int     @unique
 
-  Request     Request[]
-  Appointment Appointment[]
-  Parameter   Parameter[]
-  Husbandry   Husbandry[]
+  Forms     Form[]
+  Parameter Parameter[]
 }
 
 model Customer {
-  id      Int     @id @default(autoincrement())
-  login   Login?  @relation(fields: loginId, references: id)
-  loginId Int?    @unique
-  Tanks   Tank[]
-  Images  Image[]
+  id Int @id @default(autoincrement())
+
+  Tanks Tank[]
 
   firstName  String
   middleName String?
@@ -51,20 +43,21 @@ model Customer {
   address    String
   email      String?
   phone      Int?
-
-  Request     Request[]
-  Appointment Appointment[]
+  Form       Form[]
 }
 
-model Image {
-  id  Int    @id @default(autoincrement())
-  url String @unique
+model Form {
+  id       Int      @id @default(autoincrement())
+  dateTime DateTime @default(now())
 
-  Tank   Tank? @relation(fields: [tankId], references: [id])
-  tankId Int?
+  createdBy  Employee @relation(fields: employeeId, references: id)
+  employeeId Int
 
-  Customer   Customer? @relation(fields: [customerId], references: [id])
-  customerId Int?
+  forCustomer Customer? @relation(fields: customerId, references: id)
+  customerId  Int?
+
+  forTank Tank @relation(fields: tankId, references: id)
+  tankId  Int
 }
 
 model Tank {
@@ -74,57 +67,12 @@ model Tank {
 
   name String?
 
-  images    Image[]
   Parameter Parameter[]
   Fish      Fish[]
   Coral     Coral[]
   Plant     Plant[]
   Pest      Pest[]
-  Husbandry Husbandry[]
-}
-
-model Request {
-  id             Int       @id @default(autoincrement())
-  requestCreated DateTime  @default(now())
-  requiredBy     DateTime?
-
-  requestedBy Employee @relation(fields: employeeId, references: id)
-  employeeId  Int
-
-  forCustomer Customer? @relation(fields: customerId, references: id)
-  customerId  Int?
-
-  fromInventory Inventory? @relation(fields: inventoryId, references: id)
-  inventoryId   Int?
-
-  amount      Int?
-  cost        Int?
-  description String?
-}
-
-model Appointment {
-  id Int @id @default(autoincrement())
-
-  assignedTo Employee @relation(fields: employeeId, references: id)
-  employeeId Int
-
-  forCustomer Customer @relation(fields: customerId, references: id)
-  customerId  Int
-
-  appointmentScheduled DateTime
-  appointmentCompleted DateTime?
-
-  description String?
-}
-
-model Inventory {
-  id          Int     @id @default(autoincrement())
-  sku         Int?
-  stock       Int?
-  price       Float?
-  description String?
-
-  Request Request[]
+  Form      Form[]
 }
 
 model Parameter {
@@ -194,15 +142,4 @@ model Pest {
 
   inTank Tank @relation(fields: tankId, references: id)
   tankId Int
-}
-
-model Husbandry {
-  id          Int     @id @default(autoincrement())
-  description String?
-
-  completedBy Employee @relation(fields: employeeId, references: id)
-  employeeId  Int
-
-  forTank Tank @relation(fields: tankId, references: id)
-  tankId  Int
 }
