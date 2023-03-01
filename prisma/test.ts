@@ -5,7 +5,7 @@ import {loginDB} from './db/User'
 const prisma = new PrismaClient()
 
 
-let testLogin: User = {
+let testUser: User = {
     id: 0,
     password: "butt",
     token: "it's a secret",
@@ -24,7 +24,7 @@ loginDB.createLogin(testLogin)
     })
 */
 
-loginDB.findUser(testLogin)
+loginDB.findUser(testUser)
     .then(async () => {
         await prisma.$disconnect()
     })

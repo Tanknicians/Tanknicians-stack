@@ -6,6 +6,7 @@ export async function queryAllCustomers() {
     console.log(allUsers)
 }
 
+// CREATE
 export async function createCustomer(customer: Customer) {
     await prisma.customer.create({
         data: {
@@ -19,7 +20,7 @@ export async function createCustomer(customer: Customer) {
     })
 }
 
-
+// READ
 export async function findCustomer(customer: Customer) {
     await prisma.customer.findUnique({
         where: {
@@ -28,7 +29,7 @@ export async function findCustomer(customer: Customer) {
     })
 }
 
-
+// UPDATE
 export async function updateCustomer(customer: Customer) {
     await prisma.customer.update({
         where: {
@@ -44,5 +45,8 @@ export async function updateCustomer(customer: Customer) {
         }
     })
 }
+
+// DELETE
+// This may or may not need to include the separation of database values somehow. 
 
 export * as customerDB from "./Customer";
