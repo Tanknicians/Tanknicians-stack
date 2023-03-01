@@ -1,6 +1,6 @@
 // required imports: Express and Prisma Database
 import express, {Request, Response} from "express";
-import {findUser} from "../../prisma/db/Login";
+import {findUser} from "../../prisma/db/User";
 
 const userRouter = express.Router()
 

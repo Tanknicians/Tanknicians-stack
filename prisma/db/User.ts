@@ -1,21 +1,21 @@
-import {Login, PrismaClient} from "@prisma/client";
+import {User, PrismaClient} from "@prisma/client";
 const prisma = new PrismaClient()
 
-// create a new login for the database
-export async function createLogin(login: Login) {
-    await prisma.login.create({
+// CREATE
+export async function createUser(user: User) {
+    await prisma.user.create({
         data: {
-            email: login.email,
-            password: login.password,
-            token: login.token
+            email: user.email,
+            password: user.password,
+            token: user.token
         }
     })
 }
 
-// find user object based on email
+// READ
 export async function findUser(email: string) {
     
-    let user = await prisma.login.findUnique({
+    let user = await prisma.user.findUnique({
         where: {
             email: email
         }
@@ -23,6 +23,30 @@ export async function findUser(email: string) {
     console.log(user)
     return user;
 }
+
+// UPDATE
+export async function updateUser(user: User) {
+    await prisma.user.update({
+        where: {
+            id: user.id
+        },
+        data: {
+            email: user.email,
+            password: user.password,
+            token: user.token
+        }
+    })
+}
+
+// DELETE
+export async function deleteUser(user: User) {
+    await prisma.user.delete({
+        where: {
+            id: user.id
+        }
+    })
+}
+
 
 
 // currently unused functions
@@ -81,4 +105,4 @@ export async function createEmployeeLogin(login: Login, employee: Employee) {
 }
 */
 
-export * as loginDB from './Login'
+export * as loginDB from './User'

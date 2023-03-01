@@ -1,11 +1,11 @@
-import {Login, PrismaClient} from '@prisma/client'
+import {User, PrismaClient} from '@prisma/client'
 import {customerDB} from './db/Customer'
-import {loginDB} from './db/Login'
+import {loginDB} from './db/User'
 
 const prisma = new PrismaClient()
 
 
-let testLogin: Login = {
+let testLogin: User = {
     id: 0,
     password: "butt",
     token: "it's a secret",

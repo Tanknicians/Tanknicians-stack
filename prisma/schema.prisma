@@ -10,8 +10,8 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Login {
-  id Int @id @default(autoincrement()) // DB id value for the LOGIN table
+model User {
+  id Int @id @default(autoincrement()) // DB id value for the table
 
   email    String @unique // username and where to send to reset password
   password String
@@ -35,28 +35,28 @@ model Employee {
 model Customer {
   id Int @id @default(autoincrement())
 
-  Tanks Tank[]
-
   firstName  String
   middleName String?
   lastName   String
   address    String
   email      String?
   phone      Int?
+
   Form       Form[]
+  Tanks      Tank[]
 }
 
 model Form {
   id       Int      @id @default(autoincrement())
   dateTime DateTime @default(now())
 
-  createdBy  Employee @relation(fields: employeeId, references: id)
+  customer Customer @relation(fields: customerId, references: id)
+  customerId  Int
+
+  employee  Employee @relation(fields: employeeId, references: id)
   employeeId Int
 
-  forCustomer Customer? @relation(fields: customerId, references: id)
-  customerId  Int?
-
-  forTank Tank @relation(fields: tankId, references: id)
+  tank Tank @relation(fields: tankId, references: id)
   tankId  Int
 }
 

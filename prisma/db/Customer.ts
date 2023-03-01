@@ -19,6 +19,8 @@ export async function createCustomer(customer: Customer) {
     })
 }
 
+
+
 export async function updateCustomer(customer: Customer) {
     await prisma.customer.update({
         where: {

@@ -9,28 +9,26 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jcode94/Tanknicians-stack.git"
+    "url": "git+https://github.com/Tanknicians/Tanknicians-stack.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/jcode94/Tanknicians-stack/issues"
+    "url": "https://github.com/Tanknicians/Tanknicians-stack/issues"
   },
-  "homepage": "https://github.com/jcode94/Tanknicians-stack#readme",
-  "devDependencies": {
+  "homepage": "https://github.com/Tanknicians/Tanknicians-stack#readme",
+  "dependencies": {
+    "@prisma/client": "^4.10.0",
+    "@types/jsonwebtoken": "^9.0.1",
     "@types/express": "^4.17.17",
     "@types/node": "^18.14.1",
-    "prisma": "^4.10.1",
-    "ts-node": "^10.9.1",
-    "typescript": "^4.9.5"
-  },
-  "dependencies": {
-    "@prisma/client": "^4.11.0",
-    "@types/jsonwebtoken": "^9.0.1",
     "bcrypt": "^5.1.0",
     "express": "^4.18.2",
     "jsonwebtoken": "^9.0.0",
-    "nodemon": "^2.0.20"
+    "nodemon": "^2.0.20",
+    "prisma": "^4.10.1",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.9.5"
   }
 }
