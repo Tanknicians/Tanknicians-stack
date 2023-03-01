@@ -2,10 +2,10 @@
   "name": "tanknicians-stack",
   "version": "1.0.0",
   "description": "Full stack web application, mobile application, and data analysis platform for Tanknicians, LLC",
-  "main": "index.js",
+  "main": "server.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon backend/index.ts"
+    "start": "nodemon backend/server.ts"
   },
   "repository": {
     "type": "git",

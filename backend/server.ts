@@ -1,6 +1,7 @@
 // Import Express
 import express, { Request, Response, NextFunction } from 'express';
-import UserRoutes from './routes/UserRoutes';
+// import the microservices
+import UserRouter from './UserMicroService/UserRouter';
 
 // Initialize the express app
 const app: express.Application = express();
@@ -8,9 +9,8 @@ const app: express.Application = express();
 // Run on port 3000; change this to .ENV file later on.
 const port: number = 3000;
 
-app.use('/api/user', UserRoutes)
-
-
+// use the microservice
+app.use('/api/user', UserRouter)
 
 
 // Server startup

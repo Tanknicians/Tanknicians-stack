@@ -1,14 +1,15 @@
-import { json } from "body-parser";
-import {findUser} from "../../prisma/db/Login";
-
+// required imports: Express and Prisma Database
 import express, {Request, Response} from "express";
+import {findUser} from "../../prisma/db/Login";
 
 const userRouter = express.Router()
 
-// REQUIRED TO INTERPRET BODY
+// REQUIRED TO INTERPRET JSON FROM HTTP REQUEST BODY
 userRouter.use(express.json());
 
 userRouter.post('/login', async (req: Request, res: Response) => {
+    let {email, password} = req.body;
+
     res.send("Login!")
 })
 
@@ -21,7 +22,7 @@ userRouter.post('/find', async (req: Request, res: Response) => {
         if (user != null) {
             res.send(user)
         } else {
-            throw console.error("No user found.");
+            throw console.error(`User with email: ${email} not found.`);
         }
     } catch (error) {
         res.send(error)

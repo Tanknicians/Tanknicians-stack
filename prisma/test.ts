@@ -24,7 +24,7 @@ loginDB.createLogin(testLogin)
     })
 */
 
-loginDB.queryLogin("email@mail.com")
+loginDB.findUser("email@mail.com")
     .then(async () => {
         await prisma.$disconnect()
     })
