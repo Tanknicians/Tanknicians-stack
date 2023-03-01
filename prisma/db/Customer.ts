@@ -20,6 +20,14 @@ export async function createCustomer(customer: Customer) {
 }
 
 
+export async function findCustomer(customer: Customer) {
+    await prisma.customer.findUnique({
+        where: {
+            id: customer.id
+        }
+    })
+}
+
 
 export async function updateCustomer(customer: Customer) {
     await prisma.customer.update({
