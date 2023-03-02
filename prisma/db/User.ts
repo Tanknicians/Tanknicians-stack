@@ -19,7 +19,6 @@ export async function findUser(user: User) {
             email: user.email
         }
     });
-    console.log(findUser)
     return findUser;
 }
 
@@ -104,4 +103,4 @@ export async function createEmployeeLogin(login: Login, employee: Employee) {
 }
 */
 
-export * as loginDB from './User'
+export * as userDB from './User'

@@ -12,10 +12,10 @@ datasource db {
 
 model User {
   id Int @id @default(autoincrement()) // DB id value for the table
-
+  
   email    String @unique // username and where to send to reset password
   password String?
-  token    String? // where the JWT token would go to auth who-is-who
+  token    String? // where we can create a synchronous login token cache
 }
 
 model Employee {
