@@ -14,7 +14,7 @@ userRouter.post('/login', async (req: Request, res: Response) => {
     console.log("Login invoked.")
     
     let parsedUser: User = {
-        id: 0,
+        id: 0, // this can always be 0, since it's not used but is required to exist
         email: req.body.email,
         password: req.body.password,
         token: null
