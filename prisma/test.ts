@@ -7,9 +7,9 @@ const prisma = new PrismaClient()
 
 let testUser: User = {
     id: 0,
+    email: "email@mail.com", // this has to be unique each time else it won't create a login!
     password: "butt",
-    token: "it's a secret",
-    email: "email@mail.com" // this has to be unique each time else it won't create a login!
+    token: "it's a secret"
 }
 
 /*
