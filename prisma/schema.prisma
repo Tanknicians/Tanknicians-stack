@@ -18,19 +18,6 @@ model User {
   token    String? // where we can create a synchronous login token cache
 }
 
-model Employee {
-  id         Int @id @default(autoincrement())
-  employeeId Int @unique // their POS-style identifier
-
-  firstName  String?
-  middleName String?
-  lastName   String?
-  email      String?  @unique
-  phone      Int?     @unique
-
-  loggedParameters Parameter[]
-}
-
 model Customer {
   id Int @id @default(autoincrement())
 
@@ -42,6 +29,35 @@ model Customer {
   phone      Int?
 
   Tank      Tank[]
+  Form      Form[]
+}
+
+model Employee {
+  id         Int @id @default(autoincrement())
+  employeeId Int @unique // their POS-style identifier
+
+  firstName  String?
+  middleName String?
+  lastName   String?
+  email      String?  @unique
+  phone      Int?     @unique
+
+  loggedParameters Parameter[]
+  createdForms Form[]
+}
+
+model Form {
+  id Int @id @default(autoincrement())
+  approved Boolean @default(false)
+  created DateTime @default(now())
+
+  customer Customer @relation(fields: [customerId], references: [id])
+  customerId Int
+
+  employee Employee @relation(fields: [employeeId], references: [id])
+  employeeId Int
+
+  parameters Parameter[]
 }
 
 model Tank {
@@ -50,7 +66,7 @@ model Tank {
   size Int? // gallons/liters of water
   type String? // freshwater, brackish, saltwater, etc
 
-  owner   Customer @relation(fields: ownerId, references: id)
+  owner   Customer @relation(fields: [ownerId], references: [id])
   ownerId Int
 
   Parameter Parameter[]
@@ -60,6 +76,7 @@ model Tank {
   Pest      Pest[]
 }
 
+
 model Parameter {
   id Int @id @default(autoincrement())
 
@@ -67,11 +84,14 @@ model Parameter {
   value            Float?
   recordedDateTime DateTime @default(now())
 
-  loggedBy   Employee @relation(fields: employeeId, references: id)
+  loggedBy   Employee @relation(fields: [employeeId], references: [id])
   employeeId Int
 
-  forTank Tank @relation(fields: tankId, references: id)
+  forTank Tank @relation(fields: [tankId], references: [id])
   tankId  Int
+
+  inForm Form @relation(fields: [formId], references: [id])
+  formId Int
 }
 
 model Fish {
@@ -81,7 +101,7 @@ model Fish {
   description String?
   isSaltwater Boolean?
 
-  inTank Tank   @relation(fields: tankId, references: id)
+  inTank Tank   @relation(fields: [tankId], references: [id])
   tankId Int
   Pest   Pest[]
 }
@@ -93,7 +113,7 @@ model Coral {
   description String?
   isSaltwater Boolean?
 
-  inTank Tank   @relation(fields: tankId, references: id)
+  inTank Tank   @relation(fields: [tankId], references: [id])
   tankId Int
   Pest   Pest[]
 }
@@ -105,7 +125,7 @@ model Plant {
   description String?
   isSaltwater Boolean?
 
-  inTank Tank   @relation(fields: tankId, references: id)
+  inTank Tank   @relation(fields: [tankId], references: [id])
   tankId Int
   Pest   Pest[]
 }
@@ -116,15 +136,15 @@ model Pest {
   description String?
   isSaltwater Boolean?
 
-  onFish Fish? @relation(fields: fishId, references: id)
+  onFish Fish? @relation(fields: [fishId], references: [id])
   fishId Int?
 
-  onCoral Coral? @relation(fields: coralId, references: id)
+  onCoral Coral? @relation(fields: [coralId], references: [id])
   coralId Int?
 
-  onPlant Plant? @relation(fields: plantId, references: id)
+  onPlant Plant? @relation(fields: [plantId], references: [id])
   plantId Int?
 
-  inTank Tank @relation(fields: tankId, references: id)
+  inTank Tank @relation(fields: [tankId], references: [id])
   tankId Int
 }
