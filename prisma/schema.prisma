@@ -50,6 +50,7 @@ model Form {
   id Int @id @default(autoincrement())
   approved Boolean @default(false)
   created DateTime @default(now())
+  request String?
 
   customer Customer @relation(fields: [customerId], references: [id])
   customerId Int
