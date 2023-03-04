@@ -1,7 +1,7 @@
 // Import Express
 import express, { Request, Response, NextFunction } from 'express';
 // import the microservices
-import UserRouter from './UserService/UserRouter';
+import UserRouter from './UserService/UserRoutes';
 
 // Initialize the express app
 const app: express.Application = express();
