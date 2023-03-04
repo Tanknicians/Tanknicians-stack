@@ -18,7 +18,7 @@ export async function createForm(form: Form, parameters: Parameter[]) {
 }
 
 // READ
-export async function readForm(form: Form) {
+export async function findForm(form: Form) {
     var foundForm = await prisma.form.findUnique({
         where: {
             id: form.id
