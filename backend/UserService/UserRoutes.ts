@@ -1,6 +1,5 @@
 // required imports: Express and Prisma Database
 import express, {Request, Response} from "express";
-import * as userDB from "../../prisma/db/User";
 import { findUserService, loginUserService } from "./UserService";
 
 const userRouter = express.Router()
