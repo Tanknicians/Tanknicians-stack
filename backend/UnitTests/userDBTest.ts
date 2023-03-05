@@ -1,5 +1,4 @@
 import {User, PrismaClient} from '@prisma/client'
-import {customerDB} from '../../prisma/db/Customer'
 import {userDB} from '../../prisma/db/User'
 
 const prisma = new PrismaClient()
