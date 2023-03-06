@@ -8,6 +8,7 @@ generator client {
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
+  relationMode = "prisma"
 }
 
 model User {
@@ -54,9 +55,11 @@ model Form {
 
   customer Customer @relation(fields: [customerId], references: [id])
   customerId Int
+  @@index([customerId])
 
   employee Employee @relation(fields: [employeeId], references: [id])
   employeeId Int
+  @@index([employeeId])
 
   parameters Parameter[]
 }
@@ -69,6 +72,7 @@ model Tank {
 
   owner   Customer @relation(fields: [ownerId], references: [id])
   ownerId Int
+  @@index([ownerId])
 
   Parameter Parameter[]
   Fish      Fish[]
@@ -87,12 +91,15 @@ model Parameter {
 
   loggedBy   Employee @relation(fields: [employeeId], references: [id])
   employeeId Int
+  @@index([employeeId])
 
   forTank Tank @relation(fields: [tankId], references: [id])
   tankId  Int
+  @@index([tankId])
 
   inForm Form @relation(fields: [formId], references: [id])
   formId Int
+  @@index([formId])
 }
 
 model Fish {
@@ -104,6 +111,8 @@ model Fish {
 
   inTank Tank   @relation(fields: [tankId], references: [id])
   tankId Int
+  @@index([tankId])
+
   Pest   Pest[]
 }
 
@@ -116,6 +125,8 @@ model Coral {
 
   inTank Tank   @relation(fields: [tankId], references: [id])
   tankId Int
+  @@index([tankId])
+
   Pest   Pest[]
 }
 
@@ -128,6 +139,8 @@ model Plant {
 
   inTank Tank   @relation(fields: [tankId], references: [id])
   tankId Int
+  @@index([tankId])
+
   Pest   Pest[]
 }
 
@@ -139,13 +152,17 @@ model Pest {
 
   onFish Fish? @relation(fields: [fishId], references: [id])
   fishId Int?
+  @@index([fishId])
 
   onCoral Coral? @relation(fields: [coralId], references: [id])
   coralId Int?
+  @@index([coralId])
 
   onPlant Plant? @relation(fields: [plantId], references: [id])
   plantId Int?
+  @@index([plantId])
 
   inTank Tank @relation(fields: [tankId], references: [id])
   tankId Int
+  @@index([tankId])
 }
