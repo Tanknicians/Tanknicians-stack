@@ -1,10 +1,7 @@
 import {Customer, PrismaClient} from "@prisma/client";
 const prisma = new PrismaClient()
 
-export async function queryAllCustomers() {
-    const allUsers = await prisma.customer.findMany()
-    console.log(allUsers)
-}
+
 
 // CREATE
 export async function createCustomer(customer: Customer) {
@@ -27,6 +24,10 @@ export async function findCustomer(customer: Customer) {
             id: customer.id
         }
     })
+}
+
+export async function getAllCustomers() {
+    return await prisma.customer.findMany()
 }
 
 // UPDATE
