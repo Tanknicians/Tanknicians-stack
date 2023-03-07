@@ -29,8 +29,8 @@ model Customer {
   email      String?
   phone      Int?
 
-  Tank      Tank[]
-  Form      Form[]
+  Tanks      Tank[]
+  Forms      Form[]
 }
 
 model Employee {
@@ -43,8 +43,8 @@ model Employee {
   email      String?  @unique
   phone      Int?     @unique
 
-  loggedParameters Parameter[]
-  createdForms Form[]
+  Forms Form[]
+  Parameters Parameters[]
 }
 
 model Form {
@@ -53,15 +53,21 @@ model Form {
   created DateTime @default(now())
   request String?
 
-  customer Customer @relation(fields: [customerId], references: [id])
+  Customer Customer @relation(fields: [customerId], references: [id])
   customerId Int
   @@index([customerId])
 
-  employee Employee @relation(fields: [employeeId], references: [id])
+  Employee Employee @relation(fields: [employeeId], references: [employeeId])
   employeeId Int
   @@index([employeeId])
 
-  parameters Parameter[]
+  Parameters Parameters @relation(fields: [parametersId], references: [id])
+  parametersId Int @unique
+  @@index([parametersId])
+
+  Tank Tank @relation(fields: [tankId], references: [id])
+  tankId Int
+  @@index([tankId])
 }
 
 model Tank {
@@ -70,36 +76,40 @@ model Tank {
   size Int? // gallons/liters of water
   type String? // freshwater, brackish, saltwater, etc
 
-  owner   Customer @relation(fields: [ownerId], references: [id])
-  ownerId Int
-  @@index([ownerId])
+  Customer Customer @relation(fields: [customerId], references: [id])
+  customerId Int
+  @@index([customerId])
 
-  Parameter Parameter[]
+  Form Form[]
+  Parameters Parameters[]
   Fish      Fish[]
   Coral     Coral[]
   Plant     Plant[]
   Pest      Pest[]
 }
 
-
-model Parameter {
+// update this model with the bunch of different single-tank recording of parameters
+// the point of this is to mimic what parameters a tanknician may log on paper 
+model Parameters {
   id Int @id @default(autoincrement())
+  recorded DateTime @default(now())
 
-  name             String?
-  value            Float?
-  recordedDateTime DateTime @default(now())
+  // possible parameter types
+  nitrates Float?
+  nitrites Float?
+  oxygen Float?
+  salt Float?
 
-  loggedBy   Employee @relation(fields: [employeeId], references: [id])
+  Employee   Employee @relation(fields: [employeeId], references: [id])
   employeeId Int
   @@index([employeeId])
 
-  forTank Tank @relation(fields: [tankId], references: [id])
+  Tank Tank @relation(fields: [tankId], references: [id])
   tankId  Int
   @@index([tankId])
 
-  inForm Form @relation(fields: [formId], references: [id])
-  formId Int
-  @@index([formId])
+  // only one set of parameters per-form (one-to-one relationship)
+  Form Form?
 }
 
 model Fish {
@@ -109,11 +119,9 @@ model Fish {
   description String?
   isSaltwater Boolean?
 
-  inTank Tank   @relation(fields: [tankId], references: [id])
+  Tank Tank   @relation(fields: [tankId], references: [id])
   tankId Int
   @@index([tankId])
-
-  Pest   Pest[]
 }
 
 model Coral {
@@ -123,11 +131,9 @@ model Coral {
   description String?
   isSaltwater Boolean?
 
-  inTank Tank   @relation(fields: [tankId], references: [id])
+  Tank Tank   @relation(fields: [tankId], references: [id])
   tankId Int
   @@index([tankId])
-
-  Pest   Pest[]
 }
 
 model Plant {
@@ -137,11 +143,9 @@ model Plant {
   description String?
   isSaltwater Boolean?
 
-  inTank Tank   @relation(fields: [tankId], references: [id])
+  Tank Tank   @relation(fields: [tankId], references: [id])
   tankId Int
   @@index([tankId])
-
-  Pest   Pest[]
 }
 
 model Pest {
@@ -150,19 +154,7 @@ model Pest {
   description String?
   isSaltwater Boolean?
 
-  onFish Fish? @relation(fields: [fishId], references: [id])
-  fishId Int?
-  @@index([fishId])
-
-  onCoral Coral? @relation(fields: [coralId], references: [id])
-  coralId Int?
-  @@index([coralId])
-
-  onPlant Plant? @relation(fields: [plantId], references: [id])
-  plantId Int?
-  @@index([plantId])
-
-  inTank Tank @relation(fields: [tankId], references: [id])
+  Tank Tank @relation(fields: [tankId], references: [id])
   tankId Int
   @@index([tankId])
 }

@@ -1,17 +1,50 @@
-import {Form, Parameter, PrismaClient} from "@prisma/client";
+import {Customer, Employee, Form, Parameters, PrismaClient, Tank} from "@prisma/client";
 const prisma = new PrismaClient()
 
 // possible CRUD structure: https://www.prisma.io/docs/concepts/components/prisma-client/crud
 
 // CREATE
-export async function createForm(form: Form, parameters: Parameter[]) {
+export async function createForm(
+    form: Form, 
+    customer: Customer, 
+    employee: Employee, 
+    parameters: Parameters, 
+    tank: Tank) {
     await prisma.form.create({
         data: {
-            customerId: form.customerId,
-            employeeId: form.employeeId,
 
-            parameters: {
-                connect: parameters
+            approved: form.approved,
+            created: form.created,
+            request: form.request,
+
+            Customer: {
+                connect: customer
+                
+            },
+
+            Employee: {
+                connect: {id: employee.id}
+            },
+
+            Parameters: {
+                connectOrCreate: {
+                    where: {
+                        id: parameters.id
+                    },
+                    create: {
+                        recorded: parameters.recorded,
+                        nitrates: parameters.nitrates,
+                        nitrites: parameters.nitrites,
+                        oxygen: parameters.oxygen,
+                        salt: parameters.salt,
+                        employeeId: parameters.employeeId,
+                        tankId: parameters.tankId
+                    }
+                }
+            },
+
+            Tank: {
+                connect: tank
             }
         }
     })
