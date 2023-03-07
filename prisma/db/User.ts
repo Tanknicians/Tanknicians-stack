@@ -4,11 +4,7 @@ const prisma = new PrismaClient()
 // CREATE
 export async function createUser(user: User) {
     await prisma.user.create({
-        data: {
-            email: user.email,
-            password: user.password,
-            token: user.token
-        }
+        data: user
     })
 }
 
@@ -22,17 +18,17 @@ export async function findUser(user: User) {
     return findUser;
 }
 
+export async function getAllUsers() {
+    return await prisma.user.findMany()
+}
+
 // UPDATE
 export async function updateUser(user: User) {
     await prisma.user.update({
         where: {
             id: user.id
         },
-        data: {
-            email: user.email,
-            password: user.password,
-            token: user.token
-        }
+        data: user
     })
 }
 

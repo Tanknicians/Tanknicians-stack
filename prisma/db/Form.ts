@@ -10,6 +10,7 @@ export async function createForm(
     employee: Employee, 
     parameters: Parameters, 
     tank: Tank) {
+        
     await prisma.form.create({
         data: {
 
@@ -52,12 +53,11 @@ export async function createForm(
 
 // READ
 export async function findForm(form: Form) {
-    var foundForm = await prisma.form.findUnique({
+    return await prisma.form.findUnique({
         where: {
             id: form.id
         }
     })
-    return foundForm
 }
 
 export async function getAllForms() {
@@ -69,10 +69,7 @@ export async function updateForm(form: Form) {
     await prisma.form.update({
         where: {
             id: form.id
-        },
-        data: {
-            
-        }
+        }, data: form
     })
 }
 
