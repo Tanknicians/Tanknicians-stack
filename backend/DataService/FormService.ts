@@ -1,17 +1,6 @@
 import { Form } from "@prisma/client";
 import { Request, Response } from "express";
 import * as formDB from "../../prisma/db/Form";
-import { all } from "./DataRoutes";
-
-// this is for my own use, can be deleted later
-const defaultForm: Form = {
-    id: 0,
-    approved: false,
-    created: new Date(),
-    request: null,
-    customerId: 0,
-    employeeId: 0
-};
 
 export async function getAllFormsService(req: Request, res: Response){
 
@@ -37,7 +26,9 @@ export async function findFormService(req: Request, res: Response){
         created: new Date(),
         request: "",
         customerId: 0,
-        employeeId: 0
+        employeeId: 0,
+        parametersId: 0,
+        tankId: 0
     };
 
     let foundForm = formDB.findForm(emptyForm)
