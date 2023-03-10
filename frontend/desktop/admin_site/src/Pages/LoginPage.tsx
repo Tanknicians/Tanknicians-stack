@@ -18,6 +18,8 @@ import { useDispatch } from 'react-redux';
 import { setLogin } from '../Services';
 import { url } from '../Services';
 import axios from 'axios';
+import { relative } from 'path';
+import { height } from '@mui/system';
 
 function Copyright(props: any) {
   return (
@@ -41,9 +43,9 @@ export default function LoginPage() {
 
   const login = async (user: { email: string; password: string; }) => {
 
-    console.log("trying to log in");
+   
     const loginResponse = await axios.post(`${url}/api/user/login`, user);
-    console.log(loginResponse);
+ 
     const loggedIn = loginResponse.data;
 
     if(loggedIn)
@@ -68,7 +70,7 @@ export default function LoginPage() {
   };
 
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={theme} >
       <Grid container component="main" sx={{ height: '100vh' }}>
         <CssBaseline />
         <Grid
@@ -148,12 +150,11 @@ export default function LoginPage() {
               </Grid>
             </Box>
           </Box>
-          <Box sx={{
-            display: 'flex',
-            justifyContent: 'center',
-            }}>
-            <Copyright sx={{ mb: 3, position: 'absolute', bottom: '0', textAlign: 'center' }} />
-          </Box>
+        
+              <Copyright sx={{ mb: 3, bottom: '0', textAlign: 'center' }} />
+    
+
+          
         </Grid>
       </Grid>
     </ThemeProvider>
