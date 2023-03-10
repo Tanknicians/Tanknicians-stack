@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 // Temporary for testing
 // Will be in .ENV 
-export const url = 'http://localhost:5000/';
+export const url = 'http://localhost:5000';
 
 const initialState = {
     user: null,

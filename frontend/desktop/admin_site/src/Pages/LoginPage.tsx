@@ -40,14 +40,15 @@ export default function LoginPage() {
   const navigate = useNavigate();
 
   const login = async (user: { email: string; password: string; }) => {
-    const loginResponse = await axios.post(`${url}/login`, user);
+
+    console.log("trying to log in");
+    const loginResponse = await axios.post(`${url}/api/user/login`, user);
     console.log(loginResponse);
     const loggedIn = loginResponse.data;
 
     if(loggedIn)
     {
       dispatch(setLogin({
-        user: loggedIn.user,
         token: loggedIn.token,
       }))
       navigate('/dashboard');
