@@ -16,6 +16,3 @@ export function generateToken(user: User, secret: jwt.Secret): string {
 
 export * as jwtService from './JWTService'
 
-
-    
-

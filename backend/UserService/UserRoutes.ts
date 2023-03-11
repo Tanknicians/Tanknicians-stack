@@ -9,12 +9,23 @@ userRouter.use(express.json());
 
 // returns user's token on successful login
 userRouter.post('/login', async (req: Request, res: Response) => {
-    await loginUserService(req, res);
+    
+        console.log("userRouter.login invoked")
+        await loginUserService(req, res);
+    
 })
 
 
 userRouter.post('/find', async (req: Request, res: Response) => {
-    await findUserService(req, res);
+    let auth = true;
+    if (auth) {
+        console.log("userRouter.find invoked")
+        await findUserService(req, res);
+    } else {
+        res.send({
+            "error": "invalid auth"
+        })
+    }
 })
 
 

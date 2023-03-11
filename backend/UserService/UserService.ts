@@ -6,7 +6,6 @@ import {compare, hash} from 'bcrypt'
 
 
 export async function loginUserService(req: Request, res: Response) {
-    console.log("Login invoked.");
 
     let parsedUser: User = {
         id: 0,
@@ -19,14 +18,14 @@ export async function loginUserService(req: Request, res: Response) {
         // using PRISMA db function
         let user = await userDB.findUser(parsedUser);
         if (user != null) {
-            console.log(`User found: ${user.email}`);
             // required to make sure the Promises are not null
             if (parsedUser.password != null && user.password != null) 
             {
                 let isCompared = await compare(parsedUser.password, user.password)
                 if (isCompared) {
-                    console.log("Sending token.");
-                    res.send(user.token);
+                    res.send({
+                        "token" : user.token
+                    });
                 } else {
                     res.send("Invalid login");
                 }
@@ -41,14 +40,19 @@ export async function loginUserService(req: Request, res: Response) {
 }
 
 export async function findUserService(req: Request, res: Response) {
-    let { email } = req.body;
+    let parsedUser: User = {
+        id: 0,
+        email: req.body.email,
+        password: null,
+        token: null
+    }
     try {
         // using PRISMA db function
-        let user = await userDB.findUser(email);
+        let user = await userDB.findUser(parsedUser);
         if (user != null) {
             res.send(user);
         } else {
-            throw console.error(`User with email: ${email} not found.`);
+            throw console.error(`User with email: ${parsedUser.email} not found.`);
         }
     } catch (error) {
         res.send(error);
