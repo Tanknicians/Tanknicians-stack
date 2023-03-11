@@ -11,13 +11,11 @@ const app: express.Application = express();
 app.use(cors)
 
 // use the microservices
-app.use('/api/user', UserRouter)
-app.use('/api', DataRouter)
+app.use("/api/user", UserRouter);
+app.use("/api", DataRouter);
 
 
 // Server startup
 app.listen(process.env.PORT, () => {
-    console.log(
-        `TypeScript with Express http://localhost:${process.env.PORT}/`
-        );
+  console.log(`TypeScript with Express http://localhost:${process.env.PORT}/`);
 });

@@ -1,47 +1,45 @@
-import {User, PrismaClient} from "@prisma/client";
-const prisma = new PrismaClient()
+import { User, PrismaClient } from "@prisma/client";
+const prisma = new PrismaClient();
 
 // CREATE
 export async function createUser(user: User) {
-    await prisma.user.create({
-        data: user
-    })
+  await prisma.user.create({
+    data: user,
+  });
 }
 
 // READ
 export async function findUser(user: User) {
-    let findUser = await prisma.user.findUnique({
-        where: {
-            email: user.email
-        }
-    });
-    return findUser;
+  let findUser = await prisma.user.findUnique({
+    where: {
+      email: user.email,
+    },
+  });
+  return findUser;
 }
 
 export async function getAllUsers() {
-    return await prisma.user.findMany()
+  return await prisma.user.findMany();
 }
 
 // UPDATE
 export async function updateUser(user: User) {
-    await prisma.user.update({
-        where: {
-            id: user.id
-        },
-        data: user
-    })
+  await prisma.user.update({
+    where: {
+      id: user.id,
+    },
+    data: user,
+  });
 }
 
 // DELETE
 export async function deleteUser(user: User) {
-    await prisma.user.delete({
-        where: {
-            id: user.id
-        }
-    })
+  await prisma.user.delete({
+    where: {
+      id: user.id,
+    },
+  });
 }
-
-
 
 // currently unused functions
 /* 
@@ -99,4 +97,4 @@ export async function createEmployeeLogin(login: Login, employee: Employee) {
 }
 */
 
-export * as userDB from './User'
+export * as userDB from "./User";
