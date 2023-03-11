@@ -5,7 +5,7 @@ import * as formDB from "../../prisma/db/Form";
 export async function getAllFormsService(req: Request, res: Response) {
   // add auth function here so data isn't sent freely ?
 
-  let allForms = await formDB.getAllForms();
+  const allForms = await formDB.getAllForms();
 
   if (allForms[0] != null) {
     res.send(allForms);
@@ -28,7 +28,7 @@ export async function findFormService(req: Request, res: Response) {
     tankId: 0,
   };
 
-  let foundForm = formDB.findForm(emptyForm);
+  const foundForm = formDB.findForm(emptyForm);
 
   if (foundForm != null) {
     res.send(foundForm);

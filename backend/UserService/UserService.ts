@@ -7,7 +7,7 @@ import { compare, hash } from "bcrypt";
 export async function loginUserService(req: Request, res: Response) {
   console.log("Login invoked.");
 
-  let parsedUser: User = {
+  const parsedUser: User = {
     id: 0,
     email: req.body.email,
     password: req.body.password,
@@ -16,12 +16,12 @@ export async function loginUserService(req: Request, res: Response) {
 
   try {
     // using PRISMA db function
-    let user = await userDB.findUser(parsedUser);
+    const user = await userDB.findUser(parsedUser);
     if (user != null) {
       console.log(`User found: ${user.email}`);
       // required to make sure the Promises are not null
       if (parsedUser.password != null && user.password != null) {
-        let isCompared = await compare(parsedUser.password, user.password);
+        const isCompared = await compare(parsedUser.password, user.password);
         if (isCompared) {
           console.log("Sending token.");
           res.send(user.token);
@@ -39,10 +39,10 @@ export async function loginUserService(req: Request, res: Response) {
 }
 
 export async function findUserService(req: Request, res: Response) {
-  let { email } = req.body;
+  const { email } = req.body;
   try {
     // using PRISMA db function
-    let user = await userDB.findUser(email);
+    const user = await userDB.findUser(email);
     if (user != null) {
       res.send(user);
     } else {
@@ -55,7 +55,7 @@ export async function findUserService(req: Request, res: Response) {
 
 // this should be a private function that cannot be used by a front-end until future expansion
 export async function registerUserService(req: Request, res: Response) {
-  let parsedUser: User = {
+  const parsedUser: User = {
     id: 0,
     email: req.body.email,
     password: req.body.password,

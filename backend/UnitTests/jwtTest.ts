@@ -1,7 +1,7 @@
 import { User } from "@prisma/client";
 import * as jwtService from "../JWTService";
 
-let testUser: User = {
+const testUser: User = {
   id: 0,
   email: "email@mail.com", // this has to be unique each time else it won't create a login!
   password: "butt",

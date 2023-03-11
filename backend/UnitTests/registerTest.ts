@@ -1,11 +1,12 @@
 import { User } from "@prisma/client";
 import { hash } from "bcrypt";
 import { userDB } from "../../prisma/db/User";
-import { PrismaClient } from "@prisma/client";
 
-const prisma = new PrismaClient();
+// import { PrismaClient } from "@prisma/client";
 
-let testUser: User = {
+// const prisma = new PrismaClient();
+
+const testUser: User = {
   id: 0,
   email: "encrypted@gmail.com", // this has to be unique each time else it won't create a login!
   password: "hunter2",
@@ -13,7 +14,7 @@ let testUser: User = {
 };
 
 export async function registerUserService(testUser: User) {
-  let parsedUser: User = {
+  const parsedUser: User = {
     id: 0,
     email: testUser.email,
     password: testUser.password,

@@ -8,3 +8,5 @@ async function compareHash() {
 
   console.log(password + " " + hashTest + " " + isCompare);
 }
+
+export { compareHash };
