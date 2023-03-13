@@ -23,7 +23,6 @@ import InputAdornment from '@mui/material/InputAdornment';
 import IconButton from '@mui/material/IconButton';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 
-
 function Copyright(props: any) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
@@ -94,7 +93,7 @@ export default function LoginPage() {
   };
 
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={theme} >
       <Grid container component="main" sx={{ height: '100vh' }}>
         <CssBaseline />
         <Grid
@@ -139,7 +138,7 @@ export default function LoginPage() {
                 autoFocus
                 onChange={handleEmailChange}
                 error={emailError}
-                helperText={emailError ? 'Email is required' : ''}
+                helperText={emailError ? 'Email is required*' : ''}
                 InputProps={{
                   endAdornment: emailError && (
                     <InputAdornment position="end">
@@ -161,7 +160,7 @@ export default function LoginPage() {
                 autoComplete="current-password"
                 onChange={handlePasswordChange}
                 error={passwordError}
-                helperText={passwordError ? 'Password is required' : ''}
+                helperText={passwordError ? 'Password is required*' : ''}
                 InputProps={{
                   endAdornment: passwordError && (
                     <InputAdornment position="end">
@@ -198,12 +197,7 @@ export default function LoginPage() {
               </Grid>
             </Box>
           </Box>
-          <Box sx={{
-            display: 'flex',
-            justifyContent: 'center',
-            }}>
-            <Copyright sx={{ mb: 3, position: 'absolute', bottom: '0', textAlign: 'center' }} />
-          </Box>
+              <Copyright sx={{ mb: 3, bottom: '0', textAlign: 'center' }} />
         </Grid>
       </Grid>
     </ThemeProvider>
