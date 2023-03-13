@@ -8,7 +8,7 @@ import DataRouter from "./DataService/DataRoutes";
 const app: express.Application = express();
 
 // allow for web-browser usage
-app.use(cors);
+app.use(cors());
 
 // use the microservices
 app.use("/api/user", UserRouter);
