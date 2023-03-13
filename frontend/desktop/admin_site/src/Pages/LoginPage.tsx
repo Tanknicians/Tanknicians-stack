@@ -43,20 +43,20 @@ export default function LoginPage() {
   const navigate = useNavigate();
 
   // Error states to be checked for incorrect input
-  const [emailError, setEmailError] = useState(false);
-  const [emailRequired, setEmailRequired] = useState(false);
-  const [passwordError, setPasswordError] = useState(false);
-  const [passwordRequired, setPasswordRequired] = useState(false);
+  const [isEmailError, setIsEmailError] = useState(false);
+  const [isEmailRequired, setIsEmailRequired] = useState(false);
+  const [isPasswordError, setIsPasswordError] = useState(false);
+  const [isPasswordRequired, setIsPasswordRequired] = useState(false);
 
   // Allows errors to be cleared after user input
   const handleEmailChange = () => {
-    setEmailError(false);
-    setEmailRequired(false);
+    setIsEmailError(false);
+    setIsEmailRequired(false);
   };
 
   const handlePasswordChange = () => {
-    setPasswordError(false);
-    setPasswordRequired(false);
+    setIsPasswordError(false);
+    setIsPasswordRequired(false);
   };
 
   // Form submission with error checks
@@ -71,23 +71,25 @@ export default function LoginPage() {
     // Check for missing input and show user error 
     if(!email)
     {
-      setEmailError(true);
-      setEmailRequired(true);
+      setIsEmailError(true);
+      setIsEmailRequired(true);
     }
     else if(!password)
     {
-      setPasswordError(true);
-      setPasswordRequired(true);
+      setIsPasswordError(true);
+      setIsPasswordRequired(true);
     }
-      
-    // Package user data to request access 
-    const user = { 
-      email: (email as String).trim(), 
-      password: (password as String).trim()
-    };
+    else
+    {
+      // Package user data to request access 
+      const user = { 
+        email: (email as String).trim(), 
+        password: (password as String).trim()
+      };
     
-    // API call to login
-    login(user);
+      // API call to login
+      login(user);
+    }  
   };
   
   const login = async (user: { email: string; password: string; }) => {
@@ -149,7 +151,7 @@ export default function LoginPage() {
             <Box component="form" noValidate onSubmit={handleLoginSubmit} sx={{ mt: 1 }}>
               <TextField
                 margin="normal"
-                required = {emailRequired}
+                required = {isEmailRequired}
                 fullWidth
                 id="email"
                 label="Email Address"
@@ -157,10 +159,10 @@ export default function LoginPage() {
                 autoComplete="email"
                 autoFocus
                 onChange={handleEmailChange}
-                error={emailError}
-                helperText={emailError ? 'Email is required*' : ''}
+                error={isEmailError}
+                helperText={isEmailError ? 'Email is required*' : ''}
                 InputProps={{
-                  endAdornment: emailError && (
+                  endAdornment: isEmailError && (
                     <InputAdornment position="end">
                       <IconButton edge="end">
                         <ErrorOutlineIcon sx={{color: '#d32f2f'}}/>
@@ -171,7 +173,7 @@ export default function LoginPage() {
               />
               <TextField
                 margin="normal"
-                required = {passwordRequired}
+                required = {isPasswordRequired}
                 fullWidth
                 name="password"
                 label="Password"
@@ -179,10 +181,10 @@ export default function LoginPage() {
                 id="password"
                 autoComplete="current-password"
                 onChange={handlePasswordChange}
-                error={passwordError}
-                helperText={passwordError ? 'Password is required*' : ''}
+                error={isPasswordError}
+                helperText={isPasswordError ? 'Password is required*' : ''}
                 InputProps={{
-                  endAdornment: passwordError && (
+                  endAdornment: isPasswordError && (
                     <InputAdornment position="end">
                       <IconButton edge="end">
                         <ErrorOutlineIcon sx={{color: '#d32f2f'}}/>
@@ -212,8 +214,9 @@ export default function LoginPage() {
               </Grid>
             </Box>
           </Box >
-          <Box sx={{
-            mt: 38,
+          <Box sx={{my:4, mx: 4, display: 'flex'}}></Box>
+          <Box component = 'footer' sx={{
+            mt: 24,
             mx: 4,
             display: 'flex',
             justifyContent: 'center'

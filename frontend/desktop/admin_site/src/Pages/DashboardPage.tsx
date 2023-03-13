@@ -3,23 +3,9 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import Link from '@mui/material/Link';
 import Navigator from '../Components/DashBoardNavigator';
 import Content from '../Components/DashBoardContent';
 import Header from '../Components/DashboardHeader';
-
-function Copyright() {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center">
-      {'Copyright © '}
-      <Link color="inherit" href="https://tanknicians.com/" target="_blank">
-        Tanknicians
-      </Link>{' '}
-      {new Date().getFullYear()}.
-    </Typography>
-  );
-}
  
 let theme = createTheme({
   palette: {
@@ -199,9 +185,6 @@ export default function Paperbase() {
           <Header onDrawerToggle={handleDrawerToggle} />
           <Box component="main" sx={{ flex: 1, py: 6, px: 4, bgcolor: '#eaeff1' }}>
             <Content />
-          </Box>
-          <Box component="footer" sx={{ p: 2, bgcolor: '#eaeff1' }}>
-            <Copyright />
           </Box>
         </Box>
       </Box>
