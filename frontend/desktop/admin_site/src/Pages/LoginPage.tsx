@@ -26,12 +26,11 @@ import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 function Copyright(props: any) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Copyright © '}
       <Link color="inherit" href="https://tanknicians.com/" target="_blank">
         Tanknicians
       </Link>{' '}
+      {' © '}
       {new Date().getFullYear()}
-      {'.'}
     </Typography>
   );
 }
@@ -39,22 +38,29 @@ function Copyright(props: any) {
 const theme = createTheme();
 
 export default function LoginPage() {
-  
+  // Hooks for API and Routing
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  // Error states to be checked for incorrect input
   const [emailError, setEmailError] = useState(false);
+  const [emailRequired, setEmailRequired] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
+  const [passwordRequired, setPasswordRequired] = useState(false);
 
+  // Allows errors to be cleared after user input
   const handleEmailChange = () => {
     setEmailError(false);
+    setEmailRequired(false);
   };
 
   const handlePasswordChange = () => {
     setPasswordError(false);
+    setPasswordRequired(false);
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  // Form submission with error checks
+  const handleLoginSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     
@@ -64,11 +70,17 @@ export default function LoginPage() {
     
     // Check for missing input and show user error 
     if(!email)
+    {
       setEmailError(true);
-  
+      setEmailRequired(true);
+    }
     else if(!password)
+    {
       setPasswordError(true);
-  
+      setPasswordRequired(true);
+    }
+      
+    // Package user data to request access 
     const user = { 
       email: (email as String).trim(), 
       password: (password as String).trim()
@@ -90,6 +102,13 @@ export default function LoginPage() {
       }))
       navigate('/dashboard');
     }
+
+    // FIXME: 
+    /* else
+    {
+      Display incorrect email or password
+    }
+    */
   };
 
   return (
@@ -110,10 +129,11 @@ export default function LoginPage() {
             backgroundPosition: 'center',
           }}
         />
-        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square > 
           <Box
             sx={{
-              my: 8,
+              mt: 8,
+              mb: 10,
               mx: 4,
               display: 'flex',
               flexDirection: 'column',
@@ -126,10 +146,10 @@ export default function LoginPage() {
             <Typography component="h1" variant="h5">
               Log in
             </Typography>
-            <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
+            <Box component="form" noValidate onSubmit={handleLoginSubmit} sx={{ mt: 1 }}>
               <TextField
                 margin="normal"
-                required
+                required = {emailRequired}
                 fullWidth
                 id="email"
                 label="Email Address"
@@ -151,7 +171,7 @@ export default function LoginPage() {
               />
               <TextField
                 margin="normal"
-                required
+                required = {passwordRequired}
                 fullWidth
                 name="password"
                 label="Password"
@@ -189,15 +209,17 @@ export default function LoginPage() {
                     Forgot password?
                   </Link>
                 </Grid>
-                <Grid item>
-                  <Link href="#" variant="body2">
-                    {"Don't have an account? Sign Up"}
-                  </Link>
-                </Grid>
               </Grid>
             </Box>
+          </Box >
+          <Box sx={{
+            mt: 38,
+            mx: 4,
+            display: 'flex',
+            justifyContent: 'center'
+            }}>
+              <Copyright sx={{bottom: '0', textAlign: 'center' }} /> 
           </Box>
-              <Copyright sx={{ mb: 3, bottom: '0', textAlign: 'center' }} />
         </Grid>
       </Grid>
     </ThemeProvider>
