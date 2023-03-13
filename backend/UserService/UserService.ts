@@ -5,8 +5,6 @@ import * as userDB from "../../prisma/db/User";
 import { compare, hash } from "bcrypt";
 
 export async function loginUserService(req: Request, res: Response) {
-  console.log("Login invoked.");
-
   const parsedUser: User = {
     id: 0,
     email: req.body.email,
@@ -24,7 +22,7 @@ export async function loginUserService(req: Request, res: Response) {
         const isCompared = await compare(parsedUser.password, user.password);
         if (isCompared) {
           console.log("Sending token.");
-          res.send(user.token);
+          res.send(user);
         } else {
           res.send("Invalid login");
         }

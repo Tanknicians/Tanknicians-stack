@@ -9,18 +9,22 @@ const dataRouter = express.Router();
 dataRouter.use(express.json());
 
 dataRouter.post("/form/getall", async (req: Request, res: Response) => {
+  console.log("Form.GetAll invoked.");
   await getAllFormsService(req, res);
 });
 
 dataRouter.post("/form/find", async (req: Request, res: Response) => {
+  console.log("Form.Find invoked.");
   await findFormService(req, res);
 });
 
 dataRouter.post("/customer/getall", async (req: Request, res: Response) => {
+  console.log("Customer.GetAll invoked.");
   await getAllCustomersService(req, res);
 });
 
 dataRouter.post("/customer/find", async (req: Request, res: Response) => {
+  console.log("Customer.Find invoked.");
   await findCustomerService(req, res);
 });
 
