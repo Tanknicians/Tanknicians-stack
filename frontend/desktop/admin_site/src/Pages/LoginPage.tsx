@@ -18,6 +18,11 @@ import { useDispatch } from 'react-redux';
 import { setLogin } from '../Services';
 import { url } from '../Services';
 import axios from 'axios';
+import { useState } from 'react';
+import InputAdornment from '@mui/material/InputAdornment';
+import IconButton from '@mui/material/IconButton';
+import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
+
 
 function Copyright(props: any) {
   return (
@@ -39,13 +44,46 @@ export default function LoginPage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const login = async (user: { email: string; password: string; }) => {
+  const [emailError, setEmailError] = useState(false);
+  const [passwordError, setPasswordError] = useState(false);
 
-    console.log("trying to log in");
+  const handleEmailChange = () => {
+    setEmailError(false);
+  };
+
+  const handlePasswordChange = () => {
+    setPasswordError(false);
+  };
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    
+    // Get email and password from input
+    const email = data.get('email');
+    const password = data.get('password');
+    
+    // Check for missing input and show user error 
+    if(!email)
+      setEmailError(true);
+  
+    else if(!password)
+      setPasswordError(true);
+  
+    const user = { 
+      email: (email as String).trim(), 
+      password: (password as String).trim()
+    };
+    
+    // API call to login
+    login(user);
+  };
+  
+  const login = async (user: { email: string; password: string; }) => {
     const loginResponse = await axios.post(`${url}/api/user/login`, user);
-    console.log(loginResponse);
     const loggedIn = loginResponse.data;
 
+    // User exists, Log in 
     if(loggedIn)
     {
       dispatch(setLogin({
@@ -53,18 +91,6 @@ export default function LoginPage() {
       }))
       navigate('/dashboard');
     }
-  };
-  
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    
-    const user = { 
-        email: (data.get('email') as String).trim(), 
-        password: (data.get('password') as String).trim()
-    };
-    //console.log(user);
-    login(user);
   };
 
   return (
@@ -111,6 +137,18 @@ export default function LoginPage() {
                 name="email"
                 autoComplete="email"
                 autoFocus
+                onChange={handleEmailChange}
+                error={emailError}
+                helperText={emailError ? 'Email is required' : ''}
+                InputProps={{
+                  endAdornment: emailError && (
+                    <InputAdornment position="end">
+                      <IconButton edge="end">
+                        <ErrorOutlineIcon sx={{color: '#d32f2f'}}/>
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
               />
               <TextField
                 margin="normal"
@@ -121,6 +159,18 @@ export default function LoginPage() {
                 type="password"
                 id="password"
                 autoComplete="current-password"
+                onChange={handlePasswordChange}
+                error={passwordError}
+                helperText={passwordError ? 'Password is required' : ''}
+                InputProps={{
+                  endAdornment: passwordError && (
+                    <InputAdornment position="end">
+                      <IconButton edge="end">
+                        <ErrorOutlineIcon sx={{color: '#d32f2f'}}/>
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
               />
               <FormControlLabel
                 control={<Checkbox value="remember" color="primary" />}
