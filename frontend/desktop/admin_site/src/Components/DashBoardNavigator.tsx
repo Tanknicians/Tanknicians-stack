@@ -41,6 +41,15 @@ const itemCategory = {
 export default function Navigator(props: DrawerProps) {
   const { ...other } = props;
 
+  // const [navReq, setNavReq] = useState('bruh')
+
+  // Handle navigation to ch
+  const handleContentChange = (navReq:string, e:any) => {
+    console.log(navReq);
+    console.log(e)
+    return;
+  }
+
   return (
     <Drawer variant="permanent" {...other}>
       <List disablePadding>
@@ -53,8 +62,10 @@ export default function Navigator(props: DrawerProps) {
               <ListItemText sx={{ color: '#fff' }}>{id}</ListItemText>
             </ListItem>
             {children.map(({ id: childId, icon, active }) => (
-              <ListItem disablePadding key={childId}>
-                <ListItemButton selected={active} sx={item}>
+              <ListItem disablePadding key={childId} onClick = {(e) => {
+                handleContentChange(childId, e)
+              }}>
+                <ListItemButton selected={active} sx={item} >
                   <ListItemIcon>{icon}</ListItemIcon>
                   <ListItemText>{childId}</ListItemText>
                 </ListItemButton>
