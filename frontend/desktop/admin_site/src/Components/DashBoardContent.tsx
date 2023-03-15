@@ -10,9 +10,9 @@
 // import IconButton from '@mui/material/IconButton';
 // import SearchIcon from '@mui/icons-material/Search';
 // import RefreshIcon from '@mui/icons-material/Refresh';
-import Managerial from "./Managerial";
-import Database from "./DataBaseView";
-import Analytics from "./Analytics";
+import Managerial from "./DashboardContent/Managerial";
+import Database from "./DashboardContent/DataBaseView";
+import Analytics from "./DashboardContent/Analytics";
 import { Route, Routes } from "react-router-dom"
 
 export default function Content() {
@@ -24,7 +24,6 @@ export default function Content() {
         <Route path="/Database" element={< Database />} />
         <Route path="/Analytics" element={< Analytics />} />
       </Routes>
-
     </div>
     
 

@@ -6,21 +6,38 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
+import { Link } from "react-router-dom";
 import PeopleIcon from '@mui/icons-material/People';
 import DnsRoundedIcon from '@mui/icons-material/DnsRounded';
 import PermMediaOutlinedIcon from '@mui/icons-material/PhotoSizeSelectActual';
-import { Link } from "react-router-dom";
 
-const categories = [
+// Main set of pages and sub-pages(called child tabs)
+const tabList = [
   {
     id: 'Admin',
     children: [
-      { id: 'Managerial', icon: <PeopleIcon />, active: true },
-      { id: 'Database', icon: <DnsRoundedIcon />},
-      { id: 'Analytics', icon: <PermMediaOutlinedIcon /> },
+      { 
+        id: 'Managerial', 
+        icon: <PeopleIcon />,
+        active: true
+      },
+
+      { 
+        id: 'Database',
+        icon: <DnsRoundedIcon />,
+        active: false
+      },
+
+      { 
+        id: 'Analytics',
+        icon: <PermMediaOutlinedIcon />,
+        active: false
+      },
     ]
   }
 ];  
+
+
 
 const item = {
   py: '2px',
@@ -37,16 +54,17 @@ const itemCategory = {
   px: 3,
 };
 
-export default function Navigator(props: DrawerProps) {
-  const { ...other } = props;
 
+export default function Navigator( props: DrawerProps) {
+  const { ...other } = props;
+  
   return (
     <Drawer variant="permanent" {...other}>
       <List disablePadding>
         <ListItem sx={{ ...item, ...itemCategory, fontSize: 22, color: '#fff' }}>
           Tanknicians
         </ListItem>
-        {categories.map(({ id, children }) => (
+        {tabList.map(({ id, children }) => (
           <Box key={id} sx={{ bgcolor: '#101F33' }}>
             <ListItem sx={{ py: 2, px: 3 }}>
               <ListItemText sx={{ color: '#fff' }}>{id}</ListItemText>

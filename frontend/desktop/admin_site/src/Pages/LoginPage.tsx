@@ -102,7 +102,7 @@ export default function LoginPage() {
       dispatch(setLogin({
         token: loggedIn.token,
       }))
-      navigate('/dashboard');
+      navigate('/dashboard/Managerial');
     }
 
     // FIXME: 
