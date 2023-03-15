@@ -12,39 +12,26 @@ datasource db {
 }
 
 model User {
-  id Int @id @default(autoincrement()) // DB id value for the table
+  id   Int     @id @default(autoincrement()) // DB id value for the table
+  role String? // customer or employee or admin?
 
-  email    String  @unique // username and where to send to reset password
+  // user authentication
+  email    String  @unique
   password String?
-  token    String? // where we can create a synchronous login token cache
-}
+  token    String? // where we can create a synchronous login token cache, can also define role!
 
-model Customer {
-  id Int @id @default(autoincrement())
-
+  // user info
   firstName  String?
   middleName String?
   lastName   String?
   address    String?
-  email      String?
   phone      Int?
 
-  Tanks Tank[]
-  Forms Form[]
-}
-
-model Employee {
-  id         Int @id @default(autoincrement())
-  employeeId Int @unique // their POS-style identifier
-
-  firstName  String?
-  middleName String?
-  lastName   String?
-  email      String? @unique
-  phone      Int?    @unique
-
-  Forms      Form[]
+  // prisma relations; not shown in database
+  Customers Form[] @relation("Customers")
+  Employees Form[] @relation("Employees")
   Parameters Parameters[]
+  Tanks Tank[]
 }
 
 model Form {
@@ -53,10 +40,10 @@ model Form {
   created  DateTime @default(now())
   request  String?
 
-  Customer   Customer @relation(fields: [customerId], references: [id])
+  Customer   User @relation("Customers", fields: [customerId], references: [id])
   customerId Int
 
-  Employee   Employee @relation(fields: [employeeId], references: [employeeId])
+  Employee   User @relation("Employees", fields: [employeeId], references: [id])
   employeeId Int
 
   Parameters   Parameters @relation(fields: [parametersId], references: [id])
@@ -77,17 +64,14 @@ model Tank {
   size        Int? // gallons/liters of water
   type        String? // freshwater, brackish, saltwater, etc
 
-  Customer   Customer @relation(fields: [customerId], references: [id])
-  customerId Int
+  User   User @relation(fields: [userId], references: [id])
+  userId Int
 
   Form       Form[]
   Parameters Parameters[]
-  Fish       Fish[]
-  Coral      Coral[]
-  Plant      Plant[]
-  Pest       Pest[]
+  Pests      Pest[]
 
-  @@index([customerId])
+  @@index([userId])
 }
 
 // update this model with the bunch of different single-tank recording of parameters
@@ -102,7 +86,7 @@ model Parameters {
   oxygen   Float?
   salt     Float?
 
-  Employee   Employee @relation(fields: [employeeId], references: [id])
+  Employee   User @relation(fields: [employeeId], references: [id])
   employeeId Int
 
   Tank   Tank @relation(fields: [tankId], references: [id])
@@ -115,50 +99,10 @@ model Parameters {
   @@index([tankId])
 }
 
-model Fish {
-  id          Int      @id @default(autoincrement())
-  species     String?
-  condition   String?
-  description String?
-  isSaltwater Boolean?
-
-  Tank   Tank @relation(fields: [tankId], references: [id])
-  tankId Int
-
-  @@index([tankId])
-}
-
-model Coral {
-  id          Int      @id @default(autoincrement())
-  species     String?
-  condition   String?
-  description String?
-  isSaltwater Boolean?
-
-  Tank   Tank @relation(fields: [tankId], references: [id])
-  tankId Int
-
-  @@index([tankId])
-}
-
-model Plant {
-  id          Int      @id @default(autoincrement())
-  species     String?
-  condition   String?
-  description String?
-  isSaltwater Boolean?
-
-  Tank   Tank @relation(fields: [tankId], references: [id])
-  tankId Int
-
-  @@index([tankId])
-}
-
 model Pest {
-  id          Int      @id @default(autoincrement())
+  id          Int     @id @default(autoincrement())
   species     String?
   description String?
-  isSaltwater Boolean?
 
   Tank   Tank @relation(fields: [tankId], references: [id])
   tankId Int

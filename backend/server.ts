@@ -10,7 +10,7 @@ const app: express.Application = express();
 // allow for web-browser usage
 app.use(cors());
 
-// use the microservices
+// use the services and route them out
 app.use("/api/user", UserRouter);
 app.use("/api", DataRouter);
 
