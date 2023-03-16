@@ -16,13 +16,43 @@ import Typography from '@mui/material/Typography';
 
 const lightColor = 'rgba(255, 255, 255, 0.7)';
 
+const headerOptions = [
+  {
+    id:"Managerial",
+    children: [
+      {childId: "Man tab 1", active: true},
+      {childId: "Man tab 2", active:false},
+      {childId: "Man tab 3", active:false}
+    ]
+  },
+  {
+    id:"Database",
+    children: [
+      {childId: "Dat tab 1", active: true},
+      {childId: "Dat tab 2", active:false},
+      {childId: "Dat tab 3", active:false}
+    ]
+  },
+  {
+    id:"Analytics",
+    children: [
+      {childId: "Anal tab 1", active: true},
+      {childId: "Anal tab 2", active:false},
+      {childId: "Anal tab 3", active:false}
+    ]
+  }
+]
+
 interface HeaderProps {
+  selection: string;
   onDrawerToggle: () => void;
 }
 
-export default function Header(props: HeaderProps) {
-  const { onDrawerToggle } = props;
 
+export default function Header(props: HeaderProps) {
+  const { selection, onDrawerToggle } = props;
+  const headerSettings = headerOptions.find(item => item.id ===selection)
+   
   return (
     <React.Fragment>
       <AppBar color="primary" position="sticky" elevation={0}>
@@ -72,7 +102,7 @@ export default function Header(props: HeaderProps) {
           <Grid container alignItems="center" spacing={1}>
             <Grid item xs>
               <Typography color="inherit" variant="h5" component="h1">
-                Managerial
+                {selection}
               </Typography>
             </Grid>
             
@@ -81,10 +111,9 @@ export default function Header(props: HeaderProps) {
       </AppBar>
       <AppBar component="div" position="static" elevation={0} sx={{ zIndex: 0 }}>
         <Tabs value={0} textColor="inherit">
-          <Tab label="Approved" />
-          <Tab label="Unapproved" />
-          <Tab label="fuck" />
-          <Tab label="off" />
+          {headerSettings?.children.map(({childId, active}) => (
+            <Tab  label={childId} />
+          ))}
         </Tabs>
       </AppBar>
     </React.Fragment>
