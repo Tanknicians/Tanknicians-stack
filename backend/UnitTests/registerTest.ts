@@ -8,22 +8,31 @@ import { userDB } from "../../prisma/db/User";
 
 const testUser: User = {
   id: 0,
-  email: "encrypted@gmail.com", // this has to be unique each time else it won't create a login!
+  email: "testemail@gmail.com",
   password: "hunter2",
-  token: "hereisthetoken",
+  role: "admin",
+  firstName: "john",
+  middleName: "dude",
+  lastName: "man",
+  address: "11111 orlando",
+  phone: 4206969
 };
 
 export async function registerUserService(testUser: User) {
-  const parsedUser: User = {
+
+  // THIS CANNOT BE STATIC
+  let parsedUser: User = {
     id: 0,
     email: testUser.email,
     password: testUser.password,
-    token: testUser.token,
+    role: testUser.role,
+    firstName: testUser.firstName,
+    middleName: testUser.middleName,
+    lastName: testUser.lastName,
+    address: testUser.address,
+    phone: testUser.phone
   };
 
-  if (parsedUser.token == null) {
-    parsedUser.token = String(await hash(parsedUser.email, 10));
-  }
 
   // not allowed to register an empty password
   if (parsedUser.password != null && parsedUser.password != "") {
@@ -40,5 +49,6 @@ export async function registerUserService(testUser: User) {
     return;
   }
 }
+
 
 registerUserService(testUser);

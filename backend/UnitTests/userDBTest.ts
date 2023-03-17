@@ -5,9 +5,14 @@ const prisma = new PrismaClient();
 
 const testUser: User = {
   id: 0,
-  email: "email@gmail.com", // this has to be unique each time else it won't create a login!
+  email: "email@gmail.com",
   password: "hunter2",
-  token: "hereisthetoken",
+  role: null,
+  firstName: null,
+  middleName: null,
+  lastName: null,
+  address: null,
+  phone: null
 };
 
 /*

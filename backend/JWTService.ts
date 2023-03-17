@@ -1,6 +1,9 @@
 import { User } from "@prisma/client";
 import * as jwt from "jsonwebtoken";
 import { randomBytes } from "crypto";
+import { Request, Response, NextFunction } from 'express';
+
+
 
 /*
  * made some changes to this file.
@@ -15,7 +18,7 @@ export function generateSecret(): string {
 }
 
 // signs a token with a given secret
-export function generateToken(user: User, secret: jwt.Secret): string {
+export function generateToken(user: User, secret: string): string {
   // TODO: use or remove json
   // const json: string = JSON.stringify(user);
   return jwt.sign(
@@ -25,3 +28,31 @@ export function generateToken(user: User, secret: jwt.Secret): string {
     secret
   );
 }
+
+function verifyToken(token: string, secret: string) {
+  try {
+    return jwt.verify(token, secret);
+  } catch (err) {
+    throw err;
+  }
+}
+
+
+// Middleware for authenticating JWT
+export const authenticateJWT = (req: Request, res: Response, next: NextFunction) => {
+  const authHeader = req.headers.authorization;
+
+  if (authHeader) {
+    const token = authHeader.split(' ')[1];
+
+    jwt.verify(token, process.env.JWT_SECRET as string, (err, body) => {
+      if (err) {
+        return res.sendStatus(403);
+      }
+      req.body = body;
+      next();
+    });
+  } else {
+    res.sendStatus(401);
+  }
+};

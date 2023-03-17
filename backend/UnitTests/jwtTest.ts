@@ -3,14 +3,19 @@ import * as jwtService from "../JWTService";
 
 const testUser: User = {
   id: 0,
-  email: "email@mail.com", // this has to be unique each time else it won't create a login!
+  email: "email@mail.com",
   password: "butt",
-  token: "it's a secret",
+  role: null,
+  firstName: null,
+  middleName: null,
+  lastName: null,
+  address: null,
+  phone: null
 };
 
 //NOTE: To test on JWT.IO, copy/paste the "Secret" on the right-hand space under 'Verifiy Signature'
 
-const generatedSecret: string = jwtService.generateSecret();
-console.log("Secret: " + generatedSecret);
-console.log("\n");
-console.log("Token: " + jwtService.generateToken(testUser, generatedSecret));
+
+
+
+console.log("Token: " + jwtService.generateToken(testUser, 'secret'));

@@ -3,13 +3,21 @@ import { User } from "@prisma/client";
 import { Request, Response } from "express";
 import * as userDB from "../../prisma/db/User";
 import { compare, hash } from "bcrypt";
+import { generateToken } from "../JWTService";
+
 
 export async function loginUserService(req: Request, res: Response) {
+
   const parsedUser: User = {
     id: 0,
     email: req.body.email,
     password: req.body.password,
-    token: null,
+    role: null,
+    firstName: null,
+    middleName: null,
+    lastName: null,
+    address: null,
+    phone: null
   };
 
   try {
@@ -22,7 +30,8 @@ export async function loginUserService(req: Request, res: Response) {
         const isCompared = await compare(parsedUser.password, user.password);
         if (isCompared) {
           console.log("Sending token.");
-          res.send(user);
+          // UPDATE: sends the user data as a generated token instead of a simple JSON
+          res.send(generateToken(user, "secret"));
         } else {
           res.send("Invalid login");
         }
@@ -53,12 +62,24 @@ export async function findUserService(req: Request, res: Response) {
 
 // this should be a private function that cannot be used by a front-end until future expansion
 export async function registerUserService(req: Request, res: Response) {
-  const parsedUser: User = {
+
+  let parsedUser: User = {
     id: 0,
     email: req.body.email,
     password: req.body.password,
-    token: null,
+    role: req.body.role,
+    firstName: req.body.firstName,
+    middleName: req.body.middleName,
+    lastName: req.body.lastName,
+    address: req.body.address,
+    phone: req.body.phone
   };
+
+  // though a role is required, having a string helps more than "null"
+  if (parsedUser.role == null) {
+    parsedUser.role = "none";
+  }
+
   // not allowed to register an empty password
   if (parsedUser.password != null && parsedUser.password != "") {
     parsedUser.password = await hash(parsedUser.password, 10);

@@ -18,7 +18,6 @@ model User {
   // user authentication
   email    String  @unique
   password String?
-  token    String? // where we can create a synchronous login token cache, can also define role!
 
   // user info
   firstName  String?
@@ -28,10 +27,10 @@ model User {
   phone      Int?
 
   // prisma relations; not shown in database
-  Customers Form[] @relation("Customers")
-  Employees Form[] @relation("Employees")
+  Customers  Form[]       @relation("Customers")
+  Employees  Form[]       @relation("Employees")
   Parameters Parameters[]
-  Tanks Tank[]
+  Tanks      Tank[]
 }
 
 model Form {

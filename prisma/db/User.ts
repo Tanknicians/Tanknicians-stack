@@ -3,9 +3,20 @@ const prisma = new PrismaClient();
 
 // CREATE
 export async function createUser(user: User) {
-  await prisma.user.create({
-    data: user,
-  });
+  await prisma.user.create(
+    {
+      // note: originally was set to {data: user} but throws an insane error if not created explicitly this way
+      data: {
+        email: user.email,
+        password: user.password,
+        role: user.role,
+        firstName: user.firstName,
+        middleName: user.middleName,
+        lastName: user.lastName,
+        address: user.address,
+        phone: user.phone
+      }
+    });
 }
 
 // READ
