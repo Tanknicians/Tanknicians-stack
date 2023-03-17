@@ -54,17 +54,9 @@ const itemCategory = {
   px: 3,
 };
 
-interface NavProps extends DrawerProps {
-  setHeader: Function;
-}
 
-
-export default function Navigator( props: NavProps) {
-  const { setHeader, ...other } = props;
-
-  const handleNavSelect = ( ) => {
-    
-  }
+export default function Navigator( props: DrawerProps) {
+  const { ...other } = props;
   
   return (
     <Drawer variant="permanent" {...other}>
@@ -78,8 +70,8 @@ export default function Navigator( props: NavProps) {
               <ListItemText sx={{ color: '#fff' }}>{id}</ListItemText>
             </ListItem>
             {children.map(({ id: childId, icon, active }) => (
-              <ListItem disablePadding key={childId} onClick = {() => {setHeader(childId)}}>
-                <Link to = {childId} onClick = {handleNavSelect}>
+              <ListItem disablePadding key={childId}>
+                <Link to = {childId}>
                   <ListItemButton selected={active} sx={item} >
                     <ListItemIcon>{icon}</ListItemIcon>
                     <ListItemText>{childId}</ListItemText>
