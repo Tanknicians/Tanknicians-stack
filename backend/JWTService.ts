@@ -4,15 +4,13 @@ import { randomBytes } from "crypto";
 import { Request, Response, NextFunction } from 'express';
 
 
+interface JwtPayload {
+  id: string;
+  email: string;
+  role: string;
+}
 
-/*
- * made some changes to this file.
- * not to sure what was going on with it.
- * kinda just seemed like copy and pasted code.
- * hopefully this is cleaner.
- */
-
-// simple function that creates a random Secret for JWT
+// simple function that creates a random Secret for JWT, not actively being used
 export function generateSecret(): string {
   return randomBytes(64).toString("hex");
 }
@@ -29,15 +27,43 @@ export function generateToken(user: User, secret: string): string {
   );
 }
 
-function verifyToken(token: string, secret: string) {
+// middleware for JWT auth
+export function authenticateJWT(role: String) {
+  
+  return function (req: Request, res: Response, next: NextFunction) {
+    const authHeader = req.headers.authorization;
+    if (!authHeader) {
+      return res.status(401).send({ message: "No token provided" });
+    }
+
+    const token = authHeader.split(" ")[1];
+    let jwtPayload: JwtPayload;
+    try {
+      if (process.env.JWT_SECRET == "") return res.status(401);
+      jwtPayload = verifyToken(token, process.env.JWT_SECRET || "");
+      res.locals.jwtPayload = jwtPayload;
+    } catch (error) {
+      return res.status(401).send({ message: "Invalid token" });
+    }
+
+    if (jwtPayload.role !== role) {
+      // Check if user has the correct role
+      return res.status(401).send({ message: "Unauthorized access" });
+    }
+    next();
+  };
+}
+
+function verifyToken(token: string, secret: string): JwtPayload {
   try {
-    return jwt.verify(token, secret);
+    return jwt.verify(token, secret) as JwtPayload;
+
   } catch (err) {
     throw err;
   }
 }
 
-
+/*
 // Middleware for authenticating JWT
 export const authenticateJWT = (req: Request, res: Response, next: NextFunction) => {
   const authHeader = req.headers.authorization;
@@ -56,3 +82,4 @@ export const authenticateJWT = (req: Request, res: Response, next: NextFunction)
     res.sendStatus(401);
   }
 };
+*/
