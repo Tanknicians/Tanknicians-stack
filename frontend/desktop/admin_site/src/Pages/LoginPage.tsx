@@ -40,7 +40,7 @@ export default function LoginPage() {
   // Hooks for API and Routing
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [login, { isLoading}] = useLoginMutation();
+  const [login, { isLoading }] = useLoginMutation();
 
   // Error states to be checked for incorrect input
   const [isEmailError, setIsEmailError] = useState(false);
@@ -101,20 +101,21 @@ export default function LoginPage() {
     try
     {
       const loginResponse = await login({email: user.email, password: user.password}).unwrap();
+      console.log(loginResponse);
 
       // User exists, Log in 
       dispatch(setCredentials({...loginResponse, user}))
       navigate('/dashboard/Managerial');    
     }
     // Login failed
-    catch (error)
+    catch (err)
     {
       setErrorMessage('Incorrect email or password.')
       setIsLoginError(true);
     }
   };
 
-  return (
+  const loginContent = isLoading ? <h1>Loading...</h1> : (
     <ThemeProvider theme={theme} >
       <Grid container component="main" sx={{ height: '100vh' }}>
         <CssBaseline />
@@ -233,4 +234,6 @@ export default function LoginPage() {
       </Grid>
     </ThemeProvider>
   );
+
+  return loginContent;
 }

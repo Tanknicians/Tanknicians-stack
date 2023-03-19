@@ -1,47 +1,56 @@
-import {User, PrismaClient} from "@prisma/client";
-const prisma = new PrismaClient()
+import { User, PrismaClient } from "@prisma/client";
+const prisma = new PrismaClient();
 
 // CREATE
 export async function createUser(user: User) {
-    await prisma.user.create({
-        data: user
-    })
+  await prisma.user.create(
+    {
+      // note: originally was set to {data: user} but throws an insane error if not created explicitly this way
+      data: {
+        email: user.email,
+        password: user.password,
+        role: user.role,
+        firstName: user.firstName,
+        middleName: user.middleName,
+        lastName: user.lastName,
+        address: user.address,
+        phone: user.phone
+      }
+    });
 }
 
 // READ
 export async function findUser(user: User) {
-    let findUser = await prisma.user.findUnique({
-        where: {
-            email: user.email
-        }
-    });
-    return findUser;
+  const findUser = await prisma.user.findUnique({
+    where: {
+      email: user.email,
+    },
+  });
+  return findUser;
 }
 
 export async function getAllUsers() {
-    return await prisma.user.findMany()
+  return await prisma.user.findMany();
 }
 
 // UPDATE
 export async function updateUser(user: User) {
-    await prisma.user.update({
-        where: {
-            id: user.id
-        },
-        data: user
-    })
+  await prisma.user.update({
+    where: {
+      id: user.id,
+    },
+    data: user,
+  });
 }
 
 // DELETE
 export async function deleteUser(user: User) {
-    await prisma.user.delete({
-        where: {
-            id: user.id
-        }
-    })
+  await prisma.user.delete({
+    where: {
+      id: user.id,
+    },
+  });
 }
-
-
 
 // currently unused functions
 /* 
@@ -51,7 +60,6 @@ export async function createCustomerLogin(login: Login, customer: Customer) {
             password: login.password,
             token: login.token,
             username: login.username,
-
             customer: {
                 connectOrCreate: {
                     where: {
@@ -71,14 +79,12 @@ export async function createCustomerLogin(login: Login, customer: Customer) {
         }
     })
 }
-
 export async function createEmployeeLogin(login: Login, employee: Employee) {
     await prisma.login.create({
         data: {
             password: login.password,
             token: login.token,
             username: login.username,
-
             employee: {
                 connectOrCreate: {
                     where: {
@@ -99,4 +105,4 @@ export async function createEmployeeLogin(login: Login, employee: Employee) {
 }
 */
 
-export * as userDB from './User'
+export * as userDB from "./User";

@@ -1,23 +1,29 @@
-// Import Express
-import express from 'express';
-// import the microservices
-import UserRouter from './UserService/UserRoutes';
-import DataRouter from './DataService/DataRoutes';
-
+import express from "express";
 import cors from "cors";
+
+import UserRouter from "./UserService/UserRoutes";
+/*
+import DataRouter from "./DataService/DataRoutes";
+*/
 
 // Initialize the express app
 const app: express.Application = express();
 
-app.use(cors());
+// allow for web-browser usage
+// Set up cors options
+const corsOptions = {
+  origin: "http://localhost:3000",
+  credentials: true
+}
+app.use(cors(corsOptions));
 
-// use the microservices
-app.use('/api/user', UserRouter)
-app.use('/api', DataRouter)
+// use the services and route them out
+app.use("/api/user", UserRouter);
+/*
+app.use("/api", DataRouter);
+*/
 
 // Server startup
 app.listen(process.env.PORT, () => {
-    console.log(
-        `TypeScript with Express http://localhost:${process.env.PORT}/`
-        );
+  console.log(`TypeScript with Express http://localhost:${process.env.PORT}/`);
 });
