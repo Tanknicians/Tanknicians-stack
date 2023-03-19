@@ -15,13 +15,12 @@ import InvertColorsOutlinedIcon from '@mui/icons-material/InvertColorsOutlined';
 import LoginImage1 from '../Assets/Images/LoginImage1.jpg'
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { setLogin } from '../Services';
-import { url } from '../Services';
-import axios from 'axios';
+import { useLoginMutation } from '../Services/authApiSlice';
 import { useState } from 'react';
 import InputAdornment from '@mui/material/InputAdornment';
 import IconButton from '@mui/material/IconButton';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
+import { setCredentials } from '../Services/authSlice';
 
 function Copyright(props: any) {
   return (
@@ -41,12 +40,18 @@ export default function LoginPage() {
   // Hooks for API and Routing
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [login, { isLoading}] = useLoginMutation();
 
   // Error states to be checked for incorrect input
   const [isEmailError, setIsEmailError] = useState(false);
   const [isEmailRequired, setIsEmailRequired] = useState(false);
   const [isPasswordError, setIsPasswordError] = useState(false);
   const [isPasswordRequired, setIsPasswordRequired] = useState(false);
+
+  // Error message
+  const errorColor = '#d32f2f';
+  const [errorMessage, setErrorMessage] = useState('');
+  const [isLoginError, setIsLoginError] = useState(false);
 
   // Allows errors to be cleared after user input
   const handleEmailChange = () => {
@@ -88,29 +93,25 @@ export default function LoginPage() {
       };
     
       // API call to login
-      login(user);
+      loginAttempt(user);
     }  
   };
   
-  const login = async (user: { email: string; password: string; }) => {
-    const loginResponse = await axios.post(`${url}/api/user/login`, user);
-    const loggedIn = loginResponse.data;
-
-    // User exists, Log in 
-    if(loggedIn)
+  const loginAttempt = async (user: { email: string; password: string; }) => {
+    try
     {
-      dispatch(setLogin({
-        token: loggedIn.token,
-      }))
-      navigate('/dashboard/Managerial');
-    }
+      const loginResponse = await login({email: user.email, password: user.password}).unwrap();
 
-    // FIXME: 
-    /* else
-    {
-      Display incorrect email or password
+      // User exists, Log in 
+      dispatch(setCredentials({...loginResponse, user}))
+      navigate('/dashboard/Managerial');    
     }
-    */
+    // Login failed
+    catch (error)
+    {
+      setErrorMessage('Incorrect email or password.')
+      setIsLoginError(true);
+    }
   };
 
   return (
@@ -159,13 +160,13 @@ export default function LoginPage() {
                 autoComplete="email"
                 autoFocus
                 onChange={handleEmailChange}
-                error={isEmailError}
+                error={isEmailError || isLoginError}
                 helperText={isEmailError ? 'Email is required*' : ''}
                 InputProps={{
-                  endAdornment: isEmailError && (
+                  endAdornment: (isEmailError || isLoginError) && (
                     <InputAdornment position="end">
-                      <IconButton edge="end">
-                        <ErrorOutlineIcon sx={{color: '#d32f2f'}}/>
+                      <IconButton edge="end" style={{pointerEvents: 'none'}}>
+                        <ErrorOutlineIcon sx={{color: errorColor}}/>
                       </IconButton>
                     </InputAdornment>
                   ),
@@ -181,13 +182,13 @@ export default function LoginPage() {
                 id="password"
                 autoComplete="current-password"
                 onChange={handlePasswordChange}
-                error={isPasswordError}
+                error={isPasswordError || isLoginError}
                 helperText={isPasswordError ? 'Password is required*' : ''}
                 InputProps={{
-                  endAdornment: isPasswordError && (
+                  endAdornment: (isPasswordError || isLoginError) && (
                     <InputAdornment position="end">
-                      <IconButton edge="end">
-                        <ErrorOutlineIcon sx={{color: '#d32f2f'}}/>
+                      <IconButton edge="end" style={{pointerEvents: 'none'}}>
+                        <ErrorOutlineIcon sx={{color: errorColor}}/>
                       </IconButton>
                     </InputAdornment>
                   ),
@@ -197,6 +198,11 @@ export default function LoginPage() {
                 control={<Checkbox value="remember" color="primary" />}
                 label="Remember me"
               />
+              <Typography
+                align='center'
+                style={{color: errorColor}}
+              > {errorMessage}
+              </Typography>
               <Button
                 type="submit"
                 fullWidth
