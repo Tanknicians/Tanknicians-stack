@@ -13,6 +13,7 @@ import Tabs from '@mui/material/Tabs';
 import Toolbar from '@mui/material/Toolbar';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
+import ServiceForms from './DashboardContent/ManagerialTabs/ServiceForms';
 
 const lightColor = 'rgba(255, 255, 255, 0.7)';
 
@@ -20,38 +21,40 @@ const headerOptions = [
   {
     id:"Managerial",
     children: [
-      {childId: "Man tab 1", active: true},
-      {childId: "Man tab 2", active:false},
-      {childId: "Man tab 3", active:false}
+      {childId: "ServiceForms", component: ServiceForms, active: true},
+      {childId: "Man tab 2", component: ServiceForms, active:false},
+      {childId: "Man tab 3", component: ServiceForms, active:false}
     ]
   },
   {
     id:"Database",
     children: [
-      {childId: "Dat tab 1", active: true},
-      {childId: "Dat tab 2", active:false},
-      {childId: "Dat tab 3", active:false}
+      {childId: "Dat tab 1", component: ServiceForms, active: true},
+      {childId: "Dat tab 2", component: ServiceForms, active:false},
+      {childId: "Dat tab 3", component: ServiceForms, active:false}
     ]
   },
   {
     id:"Analytics",
     children: [
-      {childId: "Anal tab 1", active: true},
-      {childId: "Anal tab 2", active:false},
-      {childId: "Anal tab 3", active:false}
+      {childId: "Anal tab 1", component: ServiceForms, active: true},
+      {childId: "Anal tab 2", component: ServiceForms, active:false},
+      {childId: "Anal tab 3", component: ServiceForms, active:false}
     ]
   }
 ]
 
 interface HeaderProps {
+  tabSelect: (input:React.FC) => void;
   selection: string;
   onDrawerToggle: () => void;
 }
 
-
 export default function Header(props: HeaderProps) {
-  const { selection, onDrawerToggle } = props;
-  const headerSettings = headerOptions.find(item => item.id ===selection)
+  // Pull selection and onDrawerToggle from props
+  const { tabSelect, selection, onDrawerToggle } = props;
+  // get the header settings that match the current
+  const headerSettings = headerOptions.find(item => item.id === selection)
    
   return (
     <React.Fragment>
@@ -111,8 +114,8 @@ export default function Header(props: HeaderProps) {
       </AppBar>
       <AppBar component="div" position="static" elevation={0} sx={{ zIndex: 0 }}>
         <Tabs value={0} textColor="inherit">
-          {headerSettings?.children.map(({childId, active}) => (
-            <Tab  label={childId} />
+          {headerSettings?.children.map(({childId, component, active}) => (
+            <Tab  label={childId} onClick={() => tabSelect(component)}/>
           ))}
         </Tabs>
       </AppBar>

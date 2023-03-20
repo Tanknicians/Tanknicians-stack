@@ -5,9 +5,6 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
 import Navigator from '../Components/DashBoardNavigator';
 import Content from '../Components/DashBoardContent';
-import Header from '../Components/DashboardHeader';
-import { useState } from 'react';
-
  
 let theme = createTheme({
   palette: {
@@ -154,20 +151,13 @@ theme = {
 
 const drawerWidth = 256;
 
-
-
 export default function Paperbase() {
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const isSmUp = useMediaQuery(theme.breakpoints.up('sm'));
 
-  const [ header, setHeader] = useState('Managerial')
-
-
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
-
-  console.log(typeof(handleDrawerToggle))
 
   return (
     <ThemeProvider theme={theme}>

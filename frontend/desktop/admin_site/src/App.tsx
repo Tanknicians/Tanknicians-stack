@@ -10,9 +10,9 @@ export default function App() {
         <Route path ='/' element={<LoginPage/>} />
 
         {/* protected routes */}
-        <Route element ={<RequireAuth />}>
+        {/* <Route element ={<RequireAuth />}> */}
           <Route path ='/dashboard/*' element={<DashboardPage/>} />
-        </Route>
+        {/* </Route> */}
 
       </Routes>
     </BrowserRouter>
