@@ -12,6 +12,7 @@ import DnsRoundedIcon from '@mui/icons-material/DnsRounded';
 import PermMediaOutlinedIcon from '@mui/icons-material/PhotoSizeSelectActual';
 
 // Main set of pages and sub-pages(called child tabs)
+// tablist.children.id represents both an ID and a URL adendum
 const tabList = [
   {
     id: 'Admin',

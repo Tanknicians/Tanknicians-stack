@@ -14,40 +14,43 @@ import Toolbar from '@mui/material/Toolbar';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import ServiceForms from './DashboardContent/ManagerialTabs/ServiceForms';
+import {useState} from 'react'
+import { type } from 'os';
 
 const lightColor = 'rgba(255, 255, 255, 0.7)';
 
+// ChildId acts as Label for tab
 const headerOptions = [
   {
     id:"Managerial",
     children: [
-      {childId: "ServiceForms", component: ServiceForms, active: true},
-      {childId: "Man tab 2", component: <h1>man tab 2</h1>, active:false},
-      {childId: "Man tab 3", component: <h1>man tab 3</h1>, active:false}
+      {childId: "ServiceForms", component: ServiceForms, active: 0},
+      {childId: "Man tab 2", component: <h1>man tab 2</h1>, active:1},
+      {childId: "Man tab 3", component: <h1>man tab 3</h1>, active:2}
     ]
   },
   {
     id:"Database",
     children: [
-      {childId: "Dat tab 1", component: <h1>Dat tab 1</h1>, active: true},
-      {childId: "Dat tab 2", component: <h1>Dat tab 2</h1>, active:false},
-      {childId: "Dat tab 3", component: <h1>Dat tab 3</h1>, active:false}
+      {childId: "Dat tab 1", component: <h1>Dat tab 1</h1>, active: 0},
+      {childId: "Dat tab 2", component: <h1>Dat tab 2</h1>, active:1},
+      {childId: "Dat tab 3", component: <h1>Dat tab 3</h1>, active:2}
     ]
   },
   {
     id:"Analytics",
     children: [
-      {childId: "Anal tab 1", component: <h1>Anal tab 1</h1>, active: true},
-      {childId: "Anal tab 2", component: <h1>Anal tab 2</h1>, active:false},
-      {childId: "Anal tab 3", component: <h1>Anal tab 3</h1>, active:false}
+      {childId: "Anal tab 1", component: <h1>Anal tab 1</h1>, active: 0},
+      {childId: "Anal tab 2", component: <h1>Anal tab 2</h1>, active:1},
+      {childId: "Anal tab 3", component: <h1>Anal tab 3</h1>, active:2}
     ]
   }
 ]
 
-interface HeaderProps {
-  tabSelect: any// (input:React.FC) => void | any;
-  selection: string;
-  onDrawerToggle: () => void;
+type HeaderProps = {
+  tabSelect: any, // (input:React.FC) => void | any; // any until
+  selection: string,
+  onDrawerToggle: () => void
 }
 
 export default function Header(props: HeaderProps) {
@@ -55,6 +58,15 @@ export default function Header(props: HeaderProps) {
   const { tabSelect, selection, onDrawerToggle } = props;
   // get the header settings that match the current
   const headerSettings = headerOptions.find(item => item.id === selection)
+
+  // State for tracking current active tab for STYLING
+  const [activeIndex, setActiveIndex] = useState(0)
+
+  // When clicking a tab, invoke this function to select the tab and change the styling to indicate active tab
+  const choseTab = (input: any, index: number) =>{
+    tabSelect(input)
+    setActiveIndex(index)
+  }
    
   return (
     <React.Fragment>
@@ -113,9 +125,9 @@ export default function Header(props: HeaderProps) {
         </Toolbar>
       </AppBar>
       <AppBar component="div" position="static" elevation={0} sx={{ zIndex: 0 }}>
-        <Tabs value={0} textColor="inherit">
+        <Tabs value={activeIndex} textColor="inherit">
           {headerSettings?.children.map(({childId, component, active}) => (
-            <Tab  label={childId} onClick={() => tabSelect(component)}/>
+            <Tab label={childId} onClick={() => choseTab(component, active)}/>
           ))}
         </Tabs>
       </AppBar>

@@ -115,7 +115,7 @@ export default function LoginPage() {
     }
   };
 
-  const loginContent = isLoading ? <h1>Loading...</h1> : (
+  return (
     <ThemeProvider theme={theme} >
       <Grid container component="main" sx={{ height: '100vh' }}>
         <CssBaseline />
@@ -235,5 +235,4 @@ export default function LoginPage() {
     </ThemeProvider>
   );
 
-  return loginContent;
 }

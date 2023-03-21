@@ -168,7 +168,7 @@ export default function Paperbase() {
           sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
         >
           {isSmUp ? null : (
-            <Navigator  PaperProps={{ style: { width: drawerWidth } }} variant="temporary" open={mobileOpen} onClose={handleDrawerToggle}/>
+            <Navigator PaperProps={{ style: { width: drawerWidth } }} variant="temporary" open={mobileOpen} onClose={handleDrawerToggle}/>
           )} 
           <Navigator PaperProps={{ style: { width: drawerWidth } }} sx={{ display: { sm: 'block', xs: 'none' } }}/>
           </Box>
