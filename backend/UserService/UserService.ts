@@ -31,17 +31,22 @@ export async function loginUserService(req: Request, res: Response) {
         if (isCompared) {
           console.log("Sending token.");
           // UPDATE: sends the user data as a generated token instead of a simple JSON
-          res.send(generateToken(user, "secret"));
+          res.status(200).send(
+            {
+              "token" : generateToken(user, "secret")
+            });
+          return;
         } else {
-          res.send("Invalid login");
+          res.status(401).send("Invalid login");
         }
       }
     } else {
+      res.status(401).send("Invalid login");
       throw console.error(`User with email: ${parsedUser.email} not found.`);
     }
   } catch (error) {
     console.log(error);
-    res.send(error);
+    res.status(401).send(error);
   }
 }
 

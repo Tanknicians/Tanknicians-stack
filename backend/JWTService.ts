@@ -67,8 +67,10 @@ function verifyToken(token: string, secret: string): JwtPayload {
 // Middleware for authenticating JWT
 export const authenticateJWT = (req: Request, res: Response, next: NextFunction) => {
   const authHeader = req.headers.authorization;
+
   if (authHeader) {
     const token = authHeader.split(' ')[1];
+
     jwt.verify(token, process.env.JWT_SECRET as string, (err, body) => {
       if (err) {
         return res.sendStatus(403);

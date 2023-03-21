@@ -6,6 +6,9 @@ import UserRouter from "./UserService/UserRoutes";
 import DataRouter from "./DataService/DataRoutes";
 */
 
+// read the required .env file 
+require('dotenv').config()
+
 // Initialize the express app
 const app: express.Application = express();
 

@@ -44,6 +44,8 @@ const baseQueryWithReauth: BaseQueryFn = async(args, api, extraOptions) => {
     return result;
 };
 
+// FIXME:
+// For refresh token API
 export const apiSlice = createApi({
     baseQuery: baseQueryWithReauth,
     endpoints: builder => ({})

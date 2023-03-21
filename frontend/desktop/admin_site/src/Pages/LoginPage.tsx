@@ -50,6 +50,7 @@ export default function LoginPage() {
 
   // Error message
   const errorColor = '#d32f2f';
+  // FIXME: Implement 1 state with an object
   const [errorMessage, setErrorMessage] = useState('');
   const [isLoginError, setIsLoginError] = useState(false);
 
@@ -101,7 +102,6 @@ export default function LoginPage() {
     try
     {
       const loginResponse = await login({email: user.email, password: user.password}).unwrap();
-      console.log(loginResponse);
 
       // User exists, Log in 
       dispatch(setCredentials({...loginResponse, user}))
@@ -166,7 +166,7 @@ export default function LoginPage() {
                 InputProps={{
                   endAdornment: (isEmailError || isLoginError) && (
                     <InputAdornment position="end">
-                      <IconButton edge="end" style={{pointerEvents: 'none'}}>
+                      <IconButton edge="end" style={{pointerEvents: 'none'}} tabIndex={parseInt('-1')}>
                         <ErrorOutlineIcon sx={{color: errorColor}}/>
                       </IconButton>
                     </InputAdornment>
@@ -188,7 +188,7 @@ export default function LoginPage() {
                 InputProps={{
                   endAdornment: (isPasswordError || isLoginError) && (
                     <InputAdornment position="end">
-                      <IconButton edge="end" style={{pointerEvents: 'none'}}>
+                      <IconButton edge="end" style={{pointerEvents: 'none'}} tabIndex={parseInt('-1')}>
                         <ErrorOutlineIcon sx={{color: errorColor}}/>
                       </IconButton>
                     </InputAdornment>

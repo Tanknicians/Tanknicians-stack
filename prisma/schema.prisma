@@ -14,9 +14,11 @@ datasource db {
 model User {
   id   Int     @id @default(autoincrement()) // DB id value for the table
   role String? // customer or employee or admin?
+
   // user authentication
   email    String  @unique
   password String?
+
   // user info
   firstName  String?
   middleName String?
@@ -35,14 +37,19 @@ model Form {
   approved Boolean  @default(false)
   created  DateTime @default(now())
   request  String?
+
   Customer   User @relation("Customers", fields: [customerId], references: [id])
   customerId Int
+
   Employee   User @relation("Employees", fields: [employeeId], references: [id])
   employeeId Int
+
   Parameters   Parameters @relation(fields: [parametersId], references: [id])
   parametersId Int        @unique
+
   Tank   Tank @relation(fields: [tankId], references: [id])
   tankId Int
+
   @@index([customerId])
   @@index([employeeId])
   @@index([parametersId])
@@ -54,11 +61,14 @@ model Tank {
   description String?
   size        Int? // gallons/liters of water
   type        String? // freshwater, brackish, saltwater, etc
+
   User   User @relation(fields: [userId], references: [id])
   userId Int
+
   Form       Form[]
   Parameters Parameters[]
   Pests      Pest[]
+
   @@index([userId])
 }
 
@@ -72,12 +82,16 @@ model Parameters {
   nitrites Float?
   oxygen   Float?
   salt     Float?
+
   Employee   User @relation(fields: [employeeId], references: [id])
   employeeId Int
+
   Tank   Tank @relation(fields: [tankId], references: [id])
   tankId Int
+
   // only one set of parameters per-form (one-to-one relationship)
   Form Form?
+
   @@index([employeeId])
   @@index([tankId])
 }
@@ -88,5 +102,6 @@ model Pest {
   description String?
   Tank   Tank @relation(fields: [tankId], references: [id])
   tankId Int
+
   @@index([tankId])
 }
