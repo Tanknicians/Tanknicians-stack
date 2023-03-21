@@ -10,12 +10,10 @@ export default function Database(props: DatabaseProps){
     
 
     const {handleDrawerToggle, ...other} = props
-    const [pageContent, setPageContent] = useState(<h1>DataBase Views</h1>)
+    const [pageContent, setPageContent] = useState(<h1>DataBase 1</h1>)
     const setPageContentHandler = (input: any) =>{
         setPageContent(input)
     }
-     
-
         
     return (
         <div>

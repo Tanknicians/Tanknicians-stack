@@ -22,30 +22,30 @@ const headerOptions = [
     id:"Managerial",
     children: [
       {childId: "ServiceForms", component: ServiceForms, active: true},
-      {childId: "Man tab 2", component: ServiceForms, active:false},
-      {childId: "Man tab 3", component: ServiceForms, active:false}
+      {childId: "Man tab 2", component: <h1>man tab 2</h1>, active:false},
+      {childId: "Man tab 3", component: <h1>man tab 3</h1>, active:false}
     ]
   },
   {
     id:"Database",
     children: [
-      {childId: "Dat tab 1", component: ServiceForms, active: true},
-      {childId: "Dat tab 2", component: ServiceForms, active:false},
-      {childId: "Dat tab 3", component: ServiceForms, active:false}
+      {childId: "Dat tab 1", component: <h1>Dat tab 1</h1>, active: true},
+      {childId: "Dat tab 2", component: <h1>Dat tab 2</h1>, active:false},
+      {childId: "Dat tab 3", component: <h1>Dat tab 3</h1>, active:false}
     ]
   },
   {
     id:"Analytics",
     children: [
-      {childId: "Anal tab 1", component: ServiceForms, active: true},
-      {childId: "Anal tab 2", component: ServiceForms, active:false},
-      {childId: "Anal tab 3", component: ServiceForms, active:false}
+      {childId: "Anal tab 1", component: <h1>Anal tab 1</h1>, active: true},
+      {childId: "Anal tab 2", component: <h1>Anal tab 2</h1>, active:false},
+      {childId: "Anal tab 3", component: <h1>Anal tab 3</h1>, active:false}
     ]
   }
 ]
 
 interface HeaderProps {
-  tabSelect: (input:React.FC) => void;
+  tabSelect: any// (input:React.FC) => void | any;
   selection: string;
   onDrawerToggle: () => void;
 }

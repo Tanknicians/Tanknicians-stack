@@ -9,7 +9,7 @@ interface AnalyticsProps {
 export default function Analytics(props: AnalyticsProps){
     
     const {handleDrawerToggle, ...other} = props
-    const [pageContent, setPageContent] = useState(<h1>hi</h1>)
+    const [pageContent, setPageContent] = useState(<h1>Analytics page 1</h1>)
     const setPageContentHandler = (input: any) =>{
         setPageContent(input)
     }

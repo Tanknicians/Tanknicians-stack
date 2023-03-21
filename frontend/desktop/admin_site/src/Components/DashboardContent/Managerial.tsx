@@ -10,8 +10,7 @@ interface ManagerialProps {
 export default function Managerial(props: ManagerialProps){
     
     const {handleDrawerToggle, ...other} = props
-
-    const [pageContent, setPageContent] = useState(<ServiceForms/>)
+    const [pageContent, setPageContent] = useState(ServiceForms)
     const setPageContentHandler = (input: any) =>{
         setPageContent(input)
     }
@@ -22,6 +21,5 @@ export default function Managerial(props: ManagerialProps){
             <Box sx={{ flex: 1, py: 6, px: 4, bgcolor: '#eaeff1' }}>
                 {pageContent}
             </Box>
-        </div>
-       
+        </div> 
 )};
