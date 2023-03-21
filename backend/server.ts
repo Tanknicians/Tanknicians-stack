@@ -13,7 +13,12 @@ require('dotenv').config()
 const app: express.Application = express();
 
 // allow for web-browser usage
-app.use(cors());
+// Set up cors options
+const corsOptions = {
+  origin: "http://localhost:3000",
+  credentials: true
+}
+app.use(cors(corsOptions));
 
 // use the services and route them out
 app.use("/api/user", UserRouter);
