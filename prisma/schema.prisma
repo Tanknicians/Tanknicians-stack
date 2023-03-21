@@ -25,7 +25,6 @@ model User {
   lastName   String?
   address    String?
   phone      Int?
-
   // prisma relations; not shown in database
   Customers  Form[]       @relation("Customers")
   Employees  Form[]       @relation("Employees")
@@ -78,7 +77,6 @@ model Tank {
 model Parameters {
   id       Int      @id @default(autoincrement())
   recorded DateTime @default(now())
-
   // possible parameter types
   nitrates Float?
   nitrites Float?
@@ -102,7 +100,6 @@ model Pest {
   id          Int     @id @default(autoincrement())
   species     String?
   description String?
-
   Tank   Tank @relation(fields: [tankId], references: [id])
   tankId Int
 

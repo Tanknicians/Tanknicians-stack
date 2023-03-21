@@ -60,7 +60,6 @@ export async function createCustomerLogin(login: Login, customer: Customer) {
             password: login.password,
             token: login.token,
             username: login.username,
-
             customer: {
                 connectOrCreate: {
                     where: {
@@ -80,14 +79,12 @@ export async function createCustomerLogin(login: Login, customer: Customer) {
         }
     })
 }
-
 export async function createEmployeeLogin(login: Login, employee: Employee) {
     await prisma.login.create({
         data: {
             password: login.password,
             token: login.token,
             username: login.username,
-
             employee: {
                 connectOrCreate: {
                     where: {
