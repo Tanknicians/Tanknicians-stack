@@ -5,6 +5,8 @@ import * as userDB from "../../prisma/db/User";
 import { compare, hash } from "bcrypt";
 import { generateToken } from "../JWTService";
 
+// needed for the JWT secret
+require('dotenv').config()
 
 export async function loginUserService(req: Request, res: Response) {
 
@@ -31,9 +33,10 @@ export async function loginUserService(req: Request, res: Response) {
         if (isCompared) {
           console.log("Sending token.");
           // UPDATE: sends the user data as a generated token instead of a simple JSON
+          const secret: string = process.env.JWT_SECRET || "";
           res.status(200).send(
             {
-              "token" : generateToken(user, "secret")
+              "token" : generateToken(user, secret)
             });
           return;
         } else {
