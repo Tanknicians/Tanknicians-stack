@@ -15,7 +15,7 @@ export async function login(req: Request, res: Response) {
     email: req.body.email,
     password: req.body.password,
     role: null,
-    personId: null
+    userId: null
   };
 
   try {
@@ -72,7 +72,7 @@ export async function register(req: Request, res: Response) {
     email: req.body.email,
     password: req.body.password,
     role: req.body.role,
-    personId: req.body.personId
+    userId: req.body.personId
   };
 
   // though a role is required, having a string helps more than "null"
