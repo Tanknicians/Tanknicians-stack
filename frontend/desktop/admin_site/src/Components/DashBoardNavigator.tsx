@@ -10,41 +10,13 @@ import { Link } from "react-router-dom";
 import PeopleIcon from '@mui/icons-material/People';
 import DnsRoundedIcon from '@mui/icons-material/DnsRounded';
 import PermMediaOutlinedIcon from '@mui/icons-material/PhotoSizeSelectActual';
-
-// Main set of pages and sub-pages(called child tabs)
-// tablist.children.id represents both an ID and a URL adendum
-const tabList = [
-  {
-    id: 'Admin',
-    children: [
-      { 
-        id: 'Managerial', 
-        icon: <PeopleIcon />,
-        active: true
-      },
-
-      { 
-        id: 'Database',
-        icon: <DnsRoundedIcon />,
-        active: false
-      },
-
-      { 
-        id: 'Analytics',
-        icon: <PermMediaOutlinedIcon />,
-        active: false
-      },
-    ]
-  }
-];  
-
-
+import { useState } from 'react' 
 
 const item = {
   py: '2px',
   px: 3,
   color: 'rgba(255, 255, 255, 0.7)',
-  '&:hover, &:focus': {
+  '&:hover': {
     bgcolor: 'rgba(255, 255, 255, 0.08)',
   },
 };
@@ -55,32 +27,59 @@ const itemCategory = {
   px: 3,
 };
 
-
 export default function Navigator( props: DrawerProps) {
-  const { ...other } = props;
   
+  // Admin features represents a list of panels that contain content.
+  // Our list has one panel, "Admin".
+  // Admin has three children, each with a text label, icon, and highlight state: active or not active.
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  const dashboardFeatures = [
+    {
+      // In the future, other listitems->children-> onclick functions should have arguments starting at 3 then 4 etc.
+      id: 'Admin',
+      children: [
+        { 
+          id: 'Managerial', 
+          icon: <PeopleIcon />,
+          onClick: () => { setActiveIndex(0) }
+        },
+        { 
+          id: 'Database',
+          icon: <DnsRoundedIcon />,
+          onClick: () => { setActiveIndex(1) }
+        },
+        { 
+          id: 'Analytics',
+          icon: <PermMediaOutlinedIcon />,
+          onClick: () => { setActiveIndex(2) }
+        },
+      ]
+    }
+  ];
+
   return (
-    <Drawer variant="permanent" {...other}>
+    <Drawer variant="permanent" {...props}>
       <List disablePadding>
         <ListItem sx={{ ...item, ...itemCategory, fontSize: 22, color: '#fff' }}>
           Tanknicians
         </ListItem>
-        {tabList.map(({ id, children }) => (
+        {dashboardFeatures.map(({ id, children }) => (
           <Box key={id} sx={{ bgcolor: '#101F33' }}>
             <ListItem sx={{ py: 2, px: 3 }}>
               <ListItemText sx={{ color: '#fff' }}>{id}</ListItemText>
             </ListItem>
-            {children.map(({ id: childId, icon, active }) => (
-              <ListItem disablePadding key={childId}>
-                <Link to = {childId}>
-                  <ListItemButton selected={active} sx={item} >
+            {children.map(({ id: childId, icon, onClick }, index) => (
+              <ListItem disablePadding key={childId} >
+                <Link to = {childId} style = {{textDecoration: 'none', minWidth: '100%'}}>
+                  {/* onclick, set state "activeIndex" to whichever Feature is currently selected*/}
+                  {/* If curr map index is equal to the state "activeIndex", set selected to true, else set to false */}
+                  <ListItemButton selected={index === activeIndex} sx={item} onClick={onClick}>
                     <ListItemIcon>{icon}</ListItemIcon>
-                    <ListItemText>{childId}</ListItemText>
+                    <ListItemText >{childId}</ListItemText>
                   </ListItemButton>
                 </Link>
               </ListItem>
-            
-              
             ))}
             <Divider sx={{ mt: 2 }} />
           </Box>
