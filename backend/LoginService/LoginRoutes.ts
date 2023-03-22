@@ -8,8 +8,8 @@ const LoginRouter = express.Router();
 // REQUIRED TO INTERPRET JSON FROM HTTP REQUEST BODY
 LoginRouter.use(express.json());
 
-// returns Login's token on successful login
-LoginRouter.post("/login", async (req: Request, res: Response) => {
+// returns Login's token on success
+LoginRouter.post("/", async (req: Request, res: Response) => {
   console.log("Login.Login invoked.");
   await loginLoginService(req, res);
 });
