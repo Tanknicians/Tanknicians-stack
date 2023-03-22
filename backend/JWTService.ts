@@ -1,8 +1,7 @@
-import { User } from "@prisma/client";
+import { Login } from "@prisma/client";
 import * as jwt from "jsonwebtoken";
 import { randomBytes } from "crypto";
 import { Request, Response, NextFunction } from 'express';
-
 
 interface JwtPayload {
   id: string;
@@ -16,12 +15,12 @@ export function generateSecret(): string {
 }
 
 // signs a token with a given secret
-export function generateToken(user: User, secret: string): string {
+export function generateToken(login: Login, secret: string): string {
   // TODO: use or remove json
-  // const json: string = JSON.stringify(user);
+  // const json: string = JSON.stringify(login);
   return jwt.sign(
     {
-      data: user,
+      data: login,
     },
     secret
   );
@@ -47,7 +46,7 @@ export function authenticateJWT(role: String) {
     }
 
     if (jwtPayload.role !== role) {
-      // Check if user has the correct role
+      // Check if login has the correct role
       return res.status(401).send({ message: "Unauthorized access" });
     }
     next();
@@ -57,29 +56,8 @@ export function authenticateJWT(role: String) {
 function verifyToken(token: string, secret: string): JwtPayload {
   try {
     return jwt.verify(token, secret) as JwtPayload;
-
-  } catch (err) {
-    throw err;
+  } catch (error) {
+    console.log(error)
+    throw error;
   }
 }
-
-/*
-// Middleware for authenticating JWT
-export const authenticateJWT = (req: Request, res: Response, next: NextFunction) => {
-  const authHeader = req.headers.authorization;
-
-  if (authHeader) {
-    const token = authHeader.split(' ')[1];
-
-    jwt.verify(token, process.env.JWT_SECRET as string, (err, body) => {
-      if (err) {
-        return res.sendStatus(403);
-      }
-      req.body = body;
-      next();
-    });
-  } else {
-    res.sendStatus(401);
-  }
-};
-*/

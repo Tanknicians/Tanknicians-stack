@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 
-import UserRouter from "./UserService/UserRoutes";
+import LoginRouter from "./LoginService/LoginRoutes";
 /*
 import DataRouter from "./DataService/DataRoutes";
 */
@@ -21,7 +21,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 // use the services and route them out
-app.use("/api/user", UserRouter);
+app.use("/api/login", LoginRouter);
 /*
 app.use("/api", DataRouter);
 */
