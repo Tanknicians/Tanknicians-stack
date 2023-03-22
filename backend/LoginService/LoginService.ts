@@ -1,7 +1,7 @@
 // in here we may or may not use axios
 import { Login } from "@prisma/client";
 import { Request, Response } from "express";
-import * as LoginDB from "../../prisma/db/Login";
+import * as loginDB from "../../prisma/db/Login";
 import { compare, hash } from "bcrypt";
 import { generateToken } from "../JWTService";
 
@@ -20,7 +20,7 @@ export async function login(req: Request, res: Response) {
 
   try {
     // using PRISMA db function
-    const login = await LoginDB.findLogin(parsedLogin);
+    const login = await loginDB.find(parsedLogin);
     if (login != null) {
       console.log(`login found: ${login.email}`);
       // required to make sure the Promises are not null
@@ -53,7 +53,7 @@ export async function find(req: Request, res: Response) {
   const { email } = req.body;
   try {
     // using PRISMA db function
-    const login = await LoginDB.findLogin(email);
+    const login = await loginDB.find(email);
     if (login != null) {
       res.send(login);
     } else {
@@ -90,7 +90,7 @@ export async function register(req: Request, res: Response) {
   }
 
   try {
-    LoginDB.createLogin(parsedLogin);
+    loginDB.create(parsedLogin);
   } catch (error) {
     res.send(error);
   }
