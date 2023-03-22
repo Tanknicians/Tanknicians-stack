@@ -1,10 +1,7 @@
 import express from "express";
 import cors from "cors";
 
-import UserRouter from "./UserService/UserRoutes";
-/*
-import DataRouter from "./DataService/DataRoutes";
-*/
+import LoginRouter from "./LoginService/LoginRoutes";
 
 // read the required .env file 
 require('dotenv').config()
@@ -12,19 +9,17 @@ require('dotenv').config()
 // Initialize the express app
 const app: express.Application = express();
 
-// allow for web-browser usage
 // Set up cors options
 const corsOptions = {
   origin: "http://localhost:3000",
   credentials: true
 }
+
+// allow for web-browser usage
 app.use(cors(corsOptions));
 
 // use the services and route them out
-app.use("/api/user", UserRouter);
-/*
-app.use("/api", DataRouter);
-*/
+app.use("/api/login", LoginRouter);
 
 // Server startup
 app.listen(process.env.PORT, () => {

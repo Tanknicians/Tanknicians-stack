@@ -11,97 +11,107 @@ datasource db {
   relationMode = "prisma"
 }
 
-model User {
-  id   Int     @id @default(autoincrement()) // DB id value for the table
-  role String? // customer or employee or admin?
+enum Role {
+  ADMIN
+  CUSTOMER
+  EMPLOYEE
+}
 
-  // user authentication
-  email    String  @unique
+enum TankType {
+  FRESH
+  SALT
+  BRACKISH
+}
+
+model Login {
+  id   Int   @id @default(autoincrement())
+  role Role? // ADMIN, CUSTOMER, EMPLOYEE
+
+  email    String? @unique
   password String?
 
-  // user info
-  firstName  String?
-  middleName String?
-  lastName   String?
-  address    String?
-  phone      Int?
-  // prisma relations; not shown in database
-  Customers  Form[]       @relation("Customers")
-  Employees  Form[]       @relation("Employees")
-  Parameters Parameters[]
-  Tanks      Tank[]
-}
-
-model Form {
-  id       Int      @id @default(autoincrement())
-  approved Boolean  @default(false)
-  created  DateTime @default(now())
-  request  String?
-
-  Customer   User @relation("Customers", fields: [customerId], references: [id])
-  customerId Int
-
-  Employee   User @relation("Employees", fields: [employeeId], references: [id])
-  employeeId Int
-
-  Parameters   Parameters @relation(fields: [parametersId], references: [id])
-  parametersId Int        @unique
-
-  Tank   Tank @relation(fields: [tankId], references: [id])
-  tankId Int
-
-  @@index([customerId])
-  @@index([employeeId])
-  @@index([parametersId])
-  @@index([tankId])
-}
-
-model Tank {
-  id          Int     @id @default(autoincrement())
-  description String?
-  size        Int? // gallons/liters of water
-  type        String? // freshwater, brackish, saltwater, etc
-
-  User   User @relation(fields: [userId], references: [id])
-  userId Int
-
-  Form       Form[]
-  Parameters Parameters[]
-  Pests      Pest[]
+  User   User? @relation(fields: [userId], references: [id])
+  userId Int?
 
   @@index([userId])
 }
 
-// update this model with the bunch of different single-tank recording of parameters
-// the point of this is to mimic what parameters a tanknician may log on paper 
-model Parameters {
-  id       Int      @id @default(autoincrement())
-  recorded DateTime @default(now())
-  // possible parameter types
-  nitrates Float?
-  nitrites Float?
-  oxygen   Float?
-  salt     Float?
+model User {
+  id Int @id @default(autoincrement())
 
+  firstName  String?
+  middleName String?
+  lastName   String?
+  address    String?
+  phone      String?
+
+  // normally one-to-one relationship, but is entirely possible for one User to have multiple logins
+  login Login[]
+
+  EmployeeServiceCalls ServiceCall[]
+  OwnedTanks           TankMetadata[]
+}
+
+model ServiceCall {
+  id Int @id @default(autoincrement())
+
+  isApproved Boolean  @default(false) // for admin to approve the ServiceCall
+  createdOn  DateTime @default(now())
+
+  billed          Boolean?
+  customerRequest String?
+
+  alkalinity Float?
+  calcium    Float?
+  nitrate    Float?
+  phosphate  Float?
+
+  ATOOperational                 Boolean?
+  ATOResevoirFilled              Boolean?
+  chemFilterAdjusted             Boolean?
+  doserAdjustementOrManualDosing Boolean?
+  dosingReservoirsFull           Boolean?
+  floorsCheckedForSpillsOrDirt   Boolean?
+  glassCleanedInside             Boolean?
+  glassCleanedOutside            Boolean?
+  mechFilterChanged              Boolean?
+  notesUpdated                   Boolean?
+  pumpsClearedOfDebris           Boolean?
+  saltCreepCleaned               Boolean?
+  skimmerCleanedAndOperational   Boolean?
+  waterChanged                   Boolean?
+
+  pestAPresent Boolean?
+  pestBPresent Boolean?
+  pestCPresent Boolean?
+  pestDPresent Boolean?
+
+  // who created the ServiceCall (a sort of employee signature)
   Employee   User @relation(fields: [employeeId], references: [id])
   employeeId Int
 
-  Tank   Tank @relation(fields: [tankId], references: [id])
-  tankId Int
-
-  // only one set of parameters per-form (one-to-one relationship)
-  Form Form?
+  // which tank it is for (which will also link to the customer)
+  TankMetadata TankMetadata @relation(fields: [tankId], references: [id])
+  tankId       Int
 
   @@index([employeeId])
   @@index([tankId])
 }
 
-model Pest {
+model TankMetadata {
   id          Int     @id @default(autoincrement())
-  species     String?
   description String?
-  Tank   Tank @relation(fields: [tankId], references: [id])
-  tankId Int
+  volume      Int? // gallons/liters of water
+  type        TankType? 
 
-  @@index([tankId])
+  tanknicianSourcedOnly Boolean?
+  lastDateServiced      DateTime?
+
+  // Who owns the tank
+  Customer     User        @relation(fields: [customerId], references: [id])
+  customerId   Int
+  // the tank's recorded ServiceCalls
+  ServiceCalls ServiceCall[]
+
+  @@index([customerId])
 }
