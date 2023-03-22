@@ -17,6 +17,12 @@ enum Role {
   EMPLOYEE
 }
 
+enum TankType {
+  FRESH
+  SALT
+  BRACKISH
+}
+
 model Login {
   id   Int   @id @default(autoincrement())
   role Role? // ADMIN, CUSTOMER, EMPLOYEE
@@ -96,7 +102,7 @@ model TankMetadata {
   id          Int     @id @default(autoincrement())
   description String?
   volume      Int? // gallons/liters of water
-  type        String? // freshwater, brackish, saltwater, etc
+  type        TankType? 
 
   tanknicianSourcedOnly Boolean?
   lastDateServiced      DateTime?
