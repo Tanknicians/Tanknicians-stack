@@ -24,13 +24,13 @@ model Login {
   email    String? @unique
   password String?
 
-  person   Person? @relation(fields: [personId], references: [id])
-  personId Int?
+  User   User? @relation(fields: [userId], references: [id])
+  userId Int?
 
-  @@index([personId])
+  @@index([userId])
 }
 
-model Person {
+model User {
   id Int @id @default(autoincrement())
 
   firstName  String?
@@ -39,7 +39,7 @@ model Person {
   address    String?
   phone      String?
 
-  // normally one-to-one relationship, but is entirely possible for one person to have multiple logins
+  // normally one-to-one relationship, but is entirely possible for one User to have multiple logins
   login Login[]
 
   EmployeeServiceCalls ServiceCall[]
@@ -81,7 +81,7 @@ model ServiceCall {
   pestDPresent Boolean?
 
   // who created the ServiceCall (a sort of employee signature)
-  Employee   Person @relation(fields: [employeeId], references: [id])
+  Employee   User @relation(fields: [employeeId], references: [id])
   employeeId Int
 
   // which tank it is for (which will also link to the customer)
@@ -102,7 +102,7 @@ model TankMetadata {
   lastDateServiced      DateTime?
 
   // Who owns the tank
-  Customer     Person        @relation(fields: [customerId], references: [id])
+  Customer     User        @relation(fields: [customerId], references: [id])
   customerId   Int
   // the tank's recorded ServiceCalls
   ServiceCalls ServiceCall[]
