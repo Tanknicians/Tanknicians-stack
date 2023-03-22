@@ -10,12 +10,12 @@ LoginRouter.use(express.json());
 
 // returns Login's token on success
 LoginRouter.post("/", async (req: Request, res: Response) => {
-  console.log("Login.Login invoked.");
+  console.log("Login invoked.");
   await loginService.login(req, res);
 });
 
 LoginRouter.post("/find", async (req: Request, res: Response) => {
-  console.log("Login.Find invoked.");
+  console.log("Login.find invoked.");
   await loginService.find(req, res);
 });
 
