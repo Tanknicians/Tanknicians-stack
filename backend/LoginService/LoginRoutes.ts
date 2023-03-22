@@ -1,7 +1,7 @@
 // required imports: Express and Prisma Database
 import express, { Request, Response } from "express";
 import { authenticateJWT } from "../JWTService";
-import { findLoginService, loginLoginService } from "./LoginService";
+import * as loginService from "./LoginService";
 
 const LoginRouter = express.Router();
 
@@ -11,12 +11,12 @@ LoginRouter.use(express.json());
 // returns Login's token on success
 LoginRouter.post("/", async (req: Request, res: Response) => {
   console.log("Login.Login invoked.");
-  await loginLoginService(req, res);
+  await loginService.login(req, res);
 });
 
 LoginRouter.post("/find", async (req: Request, res: Response) => {
   console.log("Login.Find invoked.");
-  await findLoginService(req, res);
+  await loginService.find(req, res);
 });
 
 LoginRouter.post("/admin", authenticateJWT("admin"), async(req: Request, res: Response) => {

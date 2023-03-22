@@ -8,7 +8,7 @@ import { generateToken } from "../JWTService";
 // needed for the JWT secret
 require('dotenv').config()
 
-export async function loginLoginService(req: Request, res: Response) {
+export async function login(req: Request, res: Response) {
 
   const parsedLogin: Login = {
     id: 0,
@@ -49,7 +49,7 @@ export async function loginLoginService(req: Request, res: Response) {
   }
 }
 
-export async function findLoginService(req: Request, res: Response) {
+export async function find(req: Request, res: Response) {
   const { email } = req.body;
   try {
     // using PRISMA db function
@@ -65,7 +65,7 @@ export async function findLoginService(req: Request, res: Response) {
 }
 
 // this should be a private function that cannot be used by a front-end until future expansion
-export async function registerLoginService(req: Request, res: Response) {
+export async function register(req: Request, res: Response) {
 
   let parsedLogin: Login = {
     id: 0,
