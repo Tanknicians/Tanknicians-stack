@@ -1,0 +1,117 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+enum Role {
+  ADMIN
+  CUSTOMER
+  EMPLOYEE
+}
+
+enum TankType {
+  FRESH
+  SALT
+  BRACKISH
+}
+
+model Login {
+  id   Int   @id @default(autoincrement())
+  role Role? // ADMIN, CUSTOMER, EMPLOYEE
+
+  email    String? @unique
+  password String?
+
+  User   User? @relation(fields: [userId], references: [id])
+  userId Int?
+
+  @@index([userId])
+}
+
+model User {
+  id Int @id @default(autoincrement())
+
+  firstName  String?
+  middleName String?
+  lastName   String?
+  address    String?
+  phone      String?
+
+  // normally one-to-one relationship, but is entirely possible for one User to have multiple logins
+  login Login[]
+
+  EmployeeServiceCalls ServiceCall[]
+  OwnedTanks           TankMetadata[]
+}
+
+model ServiceCall {
+  id Int @id @default(autoincrement())
+
+  isApproved Boolean  @default(false) // for admin to approve the ServiceCall
+  createdOn  DateTime @default(now())
+
+  billed          Boolean?
+  customerRequest String?
+
+  alkalinity Float?
+  calcium    Float?
+  nitrate    Float?
+  phosphate  Float?
+
+  ATOOperational                 Boolean?
+  ATOResevoirFilled              Boolean?
+  chemFilterAdjusted             Boolean?
+  doserAdjustementOrManualDosing Boolean?
+  dosingReservoirsFull           Boolean?
+  floorsCheckedForSpillsOrDirt   Boolean?
+  glassCleanedInside             Boolean?
+  glassCleanedOutside            Boolean?
+  mechFilterChanged              Boolean?
+  notesUpdated                   Boolean?
+  pumpsClearedOfDebris           Boolean?
+  saltCreepCleaned               Boolean?
+  skimmerCleanedAndOperational   Boolean?
+  waterChanged                   Boolean?
+
+  pestAPresent Boolean?
+  pestBPresent Boolean?
+  pestCPresent Boolean?
+  pestDPresent Boolean?
+
+  // who created the ServiceCall (a sort of employee signature)
+  Employee   User @relation(fields: [employeeId], references: [id])
+  employeeId Int
+
+  // which tank it is for (which will also link to the customer)
+  TankMetadata TankMetadata @relation(fields: [tankId], references: [id])
+  tankId       Int
+
+  @@index([employeeId])
+  @@index([tankId])
+}
+
+model TankMetadata {
+  id          Int     @id @default(autoincrement())
+  description String?
+  volume      Int? // gallons/liters of water
+  type        TankType? 
+
+  tanknicianSourcedOnly Boolean?
+  lastDateServiced      DateTime?
+
+  // Who owns the tank
+  Customer     User        @relation(fields: [customerId], references: [id])
+  customerId   Int
+  // the tank's recorded ServiceCalls
+  ServiceCalls ServiceCall[]
+
+  @@index([customerId])
+}
