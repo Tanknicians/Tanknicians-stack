@@ -1,7 +1,7 @@
 // in here we may or may not use axios
 import * as Prisma from "@prisma/client";
 import { Request, Response } from "express";
-import * as LoginDB from "../../../prisma/db/Login";
+import * as LoginDB from "../../prisma/db/Login";
 import * as bcrypt from "bcrypt";
 import * as TokenGenerator from "../TokenGenerator";
 
