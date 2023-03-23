@@ -15,16 +15,11 @@ export async function create(login: Login) {
 
 // READ
 export async function find(login: Login) {
-  if (login.email === null) return;
-  try {
     return await prisma.login.findUnique({
       where: {
-        email: login.email,
+        email: JSON.parse(login.email as string),
       },
     });
-  } catch (error) {
-    console.log(error);
-  }
 }
 
 export async function getAll() {
@@ -42,7 +37,8 @@ export async function update(login: Login) {
 }
 
 // DELETE
-export async function deleteItem(login: Login) {
+// Convention broken because reserved word
+export async function deleteLogin(login: Login) {
   await prisma.login.delete({
     where: {
       id: login.id,
