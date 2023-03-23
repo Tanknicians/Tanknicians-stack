@@ -4,22 +4,17 @@ import { Request, Response } from "express";
 import * as LoginDB from "../../prisma/db/Login";
 import * as bcrypt from "bcrypt";
 import * as TokenGenerator from "../TokenGenerator";
+import { TRPCError } from "@trpc/server";
 
-export async function login(req: Request, res: Response) {
+export async function login(email: string, password: string) {
   // Construct user login model for Prisma
-  const userLogin: Prisma.Login = {
+  const userLogin = {
     id: 0,
-    email: req.body.email,
-    password: req.body.password,
+    email: email,
+    password: password,
     role: null,
     userId: null,
   };
-
-  // Check that user completed credentials
-  if (userLogin.email == null || userLogin.password == null) {
-    console.error("Email or pw is nullish");
-    return res.status(401).send("Invalid login");
-  }
 
   // Retrieve user saved credentials based on username/email
   const savedCredentials = await LoginDB.find(userLogin);
@@ -27,41 +22,47 @@ export async function login(req: Request, res: Response) {
   // Confirm user credentials existed in full in DB
   if (!savedCredentials) {
     console.error(`Login with email: ${userLogin.email} not found.`);
-    return res.status(401).send("No record found for given credentials");
+    throw new TRPCError({
+      code: "UNAUTHORIZED",
+      message: "No record found for given credentials",
+    });
   }
   if (!(savedCredentials.email && savedCredentials.password)) {
     console.error("record email or pw is nullish");
-    return res.status(401).send("User record incomplete");
+    throw new TRPCError({
+      code: "UNAUTHORIZED",
+      message: "User record incomplete",
+    });
   }
 
   console.log(`login found for ${userLogin.email}`);
 
-  let token: string;
   bcrypt.compare(
     userLogin.password,
     savedCredentials.password,
-    function (err, result) {
+    function(err, result) {
       if (err) {
         console.error(err);
-        return res.status(401).send(err);
+        throw new TRPCError({ code: "UNAUTHORIZED", cause: err });
       }
       if (!result) {
         // response is OutgoingMessage object that server response http request
-        return res.json({ success: false, message: "passwords do not match" });
+        throw new TRPCError({ code: "CONFLICT", message: "passwords do not match" });
       }
 
-      console.log("Generating token.");
-
-      // UPDATE: sends the login data as a generated token instead of a simple JSON
-      token = TokenGenerator.generateJWT(savedCredentials);
-      if (!token) {
-        return res.status(401).send("Could not generate token");
-      }
-      return res.status(200).json({
-        token: token,
-      });
-    }
+    },
   );
+
+  console.log("Generating token.");
+
+  // UPDATE: sends the login data as a generated token instead of a simple JSON
+  const token = TokenGenerator.generateJWT(savedCredentials);
+  if (!token) {
+    throw new TRPCError({ code: "UNAUTHORIZED", message: "Could not generate token" });
+  }
+  return {
+    token: token,
+  };
 }
 
 export async function find(req: Request, res: Response) {
