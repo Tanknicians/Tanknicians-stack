@@ -1,25 +1,27 @@
+// Files names of images to be randomly chosen in LoginPage
+
 const loginRandomImages = [
     
-    require('../Assets/Images/animateOcean1.jpg'),
-    require('../Assets/Images/animateOcean2.jpg'),
-    require('../Assets/Images/animateOcean3.jpg'),
-    require('../Assets/Images/bubbles.jpg'),
-    require('../Assets/Images/clownFish1.jpg'),
-    require('../Assets/Images/coral1.jpg'),
-    require('../Assets/Images/coral2.jpg'),
-    require('../Assets/Images/coral3.jpg'),
-    require('../Assets/Images/coralDrawing.jpg'),
-    require('../Assets/Images/fish1.jpg'),
-    require('../Assets/Images/fish2.jpg'),
-    require('../Assets/Images/fish3.jpg'),
-    require('../Assets/Images/jellyfish.jpg'),
-    require('../Assets/Images/shore1.jpg'),
-    require('../Assets/Images/shore2.jpg'),
-    require('../Assets/Images/tropicalFish1.jpg'),
-    require('../Assets/Images/wave1.jpg'),
-    require('../Assets/Images/wave2.jpg'),
-    require('../Assets/Images/wave3.jpg'),
-    require('../Assets/Images/wave4.jpg'),
-    require('../Assets/Images/whaleShark.jpg')
+    'animateOcean1.jpg',
+    'animateOcean2.jpg',
+    'animateOcean3.jpg',
+    'bubbles.jpg',
+    'clownFish1.jpg',
+    'coral1.jpg',
+    'coral2.jpg',
+    'coral3.jpg',
+    'coralDrawing.jpg',
+    'fish1.jpg',
+    'fish2.jpg',
+    'fish3.jpg',
+    'jellyfish.jpg',
+    'shore1.jpg',
+    'shore2.jpg',
+    'tropicalFish1.jpg',
+    'wave1.jpg',
+    'wave2.jpg',
+    'wave3.jpg',
+    'wave4.jpg',
+    'whaleShark.jpg'
 ];
 export default loginRandomImages;

@@ -12,7 +12,6 @@ import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Avatar } from '@mui/material';
 import InvertColorsOutlinedIcon from '@mui/icons-material/InvertColorsOutlined';
-import LoginImages from '../Components/LoginPageRandomImage'
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { useLoginMutation } from '../Services/authApiSlice';
@@ -21,6 +20,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 import IconButton from '@mui/material/IconButton';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import { setCredentials } from '../Services/authSlice';
+import loginRandomImages from '../Components/LoginPageRandomImage';
 
 function Copyright(props: any) {
   return (
@@ -34,10 +34,12 @@ function Copyright(props: any) {
   );
 }
 
+// Styling for 
 const theme = createTheme();
 
 // For random images to display 
-const randomImage = LoginImages[Math.floor(Math.random() * (LoginImages.length - 1))];
+const randomImagePath = loginRandomImages[Math.floor(Math.random() * loginRandomImages.length)];
+const randomImage = require(`../Assets/Images/${randomImagePath}`);
 
 export default function LoginPage() {
   // Hooks for API and Routing
