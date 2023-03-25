@@ -15,7 +15,7 @@ export function generateSecret(): string {
 }
 
 // Signs a token with a secret
-export function generateJWT(login: Login, secret: string): string {
+export function generateJWT(login: Login, secret?: string): string {
   if (!secret) {
     throw new Error("JWT_SECRET is undefined");
   }
@@ -31,7 +31,7 @@ export function generateJWT(login: Login, secret: string): string {
 }
 
 // middleware for JWT auth
-export function authenticateJWT(role: String, secret: string) {
+export function authenticateJWT(role: String, secret?: string) {
   return function (req: Request, res: Response, next: NextFunction) {
     const authHeader = req.headers.authorization;
     if (!authHeader) {

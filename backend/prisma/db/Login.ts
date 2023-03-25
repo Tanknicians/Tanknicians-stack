@@ -17,7 +17,7 @@ export async function create(login: Login) {
 export async function find(login: Login) {
     return await prisma.login.findUnique({
       where: {
-        email: login.email as string,
+        email: String(login.email),
       },
     });
 }
