@@ -36,7 +36,6 @@ export async function login(req: Request, res: Response) {
 
   console.log(`login found for ${userLogin.email}`);
 
-  let token: string;
   bcrypt.compare(
     userLogin.password,
     savedCredentials.password,
@@ -51,11 +50,17 @@ export async function login(req: Request, res: Response) {
       }
 
       console.log("Generating token.");
-
-      // UPDATE: sends the login data as a generated token instead of a simple JSON
-      token = TokenGenerator.generateJWT(savedCredentials);
-      if (!token) {
-        return res.status(401).send("Could not generate token");
+      
+      let token;
+      try {
+        // UPDATE: sends the login data as a generated token instead of a simple JSON
+        token = TokenGenerator.generateJWT(
+            savedCredentials,
+            process.env.JWT_SECRET,
+        );
+      } catch(err) {
+        console.error(err);
+        return res.status(401).send('Cannot generate token for session');
       }
       return res.status(200).json({
         token: token,

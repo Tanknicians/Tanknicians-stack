@@ -1,12 +1,11 @@
 import express from "express";
 import cors from "cors";
-
 import LoginRouter from "./LoginService/LoginRoutes";
 
 // read the required .env file
 require("dotenv").config();
 
-// Initialize the express app
+// Init app
 const app: express.Application = express();
 
 // Set up cors options
@@ -15,10 +14,10 @@ const corsOptions = {
   credentials: true,
 };
 
-// allow for web-browser usage
+// Allow for web-browser usage
 app.use(cors(corsOptions));
 
-// use the services and route them out
+// Routes
 app.use("/api/login", LoginRouter);
 
 // Server startup
