@@ -3,30 +3,27 @@ import * as jwt from "jsonwebtoken";
 import { randomBytes } from "crypto";
 import { Request, Response, NextFunction } from "express";
 
-// needed for the JWT secret
-require("dotenv").config();
-
 interface JwtPayload {
   id: string;
   email: string;
   role: string;
 }
 
-// simple function that creates a random Secret for JWT, not actively being used
+// Generates 256bit hex string for jwt secret
 export function generateSecret(): string {
-  return randomBytes(64).toString("hex");
+  return randomBytes(42).toString("hex");
 }
 
-// signs a token with a given secret
-export function generateJWT(login: Login): string {
-  if (!process.env.JWT_SECRET) {
+// Signs a token with a secret
+export function generateJWT(login: Login, secret: string): string {
+  if (!secret) {
     throw new Error("JWT_SECRET is undefined");
   }
   return jwt.sign(
     {
       data: login,
     },
-    process.env.JWT_SECRET,
+    secret,
     {
       expiresIn: "24h",
     },
@@ -34,7 +31,7 @@ export function generateJWT(login: Login): string {
 }
 
 // middleware for JWT auth
-export function authenticateJWT(role: String) {
+export function authenticateJWT(role: String, secret: string) {
   return function (req: Request, res: Response, next: NextFunction) {
     const authHeader = req.headers.authorization;
     if (!authHeader) {
@@ -44,8 +41,8 @@ export function authenticateJWT(role: String) {
     const token = authHeader.split(" ")[1];
     let jwtPayload: JwtPayload;
     try {
-      if (!process.env.JWT_SECRET) return res.status(401);
-      jwtPayload = verifyJWT(token, process.env.JWT_SECRET);
+      if (!secret) return res.status(401);
+      jwtPayload = verifyJWT(token, secret);
       res.locals.jwtPayload = jwtPayload;
     } catch (error) {
       return res.status(401).send({ message: "Invalid token" });
@@ -59,6 +56,7 @@ export function authenticateJWT(role: String) {
   };
 }
 
+// Attempt to convert token+string to JWTPayload
 function verifyJWT(token: string, secret: string): JwtPayload {
   try {
     return jwt.verify(token, secret) as JwtPayload;

@@ -1,6 +1,11 @@
 import * as Prisma from "@prisma/client";
-
 import * as TokenGenerator from "./TokenGenerator";
+
+let testSecret: string;
+
+beforeAll(() => {
+  testSecret = TokenGenerator.generateSecret();
+});
 
 test("return token for complete login", () => {
   const userLogin: Prisma.Login = {
@@ -11,5 +16,5 @@ test("return token for complete login", () => {
     userId: null,
   };
 
-  expect(TokenGenerator.generateJWT(userLogin)).not.toBe(null);
+  expect(TokenGenerator.generateJWT(userLogin, testSecret)).not.toBe(null);
 });
