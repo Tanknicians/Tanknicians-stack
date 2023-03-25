@@ -12,7 +12,7 @@ import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Avatar } from '@mui/material';
 import InvertColorsOutlinedIcon from '@mui/icons-material/InvertColorsOutlined';
-import LoginImage1 from '../Assets/Images/LoginImage1.jpg'
+import LoginImages from '../Components/LoginPageRandomImage'
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { useLoginMutation } from '../Services/authApiSlice';
@@ -36,33 +36,35 @@ function Copyright(props: any) {
 
 const theme = createTheme();
 
+// For random images to display 
+const randomImage = LoginImages[Math.floor(Math.random() * (LoginImages.length - 1))];
+
 export default function LoginPage() {
   // Hooks for API and Routing
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  // FIXME: 
+  // Implement some feature while isLoading
   const [login, { isLoading }] = useLoginMutation();
 
   // Error states to be checked for incorrect input
-  const [isEmailError, setIsEmailError] = useState(false);
-  const [isEmailRequired, setIsEmailRequired] = useState(false);
-  const [isPasswordError, setIsPasswordError] = useState(false);
-  const [isPasswordRequired, setIsPasswordRequired] = useState(false);
+  const [emailAttempt, setEmailError] = useState({isRequired: false, isEmailError: false});
+  const [passwordAttempt, setPasswordError] = useState({isRequired: false, isPasswordError: false});  
 
-  // Error message
+  // Error message for login attempt
   const errorColor = '#d32f2f';
-  // FIXME: Implement 1 state with an object
-  const [errorMessage, setErrorMessage] = useState('');
-  const [isLoginError, setIsLoginError] = useState(false);
+  const [loginError, setLoginError] = useState({errorMessage: '', isLoginError: false});
 
-  // Allows errors to be cleared after user input
+  // Allows email and password errors to be cleared after user input
   const handleEmailChange = () => {
-    setIsEmailError(false);
-    setIsEmailRequired(false);
+    setEmailError({isRequired: false, isEmailError: false});
+    setLoginError(prevState => ({ ...prevState, isLoginError: false }));  
   };
 
   const handlePasswordChange = () => {
-    setIsPasswordError(false);
-    setIsPasswordRequired(false);
+    setPasswordError({isRequired: false, isPasswordError: false});
+    setLoginError(prevState => ({ ...prevState, isLoginError: false }));  
   };
 
   // Form submission with error checks
@@ -75,15 +77,11 @@ export default function LoginPage() {
     const password = data.get('password');
     
     // Check for missing input and show user error 
-    if(!email)
-    {
-      setIsEmailError(true);
-      setIsEmailRequired(true);
+    if(!email) {
+      setEmailError({isRequired: true, isEmailError: true});
     }
-    else if(!password)
-    {
-      setIsPasswordError(true);
-      setIsPasswordRequired(true);
+    else if(!password) {
+      setPasswordError({isRequired: true, isPasswordError: true});
     }
     else
     {
@@ -98,7 +96,8 @@ export default function LoginPage() {
     }  
   };
   
-  const loginAttempt = async (user: { email: string; password: string; }) => {
+  const loginAttempt = async (user: { email: string; password: string; }) => 
+  {
     try
     {
       const loginResponse = await login({email: user.email, password: user.password}).unwrap();
@@ -110,8 +109,7 @@ export default function LoginPage() {
     // Login failed
     catch (err)
     {
-      setErrorMessage('Incorrect email or password.')
-      setIsLoginError(true);
+      setLoginError({errorMessage: 'Incorrect email or password.', isLoginError: true})  
     }
   };
 
@@ -125,7 +123,7 @@ export default function LoginPage() {
           sm={4}
           md={7}
           sx={{
-            backgroundImage: `url(${LoginImage1})`,
+            backgroundImage: `url(${randomImage})`,
             backgroundRepeat: 'no-repeat',
             backgroundColor: (t) =>
               t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
@@ -153,7 +151,7 @@ export default function LoginPage() {
             <Box component="form" noValidate onSubmit={handleLoginSubmit} sx={{ mt: 1 }}>
               <TextField
                 margin="normal"
-                required = {isEmailRequired}
+                required = {emailAttempt.isRequired}
                 fullWidth
                 id="email"
                 label="Email Address"
@@ -161,10 +159,10 @@ export default function LoginPage() {
                 autoComplete="email"
                 autoFocus
                 onChange={handleEmailChange}
-                error={isEmailError || isLoginError}
-                helperText={isEmailError ? 'Email is required*' : ''}
+                error={emailAttempt.isEmailError || loginError.isLoginError}
+                helperText={emailAttempt.isEmailError ? 'Email is required*' : ''}
                 InputProps={{
-                  endAdornment: (isEmailError || isLoginError) && (
+                  endAdornment: (emailAttempt.isEmailError || loginError.isLoginError) && (
                     <InputAdornment position="end">
                       <IconButton edge="end" style={{pointerEvents: 'none'}} tabIndex={parseInt('-1')}>
                         <ErrorOutlineIcon sx={{color: errorColor}}/>
@@ -175,7 +173,7 @@ export default function LoginPage() {
               />
               <TextField
                 margin="normal"
-                required = {isPasswordRequired}
+                required = {passwordAttempt.isRequired}
                 fullWidth
                 name="password"
                 label="Password"
@@ -183,10 +181,10 @@ export default function LoginPage() {
                 id="password"
                 autoComplete="current-password"
                 onChange={handlePasswordChange}
-                error={isPasswordError || isLoginError}
-                helperText={isPasswordError ? 'Password is required*' : ''}
+                error={passwordAttempt.isPasswordError || loginError.isLoginError}
+                helperText={passwordAttempt.isPasswordError ? 'Password is required*' : ''}
                 InputProps={{
-                  endAdornment: (isPasswordError || isLoginError) && (
+                  endAdornment: (passwordAttempt.isPasswordError || loginError.isLoginError) && (
                     <InputAdornment position="end">
                       <IconButton edge="end" style={{pointerEvents: 'none'}} tabIndex={parseInt('-1')}>
                         <ErrorOutlineIcon sx={{color: errorColor}}/>
@@ -202,7 +200,7 @@ export default function LoginPage() {
               <Typography
                 align='center'
                 style={{color: errorColor}}
-              > {errorMessage}
+              > {loginError.errorMessage}
               </Typography>
               <Button
                 type="submit"
