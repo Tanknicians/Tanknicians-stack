@@ -50,17 +50,17 @@ export async function login(req: Request, res: Response) {
       }
 
       console.log("Generating token.");
-      
+
       let token;
       try {
         // UPDATE: sends the login data as a generated token instead of a simple JSON
         token = TokenGenerator.generateJWT(
-            savedCredentials,
-            process.env.JWT_SECRET,
+          savedCredentials,
+          process.env.JWT_SECRET,
         );
-      } catch(err) {
+      } catch (err) {
         console.error(err);
-        return res.status(401).send('Cannot generate token for session');
+        return res.status(401).send("Cannot generate token for session");
       }
       return res.status(200).json({
         token: token,
