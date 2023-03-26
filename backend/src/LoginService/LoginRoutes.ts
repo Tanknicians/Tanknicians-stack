@@ -2,10 +2,6 @@
 import express, { Request, Response } from "express";
 import * as TokenGenerator from "../TokenGenerator";
 import * as LoginService from "./LoginService";
-import * as dotenv from 'dotenv'
-
-// Read the .env file.
-dotenv.config()
 
 const LoginRouter = express.Router();
 const jwt_secret = process.env.JWT_SECRET;
@@ -24,7 +20,6 @@ LoginRouter.post("/find", async (req: Request, res: Response) => {
   await LoginService.find(req, res);
 });
 
-
 LoginRouter.post(
   "/admin",
   TokenGenerator.authenticateJWT("admin", jwt_secret),
@@ -34,4 +29,4 @@ LoginRouter.post(
 );
 
 // export the routes
-export = LoginRouter;
+export default LoginRouter;
