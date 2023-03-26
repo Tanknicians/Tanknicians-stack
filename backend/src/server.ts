@@ -1,9 +1,10 @@
 import express from "express";
 import cors from "cors";
 import LoginRouter from "./LoginService/LoginRoutes";
+import * as dotenv from 'dotenv'
 
-// read the required .env file
-require("dotenv").config();
+// Read the .env file.
+dotenv.config()
 
 // Init app
 const app: express.Application = express();
