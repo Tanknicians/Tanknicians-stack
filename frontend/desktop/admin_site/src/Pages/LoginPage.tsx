@@ -34,7 +34,7 @@ function Copyright(props: any) {
   );
 }
 
-// Styling for 
+// Styling for LoginPage components
 const theme = createTheme();
 
 // For random images to display 
