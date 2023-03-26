@@ -4,6 +4,7 @@ import * as TokenGenerator from "../TokenGenerator";
 import * as LoginService from "./LoginService";
 
 const LoginRouter = express.Router();
+const jwt_secret = process.env.JWT_SECRET;
 
 // REQUIRED TO INTERPRET JSON FROM HTTP REQUEST BODY
 LoginRouter.use(express.json());
@@ -21,11 +22,11 @@ LoginRouter.post("/find", async (req: Request, res: Response) => {
 
 LoginRouter.post(
   "/admin",
-  TokenGenerator.authenticateJWT("admin"),
+  TokenGenerator.authenticateJWT("admin", jwt_secret),
   async (req: Request, res: Response) => {
     res.send("success!");
   },
 );
 
 // export the routes
-export = LoginRouter;
+export default LoginRouter;
