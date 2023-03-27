@@ -4,48 +4,16 @@ const prisma = new PrismaClient();
 // CREATE
 export async function create(
   form: ServiceCall,
-  employee: User,
-  tank: TankMetadata
 ) {
+  const {id, employeeId, tankId, ...formData} = form;
   await prisma.serviceCall.create({
     data: {
-      isApproved: form.isApproved,
-      createdOn: form.createdOn,
-
-      billed: form.billed,
-      customerRequest: form.customerRequest,
-
-      alkalinity: form.alkalinity,
-      calcium: form.calcium,
-      nitrate: form.nitrate,
-      phosphate: form.phosphate,
-
-      ATOOperational: form.ATOOperational,
-      ATOResevoirFilled: form.ATOResevoirFilled,
-      chemFilterAdjusted: form.chemFilterAdjusted,
-      doserAdjustementOrManualDosing: form.doserAdjustementOrManualDosing,
-      dosingReservoirsFull: form.dosingReservoirsFull,
-      floorsCheckedForSpillsOrDirt: form.floorsCheckedForSpillsOrDirt,
-      glassCleanedInside: form.glassCleanedInside,
-      glassCleanedOutside: form.glassCleanedOutside,
-      mechFilterChanged: form.mechFilterChanged,
-      notesUpdated: form.notesUpdated,
-      pumpsClearedOfDebris: form.pumpsClearedOfDebris,
-      saltCreepCleaned: form.saltCreepCleaned,
-      skimmerCleanedAndOperational: form.skimmerCleanedAndOperational,
-      waterChanged: form.waterChanged,
-
-      pestAPresent: form.pestAPresent,
-      pestBPresent: form.pestBPresent,
-      pestCPresent: form.pestCPresent,
-      pestDPresent: form.pestDPresent,
-
+      ...formData,
       Employee: {
-        connect: employee,
+        connect: { id: employeeId },
       },
-
       TankMetadata: {
-        connect: tank,
+        connect: { id: tankId },
       },
     },
   });

@@ -3,13 +3,10 @@ const prisma = new PrismaClient();
 
 // CREATE
 export async function create(user: User) {
+  const {id, ...userData} = user;
   await prisma.user.create({
     data: {
-      firstName: user.firstName,
-      middleName: user.middleName,
-      lastName: user.lastName,
-      address: user.address,
-      phone: user.phone,
+      ...userData
     },
   });
 }
