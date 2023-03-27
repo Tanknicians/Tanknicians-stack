@@ -1,12 +1,11 @@
 import { Request, Response } from "express";
 import * as UserDB from "../../../prisma/db/User";
 
-// For when the ID is already known, use FIND.
-export async function find(req: Request, res: Response) {
+export async function read(req: Request, res: Response) {
   const { id } = req.body;
   const err: string = `User with id: ${id} not found.`;
 
-  const user = await UserDB.find(id);
+  const user = await UserDB.read(id);
   if (!user) {
     console.error(err);
     res.json({ success: false, message: err });

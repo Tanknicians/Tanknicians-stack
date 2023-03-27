@@ -52,16 +52,12 @@ export async function create(
 }
 
 // READ
-export async function findOne(serviceCall: ServiceCall) {
+export async function read(serviceCall: ServiceCall) {
   return await prisma.serviceCall.findUnique({
     where: {
       id: serviceCall.id,
     },
   });
-}
-
-export async function getAll() {
-  return await prisma.serviceCall.findMany();
 }
 
 // UPDATE
@@ -82,6 +78,11 @@ export async function deleteServiceCall(serviceCall: ServiceCall) {
       id: serviceCall.id,
     },
   });
+}
+
+// ALL
+export async function getAll() {
+  return await prisma.serviceCall.findMany();
 }
 
 export * as serviceCallDB from "./ServiceCall";

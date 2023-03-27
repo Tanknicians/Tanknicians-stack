@@ -6,8 +6,8 @@ TankMetadataRouter.post("/create", async (req: Request, res: Response) => {
   console.log("TankMetadata.create invoked.");
 });
 
-TankMetadataRouter.post("/find", async (req: Request, res: Response) => {
-  console.log("TankMetadata.find invoked.");
+TankMetadataRouter.post("/read", async (req: Request, res: Response) => {
+  console.log("TankMetadata.read invoked.");
 });
 
 TankMetadataRouter.post("/update", async (req: Request, res: Response) => {

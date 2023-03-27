@@ -6,8 +6,8 @@ UserRouter.post("/create", async (req: Request, res: Response) => {
   console.log("User.create invoked.");
 });
 
-UserRouter.post("/find", async (req: Request, res: Response) => {
-  console.log("User.find invoked.");
+UserRouter.post("/read", async (req: Request, res: Response) => {
+  console.log("User.read invoked.");
 });
 
 UserRouter.post("/update", async (req: Request, res: Response) => {

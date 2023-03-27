@@ -22,7 +22,7 @@ export async function login(req: Request, res: Response) {
   }
 
   // Retrieve user saved credentials based on username/email
-  const savedCredentials = await LoginDB.find(userLogin);
+  const savedCredentials = await LoginDB.read(userLogin);
 
   // Confirm user credentials existed in full in DB
   if (!savedCredentials) {
@@ -69,11 +69,11 @@ export async function login(req: Request, res: Response) {
   );
 }
 
-export async function find(req: Request, res: Response) {
+export async function read(req: Request, res: Response) {
   const { email } = req.body;
   const err: string = `login with email: ${email} not found.`;
 
-  const login = await LoginDB.find(email);
+  const login = await LoginDB.read(email);
   if (!login) {
     console.error(err);
     res.json({ success: false, message: err });
