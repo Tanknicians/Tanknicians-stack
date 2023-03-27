@@ -46,7 +46,7 @@ export async function serviceCalls(user: User) {
 }
 
 export async function tankMetadata(user: User) {
-  return await prisma.user.findUnique({
+  return await prisma.user.findMany({
     where: {
       id: user.id,
     },
