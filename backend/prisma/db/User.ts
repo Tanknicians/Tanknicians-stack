@@ -23,6 +23,39 @@ export async function read(user: User) {
   });
 }
 
+export async function login(user: User) {
+  return await prisma.user.findUnique({
+    where: {
+      id: user.id,
+    },
+    select: {
+      login: true,
+    },
+  });
+}
+
+export async function serviceCalls(user: User) {
+  return await prisma.user.findMany({
+    where: {
+      id: user.id,
+    },
+    select: {
+      EmployeeServiceCalls: true,
+    },
+  });
+}
+
+export async function tankMetadata(user: User) {
+  return await prisma.user.findUnique({
+    where: {
+      id: user.id,
+    },
+    select: {
+      OwnedTanks: true,
+    },
+  });
+}
+
 // UPDATE
 export async function update(user: User) {
   await prisma.user.update({
