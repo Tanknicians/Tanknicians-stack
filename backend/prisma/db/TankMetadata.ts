@@ -19,16 +19,12 @@ export async function create(tank: TankMetadata, customer: User) {
 }
 
 // READ
-export async function find(tank: TankMetadata) {
+export async function read(tank: TankMetadata) {
   return await prisma.tankMetadata.findUnique({
     where: {
       id: tank.id,
     },
   });
-}
-
-export async function getAll() {
-  return await prisma.tankMetadata.findMany();
 }
 
 // UPDATE
@@ -49,6 +45,11 @@ export async function deleteTankMetadata(tank: TankMetadata) {
       id: tank.id,
     },
   });
+}
+
+// ALL
+export async function getAll() {
+  return await prisma.tankMetadata.findMany();
 }
 
 export * as tankDB from "./TankMetadata";

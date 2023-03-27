@@ -15,16 +15,12 @@ export async function create(user: User) {
 }
 
 // READ
-export async function find(user: User) {
+export async function read(user: User) {
   return await prisma.user.findUnique({
     where: {
       id: user.id,
     },
   });
-}
-
-export async function getAll() {
-  return await prisma.user.findMany();
 }
 
 // UPDATE
@@ -60,6 +56,11 @@ export async function search(search: String) {
       ],
     },
   });
+}
+
+// ALL
+export async function getAll() {
+  return await prisma.user.findMany();
 }
 
 export * as userDB from "./User";

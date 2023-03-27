@@ -17,9 +17,9 @@ LoginRouter.post("/", async (req: Request, res: Response) => {
   await LoginService.login(req, res);
 });
 
-LoginRouter.post("/find", async (req: Request, res: Response) => {
-  console.log("Login.find invoked.");
-  await LoginService.find(req, res);
+LoginRouter.post("/read", async (req: Request, res: Response) => {
+  console.log("Login.read invoked.");
+  await LoginService.read(req, res);
 });
 
 LoginRouter.post(
