@@ -27,8 +27,8 @@ model Login {
   id   Int   @id @default(autoincrement())
   role Role? // ADMIN, CUSTOMER, EMPLOYEE
 
-  email    String? @unique
-  password String?
+  email    String @unique
+  password String
 
   User   User? @relation(fields: [userId], references: [id])
   userId Int?
@@ -58,33 +58,33 @@ model ServiceCall {
   isApproved Boolean  @default(false) // for admin to approve the ServiceCall
   createdOn  DateTime @default(now())
 
-  billed          Boolean?
-  customerRequest String?
+  billed          Boolean
+  customerRequest String
 
-  alkalinity Float?
-  calcium    Float?
-  nitrate    Float?
-  phosphate  Float?
+  alkalinity Float
+  calcium    Float
+  nitrate    Float
+  phosphate  Float
 
-  ATOOperational                 Boolean?
-  ATOResevoirFilled              Boolean?
-  chemFilterAdjusted             Boolean?
-  doserAdjustementOrManualDosing Boolean?
-  dosingReservoirsFull           Boolean?
-  floorsCheckedForSpillsOrDirt   Boolean?
-  glassCleanedInside             Boolean?
-  glassCleanedOutside            Boolean?
-  mechFilterChanged              Boolean?
-  notesUpdated                   Boolean?
-  pumpsClearedOfDebris           Boolean?
-  saltCreepCleaned               Boolean?
-  skimmerCleanedAndOperational   Boolean?
-  waterChanged                   Boolean?
+  ATOOperational                 Boolean
+  ATOResevoirFilled              Boolean
+  chemFilterAdjusted             Boolean
+  doserAdjustementOrManualDosing Boolean
+  dosingReservoirsFull           Boolean
+  floorsCheckedForSpillsOrDirt   Boolean
+  glassCleanedInside             Boolean
+  glassCleanedOutside            Boolean
+  mechFilterChanged              Boolean
+  notesUpdated                   Boolean
+  pumpsClearedOfDebris           Boolean
+  saltCreepCleaned               Boolean
+  skimmerCleanedAndOperational   Boolean
+  waterChanged                   Boolean
 
-  pestAPresent Boolean?
-  pestBPresent Boolean?
-  pestCPresent Boolean?
-  pestDPresent Boolean?
+  pestAPresent Boolean
+  pestBPresent Boolean
+  pestCPresent Boolean
+  pestDPresent Boolean
 
   // who created the ServiceCall (a sort of employee signature)
   Employee   User @relation(fields: [employeeId], references: [id])
@@ -101,11 +101,11 @@ model ServiceCall {
 model TankMetadata {
   id          Int     @id @default(autoincrement())
   description String?
-  volume      Int? // gallons/liters of water
-  type        TankType? 
+  volume      Int // gallons/liters of water
+  type        TankType
 
-  tanknicianSourcedOnly Boolean?
-  lastDateServiced      DateTime?
+  tanknicianSourcedOnly Boolean
+  lastDateServiced      DateTime
 
   // Who owns the tank
   Customer     User        @relation(fields: [customerId], references: [id])
