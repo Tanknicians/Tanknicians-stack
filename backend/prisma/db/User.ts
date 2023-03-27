@@ -47,4 +47,19 @@ export async function deleteUser(user: User) {
   });
 }
 
+// SEARCH
+export async function search(search: String) {
+  return await prisma.user.findMany({
+    where: {
+      OR: [
+        { firstName: { contains: String(search) } },
+        { middleName: { contains: String(search) } },
+        { lastName: { contains: String(search) } },
+        { address: { contains: String(search) } },
+        { phone: { contains: String(search) } },
+      ],
+    },
+  });
+}
+
 export * as userDB from "./User";
