@@ -14,22 +14,17 @@ import Managerial from "./DashboardContent/Managerial";
 import Database from "./DashboardContent/DataBaseView";
 import Analytics from "./DashboardContent/Analytics";
 import { Route, Routes } from "react-router-dom"
-import DashboardAppBar from "./DashboardAppBar";
 
-interface ContentProps{
-  handleDrawerToggle: () => void
-}
-
-export default function Content( props: ContentProps) {
-  const {handleDrawerToggle, ... other} = props
+export default function Content( props: any) {
+  const { ... other} = props
   
   return(
     <div className="content-wrapper">
-      <DashboardAppBar onDrawerToggle= {handleDrawerToggle}/>
+      
       <Routes>
-        <Route path="/Managerial" element={< Managerial handleDrawerToggle = { handleDrawerToggle }/>} />
-        <Route path="/Database" element={< Database handleDrawerToggle = { handleDrawerToggle }/>} />
-        <Route path="/Analytics" element={< Analytics handleDrawerToggle = { handleDrawerToggle }/>} />
+        <Route path="/Managerial" element={< Managerial/>} />
+        <Route path="/Database"   element={< Database />}  />
+        <Route path="/Analytics"  element={< Analytics />} />
       </Routes>
     </div>
     
