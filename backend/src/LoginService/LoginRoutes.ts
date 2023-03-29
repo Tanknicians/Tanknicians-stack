@@ -6,23 +6,28 @@ import * as LoginService from "./LoginService";
 import express, { Request, Response } from "express";
 
 const LoginRouter = express.Router();
+const jwt_secret = process.env.JWT_SECRET;
 
 // REQUIRED TO INTERPRET JSON FROM HTTP REQUEST BODY
 LoginRouter.use(express.json());
 
 // returns Login's token on success
+LoginRouter.post("/", async (req: Request, res: Response) => {
+  console.log("Login invoked.");
+  await LoginService.login(req, res);
+});
 
 LoginRouter.post("/find", async (req: Request, res: Response) => {
-	console.log("Login.find invoked.");
-	await LoginService.find(req, res);
+  console.log("Login.find invoked.");
+  await LoginService.find(req, res);
 });
 
 LoginRouter.post(
-	"/admin",
-	TokenGenerator.authenticateJWT("admin"),
-	async (req: Request, res: Response) => {
-		res.send("success!");
-	},
+  "/admin",
+  TokenGenerator.authenticateJWT("admin", jwt_secret),
+  async (req: Request, res: Response) => {
+    res.send("success!");
+  },
 );
 
 export const loginRouter = router({

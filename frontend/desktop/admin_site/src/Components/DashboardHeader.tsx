@@ -50,12 +50,11 @@ const headerOptions = [
 type HeaderProps = {
   tabSelect: any, // (input:React.FC) => void | any; // any until
   selection: string,
-  onDrawerToggle: () => void
 }
 
 export default function Header(props: HeaderProps) {
   // Pull selection and onDrawerToggle from props
-  const { tabSelect, selection, onDrawerToggle } = props;
+  const { tabSelect, selection } = props;
   // get the header settings that match the current
   const headerSettings = headerOptions.find(item => item.id === selection)
 
@@ -91,7 +90,7 @@ export default function Header(props: HeaderProps) {
       <AppBar component="div" position="static" elevation={0} sx={{ zIndex: 0 }}>
         <Tabs value={activeIndex} textColor="inherit">
           {headerSettings?.children.map(({childId, component, active}) => (
-            <Tab label={childId} onClick={() => choseTab(component, active)}/>
+            <Tab key={childId} label={childId} onClick={() => choseTab(component, active)}/>
           ))}
         </Tabs>
       </AppBar>

@@ -55,19 +55,37 @@ export async function login(email: string, password: string) {
 		},
 	);
 
-	console.log("Generating token.");
+  bcrypt.compare(
+    userLogin.password,
+    savedCredentials.password,
+    function (err, result) {
+      if (err) {
+        console.error(err);
+        return res.status(401).send(err);
+      }
+      if (!result) {
+        // response is OutgoingMessage object that server response http request
+        return res.json({ success: false, message: "passwords do not match" });
+      }
 
-	// UPDATE: sends the login data as a generated token instead of a simple JSON
-	const token = TokenGenerator.generateJWT(savedCredentials);
-	if (!token) {
-		throw new TRPCError({
-			code: "UNAUTHORIZED",
-			message: "Could not generate token",
-		});
-	}
-	return {
-		token: token,
-	};
+      console.log("Generating token.");
+
+      let token;
+      try {
+        // UPDATE: sends the login data as a generated token instead of a simple JSON
+        token = TokenGenerator.generateJWT(
+          savedCredentials,
+          process.env.JWT_SECRET,
+        );
+      } catch (err) {
+        console.error(err);
+        return res.status(401).send("Cannot generate token for session");
+      }
+      return res.status(200).json({
+        token: token,
+      });
+    },
+  );
 }
 
 export async function find(req: Request, res: Response) {

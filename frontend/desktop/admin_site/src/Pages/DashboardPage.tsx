@@ -5,6 +5,12 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
 import Navigator from '../Components/DashBoardNavigator';
 import Content from '../Components/DashBoardContent';
+import AppBar from '@mui/material/AppBar';
+import Avatar from '@mui/material/Avatar';
+import Grid from '@mui/material/Grid';
+import IconButton from '@mui/material/IconButton';
+import MenuIcon from '@mui/icons-material/Menu';
+import Toolbar from '@mui/material/Toolbar';
  
 let theme = createTheme({
   palette: {
@@ -173,6 +179,41 @@ export default function Paperbase() {
           <Navigator PaperProps={{ style: { width: drawerWidth } }} sx={{ display: { sm: 'block', xs: 'none' } }}/>
           </Box>
         <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+          <AppBar color="primary" position="sticky" elevation={0}>
+              <Toolbar>
+              <Grid container spacing={1} alignItems="center">
+
+                  <Grid sx={{ display: { sm: 'none', xs: 'block' } }} item>
+                  <IconButton
+                      color="inherit"
+                      aria-label="open drawer"
+                      onClick={ handleDrawerToggle }
+                      edge="start"
+                  >
+                      <MenuIcon />
+                  </IconButton>
+                  </Grid>
+
+                  <Grid item xs />
+                  
+                  {/* Remove bell for now */}
+                  {/* <Grid item>
+                  <Tooltip title="Alerts • No alerts">
+                      <IconButton color="inherit">
+                      <NotificationsIcon />
+                      </IconButton>
+                  </Tooltip>
+                  </Grid> */}
+
+                  <Grid item >
+                  <IconButton color="inherit" sx={{ p: 0.5 }}>
+                      <Avatar src="/static/images/avatar/1.jpg" alt="My Avatar" />
+                  </IconButton>
+                  </Grid>
+
+              </Grid>
+              </Toolbar>
+          </AppBar>
           <Content handleDrawerToggle = { handleDrawerToggle } />
         </Box>
       </Box>
