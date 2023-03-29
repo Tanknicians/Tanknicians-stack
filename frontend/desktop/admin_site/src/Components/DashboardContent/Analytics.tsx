@@ -2,11 +2,7 @@ import Header from "../DashboardHeader";
 import { Box } from "@mui/material";
 import { useState } from "react";
 
-interface AnalyticsProps {
-    handleDrawerToggle: () => void;
-}
-
-export default function Analytics(props: AnalyticsProps){
+export default function Analytics(props: any){
     
     const {handleDrawerToggle, ...other} = props
     const [pageContent, setPageContent] = useState(<h1>Analytics page 1</h1>)
@@ -16,7 +12,7 @@ export default function Analytics(props: AnalyticsProps){
         
     return (
         <div>
-            <Header tabSelect = {setPageContentHandler} selection = "Analytics" onDrawerToggle={handleDrawerToggle} />
+            <Header tabSelect = {setPageContentHandler} selection = "Analytics"/>
             <Box sx={{ flex: 1, py: 6, px: 4, bgcolor: '#eaeff1' }}>
                 {pageContent}
             </Box>
