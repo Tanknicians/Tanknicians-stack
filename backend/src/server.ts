@@ -1,7 +1,9 @@
 import LoginRouter from "./LoginService/LoginRoutes";
+import DatabaseRouter from "./DatabaseService/DatabaseRoutes";
 import "./config";
 import cors from "cors";
 import express from "express";
+
 
 // Init app
 const app: express.Application = express();
@@ -17,6 +19,7 @@ app.use(cors(corsOptions));
 
 // Routes
 app.use("/api/login", LoginRouter);
+app.use("/api/db", DatabaseRouter);
 
 // Server startup
 app.listen(process.env.PORT, () => {
