@@ -8,13 +8,13 @@ beforeAll(() => {
 });
 
 test("return token for complete login", () => {
-	const userLogin: Prisma.Login = {
-		id: 0,
-		email: "email",
-		password: "pw",
-		role: null,
-		userId: null,
-	};
+  const userLogin: Prisma.Login = {
+    id: 0,
+    email: "email",
+    password: "pw",
+    role: null,
+    userId: null,
+  };
 
   expect(generateJWT(userLogin, testSecret)).not.toBe(null);
 });

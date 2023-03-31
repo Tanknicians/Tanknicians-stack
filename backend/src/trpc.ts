@@ -3,11 +3,11 @@ import * as trpcExpress from "@trpc/server/adapters/express";
 
 // created for each request
 export const createContext = ({
-	req,
-	res,
+  req,
+  res,
 }: trpcExpress.CreateExpressContextOptions) => {
-	console.log(req, res);
-	return {};
+  console.log(req, res);
+  return {};
 }; // no context
 
 type Context = inferAsyncReturnType<typeof createContext>;

@@ -15,4 +15,4 @@ DatabaseRouter.use("/sc", ServiceCallRouter);
 
 DatabaseRouter.use("/td", TankMetadataRouter);
 
-export default DatabaseRouter
+export default DatabaseRouter;
