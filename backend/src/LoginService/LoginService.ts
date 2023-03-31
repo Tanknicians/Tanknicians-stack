@@ -88,7 +88,7 @@ export async function login(email: string, password: string) {
   //);
 }
 
-export async function find(req: Request, res: Response) {
+export async function read(req: Request, res: Response) {
   const { email } = req.body;
   const err: string = `login with email: ${email} not found.`;
 
