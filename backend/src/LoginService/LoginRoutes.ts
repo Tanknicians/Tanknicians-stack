@@ -14,7 +14,7 @@ LoginRouter.use(express.json());
 // returns Login's token on success
 LoginRouter.post("/", async (req: Request, res: Response) => {
   console.log("Login invoked.");
-  await LoginService.login(req, res);
+  await LoginService.login(req.body.email, req.body.password);
 });
 
 LoginRouter.post("/read", async (req: Request, res: Response) => {
@@ -31,9 +31,11 @@ LoginRouter.post(
 );
 
 export const loginRouter = router({
+  
   login: publicProcedure
     .input(z.object({ email: z.string(), password: z.string() }))
     .query(async ({ input }) => {
       return await LoginService.login(input.email, input.password);
     }),
+    
 });
