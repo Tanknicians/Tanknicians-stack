@@ -17,7 +17,7 @@ export async function login(email: string, password: string) {
   };
 
   // Retrieve user saved credentials based on username/email
-  const savedCredentials = await LoginDB.find(userLogin);
+  const savedCredentials = await LoginDB.read(userLogin);
 
   // Confirm user credentials existed in full in DB
   if (!savedCredentials) {
@@ -55,44 +55,44 @@ export async function login(email: string, password: string) {
     },
   );
 
-  bcrypt.compare(
-    userLogin.password,
-    savedCredentials.password,
-    function (err, result) {
-      if (err) {
-        console.error(err);
-        return res.status(401).send(err);
-      }
-      if (!result) {
-        // response is OutgoingMessage object that server response http request
-        return res.json({ success: false, message: "passwords do not match" });
-      }
+  //bcrypt.compare(
+  //  userLogin.password,
+  //  savedCredentials.password,
+  //  function(err, result) {
+  //    if (err) {
+  //      console.error(err);
+  //      return res.status(401).send(err);
+  //    }
+  //    if (!result) {
+  //      // response is OutgoingMessage object that server response http request
+  //      return res.json({ success: false, message: "passwords do not match" });
+  //    }
 
-      console.log("Generating token.");
+  //    console.log("Generating token.");
 
-      let token;
-      try {
-        // UPDATE: sends the login data as a generated token instead of a simple JSON
-        token = TokenGenerator.generateJWT(
-          savedCredentials,
-          process.env.JWT_SECRET,
-        );
-      } catch (err) {
-        console.error(err);
-        return res.status(401).send("Cannot generate token for session");
-      }
-      return res.status(200).json({
-        token: token,
-      });
-    },
-  );
+  //    let token;
+  //    try {
+  //      // UPDATE: sends the login data as a generated token instead of a simple JSON
+  //      token = TokenGenerator.generateJWT(
+  //        savedCredentials,
+  //        process.env.JWT_SECRET,
+  //      );
+  //    } catch (err) {
+  //      console.error(err);
+  //      return res.status(401).send("Cannot generate token for session");
+  //    }
+  //    return res.status(200).json({
+  //      token: token,
+  //    });
+  //  },
+  //);
 }
 
 export async function find(req: Request, res: Response) {
   const { email } = req.body;
   const err: string = `login with email: ${email} not found.`;
 
-  const login = await LoginDB.find(email);
+  const login = await LoginDB.read(email);
   if (!login) {
     console.error(err);
     res.json({ success: false, message: err });
