@@ -18,10 +18,6 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 // Server startup
-app.listen(process.env.PORT, () => {
-  console.log(`TypeScript with Express http://localhost:${process.env.PORT}/`);
-});
-
 const appRouter = router({
   login: loginRouter,
 });
@@ -33,7 +29,10 @@ app.use(
     createContext,
   }),
 );
-app.listen(4000);
+
+app.listen(process.env.PORT, () => {
+  console.log(`TypeScript with Express http://localhost:${process.env.PORT}/`);
+});
 
 type AppRouter = typeof appRouter;
 export type { AppRouter };

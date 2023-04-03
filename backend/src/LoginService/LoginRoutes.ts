@@ -31,11 +31,9 @@ LoginRouter.post(
 );
 
 export const loginRouter = router({
-  
   login: publicProcedure
     .input(z.object({ email: z.string(), password: z.string() }))
     .query(async ({ input }) => {
       return await LoginService.login(input.email, input.password);
     }),
-    
 });
