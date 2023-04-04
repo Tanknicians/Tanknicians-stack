@@ -8,18 +8,18 @@ import { TRPCError } from "@trpc/server";
 
 const jwtSecret = process.env.JWT_SECRET;
 
-export async function login(email: string, password: string) {
+export async function login(user: { email: string; password: string }) {
   // Construct user login model for Prisma
   const userLogin = {
     id: 0,
-    email: email,
-    password: password,
+    email: user.email,
+    password: user.password,
     role: null,
     userId: null,
   };
 
   // Retrieve user saved credentials based on username/email
-  const savedCredentials = await LoginDB.read(email);
+  const savedCredentials = await LoginDB.read(user.email);
 
   // Confirm user credentials existed in full in DB
   if (!savedCredentials) {
@@ -38,11 +38,11 @@ export async function login(email: string, password: string) {
   console.log(`login found for ${userLogin.email}`);
 
   return new Promise<{ token: string }>((resolve, reject) => {
-  bcrypt.compare(
-    userLogin.password,
-    savedCredentials.password,
+    bcrypt.compare(
+      userLogin.password,
+      savedCredentials.password,
       function (err, samePasswords) {
-      if (err) {
+        if (err) {
           reject(
             new TRPCError({
               code: "INTERNAL_SERVER_ERROR",
@@ -51,12 +51,12 @@ export async function login(email: string, password: string) {
             }),
           );
           return;
-      }
+        }
         if (!samePasswords) {
           reject(
             new TRPCError({
-          code: "CONFLICT",
-          message: "passwords do not match",
+              code: "CONFLICT",
+              message: "passwords do not match",
             }),
           );
           return;
@@ -82,21 +82,21 @@ export async function login(email: string, password: string) {
               cause: err,
             }),
           );
-      }
-    },
-  );
+        }
+      },
+    );
   });
 }
 
 export async function read(email: string) {
   try {
-  const login = await LoginDB.read(email);
-  if (!login) {
+    const login = await LoginDB.read(email);
+    if (!login) {
       throw new TRPCError({
         code: "NOT_FOUND",
         message: `login with email: ${email} not found.`,
       });
-  }
+    }
     return login;
   } catch (e) {
     throw new TRPCError({
