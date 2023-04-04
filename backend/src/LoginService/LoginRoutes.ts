@@ -1,6 +1,11 @@
 import { z } from "zod";
 // required imports: Express and Prisma Database
-import { router, publicProcedure, adminProcedure } from "../trpc";
+import {
+  router,
+  publicProcedure,
+  adminProcedure,
+  isRoleCurryMiddleware,
+} from "../trpc";
 import * as LoginService from "./LoginService";
 
 const publicProcedures = {
@@ -17,9 +22,11 @@ const publicProcedures = {
 };
 
 const adminProcedures = {
-  admin: adminProcedure.mutation(async () => {
-    return "success!";
-  }),
+  admin: publicProcedure
+    .use(isRoleCurryMiddleware(["ADMIN"]))
+    .mutation(async () => {
+      return "success!";
+    }),
 };
 
 export const loginRouter = router({ ...publicProcedures, ...adminProcedures });
