@@ -3,7 +3,7 @@ const prisma = new PrismaClient();
 
 // CREATE
 export async function create(login: Login) {
-  const {id, ...loginData} = login;
+  const { id, ...loginData } = login;
   await prisma.login.create({
     data: {
       ...loginData
@@ -12,10 +12,10 @@ export async function create(login: Login) {
 }
 
 // READ
-export async function read(login: Login) {
+export async function read(email: string) {
   return await prisma.login.findUnique({
     where: {
-      email: String(login.email),
+      email: String(email),
     },
   });
 }
