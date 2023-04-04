@@ -2,12 +2,7 @@ import { Login } from "@prisma/client";
 import * as jwt from "jsonwebtoken";
 import { randomBytes } from "crypto";
 import { Request, Response, NextFunction } from "express";
-
-interface JwtPayload {
-  id: string;
-  email: string;
-  role: string;
-}
+import { z } from "zod";
 
 // Generates 256bit hex string for jwt secret
 export function generateSecret(): string {
@@ -56,10 +51,17 @@ export function authenticateJWT(role: String, secret?: string) {
   };
 }
 
+const JwtPayload = z.object({
+  id: z.string(),
+  email: z.string(),
+  role: z.string(),
+});
+type JwtPayload = z.infer<typeof JwtPayload>;
+
 // Attempt to convert token+string to JWTPayload
 function verifyJWT(token: string, secret: string): JwtPayload {
   try {
-    return jwt.verify(token, secret) as JwtPayload;
+    return JwtPayload.parse(jwt.verify(token, secret));
   } catch (error) {
     console.log(error);
     throw error;
