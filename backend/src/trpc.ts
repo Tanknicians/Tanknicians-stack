@@ -1,6 +1,7 @@
 import { TRPCError, inferAsyncReturnType, initTRPC } from "@trpc/server";
 import * as trpcExpress from "@trpc/server/adapters/express";
 import { authenticateJWT } from "./TokenGenerator";
+import {Role} from "@prisma/client";
 
 // created for each request
 export const createContext = ({
@@ -30,24 +31,30 @@ export const router = t.router;
 export const middleware = t.middleware;
 export const publicProcedure = t.procedure;
 
-const isAdmin = middleware(async ({ ctx: { jwtPayload }, next }) => {
-  if (!jwtPayload) {
-    throw new TRPCError({
-      code: "UNAUTHORIZED",
-      message: "No JWT payload found",
+export const isRoleCurryMiddleware = (roles: Role[]) =>
+  middleware(async ({ ctx: { jwtPayload }, next }) => {
+    if (!jwtPayload) {
+      throw new TRPCError({
+        code: "UNAUTHORIZED",
+        message: "No JWT payload found",
+      });
+    }
+
+    if (!roles.includes(jwtPayload.role)) {
+      throw new TRPCError({
+        code: "UNAUTHORIZED",
+        message: `Role is not of type ${roles.join(", ")}`,
+      });
+    }
+
+    return next({
+      ctx: {
+        // can't find a way to get role type to be inferred, not sure if it's possible. Might need generics; low priority
+        jwtPayload,
+      },
     });
-  }
-
-  if (jwtPayload.role !== "admin") {
-    throw new TRPCError({ code: "UNAUTHORIZED", message: "Not an admin" });
-  }
-
-  return next({
-    ctx: {
-      // had to hardcode the role admin in here, if you find another way then go ahead and fix it
-      jwtPayload: { ...jwtPayload, role: "admin" },
-    },
   });
-});
+
+const isAdmin = isRoleCurryMiddleware(["ADMIN"]);
 
 export const adminProcedure = publicProcedure.use(isAdmin);
