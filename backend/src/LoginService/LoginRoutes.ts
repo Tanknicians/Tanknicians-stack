@@ -3,7 +3,7 @@ import { z } from "zod";
 import { router, publicProcedure, adminProcedure } from "../trpc";
 import * as LoginService from "./LoginService";
 
-export const loginRoeuter = router({
+export const loginRouter = router({
   login: publicProcedure
     .input(z.object({ email: z.string().email(), password: z.string() }))
     .query(async ({ input }) => {
