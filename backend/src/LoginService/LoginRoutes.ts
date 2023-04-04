@@ -8,7 +8,7 @@ import {
 } from "../trpc";
 import * as LoginService from "./LoginService";
 
-const publicProcedures = {
+export const loginRouter = router({
   login: publicProcedure
     .input(z.object({ email: z.string().email(), password: z.string() }))
     .query(async ({ input }) => {
@@ -19,14 +19,9 @@ const publicProcedures = {
     .query(async ({ input }) => {
       return await LoginService.read(input);
     }),
-};
-
-const adminProcedures = {
   admin: publicProcedure
     .use(isRoleCurryMiddleware(["ADMIN"]))
     .mutation(async () => {
       return "success!";
     }),
-};
-
-export const loginRouter = router({ ...publicProcedures, ...adminProcedures });
+});
