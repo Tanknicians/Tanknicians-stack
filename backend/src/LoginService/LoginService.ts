@@ -88,7 +88,8 @@ export async function login(user: { email: string; password: string }) {
   });
 }
 
-export async function read(email: string) {
+export async function read(user: { email: string }) {
+  const { email } = user;
   try {
     const login = await LoginDB.read(email);
     if (!login) {
