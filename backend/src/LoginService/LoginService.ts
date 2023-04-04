@@ -6,6 +6,8 @@ import * as bcrypt from "bcrypt";
 import * as TokenGenerator from "../TokenGenerator";
 import { TRPCError } from "@trpc/server";
 
+const jwtSecret = process.env.JWT_SECRET;
+
 export async function login(email: string, password: string) {
   // Construct user login model for Prisma
   const userLogin = {
@@ -17,18 +19,16 @@ export async function login(email: string, password: string) {
   };
 
   // Retrieve user saved credentials based on username/email
-  const savedCredentials = await LoginDB.read(userLogin);
+  const savedCredentials = await LoginDB.read(email);
 
   // Confirm user credentials existed in full in DB
   if (!savedCredentials) {
-    console.error(`Login with email: ${userLogin.email} not found.`);
     throw new TRPCError({
       code: "UNAUTHORIZED",
-      message: "No record found for given credentials",
+      message: `Login with email: ${userLogin.email} not found.`,
     });
   }
-  if (!(savedCredentials.email && savedCredentials.password)) {
-    console.error("record email or pw is nullish");
+  if (!savedCredentials.email || !savedCredentials.password) {
     throw new TRPCError({
       code: "UNAUTHORIZED",
       message: "User record incomplete",
@@ -37,73 +37,79 @@ export async function login(email: string, password: string) {
 
   console.log(`login found for ${userLogin.email}`);
 
+  return new Promise<{ token: string }>((resolve, reject) => {
   bcrypt.compare(
     userLogin.password,
     savedCredentials.password,
-    function (err, result) {
+      function (err, samePasswords) {
       if (err) {
-        console.error(err);
-        throw new TRPCError({ code: "UNAUTHORIZED", cause: err });
+          reject(
+            new TRPCError({
+              code: "INTERNAL_SERVER_ERROR",
+              message: "Error occured during password compare",
+              cause: err,
+            }),
+          );
+          return;
       }
-      if (!result) {
-        // response is OutgoingMessage object that server response http request
-        throw new TRPCError({
+        if (!samePasswords) {
+          reject(
+            new TRPCError({
           code: "CONFLICT",
           message: "passwords do not match",
-        });
+            }),
+          );
+          return;
+        }
+        try {
+          if (!jwtSecret) {
+            reject(
+              new TRPCError({
+                code: "PRECONDITION_FAILED",
+                message: "JWT_SECRET is not set in environment variables.",
+              }),
+            );
+            return;
+          }
+          const token = TokenGenerator.generateJWT(savedCredentials, jwtSecret);
+          resolve({ token });
+        } catch (err) {
+          console.error(err);
+          reject(
+            new TRPCError({
+              code: "UNAUTHORIZED",
+              message: "Cannot generate token for session",
+              cause: err,
+            }),
+          );
       }
     },
   );
-
-  //bcrypt.compare(
-  //  userLogin.password,
-  //  savedCredentials.password,
-  //  function(err, result) {
-  //    if (err) {
-  //      console.error(err);
-  //      return res.status(401).send(err);
-  //    }
-  //    if (!result) {
-  //      // response is OutgoingMessage object that server response http request
-  //      return res.json({ success: false, message: "passwords do not match" });
-  //    }
-
-  //    console.log("Generating token.");
-
-  //    let token;
-  //    try {
-  //      // UPDATE: sends the login data as a generated token instead of a simple JSON
-  //      token = TokenGenerator.generateJWT(
-  //        savedCredentials,
-  //        process.env.JWT_SECRET,
-  //      );
-  //    } catch (err) {
-  //      console.error(err);
-  //      return res.status(401).send("Cannot generate token for session");
-  //    }
-  //    return res.status(200).json({
-  //      token: token,
-  //    });
-  //  },
-  //);
+  });
 }
 
-export async function read(req: Request, res: Response) {
-  const { email } = req.body;
-  const err: string = `login with email: ${email} not found.`;
-
+export async function read(email: string) {
+  try {
   const login = await LoginDB.read(email);
   if (!login) {
-    console.error(err);
-    res.json({ success: false, message: err });
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: `login with email: ${email} not found.`,
+      });
   }
-
-  res.send(login);
+    return login;
+  } catch (e) {
+    throw new TRPCError({
+      code: "INTERNAL_SERVER_ERROR",
+      message: "An error occured during read",
+      cause: e,
+    });
+  }
 }
 
 // this should be a private function that cannot be used by a front-end until future expansion
 export async function register(req: Request, res: Response) {
-  let parsedLogin: Prisma.Login = {
+  const parsedLogin: Prisma.Login = {
     id: 0,
     email: req.body.email,
     password: req.body.password,
