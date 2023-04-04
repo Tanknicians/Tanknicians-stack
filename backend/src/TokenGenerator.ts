@@ -1,4 +1,4 @@
-import { Login } from "@prisma/client";
+import { Login, Role } from "@prisma/client";
 import * as jwt from "jsonwebtoken";
 import { randomBytes } from "crypto";
 import { Request, Response, NextFunction } from "express";
@@ -35,7 +35,7 @@ export function authenticateJWT(token?: string) {
 const JwtPayload = z.object({
   id: z.string(),
   email: z.string(),
-  role: z.enum(["admin", "user"]),
+  role: z.nativeEnum(Role),
 });
 type JwtPayload = z.infer<typeof JwtPayload>;
 
