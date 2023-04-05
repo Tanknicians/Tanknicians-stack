@@ -11,7 +11,7 @@ import * as LoginService from "./LoginService";
 export const loginRouter = router({
   login: publicProcedure
     .input(z.object({ email: z.string().email(), password: z.string() }))
-    .query(async ({ input }) => {
+    .mutation(async ({ input }) => {
       return await LoginService.login(input);
     }),
   read: publicProcedure

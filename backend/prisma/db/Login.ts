@@ -2,11 +2,11 @@ import { Login, PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 // CREATE
-export async function create(login: Login) {
-  const { id, ...loginData } = login;
+export async function create(login: Omit<Login, "id">) {
+  console.log(login);
   await prisma.login.create({
     data: {
-      ...loginData
+      ...login,
     },
   });
 }
