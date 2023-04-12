@@ -24,7 +24,7 @@ const appRouter = router({
 });
 
 app.use(
-  "/api",
+  "/trpc",
   trpcExpress.createExpressMiddleware({
     router: appRouter,
     createContext,
