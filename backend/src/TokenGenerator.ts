@@ -1,7 +1,6 @@
 import { Login, Role } from "@prisma/client";
 import * as jwt from "jsonwebtoken";
 import { randomBytes } from "crypto";
-import { Request, Response, NextFunction } from "express";
 import { z } from "zod";
 
 // Generates 256bit hex string for jwt secret

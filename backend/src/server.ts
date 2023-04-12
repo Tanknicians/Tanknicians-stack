@@ -4,6 +4,7 @@ import express from "express";
 import { loginRouter } from "./LoginService/LoginRoutes";
 
 import { createContext, router } from "./trpc";
+import { register } from "./LoginService/LoginService";
 
 // Initialize the express app
 const app = express();

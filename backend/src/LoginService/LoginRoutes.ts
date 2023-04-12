@@ -1,11 +1,5 @@
 import { z } from "zod";
-// required imports: Express and Prisma Database
-import {
-  router,
-  publicProcedure,
-  adminProcedure,
-  isRoleCurryMiddleware,
-} from "../trpc";
+import { router, publicProcedure, isRoleCurryMiddleware } from "../trpc";
 import * as LoginService from "./LoginService";
 
 export const loginRouter = router({
