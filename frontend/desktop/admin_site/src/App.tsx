@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import RequireAuth from './Services/RequireAuth';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { queryClient, trpc, trpcClient } from './API/trpcClient';
+import PasswordResetPage from './Pages/PasswordResetPage';
 
 export default function App() {
   return (
@@ -12,6 +13,7 @@ export default function App() {
         <BrowserRouter>
           <Routes>
             <Route path='/' element={<LoginPage />} />
+            <Route path='/password-reset' element={<PasswordResetPage />} />
 
             {/* protected routes */}
             <Route element={<RequireAuth />}>

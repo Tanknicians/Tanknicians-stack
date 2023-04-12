@@ -5,6 +5,7 @@ import { loginRouter } from "./LoginService/LoginRoutes";
 
 import { createContext, router } from "./trpc";
 import { register } from "./LoginService/LoginService";
+import { emailRouter } from "./EmailService/EmailRoutes";
 
 // Initialize the express app
 const app = express();
@@ -21,6 +22,7 @@ app.use(cors(corsOptions));
 // Server startup
 const appRouter = router({
   login: loginRouter,
+  email: emailRouter,
 });
 
 app.use(
