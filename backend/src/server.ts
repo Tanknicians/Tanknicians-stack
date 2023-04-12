@@ -11,7 +11,7 @@ const app = express();
 
 // Set up cors options
 const corsOptions = {
-  origin: "http://localhost:3000",
+  origin: `http://localhost:${process.env.PORT}/`,
   credentials: true,
 };
 
@@ -24,7 +24,7 @@ const appRouter = router({
 });
 
 app.use(
-  "/trpc",
+  "/api",
   trpcExpress.createExpressMiddleware({
     router: appRouter,
     createContext,
