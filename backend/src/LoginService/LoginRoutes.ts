@@ -22,7 +22,7 @@ const adminMutation = publicProcedure
   });
 
 export const loginRouter = router({
-  "": loginMutation,
+  login: loginMutation,
   read: readQuery,
   admin: adminMutation,
 });
