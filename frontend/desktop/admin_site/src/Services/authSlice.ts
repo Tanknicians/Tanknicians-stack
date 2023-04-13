@@ -3,7 +3,7 @@ import { RootState } from '../Redux/store';
 
 const initialState = {
   user: null,
-  token: localStorage.getItem('token')
+  token: null,
 };
 
 const authSlice = createSlice({
