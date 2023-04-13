@@ -105,7 +105,6 @@ export async function read(user: { email: string }) {
   }
 }
 
-// this should be a private function that cannot be used by a front-end until future expansion
 export async function register(login: Omit<Prisma.Login, "id">) {
   // though a role is required, having a string helps more than "null"
   if (login.role == null) {
