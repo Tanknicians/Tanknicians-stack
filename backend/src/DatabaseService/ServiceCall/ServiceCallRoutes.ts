@@ -1,21 +1,55 @@
-import express, { Request, Response } from "express";
+import { z } from 'zod';
+import { router, publicProcedure, isRoleCurryMiddleware } from '../../trpc';
+//import * as ServiceCall from './ServiceCallService';
+import * as Prisma from '@prisma/client';
 
-const ServiceCallRouter = express.Router();
+const createMutation = publicProcedure
+  .use(isRoleCurryMiddleware(['ADMIN']))
+  .input(
+    z.object({
+      // data values
+    })
+  )
+  .mutation(async ({ input }) => {
+    // service function
+  });
 
-ServiceCallRouter.post("/", async (req: Request, res: Response) => {
-  console.log("ServiceCall.create invoked.");
+const readQuery = publicProcedure
+  .use(isRoleCurryMiddleware(['ADMIN']))
+  .input(
+    z.object({
+      // data values
+    })
+  )
+  .query(async ({ input }) => {
+    // service function
+  });
+
+const updateMutation = publicProcedure
+  .use(isRoleCurryMiddleware(['ADMIN']))
+  .input(
+    z.object({
+      // data values
+    })
+  )
+  .mutation(async ({ input }) => {
+    // service function
+  });
+
+const deleteMutation = publicProcedure
+  .use(isRoleCurryMiddleware(['ADMIN']))
+  .input(
+    z.object({
+      // data values
+    })
+  )
+  .mutation(async ({ input }) => {
+    // service function
+  });
+
+export const serviceCallRouter = router({
+  create: createMutation,
+  read: readQuery,
+  update: updateMutation,
+  delete: deleteMutation
 });
-
-ServiceCallRouter.get("/", async (req: Request, res: Response) => {
-  console.log("ServiceCall.read invoked.");
-});
-
-ServiceCallRouter.put("/", async (req: Request, res: Response) => {
-  console.log("ServiceCall.update invoked.");
-});
-
-ServiceCallRouter.delete("/", async (req: Request, res: Response) => {
-  console.log("ServiceCall.delete invoked.");
-});
-
-export default ServiceCallRouter;
