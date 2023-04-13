@@ -25,7 +25,7 @@ enum TankType {
 
 model Login {
   id   Int   @id @default(autoincrement())
-  role Role? // ADMIN, CUSTOMER, EMPLOYEE
+  role Role // ADMIN, CUSTOMER, EMPLOYEE
 
   email    String @unique
   password String
