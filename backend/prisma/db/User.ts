@@ -1,4 +1,4 @@
-import { User, PrismaClient } from "@prisma/client";
+import { User, PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 // CREATE
@@ -6,50 +6,50 @@ export async function create(user: User) {
   const { id, ...userData } = user;
   await prisma.user.create({
     data: {
-      ...userData,
-    },
+      ...userData
+    }
   });
 }
 
 // READ
-export async function read(user: User) {
+export async function read(id: number) {
   return await prisma.user.findUnique({
     where: {
-      id: user.id,
-    },
+      id: id
+    }
   });
 }
 
-export async function login(user: User) {
+export async function login(id: number) {
   return await prisma.user.findUnique({
     where: {
-      id: user.id,
+      id: id
     },
     select: {
-      login: true,
-    },
+      login: true
+    }
   });
 }
 
-export async function serviceCalls(user: User) {
+export async function serviceCalls(id: number) {
   return await prisma.user.findMany({
     where: {
-      id: user.id,
+      id: id
     },
     select: {
-      EmployeeServiceCalls: true,
-    },
+      EmployeeServiceCalls: true
+    }
   });
 }
 
-export async function tankMetadata(user: User) {
+export async function tankMetadata(id: number) {
   return await prisma.user.findMany({
     where: {
-      id: user.id,
+      id: id
     },
     select: {
-      OwnedTanks: true,
-    },
+      OwnedTanks: true
+    }
   });
 }
 
@@ -57,19 +57,19 @@ export async function tankMetadata(user: User) {
 export async function update(user: User) {
   await prisma.user.update({
     where: {
-      id: user.id,
+      id: user.id
     },
-    data: user,
+    data: user
   });
 }
 
 // DELETE
 // single-word convention broken because of "delete" being a reserved word
-export async function deleteUser(user: User) {
+export async function deleteUser(id: number) {
   await prisma.user.delete({
     where: {
-      id: user.id,
-    },
+      id: id
+    }
   });
 }
 
@@ -82,9 +82,9 @@ export async function search(search: String) {
         { middleName: { contains: String(search) } },
         { lastName: { contains: String(search) } },
         { address: { contains: String(search) } },
-        { phone: { contains: String(search) } },
-      ],
-    },
+        { phone: { contains: String(search) } }
+      ]
+    }
   });
 }
 
@@ -93,4 +93,4 @@ export async function getAll() {
   return await prisma.user.findMany();
 }
 
-export * as userDB from "./User";
+export * as userDB from './User';
