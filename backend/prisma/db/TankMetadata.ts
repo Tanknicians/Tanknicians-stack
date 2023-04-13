@@ -2,8 +2,8 @@ import { TankMetadata, PrismaClient, User } from '@prisma/client';
 const prisma = new PrismaClient();
 
 // CREATE
-export async function create(tank: TankMetadata) {
-  const { id, customerId, ...tankData } = tank;
+export async function create(tank: Omit<TankMetadata, 'id'>) {
+  const {customerId, ...tankData } = tank;
   await prisma.tankMetadata.create({
     data: {
       ...tankData,
