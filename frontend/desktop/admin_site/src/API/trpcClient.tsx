@@ -15,7 +15,7 @@ export const queryClient = new QueryClient();
 export const trpcClient = trpc.createClient({
   links: [
     httpBatchLink({
-      url: "http://localhost:5000/trpc",
+      url: "http://localhost:5000/api",
       // You can pass any HTTP headers you wish here
       async headers() {
         return {
