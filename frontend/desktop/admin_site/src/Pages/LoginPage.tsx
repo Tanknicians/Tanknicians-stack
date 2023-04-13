@@ -127,7 +127,6 @@ export default function LoginPage() {
         },
         onSuccess: ({ savedCredentials, token }) => {
           dispatch(setCredentials({ savedCredentials, token }));
-          localStorage.setItem('token', token);
           navigate('/dashboard/Managerial');
         }
       }
