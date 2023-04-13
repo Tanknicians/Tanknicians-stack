@@ -1,25 +1,55 @@
-import express, { Request, Response } from "express";
+import { z } from 'zod';
+import { router, publicProcedure, isRoleCurryMiddleware } from '../../trpc';
+import * as UserService from './UserService';
+import * as Prisma from '@prisma/client';
 
-const UserRouter = express.Router();
+const createMutation = publicProcedure
+  .use(isRoleCurryMiddleware(['EMPLOYEE']))
+  .input(
+    z.object({
+      // data values
+    })
+  )
+  .mutation(async ({ input }) => {
+    // service function
+  });
 
-UserRouter.post("/create", async (req: Request, res: Response) => {
-  console.log("User.create invoked.");
+const readQuery = publicProcedure
+  .use(isRoleCurryMiddleware(['ADMIN']))
+  .input(
+    z.object({
+      // data values
+    })
+  )
+  .query(async ({ input }) => {
+    // service function
+  });
+
+const updateMutation = publicProcedure
+  .use(isRoleCurryMiddleware(['ADMIN']))
+  .input(
+    z.object({
+      // data values
+    })
+  )
+  .mutation(async ({ input }) => {
+    // service function
+  });
+
+const deleteMutation = publicProcedure
+  .use(isRoleCurryMiddleware(['ADMIN']))
+  .input(
+    z.object({
+      // data values
+    })
+  )
+  .mutation(async ({ input }) => {
+    // service function
+  });
+
+export const userRouter = router({
+  create: createMutation,
+  read: readQuery,
+  update: updateMutation,
+  delete: deleteMutation
 });
-
-UserRouter.post("/read", async (req: Request, res: Response) => {
-  console.log("User.read invoked.");
-});
-
-UserRouter.post("/update", async (req: Request, res: Response) => {
-  console.log("User.update invoked.");
-});
-
-UserRouter.post("/delete", async (req: Request, res: Response) => {
-  console.log("User.delete invoked.");
-});
-
-UserRouter.post("/search", async (req: Request, res: Response) => {
-  console.log("User.search invoked.");
-});
-
-export default UserRouter;
