@@ -1,7 +1,7 @@
 import { TRPCError, inferAsyncReturnType, initTRPC } from "@trpc/server";
 import * as trpcExpress from "@trpc/server/adapters/express";
 import { authenticateJWT } from "./TokenGenerator";
-import {Role} from "@prisma/client";
+import { Role } from "@prisma/client";
 
 // created for each request
 export const createContext = ({
