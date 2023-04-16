@@ -125,7 +125,7 @@ export async function register(login: Omit<Prisma.Login, "id">) {
   }
 
   try {
-    LoginDB.create(login);
+    await LoginDB.create(login);
   } catch (error) {
     throw new TRPCError({
       code: "INTERNAL_SERVER_ERROR",
