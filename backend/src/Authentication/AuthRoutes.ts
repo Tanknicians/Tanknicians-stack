@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { router, publicProcedure, isRoleCurryMiddleware } from "../trpc";
-import * as LoginService from "./AuthService";
+import * as AuthService from "./AuthService";
 import * as Prisma from "@prisma/client";
 
 const loginMutation = publicProcedure
@@ -11,7 +11,8 @@ const loginMutation = publicProcedure
     }),
   )
   .mutation(async ({ input }) => {
-    return await LoginService.login(input);
+    return await AuthService
+  .login(input);
   });
 
 const readQuery = publicProcedure
@@ -21,7 +22,8 @@ const readQuery = publicProcedure
     }),
   )
   .mutation(async ({ input }) => {
-    return await LoginService.read(input);
+    return await AuthService
+  .read(input);
   });
 
 const registerMutation = publicProcedure
@@ -33,7 +35,8 @@ const registerMutation = publicProcedure
     }),
   )
   .query(async ({ input }) => {
-    return await LoginService.register(input as Omit<Prisma.Login, "id">);
+    return await AuthService
+  .register(input as Omit<Prisma.Login, "id">);
   });
 
 const adminMutation = publicProcedure
