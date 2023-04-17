@@ -1,10 +1,8 @@
 import * as trpcExpress from "@trpc/server/adapters/express";
 import cors from "cors";
 import express from "express";
-import { loginRouter } from "./LoginService/LoginRoutes";
-
+import { authRouter } from "./Authentication/AuthRoutes";
 import { createContext, router } from "./trpc";
-import { register } from "./LoginService/LoginService";
 
 // Initialize the express app
 const app = express();
@@ -20,7 +18,7 @@ app.use(cors(corsOptions));
 
 // Server startup
 const appRouter = router({
-  login: loginRouter,
+  auth: authRouter,
 });
 
 app.use(
