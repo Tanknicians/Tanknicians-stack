@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
-import * as UserDB from "../../../prisma/db/User";
+import { userDB } from "../../../prisma/db/User";
 import * as Prisma from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 
 export async function read(id: number) {
   try {
-    const user = await UserDB.read(id);
+    const user = await userDB.read(id);
     if (!user) {
       throw new TRPCError({
         code: "NOT_FOUND",
