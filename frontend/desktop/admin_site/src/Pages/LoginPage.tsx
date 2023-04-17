@@ -54,7 +54,7 @@ export default function LoginPage() {
 
   // FIXME:
   // Implement some feature while isLoading
-  const { mutate: login, isLoading } = trpc.login.login.useMutation();
+  const { mutate: login, isLoading } = trpc.auth.login.useMutation();
 
   // Error states to be checked for incorrect input
   const [emailAttempt, setEmailError] = useState({

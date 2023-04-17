@@ -6,7 +6,7 @@ export const getToken = () => sessionStorage.getItem("token") ?? "";
 
 export const trpc = createTRPCReact<AppRouter>();
 
-const login = trpc.login.login;
+const login = trpc.auth.login;
 
 console.log(login);
 
