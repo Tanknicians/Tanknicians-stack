@@ -12,7 +12,7 @@ test("return token for complete login", () => {
     id: 0,
     email: "email",
     password: "pw",
-    role: null,
+    role: "CUSTOMER",
     userId: null,
   };
 
