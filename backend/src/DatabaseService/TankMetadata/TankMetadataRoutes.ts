@@ -1,21 +1,55 @@
-import express, { Request, Response } from "express";
+import { z } from "zod";
+import { router, publicProcedure, isRoleCurryMiddleware } from "../../trpc";
+//import * as TankMetadata from './TankMetadataService';
+import * as Prisma from "@prisma/client";
 
-const TankMetadataRouter = express.Router();
+const createMutation = publicProcedure
+  .use(isRoleCurryMiddleware(["ADMIN"]))
+  .input(
+    z.object({
+      // data values
+    }),
+  )
+  .mutation(async ({ input }) => {
+    // service function
+  });
 
-TankMetadataRouter.post("/create", async (req: Request, res: Response) => {
-  console.log("TankMetadata.create invoked.");
+const readQuery = publicProcedure
+  .use(isRoleCurryMiddleware(["ADMIN"]))
+  .input(
+    z.object({
+      // data values
+    }),
+  )
+  .query(async ({ input }) => {
+    // service function
+  });
+
+const updateMutation = publicProcedure
+  .use(isRoleCurryMiddleware(["ADMIN"]))
+  .input(
+    z.object({
+      // data values
+    }),
+  )
+  .mutation(async ({ input }) => {
+    // service function
+  });
+
+const deleteMutation = publicProcedure
+  .use(isRoleCurryMiddleware(["ADMIN"]))
+  .input(
+    z.object({
+      // data values
+    }),
+  )
+  .mutation(async ({ input }) => {
+    // service function
+  });
+
+export const tankMetaDataRouter = router({
+  create: createMutation,
+  read: readQuery,
+  update: updateMutation,
+  delete: deleteMutation,
 });
-
-TankMetadataRouter.post("/read", async (req: Request, res: Response) => {
-  console.log("TankMetadata.read invoked.");
-});
-
-TankMetadataRouter.post("/update", async (req: Request, res: Response) => {
-  console.log("TankMetadata.update invoked.");
-});
-
-TankMetadataRouter.post("/delete", async (req: Request, res: Response) => {
-  console.log("TankMetadata.delete invoked.");
-});
-
-export default TankMetadataRouter;

@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { router, publicProcedure, isRoleCurryMiddleware } from "../../trpc";
-//import * as ServiceCall from './ServiceCallService';
+//import * as Login from './LoginService';
 import * as Prisma from "@prisma/client";
 
 const createMutation = publicProcedure
@@ -47,7 +47,7 @@ const deleteMutation = publicProcedure
     // service function
   });
 
-export const serviceCallRouter = router({
+export const loginRouter = router({
   create: createMutation,
   read: readQuery,
   update: updateMutation,

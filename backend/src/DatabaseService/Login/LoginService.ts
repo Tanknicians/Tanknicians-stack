@@ -1,10 +1,10 @@
 import * as Prisma from '@prisma/client';
-import { tankDB } from '../../../prisma/db/TankMetadata';
+import { loginDB } from '../../../prisma/db/Login';
 import { TRPCError } from '@trpc/server';
 
-export async function create(tank: Omit<Prisma.TankMetadata, 'id'>) {
+export async function create(login: Omit<Prisma.Login, 'id'>) {
   try {
-    await tankDB.create(tank);
+    await loginDB.create(login);
   } catch (e) {
     throw new TRPCError({
       code: 'INTERNAL_SERVER_ERROR',
@@ -14,16 +14,16 @@ export async function create(tank: Omit<Prisma.TankMetadata, 'id'>) {
   }
 }
 
-export async function read(id: number) {
+export async function read(email: string) {
   try {
-    const tank = await tankDB.read(id);
-    if (!tank) {
+    const login = await loginDB.read(email);
+    if (!login) {
       throw new TRPCError({
         code: 'NOT_FOUND',
-        message: `TankMetadata with id: ${id} not found.`
+        message: `Login with email: ${email} not found.`
       });
     }
-    return tank;
+    return login;
   } catch (e) {
     throw new TRPCError({
       code: 'INTERNAL_SERVER_ERROR',
@@ -33,9 +33,9 @@ export async function read(id: number) {
   }
 }
 
-export async function update(tank: Prisma.TankMetadata) {
+export async function update(login: Prisma.Login) {
   try {
-    await tankDB.update(tank);
+    await loginDB.update(login);
   } catch (e) {
     throw new TRPCError({
       code: 'INTERNAL_SERVER_ERROR',
@@ -47,7 +47,7 @@ export async function update(tank: Prisma.TankMetadata) {
 
 export async function deleteOne(id: number) {
   try {
-    await tankDB.deleteTankMetadata(id);
+    await loginDB.deleteLogin(id);
   } catch (e) {
     throw new TRPCError({
       code: 'INTERNAL_SERVER_ERROR',
@@ -61,11 +61,11 @@ export async function deleteOne(id: number) {
   // Search requires any STRING and searches all columns
   export async function search(search: string) {
     try {
-      const searchData = tankDB.search(search)
+      const searchData = loginDB.search(search)
       if (!searchData) {
         throw new TRPCError({
           code: "NOT_FOUND",
-          message: `No searchTankMetadata from search found.`,
+          message: `No searchUser from search found.`,
         });
       }
       return searchData;

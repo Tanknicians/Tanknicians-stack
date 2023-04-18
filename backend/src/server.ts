@@ -1,12 +1,11 @@
-import LoginRouter from "./LoginService/LoginRoutes";
-import DatabaseRouter from "./DatabaseService/DatabaseRoutes";
-import "./config";
+import * as trpcExpress from "@trpc/server/adapters/express";
 import cors from "cors";
 import express from "express";
+import { authRouter } from "./Authentication/AuthRoutes";
+import { createContext, router } from "./trpc";
 
-
-// Init app
-const app: express.Application = express();
+// Initialize the express app
+const app = express();
 
 // Set up cors options
 const corsOptions = {
@@ -17,11 +16,22 @@ const corsOptions = {
 // Allow for web-browser usage
 app.use(cors(corsOptions));
 
-// Routes
-app.use("/api/login", LoginRouter);
-app.use("/api/db", DatabaseRouter);
-
 // Server startup
+const appRouter = router({
+  auth: authRouter,
+});
+
+app.use(
+  "/api",
+  trpcExpress.createExpressMiddleware({
+    router: appRouter,
+    createContext,
+  }),
+);
+
 app.listen(process.env.PORT, () => {
   console.log(`TypeScript with Express http://localhost:${process.env.PORT}/`);
 });
+
+type AppRouter = typeof appRouter;
+export type { AppRouter };

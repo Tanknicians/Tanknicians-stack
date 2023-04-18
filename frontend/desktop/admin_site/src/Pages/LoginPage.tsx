@@ -14,18 +14,23 @@ import { Avatar } from '@mui/material';
 import InvertColorsOutlinedIcon from '@mui/icons-material/InvertColorsOutlined';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { useLoginMutation } from '../Services/authApiSlice';
 import { useState } from 'react';
 import InputAdornment from '@mui/material/InputAdornment';
 import IconButton from '@mui/material/IconButton';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import { setCredentials } from '../Services/authSlice';
 import loginRandomImages from '../Components/LoginPageRandomImage';
+import { trpc } from '../API/trpcClient';
 
-function Copyright(props: any) {
+function Copyright(props: { [k: string]: unknown }) {
   return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      <Link color="inherit" href="https://tanknicians.com/" target="_blank">
+    <Typography
+      variant='body2'
+      color='text.secondary'
+      align='center'
+      {...props}
+    >
+      <Link color='inherit' href='https://tanknicians.com/' target='_blank'>
         Tanknicians
       </Link>{' '}
       {' © '}
@@ -37,8 +42,9 @@ function Copyright(props: any) {
 // Styling for LoginPage components
 const theme = createTheme();
 
-// For random images to display 
-const randomImagePath = loginRandomImages[Math.floor(Math.random() * loginRandomImages.length)];
+// For random images to display
+const randomImagePath =
+  loginRandomImages[Math.floor(Math.random() * loginRandomImages.length)];
 const randomImage = require(`../Assets/Images/${randomImagePath}`);
 
 export default function LoginPage() {
@@ -46,78 +52,90 @@ export default function LoginPage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // FIXME: 
+  // FIXME:
   // Implement some feature while isLoading
-  const [login, { isLoading }] = useLoginMutation();
+  const { mutate: login, isLoading } = trpc.auth.login.useMutation();
 
   // Error states to be checked for incorrect input
-  const [emailAttempt, setEmailError] = useState({isRequired: false, isEmailError: false});
-  const [passwordAttempt, setPasswordError] = useState({isRequired: false, isPasswordError: false});  
+  const [emailAttempt, setEmailError] = useState({
+    isRequired: false,
+    isEmailError: false
+  });
+  const [passwordAttempt, setPasswordError] = useState({
+    isRequired: false,
+    isPasswordError: false
+  });
 
   // Error message for login attempt
   const errorColor = '#d32f2f';
-  const [loginError, setLoginError] = useState({errorMessage: '', isLoginError: false});
+  const [loginError, setLoginError] = useState({
+    errorMessage: '',
+    isLoginError: false
+  });
 
   // Allows email and password errors to be cleared after user input
   const handleEmailChange = () => {
-    setEmailError({isRequired: false, isEmailError: false});
-    setLoginError(prevState => ({ ...prevState, isLoginError: false }));  
+    setEmailError({ isRequired: false, isEmailError: false });
+    setLoginError(prevState => ({ ...prevState, isLoginError: false }));
   };
 
   const handlePasswordChange = () => {
-    setPasswordError({isRequired: false, isPasswordError: false});
-    setLoginError(prevState => ({ ...prevState, isLoginError: false }));  
+    setPasswordError({ isRequired: false, isPasswordError: false });
+    setLoginError(prevState => ({ ...prevState, isLoginError: false }));
   };
 
   // Form submission with error checks
   const handleLoginSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    
+
     // Get email and password from input
     const email = data.get('email');
     const password = data.get('password');
-    
-    // Check for missing input and show user error 
-    if(!email) {
-      setEmailError({isRequired: true, isEmailError: true});
-    }
-    else if(!password) {
-      setPasswordError({isRequired: true, isPasswordError: true});
-    }
-    else
-    {
-      // Package user data to request access 
-      const user = { 
-        email: (email as String).trim(), 
+
+    // Check for missing input and show user error
+    if (!email) {
+      setEmailError({ isRequired: true, isEmailError: true });
+    } else if (!password) {
+      setPasswordError({ isRequired: true, isPasswordError: true });
+    } else {
+      // Package user data to request access
+      const user = {
+        email: (email as String).trim(),
         password: (password as String).trim()
       };
-    
+
       // API call to login
       loginAttempt(user);
-    }  
+    }
   };
-  
-  const loginAttempt = async (user: { email: string; password: string; }) => 
-  {
-    try
-    {
-      const loginResponse = await login({email: user.email, password: user.password}).unwrap();
 
-      // User exists, Log in 
-      dispatch(setCredentials({...loginResponse, user}))
-      navigate('/dashboard/Managerial');    
-    }
-    // Login failed
-    catch (err)
-    {
-      setLoginError({errorMessage: 'Incorrect email or password.', isLoginError: true})  
-    }
+  const loginAttempt = (user: { email: string; password: string }) => {
+    login(
+      {
+        email: user.email,
+        password: user.password
+      },
+      {
+        onError(error) {
+          // Handle error
+          console.log(error);
+          setLoginError({
+            errorMessage: 'Incorrect email or password.',
+            isLoginError: true
+          });
+        },
+        onSuccess: ({ savedCredentials, token }) => {
+          dispatch(setCredentials({ savedCredentials, token }));
+          navigate('/dashboard/Managerial');
+        }
+      }
+    );
   };
 
   return (
-    <ThemeProvider theme={theme} >
-      <Grid container component="main" sx={{ height: '100vh' }}>
+    <ThemeProvider theme={theme}>
+      <Grid container component='main' sx={{ height: '100vh' }}>
         <CssBaseline />
         <Grid
           item
@@ -127,13 +145,15 @@ export default function LoginPage() {
           sx={{
             backgroundImage: `url(${randomImage})`,
             backgroundRepeat: 'no-repeat',
-            backgroundColor: (t) =>
-              t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
+            backgroundColor: t =>
+              t.palette.mode === 'light'
+                ? t.palette.grey[50]
+                : t.palette.grey[900],
             backgroundSize: 'cover',
-            backgroundPosition: 'center',
+            backgroundPosition: 'center'
           }}
         />
-        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square > 
+        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
           <Box
             sx={{
               mt: 8,
@@ -141,98 +161,120 @@ export default function LoginPage() {
               mx: 4,
               display: 'flex',
               flexDirection: 'column',
-              alignItems: 'center',
+              alignItems: 'center'
             }}
           >
-             <Avatar sx={{ m: 1, bgcolor: 'primary.main' }}>
-             <InvertColorsOutlinedIcon/>
+            <Avatar sx={{ m: 1, bgcolor: 'primary.main' }}>
+              <InvertColorsOutlinedIcon />
             </Avatar>
-            <Typography component="h1" variant="h5">
+            <Typography component='h1' variant='h5'>
               Log in
             </Typography>
-            <Box component="form" noValidate onSubmit={handleLoginSubmit} sx={{ mt: 1 }}>
+            <Box
+              component='form'
+              noValidate
+              onSubmit={handleLoginSubmit}
+              sx={{ mt: 1 }}
+            >
               <TextField
-                margin="normal"
-                required = {emailAttempt.isRequired}
+                margin='normal'
+                required={emailAttempt.isRequired}
                 fullWidth
-                id="email"
-                label="Email Address"
-                name="email"
-                autoComplete="email"
+                id='email'
+                label='Email Address'
+                name='email'
+                autoComplete='email'
                 autoFocus
                 onChange={handleEmailChange}
                 error={emailAttempt.isEmailError || loginError.isLoginError}
-                helperText={emailAttempt.isEmailError ? 'Email is required*' : ''}
+                helperText={
+                  emailAttempt.isEmailError ? 'Email is required*' : ''
+                }
                 InputProps={{
-                  endAdornment: (emailAttempt.isEmailError || loginError.isLoginError) && (
-                    <InputAdornment position="end">
-                      <IconButton edge="end" style={{pointerEvents: 'none'}} tabIndex={parseInt('-1')}>
-                        <ErrorOutlineIcon sx={{color: errorColor}}/>
+                  endAdornment: (emailAttempt.isEmailError ||
+                    loginError.isLoginError) && (
+                    <InputAdornment position='end'>
+                      <IconButton
+                        edge='end'
+                        style={{ pointerEvents: 'none' }}
+                        tabIndex={parseInt('-1')}
+                      >
+                        <ErrorOutlineIcon sx={{ color: errorColor }} />
                       </IconButton>
                     </InputAdornment>
-                  ),
+                  )
                 }}
               />
               <TextField
-                margin="normal"
-                required = {passwordAttempt.isRequired}
+                margin='normal'
+                required={passwordAttempt.isRequired}
                 fullWidth
-                name="password"
-                label="Password"
-                type="password"
-                id="password"
-                autoComplete="current-password"
+                name='password'
+                label='Password'
+                type='password'
+                id='password'
+                autoComplete='current-password'
                 onChange={handlePasswordChange}
-                error={passwordAttempt.isPasswordError || loginError.isLoginError}
-                helperText={passwordAttempt.isPasswordError ? 'Password is required*' : ''}
+                error={
+                  passwordAttempt.isPasswordError || loginError.isLoginError
+                }
+                helperText={
+                  passwordAttempt.isPasswordError ? 'Password is required*' : ''
+                }
                 InputProps={{
-                  endAdornment: (passwordAttempt.isPasswordError || loginError.isLoginError) && (
-                    <InputAdornment position="end">
-                      <IconButton edge="end" style={{pointerEvents: 'none'}} tabIndex={parseInt('-1')}>
-                        <ErrorOutlineIcon sx={{color: errorColor}}/>
+                  endAdornment: (passwordAttempt.isPasswordError ||
+                    loginError.isLoginError) && (
+                    <InputAdornment position='end'>
+                      <IconButton
+                        edge='end'
+                        style={{ pointerEvents: 'none' }}
+                        tabIndex={parseInt('-1')}
+                      >
+                        <ErrorOutlineIcon sx={{ color: errorColor }} />
                       </IconButton>
                     </InputAdornment>
-                  ),
+                  )
                 }}
               />
               <FormControlLabel
-                control={<Checkbox value="remember" color="primary" />}
-                label="Remember me"
+                control={<Checkbox value='remember' color='primary' />}
+                label='Remember me'
               />
-              <Typography
-                align='center'
-                style={{color: errorColor}}
-              > {loginError.errorMessage}
+              <Typography align='center' style={{ color: errorColor }}>
+                {' '}
+                {loginError.errorMessage}
               </Typography>
               <Button
-                type="submit"
+                type='submit'
                 fullWidth
-                variant="contained"
+                variant='contained'
                 sx={{ mt: 3, mb: 2 }}
               >
                 Sign In
               </Button>
               <Grid container>
                 <Grid item xs>
-                  <Link href="#" variant="body2">
+                  <Link href='#' variant='body2'>
                     Forgot password?
                   </Link>
                 </Grid>
               </Grid>
             </Box>
-          </Box >
-          <Box sx={{my:4, mx: 4, display: 'flex'}}></Box>
-          <Box component = 'footer' sx={{
-            mt: 24,
-            mx: 4,
-            display: 'flex',
-            justifyContent: 'center'
-            }}>
-              <Copyright sx={{bottom: '0', textAlign: 'center' }} /> 
+          </Box>
+          <Box sx={{ my: 4, mx: 4, display: 'flex' }} />
+          <Box
+            component='footer'
+            sx={{
+              mt: 24,
+              mx: 4,
+              display: 'flex',
+              justifyContent: 'center'
+            }}
+          >
+            <Copyright sx={{ bottom: '0', textAlign: 'center' }} />
           </Box>
         </Grid>
       </Grid>
     </ThemeProvider>
   );
-
 }

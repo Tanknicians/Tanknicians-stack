@@ -25,7 +25,7 @@ enum TankType {
 
 model Login {
   id   Int   @id @default(autoincrement())
-  role Role? // ADMIN, CUSTOMER, EMPLOYEE
+  role Role // ADMIN, CUSTOMER, EMPLOYEE
 
   email    String @unique
   password String
@@ -99,7 +99,7 @@ model ServiceCall {
 }
 
 model TankMetadata {
-  id          Int     @id @default(autoincrement())
+  id          Int      @id @default(autoincrement())
   description String?
   volume      Int // gallons/liters of water
   type        TankType
@@ -108,7 +108,7 @@ model TankMetadata {
   lastDateServiced      DateTime
 
   // Who owns the tank
-  Customer     User        @relation(fields: [customerId], references: [id])
+  Customer     User          @relation(fields: [customerId], references: [id])
   customerId   Int
   // the tank's recorded ServiceCalls
   ServiceCalls ServiceCall[]

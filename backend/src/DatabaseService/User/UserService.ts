@@ -1,29 +1,78 @@
-import { Request, Response } from "express";
-import * as UserDB from "../../../prisma/db/User";
+import { userDB } from '../../../prisma/db/User';
+import * as Prisma from '@prisma/client';
+import { TRPCError } from '@trpc/server';
 
-export async function read(req: Request, res: Response) {
-  const { id } = req.body;
-  const err: string = `User with id: ${id} not found.`;
-
-  const user = await UserDB.read(id);
-  if (!user) {
-    console.error(err);
-    res.json({ success: false, message: err });
+export async function create(user: Omit<Prisma.User, 'id'>) {
+  try {
+    await userDB.create(user);
+  } catch (e) {
+    throw new TRPCError({
+      code: 'INTERNAL_SERVER_ERROR',
+      message: 'An error occured during create.',
+      cause: e
+    });
   }
-
-  res.send(user);
 }
 
-// Search requires a STRING and searches all columns of User
-export async function search(req: Request, res: Response) {
-  const { search } = req.body;
-  const err: string = `User with search: "${search}" not found.`;
-
-  const result = await UserDB.search(search);
-  if (!result) {
-    console.error(err);
-    res.json({ success: false, message: err });
+export async function read(id: number) {
+  try {
+    const user = await userDB.read(id);
+    if (!user) {
+      throw new TRPCError({
+        code: 'NOT_FOUND',
+        message: `User with id: ${id} not found.`
+      });
+    }
+    return user;
+  } catch (e) {
+    throw new TRPCError({
+      code: 'INTERNAL_SERVER_ERROR',
+      message: 'An error occured during read',
+      cause: e
+    });
   }
+}
 
-  res.send(result);
+export async function update(user: Prisma.User) {
+  try {
+    await userDB.update(user);
+  } catch (e) {
+    throw new TRPCError({
+      code: 'INTERNAL_SERVER_ERROR',
+      message: 'An error occured during update.',
+      cause: e
+    });
+  }
+}
+
+export async function deleteOne(id: number) {
+  try {
+    await userDB.deleteUser(id);
+  } catch (e) {
+    throw new TRPCError({
+      code: 'INTERNAL_SERVER_ERROR',
+      message: 'An error occured during delete.',
+      cause: e
+    });
+  }
+}
+
+// Search requires any STRING and searches all columns
+export async function search(search: string) {
+  try {
+    const searchData = userDB.search(search);
+    if (!searchData) {
+      throw new TRPCError({
+        code: 'NOT_FOUND',
+        message: `No searchUser from search found.`
+      });
+    }
+    return searchData;
+  } catch (e) {
+    throw new TRPCError({
+      code: 'INTERNAL_SERVER_ERROR',
+      message: 'An error occured during search.',
+      cause: e
+    });
+  }
 }
