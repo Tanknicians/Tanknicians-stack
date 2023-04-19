@@ -1,15 +1,15 @@
-import * as Prisma from '@prisma/client';
-import { loginDB } from '../../../prisma/db/Login';
-import { TRPCError } from '@trpc/server';
+import * as Prisma from "@prisma/client";
+import { loginDB } from "../../../prisma/db/Login";
+import { TRPCError } from "@trpc/server";
 
-export async function create(login: Omit<Prisma.Login, 'id'>) {
+export async function create(login: Omit<Prisma.Login, "id">) {
   try {
     await loginDB.create(login);
   } catch (e) {
     throw new TRPCError({
-      code: 'INTERNAL_SERVER_ERROR',
-      message: 'An error occured during create.',
-      cause: e
+      code: "INTERNAL_SERVER_ERROR",
+      message: "An error occured during create.",
+      cause: e,
     });
   }
 }
@@ -19,16 +19,16 @@ export async function read(email: string) {
     const login = await loginDB.read(email);
     if (!login) {
       throw new TRPCError({
-        code: 'NOT_FOUND',
-        message: `Login with email: ${email} not found.`
+        code: "NOT_FOUND",
+        message: `Login with email: ${email} not found.`,
       });
     }
     return login;
   } catch (e) {
     throw new TRPCError({
-      code: 'INTERNAL_SERVER_ERROR',
-      message: 'An error occured during read',
-      cause: e
+      code: "INTERNAL_SERVER_ERROR",
+      message: "An error occured during read",
+      cause: e,
     });
   }
 }
@@ -38,9 +38,9 @@ export async function update(login: Prisma.Login) {
     await loginDB.update(login);
   } catch (e) {
     throw new TRPCError({
-      code: 'INTERNAL_SERVER_ERROR',
-      message: 'An error occured during update.',
-      cause: e
+      code: "INTERNAL_SERVER_ERROR",
+      message: "An error occured during update.",
+      cause: e,
     });
   }
 }
@@ -50,9 +50,9 @@ export async function deleteOne(id: number) {
     await loginDB.deleteLogin(id);
   } catch (e) {
     throw new TRPCError({
-      code: 'INTERNAL_SERVER_ERROR',
-      message: 'An error occured during delete.',
-      cause: e
+      code: "INTERNAL_SERVER_ERROR",
+      message: "An error occured during delete.",
+      cause: e,
     });
   }
 }

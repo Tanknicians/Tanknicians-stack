@@ -1,6 +1,6 @@
-import { z } from 'zod';
-import { router, publicProcedure, isRoleCurryMiddleware } from '../../trpc';
-import * as ServiceCall from './ServiceCallService';
+import { z } from "zod";
+import { router, publicProcedure, isRoleCurryMiddleware } from "../../trpc";
+import * as ServiceCall from "./ServiceCallService";
 
 const ServiceCallModel = z.object({
   id: z.number().int(),
@@ -31,32 +31,32 @@ const ServiceCallModel = z.object({
   pestCPresent: z.boolean(),
   pestDPresent: z.boolean(),
   employeeId: z.number().int(),
-  tankId: z.number().int()
+  tankId: z.number().int(),
 });
 
 const createMutation = publicProcedure
-  .use(isRoleCurryMiddleware(['ADMIN']))
+  .use(isRoleCurryMiddleware(["ADMIN"]))
   .input(ServiceCallModel.omit({ id: true }))
   .mutation(async ({ input }) => {
     return await ServiceCall.create(input);
   });
 
 const readQuery = publicProcedure
-  .use(isRoleCurryMiddleware(['ADMIN']))
+  .use(isRoleCurryMiddleware(["ADMIN"]))
   .input(ServiceCallModel.pick({ id: true }))
   .query(async ({ input }) => {
     return await ServiceCall.read(input.id);
   });
 
 const updateMutation = publicProcedure
-  .use(isRoleCurryMiddleware(['ADMIN']))
+  .use(isRoleCurryMiddleware(["ADMIN"]))
   .input(ServiceCallModel)
   .mutation(async ({ input }) => {
     return await ServiceCall.update(input);
   });
 
 const deleteMutation = publicProcedure
-  .use(isRoleCurryMiddleware(['ADMIN']))
+  .use(isRoleCurryMiddleware(["ADMIN"]))
   .input(ServiceCallModel.pick({ id: true }))
   .mutation(async ({ input }) => {
     return await ServiceCall.deleteOne(input.id);
@@ -66,5 +66,5 @@ export const serviceCallRouter = router({
   create: createMutation,
   read: readQuery,
   update: updateMutation,
-  delete: deleteMutation
+  delete: deleteMutation,
 });
