@@ -3,16 +3,18 @@ import { router, publicProcedure, isRoleCurryMiddleware } from "../../trpc";
 import * as Login from './LoginService';
 import * as Prisma from "@prisma/client";
 
+const LoginObject = z.object({
+  id: z.number().int(),
+  email: z.string().email(),
+  password: z.string(),
+  role: z.nativeEnum(Prisma.Role),
+  userId: z.number().int()
+});
 
 const createMutation = publicProcedure
   .use(isRoleCurryMiddleware(["ADMIN"]))
   .input(
-    z.object({
-      email: z.string().email(),
-      password: z.string(),
-      role: z.nativeEnum(Prisma.Role),
-      userId: z.number().positive().int()
-    }),
+    LoginObject.omit({id: true}),
   )
   .mutation(async ({ input }) => {
     return await Login.create(input);
@@ -21,9 +23,7 @@ const createMutation = publicProcedure
 const readQuery = publicProcedure
   .use(isRoleCurryMiddleware(["ADMIN"]))
   .input(
-    z.object({
-      email: z.string().email()
-    }),
+    LoginObject.pick({email: true}),
   )
   .query(async ({ input }) => {
     return await Login.read(input.email);
@@ -32,13 +32,7 @@ const readQuery = publicProcedure
 const updateMutation = publicProcedure
   .use(isRoleCurryMiddleware(["ADMIN"]))
   .input(
-    z.object({
-      id: z.number().positive().int(),
-      email: z.string().email(),
-      password: z.string(),
-      role: z.nativeEnum(Prisma.Role),
-      userId: z.number().positive().int()
-    }),
+    LoginObject,
   )
   .mutation(async ({ input }) => {
     return await Login.update(input);
@@ -47,9 +41,7 @@ const updateMutation = publicProcedure
 const deleteMutation = publicProcedure
   .use(isRoleCurryMiddleware(["ADMIN"]))
   .input(
-    z.object({
-      id: z.number().positive().int()
-    }),
+    LoginObject.pick({id: true}),
   )
   .mutation(async ({ input }) => {
     return await Login.deleteOne(input.id);
