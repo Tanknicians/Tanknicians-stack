@@ -2,9 +2,8 @@ name: Rome Formatter
 
 on:
   push:
-    branches: ['dev', 'releases/*']
+    branches: ['dev', '*']
   pull_request:
-    branches: ['dev']
 
 jobs:
   rome_formatter:
