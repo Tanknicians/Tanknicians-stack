@@ -22,7 +22,7 @@
   },
   "homepage": "https://github.com/Tanknicians/Tanknicians-stack#readme",
   "dependencies": {
-    "@prisma/client": "^4.10.0",
+    "@prisma/client": "^4.13.0",
     "@trpc/server": "^10.18.0",
     "bcrypt": "^5.1.0",
     "cors": "^2.8.5",
@@ -55,7 +55,7 @@
     "@types/react": "^18.0.28",
     "babel-jest": "^29.5.0",
     "jest": "^29.5.0",
-    "prisma": "^4.11.0",
+    "prisma": "^4.13.0",
     "rome": "^11.0.0",
     "ts-jest": "^29.0.5"
   }

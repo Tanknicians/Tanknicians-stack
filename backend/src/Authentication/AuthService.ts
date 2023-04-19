@@ -1,9 +1,9 @@
 // in here we may or may not use axios
-import * as Prisma from '@prisma/client';
-import * as bcrypt from 'bcrypt';
-import * as TokenGenerator from '../TokenGenerator';
-import { loginDB } from '../../prisma/db/Login';
-import { TRPCError } from '@trpc/server';
+import * as Prisma from "@prisma/client";
+import * as bcrypt from "bcrypt";
+import * as TokenGenerator from "../TokenGenerator";
+import { loginDB } from "../../prisma/db/Login";
+import { TRPCError } from "@trpc/server";
 
 const jwtSecret = process.env.JWT_SECRET;
 
@@ -16,14 +16,14 @@ export async function login(login: { email: string; password: string }) {
   // Confirm login credentials existed in full in DB
   if (!savedCredentials) {
     throw new TRPCError({
-      code: 'UNAUTHORIZED',
-      message: `Login with email: ${email} not found.`
+      code: "UNAUTHORIZED",
+      message: `Login with email: ${email} not found.`,
     });
   }
-  if (!savedCredentials.email || !savedCredentials.password) {
+  if (!(savedCredentials.email && savedCredentials.password)) {
     throw new TRPCError({
-      code: 'UNAUTHORIZED',
-      message: 'User record incomplete'
+      code: "UNAUTHORIZED",
+      message: "User record incomplete",
     });
   }
 
@@ -38,19 +38,19 @@ export async function login(login: { email: string; password: string }) {
           if (err) {
             reject(
               new TRPCError({
-                code: 'INTERNAL_SERVER_ERROR',
-                message: 'Error occured during password compare',
-                cause: err
-              })
+                code: "INTERNAL_SERVER_ERROR",
+                message: "Error occured during password compare",
+                cause: err,
+              }),
             );
             return;
           }
           if (!samePasswords) {
             reject(
               new TRPCError({
-                code: 'CONFLICT',
-                message: 'passwords do not match'
-              })
+                code: "CONFLICT",
+                message: "passwords do not match",
+              }),
             );
             return;
           }
@@ -58,59 +58,39 @@ export async function login(login: { email: string; password: string }) {
             if (!jwtSecret) {
               reject(
                 new TRPCError({
-                  code: 'PRECONDITION_FAILED',
-                  message: 'JWT_SECRET is not set in environment variables.'
-                })
+                  code: "PRECONDITION_FAILED",
+                  message: "JWT_SECRET is not set in environment variables.",
+                }),
               );
               return;
             }
             const token = TokenGenerator.generateJWT(
               savedCredentials,
-              jwtSecret
+              jwtSecret,
             );
             resolve({ token, savedCredentials });
           } catch (err) {
             console.error(err);
             reject(
               new TRPCError({
-                code: 'UNAUTHORIZED',
-                message: 'Cannot generate token for session',
-                cause: err
-              })
+                code: "UNAUTHORIZED",
+                message: "Cannot generate token for session",
+                cause: err,
+              }),
             );
           }
-        }
+        },
       );
-    }
+    },
   );
 }
 
-export async function read(login: { email: string }) {
-  const { email } = login;
-  try {
-    const login = await loginDB.read(email);
-    if (!login) {
-      throw new TRPCError({
-        code: 'NOT_FOUND',
-        message: `login with email: ${email} not found.`
-      });
-    }
-    return login;
-  } catch (e) {
-    throw new TRPCError({
-      code: 'INTERNAL_SERVER_ERROR',
-      message: 'An error occured during read',
-      cause: e
-    });
-  }
-}
-
-export async function register(login: Omit<Prisma.Login, 'id'>) {
+export async function register(login: Omit<Prisma.Login, "id">) {
   // though a role is required, having a string helps more than "null"
   if (login.role == null) {
     throw new TRPCError({
-      code: 'BAD_REQUEST',
-      message: 'Role cannot be empty.'
+      code: "BAD_REQUEST",
+      message: "Role cannot be empty.",
     });
   }
 
@@ -119,8 +99,8 @@ export async function register(login: Omit<Prisma.Login, 'id'>) {
     login.password = await bcrypt.hash(login.password, 10);
   } else {
     throw new TRPCError({
-      code: 'BAD_REQUEST',
-      message: 'Password cannot be empty.'
+      code: "BAD_REQUEST",
+      message: "Password cannot be empty.",
     });
   }
 
@@ -128,9 +108,9 @@ export async function register(login: Omit<Prisma.Login, 'id'>) {
     loginDB.create(login);
   } catch (error) {
     throw new TRPCError({
-      code: 'INTERNAL_SERVER_ERROR',
-      message: 'An error occured during registration',
-      cause: error
+      code: "INTERNAL_SERVER_ERROR",
+      message: "An error occured during registration",
+      cause: error,
     });
   }
 }

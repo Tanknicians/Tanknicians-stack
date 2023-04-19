@@ -13,7 +13,7 @@ test("return token for complete login", () => {
     email: "email",
     password: "pw",
     role: "CUSTOMER",
-    userId: null,
+    userId: 1,
   };
 
   expect(generateJWT(userLogin, testSecret)).not.toBe(null);
