@@ -2,49 +2,43 @@ import { z } from "zod";
 import { router, publicProcedure, isRoleCurryMiddleware } from "../../trpc";
 //import * as Login from './LoginService';
 import * as Prisma from "@prisma/client";
+import { create, deleteOne, read, update } from "./LoginService";
+import { LoginModel } from "../../../prisma/zod";
 
 const createMutation = publicProcedure
   .use(isRoleCurryMiddleware(["ADMIN"]))
-  .input(
-    z.object({
-      // data values
-    }),
-  )
+  .input(LoginModel.omit({ id: true }))
   .mutation(async ({ input }) => {
-    // service function
+    let { userId } = input;
+    if (userId === undefined) {
+      userId = null;
+    }
+    create({ ...input, userId });
   });
 
 const readQuery = publicProcedure
   .use(isRoleCurryMiddleware(["ADMIN"]))
-  .input(
-    z.object({
-      // data values
-    }),
-  )
+  .input(LoginModel.pick({ email: true }))
   .query(async ({ input }) => {
-    // service function
+    read(input.email);
   });
 
 const updateMutation = publicProcedure
   .use(isRoleCurryMiddleware(["ADMIN"]))
-  .input(
-    z.object({
-      // data values
-    }),
-  )
+  .input(LoginModel)
   .mutation(async ({ input }) => {
-    // service function
+    let { userId } = input;
+    if (userId === undefined) {
+      userId = null;
+    }
+    update({ ...input, userId });
   });
 
 const deleteMutation = publicProcedure
   .use(isRoleCurryMiddleware(["ADMIN"]))
-  .input(
-    z.object({
-      // data values
-    }),
-  )
+  .input(LoginModel.pick({ id: true }))
   .mutation(async ({ input }) => {
-    // service function
+    deleteOne(input.id);
   });
 
 export const loginRouter = router({
