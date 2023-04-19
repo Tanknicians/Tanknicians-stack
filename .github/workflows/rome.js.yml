@@ -2,7 +2,7 @@ name: Rome Formatter
 
 on:
   push:
-    branches: ['dev', '*']
+    branches: ['dev', 'formatting-actions']
   pull_request:
 
 jobs:
