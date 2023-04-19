@@ -85,26 +85,6 @@ export async function login(login: { email: string; password: string }) {
   );
 }
 
-export async function read(login: { email: string }) {
-  const { email } = login;
-  try {
-    const login = await loginDB.read(email);
-    if (!login) {
-      throw new TRPCError({
-        code: 'NOT_FOUND',
-        message: `login with email: ${email} not found.`
-      });
-    }
-    return login;
-  } catch (e) {
-    throw new TRPCError({
-      code: 'INTERNAL_SERVER_ERROR',
-      message: 'An error occured during read',
-      cause: e
-    });
-  }
-}
-
 export async function register(login: Omit<Prisma.Login, 'id'>) {
   // though a role is required, having a string helps more than "null"
   if (login.role == null) {
