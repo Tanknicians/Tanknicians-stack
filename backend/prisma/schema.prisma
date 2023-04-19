@@ -30,8 +30,8 @@ model Login {
   email    String @unique
   password String
 
-  User   User? @relation(fields: [userId], references: [id])
-  userId Int?
+  User   User @relation(fields: [userId], references: [id])
+  userId Int
 
   @@index([userId])
 }
