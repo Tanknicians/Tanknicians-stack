@@ -26,7 +26,7 @@ const jwtSecret = process.env.JWT_SECRET;
 // middleware for JWT auth
 export function authenticateJWT(token?: string) {
   // TODO: handle the case for when token is an empty string. right now it treats it as null
-  if (!token || !jwtSecret) return null;
+  if (!(token && jwtSecret)) return null;
   return verifyJWT(token, jwtSecret);
 }
 
