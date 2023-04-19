@@ -1,7 +1,6 @@
 import { z } from 'zod';
 import { router, publicProcedure, isRoleCurryMiddleware } from '../../trpc';
 import * as ServiceCall from './ServiceCallService';
-import * as Prisma from '@prisma/client';
 
 const ServiceCallModel = z.object({
   id: z.number().int(),
