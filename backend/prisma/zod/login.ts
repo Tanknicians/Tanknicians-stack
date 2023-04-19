@@ -7,11 +7,11 @@ export const LoginModel = z.object({
   role: z.nativeEnum(Role),
   email: z.string(),
   password: z.string(),
-  userId: z.number().int().nullish(),
+  userId: z.number().int(),
 })
 
 export interface CompleteLogin extends z.infer<typeof LoginModel> {
-  User?: CompleteUser | null
+  User: CompleteUser
 }
 
 /**
@@ -20,5 +20,5 @@ export interface CompleteLogin extends z.infer<typeof LoginModel> {
  * NOTE: Lazy required in case of potential circular dependencies within schema
  */
 export const RelatedLoginModel: z.ZodSchema<CompleteLogin> = z.lazy(() => LoginModel.extend({
-  User: RelatedUserModel.nullish(),
+  User: RelatedUserModel,
 }))
