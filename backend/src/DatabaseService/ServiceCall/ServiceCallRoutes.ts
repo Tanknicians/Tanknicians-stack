@@ -1,50 +1,34 @@
 import { z } from "zod";
 import { router, publicProcedure, isRoleCurryMiddleware } from "../../trpc";
-//import * as ServiceCall from './ServiceCallService';
-import * as Prisma from "@prisma/client";
+import { ServiceCallModel } from "../../../prisma/zod";
+import { create, deleteOne, read, update } from "./ServiceCallService";
 
 const createMutation = publicProcedure
   .use(isRoleCurryMiddleware(["ADMIN"]))
-  .input(
-    z.object({
-      // data values
-    }),
-  )
+  .input(ServiceCallModel.omit({ id: true }))
   .mutation(async ({ input }) => {
-    // service function
+    create(input);
   });
 
 const readQuery = publicProcedure
   .use(isRoleCurryMiddleware(["ADMIN"]))
-  .input(
-    z.object({
-      // data values
-    }),
-  )
+  .input(ServiceCallModel.pick({ id: true }))
   .query(async ({ input }) => {
-    // service function
+    read(input.id);
   });
 
 const updateMutation = publicProcedure
   .use(isRoleCurryMiddleware(["ADMIN"]))
-  .input(
-    z.object({
-      // data values
-    }),
-  )
+  .input(ServiceCallModel)
   .mutation(async ({ input }) => {
-    // service function
+    update(input);
   });
 
 const deleteMutation = publicProcedure
   .use(isRoleCurryMiddleware(["ADMIN"]))
-  .input(
-    z.object({
-      // data values
-    }),
-  )
+  .input(ServiceCallModel.pick({ id: true }))
   .mutation(async ({ input }) => {
-    // service function
+    deleteOne(input.id);
   });
 
 export const serviceCallRouter = router({
