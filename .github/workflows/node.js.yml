@@ -46,12 +46,9 @@ jobs:
         env:
           DATABASE_URL: mysql://prisma:prisma@localhost:3306/prisma
 
-      - name: 'Create env file'
-        working-directory: backend
-        run: echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" > .env
-
       - name: Run tests
         working-directory: backend
         run: npm test
         env:
           DATABASE_URL: mysql://prisma:prisma@localhost:3306/prisma
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
