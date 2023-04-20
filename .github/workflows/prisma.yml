@@ -1,0 +1,48 @@
+name: Prisma Test
+
+on:
+  push:
+    branches:
+      - dev
+      - master
+  pull_request:
+    branches:
+      - dev
+      - master
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_USER: prisma
+          MYSQL_PASSWORD: prisma
+          MYSQL_DATABASE: prisma
+          MYSQL_ROOT_PASSWORD: prisma
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run database migrations
+        run: npx prisma migrate deploy
+        env:
+          DATABASE_URL: mysql://prisma:prisma@localhost:3306/prisma
+
+      - name: Run tests
+        run: npm test
+        env:
+          DATABASE_URL: mysql://prisma:prisma@localhost:3306/prisma
