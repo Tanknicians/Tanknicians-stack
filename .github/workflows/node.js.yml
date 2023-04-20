@@ -2,35 +2,53 @@ name: Node.js CI
 
 on:
   push:
-    branches: [ "master" ]
+    branches: ['master', 'dev']
   pull_request:
-    branches: [ "master", "dev" ]
+    branches: ['master', 'dev']
 
 jobs:
-  build:
-
+  test:
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
         node-version: [18.x]
 
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_USER: prisma
+          MYSQL_PASSWORD: prisma
+          MYSQL_DATABASE: prisma
+          MYSQL_ROOT_PASSWORD: prisma
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
     steps:
-    - uses: actions/checkout@v3
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    - name: Install dependencies
-      working-directory: backend
-      run: npm ci
-    - name: Build application
-      working-directory: backend
-      run: npm run build --if-present
-    - name: 'Create env file'
-      working-directory: backend
-      run: echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" > .env
-    - name: Run tests
-      working-directory: backend
-      run: npm test
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+      - name: Install dependencies
+        working-directory: backend
+        run: npm ci
+      - name: Build application
+        working-directory: backend
+        run: npm run build --if-present
+
+      - name: Run database migrations
+        working-directory: backend
+        run: npx prisma migrate deploy
+        env:
+          DATABASE_URL: mysql://prisma:prisma@localhost:3306/prisma
+
+      - name: Run tests
+        working-directory: backend
+        run: npm test
+        env:
+          DATABASE_URL: mysql://prisma:prisma@localhost:3306/prisma
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
