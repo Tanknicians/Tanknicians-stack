@@ -1,20 +1,19 @@
-import { Login, Role } from "@prisma/client";
-import { authRouter } from "./AuthRoutes";
 import { faker } from "@faker-js/faker";
-import { z } from "zod";
+import { Role } from "@prisma/client";
+import { authRouter } from "./AuthRoutes";
 
 class MockUser {
   email: string;
   password: string;
   id: number;
   role: Role;
-  userId: number | null;
+  userId: number;
 
   constructor(role: Role) {
     this.email = faker.internet.email();
     this.password = faker.internet.password();
     this.id = faker.datatype.number();
-    this.userId = null;
+    this.userId = 1;
     this.role = role;
   }
 
