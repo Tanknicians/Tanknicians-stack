@@ -20,6 +20,7 @@ const registerMutation = publicProcedure
       email: z.string().email(),
       password: z.string(),
       role: z.string(),
+      userId: z.number(),
     }),
   )
   .query(async ({ input }) => {
