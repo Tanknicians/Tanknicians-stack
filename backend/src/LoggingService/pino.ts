@@ -2,7 +2,7 @@ import { pino } from 'pino';
 import { pinoHttp } from 'pino-http';
 
 // used with the back-end server
-const logger = pino(
+export const logger = pino(
   {
     transport: {
       target: 'pino-pretty' // pretty printing
@@ -16,7 +16,7 @@ const logger = pino(
 );
 
 // used with Express/tRPC/HTTP methods
-const httpLogger = pinoHttp(
+export const httpLogger = pinoHttp(
   {
     transport: {
       target: 'pino-pretty' // pretty printing
@@ -28,5 +28,6 @@ const httpLogger = pinoHttp(
     sync: false // Asynchronous logging
   })
 );
+
 
 // NOTE: need to have a log rotation service on the Ubuntu server
