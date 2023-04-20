@@ -11,10 +11,10 @@ jobs:
           ref: ${{ github.head_ref }}
       - name: rome check
         working-directory: backend
-        run: npx rome check --apply-suggested
+        run: npx rome check src --apply-suggested
       - name: rome format
         working-directory: backend
-        run: npx rome format --write
+        run: npx rome format src --write
       - name: Check for modified files
         id: git-check
         run: echo "modified=$(if git diff-index --quiet HEAD --; then echo "false"; else echo "true"; fi)" >> $GITHUB_OUTPUT
