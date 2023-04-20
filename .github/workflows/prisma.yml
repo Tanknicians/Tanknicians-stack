@@ -35,14 +35,17 @@ jobs:
           node-version: 16
 
       - name: Install dependencies
+        working-directory: backend
         run: npm ci
 
       - name: Run database migrations
+        working-directory: backend
         run: npx prisma migrate deploy
         env:
           DATABASE_URL: mysql://prisma:prisma@localhost:3306/prisma
 
       - name: Run tests
+        working-directory: backend
         run: npm test
         env:
           DATABASE_URL: mysql://prisma:prisma@localhost:3306/prisma
