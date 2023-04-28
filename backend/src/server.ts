@@ -4,7 +4,8 @@ import express from "express";
 import { authRouter } from "./Authentication/AuthRoutes";
 import { emailRouter } from "./EmailService/EmailRoutes";
 import { createContext, router } from "./trpc";
-import { logger } from "./LoggingService/pino";
+import { logger, httpLogger } from "./LoggingService/pino";
+
 
 // Initialize the express app
 const app = express();
@@ -17,6 +18,8 @@ const corsOptions = {
 
 // Allow for web-browser usage
 app.use(cors(corsOptions));
+// pino http logger
+app.use(httpLogger)
 
 // Server startup
 const appRouter = router({
