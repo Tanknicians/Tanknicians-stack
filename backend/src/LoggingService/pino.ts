@@ -9,7 +9,7 @@ export const logger = pino(
     }
   },
   pino.destination({
-    dest: './log-file', // omit for stdout
+    dest: '../log-file', // omit for stdout
     minLength: 4096, // Buffer before writing
     sync: false // Asynchronous logging
   })
@@ -23,7 +23,7 @@ export const httpLogger = pinoHttp(
     }
   },
   pino.destination({
-    dest: './http-log-file', // omit for stdout
+    dest: '../http-log-file', // omit for stdout
     minLength: 4096, // Buffer before writing
     sync: false // Asynchronous logging
   })
