@@ -4,7 +4,7 @@ import express from "express";
 import { authRouter } from "./Authentication/AuthRoutes";
 import { emailRouter } from "./EmailService/EmailRoutes";
 import { createContext, router } from "./trpc";
-import { logger } from './LoggingService/pino'
+import { logger } from "./LoggingService/pino";
 
 // Initialize the express app
 const app = express();
@@ -36,8 +36,6 @@ app.listen(process.env.PORT, () => {
   console.log(`TypeScript with Express http://localhost:${process.env.PORT}/`);
   logger.info(`Server up and listening on port ${process.env.PORT}`);
 });
-
-
 
 type AppRouter = typeof appRouter;
 export type { AppRouter };
