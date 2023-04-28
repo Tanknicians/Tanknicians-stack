@@ -3,6 +3,7 @@ import cors from "cors";
 import express from "express";
 import { authRouter } from "./Authentication/AuthRoutes";
 import { createContext, router } from "./trpc";
+import { logger } from './LoggingService/pino'
 
 // Initialize the express app
 const app = express();
@@ -31,7 +32,10 @@ app.use(
 
 app.listen(process.env.PORT, () => {
   console.log(`TypeScript with Express http://localhost:${process.env.PORT}/`);
+  logger.info('Server up and listening on port ' + process.env.PORT);
 });
+
+
 
 type AppRouter = typeof appRouter;
 export type { AppRouter };
