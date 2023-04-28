@@ -13,6 +13,7 @@ export const logger = pino({
   }
 });
 
+// front-end usage 
 export const httpLogger = pinoHttp({
   transport: {
     target: 'pino/file',
