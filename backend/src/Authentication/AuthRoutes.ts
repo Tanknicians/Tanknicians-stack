@@ -27,11 +27,11 @@ const registerMutation = publicProcedure
     return await AuthService.register(input as Omit<Prisma.Login, "id">);
   });
 
-  const refreshMutation = publicProcedure
+const refreshMutation = publicProcedure
   .input(
     z.object({
       email: z.string().email(),
-      token: z.string()
+      token: z.string(),
     }),
   )
   .query(async ({ input }) => {
@@ -41,5 +41,5 @@ const registerMutation = publicProcedure
 export const authRouter = router({
   login: loginMutation,
   register: registerMutation,
-  refresh: refreshMutation
+  refresh: refreshMutation,
 });

@@ -32,10 +32,12 @@ export function generateRefreshToken(login: Login): string {
 
 // middleware for JWT auth
 export function authenticateJWT(
-  token?: string, 
-  isRefreshToken: boolean = false) {
-    // change this to proper error checking
-  if (!(token && jwtSecret && jwtRefreshSecret)) throw new Error("Secret not found!");
+  token?: string,
+  isRefreshToken: boolean = false,
+) {
+  // change this to proper error checking
+  if (!(token && jwtSecret && jwtRefreshSecret))
+    throw new Error("Secret not found!");
   const secret = isRefreshToken ? jwtRefreshSecret : jwtSecret;
   return verifyJWT(token, secret, isRefreshToken);
 }
@@ -46,11 +48,15 @@ const JwtPayload = z.object({
   email: z.string(),
   role: z.nativeEnum(Role),
   userId: z.number().nullable(),
-  isRefreshToken: z.boolean().optional()
+  isRefreshToken: z.boolean().optional(),
 });
 type JwtPayload = z.infer<typeof JwtPayload>;
 
-function verifyJWT(token: string, secret: string, isRefreshToken: boolean): JwtPayload {
+function verifyJWT(
+  token: string,
+  secret: string,
+  isRefreshToken: boolean,
+): JwtPayload {
   const payload = JwtPayload.parse(jwt.verify(token, secret));
   if (isRefreshToken && !payload.isRefreshToken) {
     throw new Error("Invalid token type");
