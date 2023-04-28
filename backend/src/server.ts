@@ -32,7 +32,7 @@ app.use(
 
 app.listen(process.env.PORT, () => {
   console.log(`TypeScript with Express http://localhost:${process.env.PORT}/`);
-  logger.info('Server up and listening on port ' + process.env.PORT);
+  logger.info(`Server up and listening on port ${process.env.PORT}`);
 });
 
 
