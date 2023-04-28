@@ -4,6 +4,7 @@ import express from "express";
 import { authRouter } from "./Authentication/AuthRoutes";
 import { emailRouter } from "./EmailService/EmailRoutes";
 import { createContext, router } from "./trpc";
+import { logger, httpLogger } from "./LoggingService/pino";
 
 // Initialize the express app
 const app = express();
@@ -16,6 +17,8 @@ const corsOptions = {
 
 // Allow for web-browser usage
 app.use(cors(corsOptions));
+// pino http logger
+app.use(httpLogger);
 
 // Server startup
 const appRouter = router({
@@ -33,6 +36,7 @@ app.use(
 
 app.listen(process.env.PORT, () => {
   console.log(`TypeScript with Express http://localhost:${process.env.PORT}/`);
+  logger.info(`Server up and listening on port ${process.env.PORT}`);
 });
 
 type AppRouter = typeof appRouter;
