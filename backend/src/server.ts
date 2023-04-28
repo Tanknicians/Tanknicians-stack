@@ -2,6 +2,7 @@ import * as trpcExpress from "@trpc/server/adapters/express";
 import cors from "cors";
 import express from "express";
 import { authRouter } from "./Authentication/AuthRoutes";
+import { emailRouter } from "./EmailService/EmailRoutes";
 import { createContext, router } from "./trpc";
 
 // Initialize the express app
@@ -18,6 +19,7 @@ app.use(cors(corsOptions));
 
 // Server startup
 const appRouter = router({
+  email: emailRouter,
   auth: authRouter,
 });
 
