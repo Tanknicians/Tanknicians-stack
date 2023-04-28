@@ -52,6 +52,7 @@ const JwtPayload = z.object({
 });
 type JwtPayload = z.infer<typeof JwtPayload>;
 
+// quick function to verify the JWT
 function verifyJWT(
   token: string,
   secret: string,
