@@ -32,9 +32,10 @@ export function authenticateJWT(token?: string) {
 
 //might want to auto gen this later
 const JwtPayload = z.object({
-  id: z.string(),
+  id: z.number(),
   email: z.string(),
   role: z.nativeEnum(Role),
+  userId: z.number().nullable(),
 });
 type JwtPayload = z.infer<typeof JwtPayload>;
 
