@@ -1,32 +1,27 @@
-import { pino } from "pino";
-import { pinoHttp } from "pino-http";
+import { pino } from 'pino';
+import { pinoHttp } from 'pino-http';
 
 // used with the back-end server
-export const logger = pino(
-  {
-    transport: {
-      target: "pino-pretty", // pretty printing
-    },
-  },
-  pino.destination({
-    dest: '../log-file', // omit for stdout
-    minLength: 4096, // Buffer before writing
-    sync: false, // Asynchronous logging
-  }),
-);
+export const logger = pino({
+  transport: {
+    target: 'pino/file', // no pretty printing because it only looks good in console, not in text
+    options: {
+      destination: '../backend.log',
+      minLength: 4096,
+      sync: false
+    }
+  }
+});
 
-// used with Express/tRPC/HTTP methods
-export const httpLogger = pinoHttp(
-  {
-    transport: {
-      target: "pino-pretty", // pretty printing
-    },
-  },
-  pino.destination({
-    dest: '../http-log-file', // omit for stdout
-    minLength: 4096, // Buffer before writing
-    sync: false, // Asynchronous logging
-  }),
-);
+export const httpLogger = pinoHttp({
+  transport: {
+    target: 'pino/file',
+    options: {
+      destination: '../frontend.log',
+      minLength: 4096,
+      sync: false
+    }
+  }
+})
 
 // NOTE: need to have a log rotation service on the Ubuntu server
