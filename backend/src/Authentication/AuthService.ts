@@ -6,6 +6,7 @@ import { loginDB } from "../../prisma/db/Login";
 import { TRPCError } from "@trpc/server";
 
 const jwtSecret = process.env.JWT_SECRET;
+const jwtRefreshSecret = process.env.JWT_REFRESH_SECRET;
 
 export async function login(login: { email: string; password: string }) {
   const { email, password } = login;
@@ -113,4 +114,9 @@ export async function register(login: Omit<Prisma.Login, "id">) {
       cause: error,
     });
   }
+}
+
+// generate refresh token
+export async function refresh(email: string, token: string) {
+  // need the Token Refresh function and error checking here
 }
