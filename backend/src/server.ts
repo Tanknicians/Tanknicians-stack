@@ -5,6 +5,7 @@ import { authRouter } from "./Authentication/AuthRoutes";
 import { emailRouter } from "./EmailService/EmailRoutes";
 import { createContext, router } from "./trpc";
 import { logger, httpLogger } from "./LoggingService/pino";
+import { databaseRouter } from "./DatabaseService/DatabaseRoutes";
 
 // Initialize the express app
 const app = express();
@@ -24,6 +25,7 @@ app.use(httpLogger);
 const appRouter = router({
   email: emailRouter,
   auth: authRouter,
+  db: databaseRouter,
 });
 
 app.use(
