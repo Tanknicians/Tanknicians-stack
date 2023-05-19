@@ -32,10 +32,11 @@ const refreshMutation = publicProcedure
     z.object({
       email: z.string().email(),
       token: z.string(),
+      isRefresh: z.boolean(),
     }),
   )
   .query(async ({ input }) => {
-    return await AuthService.refresh(input.email, input.token);
+    return await AuthService.refresh(input.email, input.token, input.isRefresh);
   });
 
 export const authRouter = router({

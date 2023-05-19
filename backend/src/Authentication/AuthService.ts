@@ -1,7 +1,7 @@
 // in here we may or may not use axios
 import * as Prisma from "@prisma/client";
 import * as bcrypt from "bcrypt";
-import * as TokenGenerator from "../TokenGenerator";
+import {generateJWT, authenticateJWT, generateRefreshToken} from "../TokenGenerator";
 import { loginDB } from "../../prisma/db/Login";
 import { TRPCError } from "@trpc/server";
 
@@ -65,7 +65,7 @@ export async function login(login: { email: string; password: string }) {
               );
               return;
             }
-            const token = TokenGenerator.generateJWT(
+            const token = generateJWT(
               savedCredentials,
               jwtSecret,
             );
@@ -116,7 +116,21 @@ export async function register(login: Omit<Prisma.Login, "id">) {
   }
 }
 
-// generate refresh token
-export async function refresh(email: string, token: string) {
-  // need the Token Refresh function and error checking here
+// generate refresh token; update this to have proper checks and error messaging
+export async function refresh(email: string, token: string, isRefresh: boolean) {
+  
+  // implement error checking
+  const findUser = await loginDB.read(email);
+
+  if (!findUser) return;
+
+  // implement error checking
+  const payload = authenticateJWT(token, isRefresh)
+
+  if (!payload) return;
+
+  const newToken = generateRefreshToken(findUser)
+
+  return newToken;
+
 }
