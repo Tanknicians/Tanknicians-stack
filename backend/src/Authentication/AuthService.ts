@@ -116,21 +116,16 @@ export async function register(login: Omit<Prisma.Login, "id">) {
   }
 }
 
-// generate refresh token; update this to have proper checks and error messaging
-export async function refresh(email: string, token: string, isRefresh: boolean) {
+// Generate a new access token using a refresh token; update this function to include proper checks and error messaging
+export async function refresh(email: string, refreshToken: string) {
   
-  // implement error checking
-  const findUser = await loginDB.read(email);
+  // Find the login based on the provided email
+  
+  // Compare the token associated with the login
 
-  if (!findUser) return;
+  // Validate the refresh token (expiration, integrity)
 
-  // implement error checking
-  const payload = authenticateJWT(token, isRefresh)
+  // Generate a new access token
 
-  if (!payload) return;
-
-  const newToken = generateRefreshToken(findUser)
-
-  return newToken;
-
+  // Return the new access token 
 }
