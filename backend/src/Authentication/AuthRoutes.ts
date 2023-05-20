@@ -31,12 +31,11 @@ const refreshMutation = publicProcedure
   .input(
     z.object({
       email: z.string().email(),
-      token: z.string(),
-      isRefresh: z.boolean(),
+      refreshToken: z.string(),
     }),
   )
   .query(async ({ input }) => {
-    return await AuthService.refresh(input.email, input.token, input.isRefresh);
+    return await AuthService.refresh(input.email, input.refreshToken);
   });
 
 export const authRouter = router({
