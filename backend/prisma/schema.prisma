@@ -33,7 +33,19 @@ model Login {
   User   User @relation(fields: [userId], references: [id])
   userId Int
 
+  RefreshToken RefreshToken[]
+
   @@index([userId])
+}
+
+model RefreshToken {
+  id Int @id @default(autoincrement())
+  refreshToken String 
+
+  Login Login @relation(fields: [loginId], references: [id])
+  loginId Int @unique // login shouldn't have more than one refresh token in db
+
+  @@index([loginId])
 }
 
 model User {
