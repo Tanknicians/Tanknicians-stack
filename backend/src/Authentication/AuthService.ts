@@ -119,11 +119,15 @@ export async function register(login: Omit<Prisma.Login, "id">) {
 // Generate a new access token using a refresh token; update this function to include proper checks and error messaging
 export async function refresh(email: string, refreshToken: string) {
   
+  // Validate the refresh token (expiration, integrity)
+  let tokenValidation = authenticateJWT(refreshToken, true)
+
   // Find the login based on the provided email
+  let login = await loginDB.read(email)
+  if (!login) return;
   
   // Compare the token associated with the login
-
-  // Validate the refresh token (expiration, integrity)
+  
 
   // Generate a new access token
 
