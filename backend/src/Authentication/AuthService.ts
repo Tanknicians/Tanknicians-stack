@@ -2,12 +2,15 @@
 import * as Prisma from "@prisma/client";
 import * as bcrypt from "bcrypt";
 
-import {generateJWT, authenticateJWT, generateRefreshToken} from "../TokenGenerator";
+import {
+  generateJWT,
+  authenticateJWT,
+  generateRefreshToken,
+} from "../TokenGenerator";
 import { loginDB } from "../../prisma/db/Login";
 import { refreshTokenDB } from "../../prisma/db/RefreshToken";
 
 import { TRPCError } from "@trpc/server";
-
 
 const jwtSecret = process.env.JWT_SECRET;
 const jwtRefreshSecret = process.env.JWT_REFRESH_SECRET;
@@ -69,10 +72,7 @@ export async function login(login: { email: string; password: string }) {
               );
               return;
             }
-            const token = generateJWT(
-              savedCredentials,
-              jwtSecret,
-            );
+            const token = generateJWT(savedCredentials, jwtSecret);
             resolve({ token, savedCredentials });
           } catch (err) {
             console.error(err);
@@ -122,14 +122,13 @@ export async function register(login: Omit<Prisma.Login, "id">) {
 
 // Generate a new access token using a refresh token; update this function to include proper checks and error messaging
 export async function refresh(email: string, refreshToken: string) {
-  
   // Validate the refresh token (expiration, integrity)
-  const tokenValidation = authenticateJWT(refreshToken, true)
+  const tokenValidation = authenticateJWT(refreshToken, true);
   // todo: implement proper error checking
   if (!tokenValidation) return;
 
   // Find the login based on the provided email
-  const dbLoginPayload = await loginDB.read(email)
+  const dbLoginPayload = await loginDB.read(email);
   // todo: implement proper error checking
   if (!dbLoginPayload) return;
 
@@ -137,10 +136,10 @@ export async function refresh(email: string, refreshToken: string) {
   const dbRefreshTokenPayload = await refreshTokenDB.read(dbLoginPayload.id);
   // todo: implement proper error checking
   if (!dbRefreshTokenPayload) return;
-  
+
   // Compare the token associated with the login from the database
   if (refreshToken !== dbRefreshTokenPayload.refreshToken) return;
 
   // Generate and return a new access token
-  return generateRefreshToken(dbLoginPayload)
+  return generateRefreshToken(dbLoginPayload);
 }
