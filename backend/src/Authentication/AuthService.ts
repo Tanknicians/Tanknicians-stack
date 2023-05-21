@@ -124,22 +124,22 @@ export async function register(login: Omit<Prisma.Login, "id">) {
 export async function refresh(email: string, refreshToken: string) {
   
   // Validate the refresh token (expiration, integrity)
-  let tokenValidation = authenticateJWT(refreshToken, true)
+  const tokenValidation = authenticateJWT(refreshToken, true)
   // todo: implement proper error checking
   if (!tokenValidation) return;
 
   // Find the login based on the provided email
-  let dbLoginPayload = await loginDB.read(email)
+  const dbLoginPayload = await loginDB.read(email)
   // todo: implement proper error checking
   if (!dbLoginPayload) return;
 
   // Find the refresh token based on the login
-  let dbRefreshTokenPayload = await refreshTokenDB.read(dbLoginPayload.id);
+  const dbRefreshTokenPayload = await refreshTokenDB.read(dbLoginPayload.id);
   // todo: implement proper error checking
   if (!dbRefreshTokenPayload) return;
   
   // Compare the token associated with the login from the database
-  if (refreshToken != dbRefreshTokenPayload.refreshToken) return;
+  if (refreshToken !== dbRefreshTokenPayload.refreshToken) return;
 
   // Generate and return a new access token
   return generateRefreshToken(dbLoginPayload)
