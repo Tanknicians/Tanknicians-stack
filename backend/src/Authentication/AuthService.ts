@@ -34,7 +34,10 @@ export async function login(login: { email: string; password: string }) {
 
   console.log(`login found for ${email}`);
 
-  return new Promise<{ token: string; savedCredentials: Prisma.Login }>(
+  return new Promise<{ 
+    token: string; 
+    refreshToken: string;
+    savedCredentials: Prisma.Login }>(
     (resolve, reject) => {
       bcrypt.compare(
         password,
@@ -73,7 +76,10 @@ export async function login(login: { email: string; password: string }) {
               savedCredentials,
               jwtSecret,
             );
-            resolve({ token, savedCredentials });
+            const refreshToken = generateRefreshToken(
+              savedCredentials,
+            );
+            resolve({ token, refreshToken, savedCredentials });
           } catch (err) {
             console.error(err);
             reject(
@@ -122,7 +128,9 @@ export async function register(login: Omit<Prisma.Login, "id">) {
 
 // Generate a new access token using a refresh token; update this function to include proper checks and error messaging
 export async function refresh(email: string, refreshToken: string) {
-  
+
+  // make sure jwtSecret loaded in
+  if (!jwtSecret) return;
   // Validate the refresh token (expiration, integrity)
   const tokenValidation = authenticateJWT(refreshToken, true)
   // todo: implement proper error checking
@@ -142,5 +150,5 @@ export async function refresh(email: string, refreshToken: string) {
   if (refreshToken !== dbRefreshTokenPayload.refreshToken) return;
 
   // Generate and return a new access token
-  return generateRefreshToken(dbLoginPayload)
+  return generateJWT(dbLoginPayload, jwtSecret, true)
 }
