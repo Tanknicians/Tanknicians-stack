@@ -36,6 +36,8 @@ export async function login(login: { email: string; password: string }) {
 
   return new Promise<{
     token: string;
+  return new Promise<{
+    token: string;
     refreshToken: string;
     savedCredentials: Prisma.Login;
   }>((resolve, reject) => {
