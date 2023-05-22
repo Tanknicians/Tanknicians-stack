@@ -37,66 +37,60 @@ export async function login(login: { email: string; password: string }) {
 
   console.log(`login found for ${email}`);
 
-  return new Promise<{ 
-    token: string; 
+  return new Promise<{
+    token: string;
     refreshToken: string;
-    savedCredentials: Prisma.Login }>(
-    (resolve, reject) => {
-      bcrypt.compare(
-        password,
-        savedCredentials.password,
-        function (err, samePasswords) {
-          if (err) {
+    savedCredentials: Prisma.Login;
+  }>((resolve, reject) => {
+    bcrypt.compare(
+      password,
+      savedCredentials.password,
+      function (err, samePasswords) {
+        if (err) {
+          reject(
+            new TRPCError({
+              code: "INTERNAL_SERVER_ERROR",
+              message: "Error occured during password compare",
+              cause: err,
+            }),
+          );
+          return;
+        }
+        if (!samePasswords) {
+          reject(
+            new TRPCError({
+              code: "CONFLICT",
+              message: "passwords do not match",
+            }),
+          );
+          return;
+        }
+        try {
+          if (!jwtSecret) {
             reject(
               new TRPCError({
-                code: "INTERNAL_SERVER_ERROR",
-                message: "Error occured during password compare",
-                cause: err,
+                code: "PRECONDITION_FAILED",
+                message: "JWT_SECRET is not set in environment variables.",
               }),
             );
             return;
           }
-          if (!samePasswords) {
-            reject(
-              new TRPCError({
-                code: "CONFLICT",
-                message: "passwords do not match",
-              }),
-            );
-            return;
-          }
-          try {
-            if (!jwtSecret) {
-              reject(
-                new TRPCError({
-                  code: "PRECONDITION_FAILED",
-                  message: "JWT_SECRET is not set in environment variables.",
-                }),
-              );
-              return;
-            }
-            const token = generateJWT(
-              savedCredentials,
-              jwtSecret,
-            );
-            const refreshToken = generateRefreshToken(
-              savedCredentials,
-            );
-            resolve({ token, refreshToken, savedCredentials });
-          } catch (err) {
-            console.error(err);
-            reject(
-              new TRPCError({
-                code: "UNAUTHORIZED",
-                message: "Cannot generate token for session",
-                cause: err,
-              }),
-            );
-          }
-        },
-      );
-    },
-  );
+          const token = generateJWT(savedCredentials, jwtSecret);
+          const refreshToken = generateRefreshToken(savedCredentials);
+          resolve({ token, refreshToken, savedCredentials });
+        } catch (err) {
+          console.error(err);
+          reject(
+            new TRPCError({
+              code: "UNAUTHORIZED",
+              message: "Cannot generate token for session",
+              cause: err,
+            }),
+          );
+        }
+      },
+    );
+  });
 }
 
 export async function register(login: Omit<Prisma.Login, "id">) {
@@ -131,7 +125,6 @@ export async function register(login: Omit<Prisma.Login, "id">) {
 
 // Generate a new access token using a refresh token; update this function to include proper checks and error messaging
 export async function refresh(email: string, refreshToken: string) {
-
   // make sure jwtSecret loaded in
   if (!jwtSecret) return;
   // Validate the refresh token (expiration, integrity)
@@ -153,5 +146,5 @@ export async function refresh(email: string, refreshToken: string) {
   if (refreshToken !== dbRefreshTokenPayload.refreshToken) return;
 
   // Generate and return a new access token
-  return generateJWT(dbLoginPayload, jwtSecret, true)
+  return generateJWT(dbLoginPayload, jwtSecret, true);
 }
