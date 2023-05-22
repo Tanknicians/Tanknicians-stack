@@ -36,51 +36,55 @@ export async function login(login: { email: string; password: string }) {
 
   return new Promise<{
     token: string;
-  return new Promise<{
-    token: string;
     refreshToken: string;
-    savedCredentials: Prisma.Login;
-  }>((resolve, reject) => {
-    bcrypt.compare(
-      password,
-      savedCredentials.password,
-      function (err, samePasswords) {
-        if (err) {
-          reject(
-            new TRPCError({
-              code: 'INTERNAL_SERVER_ERROR',
-              message: 'Error occured during password compare',
-              cause: err
-            })
-          );
-          return;
-        }
-        if (!samePasswords) {
-          reject(
-            new TRPCError({
-              code: 'CONFLICT',
-              message: 'passwords do not match'
-            })
-          );
-          return;
-        }
-        try {
-          const token = generateJWT(savedCredentials);
-          const refreshToken = generateRefreshToken(savedCredentials);
-          resolve({ token, refreshToken, savedCredentials });
-        } catch (err) {
-          console.error(err);
-          reject(
-            new TRPCError({
-              code: 'UNAUTHORIZED',
-              message: 'Cannot generate token for session',
-              cause: err
-            })
-          );
-        }
-      }
-    );
-  });
+    savedCredentials: Prisma.Login }>(
+    (resolve, reject) => {
+      bcrypt.compare(
+        password,
+        savedCredentials.password,
+        function (err, samePasswords) {
+          if (err) {
+            reject(
+              new TRPCError({
+                code: "INTERNAL_SERVER_ERROR",
+                message: "Error occured during password compare",
+                cause: err,
+              }),
+            );
+            return;
+          }
+          if (!samePasswords) {
+            reject(
+              new TRPCError({
+                code: "CONFLICT",
+                message: "passwords do not match",
+              }),
+            );
+            return;
+          }
+          try {
+           
+            const token = generateJWT(
+              savedCredentials,
+            );
+            const refreshToken = generateRefreshToken(
+              savedCredentials,
+            );
+            resolve({ token, refreshToken, savedCredentials });
+          } catch (err) {
+            console.error(err);
+            reject(
+              new TRPCError({
+                code: "UNAUTHORIZED",
+                message: "Cannot generate token for session",
+                cause: err,
+              }),
+            );
+          }
+        },
+      );
+    },
+  );
 }
 
 export async function register(login: Omit<Prisma.Login, 'id'>) {
@@ -115,6 +119,7 @@ export async function register(login: Omit<Prisma.Login, 'id'>) {
 
 // Generate a new access token using a refresh token; update this function to include proper checks and error messaging
 export async function refresh(email: string, refreshToken: string) {
+
   // Validate the refresh token (expiration, integrity)
   const tokenValidation = authenticateJWT(refreshToken, true);
   // todo: implement proper error checking
@@ -134,5 +139,5 @@ export async function refresh(email: string, refreshToken: string) {
   if (refreshToken !== dbRefreshTokenPayload.refreshToken) return;
 
   // Generate and return a new access token
-  return generateJWT(dbLoginPayload);
+  return generateJWT(dbLoginPayload)
 }
