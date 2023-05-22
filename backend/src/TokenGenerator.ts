@@ -15,7 +15,7 @@ export function generateSecret(): string {
 export function generateJWT(
   login: Login,
   secret: string,
-  isRefreshToken: boolean = false,
+  isRefreshToken = false,
 ): string {
   const expiresIn = isRefreshToken ? "7d" : "24h";
   const payload = {
@@ -31,10 +31,7 @@ export function generateRefreshToken(login: Login): string {
 }
 
 // middleware for JWT auth
-export function authenticateJWT(
-  token?: string,
-  isRefreshToken: boolean = false,
-) {
+export function authenticateJWT(token?: string, isRefreshToken = false) {
   // change this to proper error checking
   if (!(token && jwtSecret && jwtRefreshSecret))
     throw new Error("Secret not found!");
