@@ -24,26 +24,26 @@ enum TankType {
 }
 
 model Login {
-  id   Int   @id @default(autoincrement())
+  id   Int  @id @default(autoincrement())
   role Role // ADMIN, CUSTOMER, EMPLOYEE
 
   email    String @unique
   password String
 
   User   User @relation(fields: [userId], references: [id])
-  userId Int
+  userId Int  @unique
 
-  RefreshToken RefreshToken[]
+  RefreshToken RefreshToken? // For a one-to-one relationship to work
 
   @@index([userId])
 }
 
 model RefreshToken {
-  id Int @id @default(autoincrement())
-  refreshToken String 
+  id           Int    @id @default(autoincrement())
+  refreshToken String
 
-  Login Login @relation(fields: [loginId], references: [id])
-  loginId Int @unique // login shouldn't have more than one refresh token in db
+  Login   Login @relation(fields: [loginId], references: [id])
+  loginId Int   @unique
 
   @@index([loginId])
 }
@@ -57,8 +57,8 @@ model User {
   address    String?
   phone      String?
 
-  // normally one-to-one relationship, but is entirely possible for one User to have multiple logins
-  login Login[]
+  // changed to optional; we can have User data without a Login
+  login Login?
 
   EmployeeServiceCalls ServiceCall[]
   OwnedTanks           TankMetadata[]
