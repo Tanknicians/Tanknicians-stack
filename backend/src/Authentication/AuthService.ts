@@ -8,7 +8,6 @@ import {
   generateRefreshToken,
 } from "../TokenGenerator";
 import { loginDB } from "../../prisma/db/Login";
-import { refreshTokenDB } from "../../prisma/db/RefreshToken";
 
 import { TRPCError } from "@trpc/server";
 
@@ -65,28 +64,6 @@ export async function login(login: { email: string; password: string }) {
         try {
           const token = generateJWT(savedCredentials);
           const refreshToken = generateRefreshToken(savedCredentials);
-          const refreshTokenPayload = await refreshTokenDB.read(
-            savedCredentials.id,
-          );
-          try {
-            if (!refreshTokenPayload) {
-              refreshTokenDB.create({
-                refreshToken: refreshToken,
-                loginId: savedCredentials.id,
-              });
-            } else {
-              // what should we do here?
-            }
-          } catch (err) {
-            console.error(err);
-            reject(
-              new TRPCError({
-                code: "UNAUTHORIZED",
-                message: "Cannot generate token for session",
-                cause: err,
-              }),
-            );
-          }
           resolve({ token, refreshToken, savedCredentials });
         } catch (err) {
           console.error(err);
@@ -135,6 +112,7 @@ export async function register(login: Omit<Prisma.Login, "id">) {
 
 // Generate a new access token using a refresh token; update this function to include proper checks and error messaging
 export async function refresh(email: string, refreshToken: string) {
+  
   // Validate the refresh token (expiration, integrity)
   const tokenValidation = authenticateJWT(refreshToken, true);
   // todo: implement proper error checking
@@ -144,14 +122,6 @@ export async function refresh(email: string, refreshToken: string) {
   const dbLoginPayload = await loginDB.read(email);
   // todo: implement proper error checking
   if (!dbLoginPayload) return;
-
-  // Find the refresh token based on the login
-  const dbRefreshTokenPayload = await refreshTokenDB.read(dbLoginPayload.id);
-  // todo: implement proper error checking
-  if (!dbRefreshTokenPayload) return;
-
-  // Compare the token associated with the login from the database
-  if (refreshToken !== dbRefreshTokenPayload.refreshToken) return;
 
   // Generate and return a new access token
   return generateJWT(dbLoginPayload);

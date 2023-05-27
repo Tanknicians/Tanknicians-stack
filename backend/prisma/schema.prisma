@@ -33,20 +33,9 @@ model Login {
   User   User @relation(fields: [userId], references: [id])
   userId Int  @unique
 
-  RefreshToken RefreshToken? // For a one-to-one relationship to work
-
   @@index([userId])
 }
 
-model RefreshToken {
-  id           Int    @id @default(autoincrement())
-  refreshToken String
-
-  Login   Login @relation(fields: [loginId], references: [id])
-  loginId Int   @unique
-
-  @@index([loginId])
-}
 
 model User {
   id Int @id @default(autoincrement())
