@@ -1,5 +1,5 @@
 import Prisma from "@prisma/client";
-import { generateSecret, generateJWT } from "./TokenGenerator";
+import { generateSecret, generateToken } from "./TokenGenerator";
 
 let testSecret: string;
 
@@ -16,5 +16,5 @@ test("return token for complete login", () => {
     userId: 1,
   };
 
-  expect(generateJWT(userLogin, testSecret)).not.toBe(null);
+  expect(generateToken(userLogin, testSecret)).not.toBe(null);
 });

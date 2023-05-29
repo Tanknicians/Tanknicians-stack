@@ -3,8 +3,9 @@ import * as Prisma from "@prisma/client";
 import * as bcrypt from "bcrypt";
 
 import {
-  generateJWT,
-  authenticateJWT,
+  generateToken,
+  verifyToken,
+  verifyRefreshToken,
   generateRefreshToken,
 } from "../TokenGenerator";
 import { loginDB } from "../../prisma/db/Login";
@@ -62,7 +63,7 @@ export async function login(login: { email: string; password: string }) {
           return;
         }
         try {
-          const token = generateJWT(savedCredentials);
+          const token = generateToken(savedCredentials);
           const refreshToken = generateRefreshToken(savedCredentials);
           resolve({ token, refreshToken, savedCredentials });
         } catch (err) {
@@ -113,7 +114,7 @@ export async function register(login: Omit<Prisma.Login, "id">) {
 // Generate a new access token using a refresh token; update this function to include proper checks and error messaging
 export async function refresh(email: string, refreshToken: string) {
   // Validate the refresh token (expiration, integrity)
-  const tokenValidation = authenticateJWT(refreshToken, true);
+  const tokenValidation = verifyRefreshToken(refreshToken);
   // todo: implement proper error checking
   if (!tokenValidation) return;
 
@@ -123,5 +124,5 @@ export async function refresh(email: string, refreshToken: string) {
   if (!dbLoginPayload) return;
 
   // Generate and return a new access token
-  return generateJWT(dbLoginPayload);
+  return generateToken(dbLoginPayload);
 }
