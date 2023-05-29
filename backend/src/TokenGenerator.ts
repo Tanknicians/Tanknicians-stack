@@ -12,7 +12,6 @@ const JwtPayload = z.object({
   email: z.string(),
   role: z.nativeEnum(Role),
   userId: z.number().nullable(),
-  isRefreshToken: z.boolean().optional(),
 });
 type JwtPayload = z.infer<typeof JwtPayload>;
 
