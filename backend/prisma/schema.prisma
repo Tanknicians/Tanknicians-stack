@@ -24,17 +24,18 @@ enum TankType {
 }
 
 model Login {
-  id   Int   @id @default(autoincrement())
+  id   Int  @id @default(autoincrement())
   role Role // ADMIN, CUSTOMER, EMPLOYEE
 
   email    String @unique
   password String
 
   User   User @relation(fields: [userId], references: [id])
-  userId Int
+  userId Int  @unique
 
   @@index([userId])
 }
+
 
 model User {
   id Int @id @default(autoincrement())
@@ -45,8 +46,8 @@ model User {
   address    String?
   phone      String?
 
-  // normally one-to-one relationship, but is entirely possible for one User to have multiple logins
-  login Login[]
+  // changed to optional; we can have User data without a Login
+  login Login?
 
   EmployeeServiceCalls ServiceCall[]
   OwnedTanks           TankMetadata[]

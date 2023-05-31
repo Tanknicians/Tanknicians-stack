@@ -6,8 +6,8 @@ import { tankMetaDataRouter } from "./TankMetadata/TankMetadataRoutes";
 import { userRouter } from "./User/UserRoutes";
 
 export const databaseRouter = router({
-  lg: loginRouter,
+  login: loginRouter,
   sc: serviceCallRouter,
   td: tankMetaDataRouter,
-  usr: userRouter,
+  user: userRouter,
 });

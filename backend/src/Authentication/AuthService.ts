@@ -1,12 +1,15 @@
 // in here we may or may not use axios
 import * as Prisma from "@prisma/client";
 import * as bcrypt from "bcrypt";
-import * as TokenGenerator from "../TokenGenerator";
-import { loginDB } from "../../prisma/db/Login";
-import { TRPCError } from "@trpc/server";
 
-const jwtSecret = process.env.JWT_SECRET;
-const jwtRefreshSecret = process.env.JWT_REFRESH_SECRET;
+import {
+  generateToken,
+  verifyRefreshToken,
+  generateRefreshToken,
+} from "../TokenGenerator";
+import { loginDB } from "../../prisma/db/Login";
+
+import { TRPCError } from "@trpc/server";
 
 export async function login(login: { email: string; password: string }) {
   const { email, password } = login;
@@ -30,60 +33,51 @@ export async function login(login: { email: string; password: string }) {
 
   console.log(`login found for ${email}`);
 
-  return new Promise<{ token: string; savedCredentials: Prisma.Login }>(
-    (resolve, reject) => {
-      bcrypt.compare(
-        password,
-        savedCredentials.password,
-        function (err, samePasswords) {
-          if (err) {
-            reject(
-              new TRPCError({
-                code: "INTERNAL_SERVER_ERROR",
-                message: "Error occured during password compare",
-                cause: err,
-              }),
-            );
-            return;
-          }
-          if (!samePasswords) {
-            reject(
-              new TRPCError({
-                code: "CONFLICT",
-                message: "passwords do not match",
-              }),
-            );
-            return;
-          }
-          try {
-            if (!jwtSecret) {
-              reject(
-                new TRPCError({
-                  code: "PRECONDITION_FAILED",
-                  message: "JWT_SECRET is not set in environment variables.",
-                }),
-              );
-              return;
-            }
-            const token = TokenGenerator.generateJWT(
-              savedCredentials,
-              jwtSecret,
-            );
-            resolve({ token, savedCredentials });
-          } catch (err) {
-            console.error(err);
-            reject(
-              new TRPCError({
-                code: "UNAUTHORIZED",
-                message: "Cannot generate token for session",
-                cause: err,
-              }),
-            );
-          }
-        },
-      );
-    },
-  );
+  return new Promise<{
+    token: string;
+    refreshToken: string;
+    savedCredentials: Prisma.Login;
+  }>((resolve, reject) => {
+    bcrypt.compare(
+      password,
+      savedCredentials.password,
+      async function (err, samePasswords) {
+        if (err) {
+          reject(
+            new TRPCError({
+              code: "INTERNAL_SERVER_ERROR",
+              message: "Error occured during password compare",
+              cause: err,
+            }),
+          );
+          return;
+        }
+        if (!samePasswords) {
+          reject(
+            new TRPCError({
+              code: "CONFLICT",
+              message: "passwords do not match",
+            }),
+          );
+          return;
+        }
+        try {
+          const token = generateToken(savedCredentials);
+          const refreshToken = generateRefreshToken(savedCredentials);
+          resolve({ token, refreshToken, savedCredentials });
+        } catch (err) {
+          console.error(err);
+          reject(
+            new TRPCError({
+              code: "UNAUTHORIZED",
+              message: "Cannot generate token for session",
+              cause: err,
+            }),
+          );
+        }
+      },
+    );
+  });
 }
 
 export async function register(login: Omit<Prisma.Login, "id">) {
@@ -116,7 +110,26 @@ export async function register(login: Omit<Prisma.Login, "id">) {
   }
 }
 
-// generate refresh token
-export async function refresh(email: string, token: string) {
-  // need the Token Refresh function and error checking here
+// Generate a new access token using a refresh token
+export async function refresh(email: string, refreshToken: string) {
+  const tokenValidation = verifyRefreshToken(refreshToken);
+
+  if (!tokenValidation) {
+    throw new TRPCError({
+      code: "FORBIDDEN",
+      message: "Refresh token not valid.",
+    });
+  }
+
+  const dbLoginPayload = await loginDB.read(email);
+
+  if (!dbLoginPayload) {
+    throw new TRPCError({
+      code: "NOT_FOUND",
+      message: "Login does not exist.",
+    });
+  }
+
+  // Generate and return a new ACCESS token
+  return generateToken(dbLoginPayload);
 }

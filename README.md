@@ -30,4 +30,4 @@ Change terminal operating directory to the "backend" folder: "cd /backend"
 
 Run "npm install" and "npx prisma generate" to download the dependencies and build the required models. 
 
-Required: .env file in the folder of /backend with DATABASE_URL, PORT, and JWT_TOKEN as strings.
+Required: .env file in the folder of /backend with DATABASE_URL, PORT, JWT_TOKEN, and JWT_REFRESH_TOKEN as strings.
