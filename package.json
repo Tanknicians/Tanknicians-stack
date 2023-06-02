@@ -1,0 +1,20 @@
+{
+  "name": "tanknicians-stack",
+  "version": "1.0.0",
+  "description": "Full stack web application, mobile application, and data analysis platform for Tanknicians, LLC",
+  "main": "jest.config.js",
+  "scripts": {
+    "test": "test",
+    "dev": "concurrently \"cd backend && npm run generate && npm run start\" \"cd frontend && npm start\" "
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Tanknicians/Tanknicians-stack.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Tanknicians/Tanknicians-stack/issues"
+  },
+  "homepage": "https://github.com/Tanknicians/Tanknicians-stack#readme"
+}
