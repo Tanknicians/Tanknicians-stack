@@ -5,6 +5,7 @@ import RequireAuth from './Services/RequireAuth';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { queryClient, trpc, trpcClient } from './API/trpcClient';
 import PasswordResetPage from './Pages/PasswordResetPage';
+import React from 'react';
 
 export default function App() {
   return (
