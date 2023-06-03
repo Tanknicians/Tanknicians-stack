@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import App from './App';
 import { disableReactDevTools } from '@fvilers/disable-react-devtools';
 import { Provider } from 'react-redux';
-import {store} from './Redux/store' 
+import { store } from './Redux/store' 
 
 // Disables react dev tools for security
 if(process.env.NODE_ENV === 'production')
