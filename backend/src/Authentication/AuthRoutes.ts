@@ -1,29 +1,22 @@
 import { z } from "zod";
-import { router, publicProcedure } from "../trpc";
+import { router, publicProcedure } from "trpc";
 import * as AuthService from "./AuthService";
 import * as Prisma from "@prisma/client";
+import { Login } from "types";
 
-const loginMutation = publicProcedure
+const loginQuery = publicProcedure
   .input(
-    z.object({
-      email: z.string().email(),
-      password: z.string(),
-    }),
+    Login.pick({ email: true , password: true }),
   )
-  .mutation(async ({ input }) => {
+  .query(async ({ input }) => {
     return await AuthService.login(input);
   });
 
 const registerMutation = publicProcedure
   .input(
-    z.object({
-      email: z.string().email(),
-      password: z.string(),
-      role: z.string(),
-      userId: z.number(),
-    }),
+    Login.omit({id: true})
   )
-  .query(async ({ input }) => {
+  .mutation(async ({ input }) => {
     return await AuthService.register(input as Omit<Prisma.Login, "id">);
   });
 
@@ -39,7 +32,7 @@ const refreshMutation = publicProcedure
   });
 
 export const authRouter = router({
-  login: loginMutation,
+  login: loginQuery,
   register: registerMutation,
   refresh: refreshMutation,
 });
