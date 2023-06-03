@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { publicProcedure, router } from "../trpc";
+import { publicProcedure, router } from "trpc";
 import { resetPassword } from "./EmailService";
 
 export const emailRouter = router({
