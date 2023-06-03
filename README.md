@@ -24,10 +24,5 @@ Project consists of 3 major components:
 2. Mobile application for on-site use by technicians to fulfill service call needs (recording, reporting, order placement).
 3. Public-facing customer portal for records review, inventory browsing, and display of additional static content.
 
-* To Use Back-End:
+* To start server and frontend: run <code>npm run dev</code> from the root directory.
 
-Change terminal operating directory to the "backend" folder: "cd /backend"
-
-Run "npm install" and "npx prisma generate" to download the dependencies and build the required models. 
-
-Required: .env file in the folder of /backend with DATABASE_URL, PORT, JWT_TOKEN, and JWT_REFRESH_TOKEN as strings.
