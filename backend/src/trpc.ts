@@ -58,3 +58,5 @@ export const isRoleCurryMiddleware = (roles: Role[]) =>
 const isAdmin = isRoleCurryMiddleware(["ADMIN"]);
 
 export const adminProcedure = publicProcedure.use(isAdmin);
+
+// create privateProcedure for server-only operations
