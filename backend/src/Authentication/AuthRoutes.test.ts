@@ -1,7 +1,6 @@
 import { faker } from "@faker-js/faker";
 import { Role } from "@prisma/client";
 import { authRouter } from "./AuthRoutes";
-import '@types/jest'
 
 class MockUser {
   email: string;
