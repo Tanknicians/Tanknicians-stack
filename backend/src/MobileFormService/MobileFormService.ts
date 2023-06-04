@@ -34,12 +34,6 @@ export async function checkServiceCall(serviceCall: Omit<Prisma.ServiceCall, "id
       
 
     /* 
-    
-    a function to fetch a "previous" service call? 4
-            ie: the latest form uploaded on May 3rd, 2023
-        if there is no previous SC, skip comparisons
-            
-
         the function could also be generating a log of which of the specified parameters are out of range ?
 
         primary goal: compare to 'reasonable' min-max ranges and set the "isApproved" boolean to true/false
@@ -53,7 +47,7 @@ export async function checkServiceCall(serviceCall: Omit<Prisma.ServiceCall, "id
 // const for valid parameters
 
 // const for valid delta (0.1 delta off average okay? etc)
-
+// this needs to be updated for actual proper deltas 
 const delta = {
     alkalinity: 0.1,
     calcium: 0.1,
