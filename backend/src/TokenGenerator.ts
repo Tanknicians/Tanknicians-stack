@@ -2,13 +2,13 @@ import * as Prisma from "@prisma/client";
 import * as jwt from "jsonwebtoken";
 import { randomBytes } from "crypto";
 import { Login } from "types";
-import { z } from "zod"
+import { z } from "zod";
 
 const jwtSecret = process.env.JWT_SECRET;
 const jwtRefreshSecret = process.env.JWT_REFRESH_SECRET;
 
 //might want to auto gen this later
-const JwtPayload = Login.omit({password: true});
+const JwtPayload = Login.omit({ password: true });
 type JwtPayload = z.infer<typeof JwtPayload>;
 
 // Generates 256bit hex string for jwt secret

@@ -1,12 +1,12 @@
-import * as Prisma from '@prisma/client';
-import { z } from 'zod';
+import * as Prisma from "@prisma/client";
+import { z } from "zod";
 
 export const Login = z.object({
   id: z.number().int(),
   email: z.string().email(),
   password: z.string(),
   role: z.nativeEnum(Prisma.Role),
-  userId: z.number().int()
+  userId: z.number().int(),
 });
 
 export const ServiceCall = z.object({
@@ -38,7 +38,7 @@ export const ServiceCall = z.object({
   pestCPresent: z.boolean(),
   pestDPresent: z.boolean(),
   employeeId: z.number().int(),
-  tankId: z.number().int()
+  tankId: z.number().int(),
 });
 
 export const TankMetadata = z.object({
@@ -48,7 +48,7 @@ export const TankMetadata = z.object({
   type: z.nativeEnum(Prisma.TankType),
   tanknicianSourcedOnly: z.boolean(),
   lastDateServiced: z.date(),
-  customerId: z.number().int()
+  customerId: z.number().int(),
 });
 
 export const User = z.object({
@@ -57,5 +57,5 @@ export const User = z.object({
   middleName: z.string().nullable(),
   lastName: z.string().nullable(),
   address: z.string().nullable(),
-  phone: z.string().nullable()
+  phone: z.string().nullable(),
 });
