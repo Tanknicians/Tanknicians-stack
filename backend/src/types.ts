@@ -20,7 +20,7 @@ export const ServiceCall = z.object({
   nitrate: z.number(),
   phosphate: z.number(),
   ATOOperational: z.boolean(),
-  ATOResevoirFilled: z.boolean(),
+  ATOReservoirFilled: z.boolean(),
   chemFilterAdjusted: z.boolean(),
   doserAdjustementOrManualDosing: z.boolean(),
   dosingReservoirsFull: z.boolean(),
