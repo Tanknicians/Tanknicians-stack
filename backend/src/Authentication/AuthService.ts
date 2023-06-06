@@ -1,15 +1,15 @@
 // in here we may or may not use axios
-import * as Prisma from '@prisma/client';
-import * as bcrypt from 'bcrypt';
+import * as Prisma from "@prisma/client";
+import * as bcrypt from "bcrypt";
 
 import {
   generateToken,
   verifyRefreshToken,
-  generateRefreshToken
-} from '../TokenGenerator';
-import { loginDB } from '../../prisma/db/Login';
+  generateRefreshToken,
+} from "../TokenGenerator";
+import { loginDB } from "../../prisma/db/Login";
 
-import { TRPCError } from '@trpc/server';
+import { TRPCError } from "@trpc/server";
 
 export async function login(login: { email: string; password: string }) {
   const { email, password } = login;
@@ -20,14 +20,14 @@ export async function login(login: { email: string; password: string }) {
   // Confirm login credentials existed in full in DB
   if (!savedCredentials) {
     throw new TRPCError({
-      code: 'UNAUTHORIZED',
-      message: `Login with email: ${email} not found.`
+      code: "UNAUTHORIZED",
+      message: `Login with email: ${email} not found.`,
     });
   }
   if (!(savedCredentials.email && savedCredentials.password)) {
     throw new TRPCError({
-      code: 'UNAUTHORIZED',
-      message: 'User record incomplete'
+      code: "UNAUTHORIZED",
+      message: "User record incomplete",
     });
   }
 
@@ -45,19 +45,19 @@ export async function login(login: { email: string; password: string }) {
         if (err) {
           reject(
             new TRPCError({
-              code: 'INTERNAL_SERVER_ERROR',
-              message: 'Error occurred during password compare',
-              cause: err
-            })
+              code: "INTERNAL_SERVER_ERROR",
+              message: "Error occurred during password compare",
+              cause: err,
+            }),
           );
           return;
         }
         if (!samePasswords) {
           reject(
             new TRPCError({
-              code: 'CONFLICT',
-              message: 'passwords do not match'
-            })
+              code: "CONFLICT",
+              message: "passwords do not match",
+            }),
           );
           return;
         }
@@ -70,23 +70,23 @@ export async function login(login: { email: string; password: string }) {
           console.error(err);
           reject(
             new TRPCError({
-              code: 'UNAUTHORIZED',
-              message: 'Cannot generate token for session',
-              cause: err
-            })
+              code: "UNAUTHORIZED",
+              message: "Cannot generate token for session",
+              cause: err,
+            }),
           );
         }
-      }
+      },
     );
   });
 }
 
-export async function register(login: Omit<Prisma.Login, 'id'>) {
+export async function register(login: Omit<Prisma.Login, "id">) {
   // though a role is required, having a string helps more than "null"
   if (login.role == null) {
     throw new TRPCError({
-      code: 'BAD_REQUEST',
-      message: 'Role cannot be empty.'
+      code: "BAD_REQUEST",
+      message: "Role cannot be empty.",
     });
   }
 
@@ -95,8 +95,8 @@ export async function register(login: Omit<Prisma.Login, 'id'>) {
     login.password = await bcrypt.hash(login.password, 10);
   } else {
     throw new TRPCError({
-      code: 'BAD_REQUEST',
-      message: 'Password cannot be empty.'
+      code: "BAD_REQUEST",
+      message: "Password cannot be empty.",
     });
   }
 
@@ -104,9 +104,9 @@ export async function register(login: Omit<Prisma.Login, 'id'>) {
     await loginDB.create(login);
   } catch (error) {
     throw new TRPCError({
-      code: 'INTERNAL_SERVER_ERROR',
-      message: 'An error occured during registration',
-      cause: error
+      code: "INTERNAL_SERVER_ERROR",
+      message: "An error occured during registration",
+      cause: error,
     });
   }
 }
@@ -117,8 +117,8 @@ export async function refresh(email: string, refreshToken: string) {
 
   if (!tokenValidation) {
     throw new TRPCError({
-      code: 'FORBIDDEN',
-      message: 'Refresh token not valid.'
+      code: "FORBIDDEN",
+      message: "Refresh token not valid.",
     });
   }
 
@@ -126,8 +126,8 @@ export async function refresh(email: string, refreshToken: string) {
 
   if (!dbLoginPayload) {
     throw new TRPCError({
-      code: 'NOT_FOUND',
-      message: 'Login does not exist.'
+      code: "NOT_FOUND",
+      message: "Login does not exist.",
     });
   }
   const secret = process.env.JWT_SECRET;
