@@ -1,8 +1,11 @@
-/** @type {import('ts-jest').JestConfigWithTsJest} */
-module.exports = {
+import type {Config} from 'jest';
+
+const config: Config = {
+  verbose: true,
   preset: "ts-jest",
   testEnvironment: "node",
   rootDir: "./",
+  modulePaths: ["<rootDir>"],
   moduleNameMapper: {
     '^trpc/(.*)$': '<rootDir>/backend/src/trpc/$1',
     '^prisma/(.*)$': '<rootDir>/backend/prisma/$1',
@@ -10,3 +13,4 @@ module.exports = {
   },
 };
 
+export default config;
