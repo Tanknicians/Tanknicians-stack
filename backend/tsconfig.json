@@ -13,9 +13,9 @@
     "skipLibCheck": true /* Skip type checking all .d.ts files. */,
     "baseUrl": ".",
     "paths": {
-      "trpc": ["src/trpc"],
+      "trpc": ["src/trpc.ts"],
       "prisma": ["prisma"],
-      "types": ["src/types"]
+      "types": ["src/types.ts"]
     }
   }
 }
