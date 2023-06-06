@@ -15,7 +15,8 @@
     "paths": {
       "trpc": ["src/trpc"],
       "prisma": ["prisma"],
-      "types": ["src/types"]
+      "types": ["src/types"],
+      "config": ["src/config"]
     }
   }
 }
