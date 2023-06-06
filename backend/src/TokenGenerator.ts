@@ -17,7 +17,10 @@ export function generateSecret(): string {
 }
 
 // Signs a token with a secret
-export function generateToken(secret: string | undefined, login: Prisma.Login): string {
+export function generateToken(
+  secret: string | undefined,
+  login: Prisma.Login,
+): string {
   if (!jwtSecret) throw new Error("JWT secret not found.");
   const expiresIn = "24h";
   const payload = {
