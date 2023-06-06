@@ -1,6 +1,6 @@
 import { QueryClient } from "@tanstack/react-query";
 import { createTRPCReact, httpBatchLink } from "@trpc/react-query";
-import type { AppRouter } from "../../../../../backend/src/server";
+import type { AppRouter } from "../../../backend/src/server";
 
 export const getToken = () => sessionStorage.getItem("token") ?? "";
 
