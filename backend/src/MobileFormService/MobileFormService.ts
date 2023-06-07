@@ -21,13 +21,7 @@ export async function uploadServiceCall(
 export function checkServiceCall(
   serviceCall: Omit<Prisma.ServiceCall, "id">,
 ): Omit<Prisma.ServiceCall, "id"> {
-
-  const {
-    alkalinity,
-    calcium,
-    nitrate,
-    phosphate
-  } = serviceCall;
+  const { alkalinity, calcium, nitrate, phosphate } = serviceCall;
 
   if (
     alkalinity < paramLimits.alkalinityMin ||
@@ -60,10 +54,8 @@ const paramLimits = {
   nitrateMin: 1,
   nitrateMax: 20,
   phosphateMin: 0.03,
-  phosphateMax: 0.24
+  phosphateMax: 0.24,
 };
-
-
 
 // Standard deviation calculations, takes in an array of Service Calls without "id"
 function calculateStandardDeviation(data: Omit<Prisma.ServiceCall, "id">[]): {
@@ -115,7 +107,6 @@ function calculateStandardDeviation(data: Omit<Prisma.ServiceCall, "id">[]): {
   };
   return standardDeviation;
 }
-
 
 /* This code used to be part of the MobileFormService "checkServiceCall" code, may be recycled later.
 
