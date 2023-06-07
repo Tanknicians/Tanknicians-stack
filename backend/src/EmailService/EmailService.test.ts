@@ -1,4 +1,4 @@
-import "../config";
+import "config";
 import { resetPassword, sendEmail } from "./EmailService";
 
 const testEmail = process.env.TEST_EMAIL;

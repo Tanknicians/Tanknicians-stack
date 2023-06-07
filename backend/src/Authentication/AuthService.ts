@@ -46,7 +46,7 @@ export async function login(login: { email: string; password: string }) {
           reject(
             new TRPCError({
               code: "INTERNAL_SERVER_ERROR",
-              message: "Error occured during password compare",
+              message: "Error occurred during password compare",
               cause: err,
             }),
           );
@@ -62,7 +62,8 @@ export async function login(login: { email: string; password: string }) {
           return;
         }
         try {
-          const token = generateToken(savedCredentials);
+          const secret = process.env.JWT_SECRET;
+          const token = generateToken(secret, savedCredentials);
           const refreshToken = generateRefreshToken(savedCredentials);
           resolve({ token, refreshToken, savedCredentials });
         } catch (err) {
@@ -129,7 +130,7 @@ export async function refresh(email: string, refreshToken: string) {
       message: "Login does not exist.",
     });
   }
-
+  const secret = process.env.JWT_SECRET;
   // Generate and return a new ACCESS token
-  return generateToken(dbLoginPayload);
+  return generateToken(secret, dbLoginPayload);
 }

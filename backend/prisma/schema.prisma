@@ -59,8 +59,8 @@ model ServiceCall {
   isApproved Boolean  @default(false) // for admin to approve the ServiceCall
   createdOn  DateTime @default(now())
 
-  billed          Boolean
   customerRequest String
+  employeeNotes String
 
   alkalinity Float
   calcium    Float
@@ -68,7 +68,7 @@ model ServiceCall {
   phosphate  Float
 
   ATOOperational                 Boolean
-  ATOResevoirFilled              Boolean
+  ATOReservoirFilled             Boolean
   chemFilterAdjusted             Boolean
   doserAdjustementOrManualDosing Boolean
   dosingReservoirsFull           Boolean
@@ -76,7 +76,6 @@ model ServiceCall {
   glassCleanedInside             Boolean
   glassCleanedOutside            Boolean
   mechFilterChanged              Boolean
-  notesUpdated                   Boolean
   pumpsClearedOfDebris           Boolean
   saltCreepCleaned               Boolean
   skimmerCleanedAndOperational   Boolean

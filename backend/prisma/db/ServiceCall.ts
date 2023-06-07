@@ -1,4 +1,4 @@
-import { ServiceCall, PrismaClient, TankMetadata, User } from '@prisma/client';
+import { ServiceCall, PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 // CREATE
@@ -26,6 +26,19 @@ export async function read(id: number) {
   });
 }
 
+// should return the first few latest service calls from a specified tank
+export async function readLatest(tankId: number) {
+  return await prisma.serviceCall.findMany({
+    where: {
+      tankId: tankId
+    },
+    orderBy: {
+      id: 'desc'
+    },
+    take: 3 // change this for n-service calls to return, currently set >1 to get averages on data
+  });
+}
+
 // UPDATE
 export async function update(serviceCall: ServiceCall) {
   await prisma.serviceCall.update({
@@ -50,5 +63,7 @@ export async function deleteServiceCall(id: number) {
 export async function getAll() {
   return await prisma.serviceCall.findMany();
 }
+
+// SEARCH (needs to be implemented)
 
 export * as serviceCallDB from './ServiceCall';

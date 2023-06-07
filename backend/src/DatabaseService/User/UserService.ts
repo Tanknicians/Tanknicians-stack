@@ -1,4 +1,4 @@
-import { userDB } from "../../../prisma/db/User";
+import { userDB } from "prisma/db/User";
 import * as Prisma from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 

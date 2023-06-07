@@ -16,5 +16,5 @@ test("return token for complete login", () => {
     userId: 1,
   };
 
-  expect(generateToken(userLogin, testSecret)).not.toBe(null);
+  expect(generateToken(testSecret, userLogin)).not.toBe(null);
 });

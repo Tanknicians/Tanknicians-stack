@@ -1,5 +1,5 @@
 import * as Prisma from "@prisma/client";
-import { tankDB } from "../../../prisma/db/TankMetadata";
+import { tankDB } from "prisma/db/TankMetadata";
 import { TRPCError } from "@trpc/server";
 
 export async function create(tank: Omit<Prisma.TankMetadata, "id">) {

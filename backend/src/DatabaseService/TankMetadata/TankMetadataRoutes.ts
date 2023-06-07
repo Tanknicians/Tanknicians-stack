@@ -1,44 +1,33 @@
-import { z } from "zod";
-import { router, publicProcedure, isRoleCurryMiddleware } from "../../trpc";
-import * as TankMetadata from "./TankMetadataService";
-import * as Prisma from "@prisma/client";
-
-const TankMetadataObject = z.object({
-  id: z.number().int(),
-  description: z.string().nullable(),
-  volume: z.number().positive(),
-  type: z.nativeEnum(Prisma.TankType),
-  tanknicianSourcedOnly: z.boolean(),
-  lastDateServiced: z.date(),
-  customerId: z.number().int(),
-});
+import { router, publicProcedure, isRoleCurryMiddleware } from "trpc";
+import * as TankMetadataService from "./TankMetadataService";
+import { TankMetadata } from "types";
 
 const createMutation = publicProcedure
   .use(isRoleCurryMiddleware(["ADMIN"]))
-  .input(TankMetadataObject.omit({ id: true }))
+  .input(TankMetadata.omit({ id: true }))
   .mutation(async ({ input }) => {
-    return await TankMetadata.create(input);
+    return await TankMetadataService.create(input);
   });
 
 const readQuery = publicProcedure
   .use(isRoleCurryMiddleware(["ADMIN"]))
-  .input(TankMetadataObject.pick({ id: true }))
+  .input(TankMetadata.pick({ id: true }))
   .query(async ({ input }) => {
-    return await TankMetadata.read(input.id);
+    return await TankMetadataService.read(input.id);
   });
 
 const updateMutation = publicProcedure
   .use(isRoleCurryMiddleware(["ADMIN"]))
-  .input(TankMetadataObject)
+  .input(TankMetadata)
   .mutation(async ({ input }) => {
-    return await TankMetadata.update(input);
+    return await TankMetadataService.update(input);
   });
 
 const deleteMutation = publicProcedure
   .use(isRoleCurryMiddleware(["ADMIN"]))
-  .input(TankMetadataObject.pick({ id: true }))
+  .input(TankMetadata.pick({ id: true }))
   .mutation(async ({ input }) => {
-    return await TankMetadata.deleteOne(input.id);
+    return await TankMetadataService.deleteOne(input.id);
   });
 
 export const tankMetaDataRouter = router({
