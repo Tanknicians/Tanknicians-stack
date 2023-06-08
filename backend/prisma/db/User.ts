@@ -19,7 +19,7 @@ export async function read(id: number) {
   });
 }
 
-export async function login(id: number) {
+export async function readLoginByUserId(id: number) {
   return await prisma.user.findUnique({
     where: {
       id: id
@@ -30,7 +30,7 @@ export async function login(id: number) {
   });
 }
 
-export async function serviceCalls(id: number) {
+export async function readEmployeeServiceCallsByUserId(id: number) {
   return await prisma.user.findMany({
     where: {
       id: id
@@ -41,7 +41,7 @@ export async function serviceCalls(id: number) {
   });
 }
 
-export async function tankMetadata(id: number) {
+export async function readTankMetadataByUserId(id: number) {
   return await prisma.user.findMany({
     where: {
       id: id
