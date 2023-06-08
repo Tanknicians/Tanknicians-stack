@@ -1,4 +1,4 @@
-import { TankMetadata, PrismaClient, User } from '@prisma/client';
+import { TankMetadata, PrismaClient, TankType } from '@prisma/client';
 const prisma = new PrismaClient();
 
 // CREATE
@@ -25,6 +25,14 @@ export async function read(id: number) {
   });
 }
 
+export async function readTanksByCustomerId(customerId: number) {
+  return await prisma.tankMetadata.findMany({
+    where: {
+      customerId: customerId
+    }
+  });
+}
+
 // UPDATE
 export async function update(tank: TankMetadata) {
   await prisma.tankMetadata.update({
@@ -44,6 +52,32 @@ export async function deleteTankMetadata(id: number) {
     }
   });
 }
+
+// SEARCH
+export async function search(search: string) {
+  return await prisma.tankMetadata.findMany({
+    where: {
+      OR: [
+        { description: { contains: search } },
+        { type: { equals: search.toUpperCase() as TankType } }
+      ]
+    }
+  });
+}
+
+// SEARCH by date range
+export async function searchByDateTime(startDate: Date, endDate: Date) {
+  return await prisma.tankMetadata.findMany({
+    where: {
+      lastDateServiced: {
+        gte: startDate,
+        lte: endDate,
+      },
+    },
+  });
+}
+
+
 
 // ALL
 export async function getAll() {
