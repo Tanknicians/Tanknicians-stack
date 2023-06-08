@@ -20,6 +20,17 @@ export async function read(email: string) {
   });
 }
 
+export async function readUserByLoginId(id: number) {
+  return await prisma.login.findUnique({
+    where: {
+      id: id
+    },
+    select: {
+      User: true
+    }
+  })
+}
+
 // UPDATE
 export async function update(login: Login) {
   await prisma.login.update({
@@ -36,6 +47,18 @@ export async function deleteLogin(id: number) {
   await prisma.login.delete({
     where: {
       id: id
+    }
+  });
+}
+
+// SEARCH
+export async function search(search: String) {
+  return await prisma.login.findMany({
+    where: {
+      OR: [
+        { email: { contains: String(search) } }
+        // we can add more parameters as-needed
+      ]
     }
   });
 }
