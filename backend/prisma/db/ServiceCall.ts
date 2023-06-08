@@ -80,6 +80,18 @@ export async function search(search: String) {
   });
 }
 
+// SEARCH by date range
+export async function searchByDateTime(startDate: Date, endDate: Date) {
+  return await prisma.serviceCall.findMany({
+    where: {
+      createdOn: {
+        gte: startDate,
+        lte: endDate,
+      },
+    },
+  });
+}
+
 // ALL
 export async function getAll() {
   return await prisma.serviceCall.findMany();
