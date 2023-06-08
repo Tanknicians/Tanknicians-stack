@@ -1,6 +1,7 @@
 import { router, publicProcedure, isRoleCurryMiddleware } from "trpc";
 import * as ServiceCallService from "./ServiceCallService";
 import { ServiceCall } from "types";
+import { z } from "zod";
 
 const createMutation = publicProcedure
   .use(isRoleCurryMiddleware(["ADMIN"]))
@@ -30,9 +31,21 @@ const deleteMutation = publicProcedure
     return await ServiceCallService.deleteOne(input.id);
   });
 
+  const searchQuery = publicProcedure
+  .use(isRoleCurryMiddleware(['ADMIN']))
+  .input(
+    z.object({
+      search: z.string()
+    })
+  )
+  .query(async ({ input }) => {
+    return await ServiceCallService.search(input.search);
+  });
+
 export const serviceCallRouter = router({
   create: createMutation,
   read: readQuery,
   update: updateMutation,
   delete: deleteMutation,
+  search: searchQuery
 });
