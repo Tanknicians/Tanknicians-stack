@@ -57,7 +57,7 @@ export async function deleteOne(id: number) {
   }
 }
 
-// Search requires any STRING and searches all columns
+// Search requires any STRING and searches all string-based columns
 export async function search(search: string) {
   try {
     const searchData = userDB.search(search);
