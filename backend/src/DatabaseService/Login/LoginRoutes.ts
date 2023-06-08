@@ -1,6 +1,6 @@
-import { router, publicProcedure, isRoleCurryMiddleware } from "trpc";
+import { router, publicProcedure, isRoleCurryMiddleware } from "./../../trpc";
 import * as LoginService from "./LoginService";
-import { Login } from "types";
+import { Login } from "./../../types";
 
 const createMutation = publicProcedure
   .use(isRoleCurryMiddleware(["ADMIN"]))

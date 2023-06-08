@@ -1,6 +1,6 @@
-import { router, publicProcedure, isRoleCurryMiddleware } from "trpc";
+import { router, publicProcedure, isRoleCurryMiddleware } from "./../../trpc";
 import * as TankMetadataService from "./TankMetadataService";
-import { TankMetadata } from "types";
+import { TankMetadata } from "./../../types";
 
 const createMutation = publicProcedure
   .use(isRoleCurryMiddleware(["ADMIN"]))

@@ -1,8 +1,8 @@
 import { z } from "zod";
-import { router, publicProcedure } from "trpc";
+import { router, publicProcedure } from "./../trpc";
 import * as AuthService from "./AuthService";
 import * as Prisma from "@prisma/client";
-import { Login } from "types";
+import { Login } from "./../types";
 
 const loginQuery = publicProcedure
   .input(Login.pick({ email: true, password: true }))

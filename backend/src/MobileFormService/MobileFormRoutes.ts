@@ -1,5 +1,5 @@
-import { router, publicProcedure, isRoleCurryMiddleware } from "trpc";
-import { ServiceCall } from "types";
+import { router, publicProcedure, isRoleCurryMiddleware } from "./../trpc";
+import { ServiceCall } from "./../types";
 import { uploadServiceCall } from "./MobileFormService";
 
 const uploadFormMutation = publicProcedure
