@@ -35,11 +35,11 @@ const deleteMutation = publicProcedure
   .use(isRoleCurryMiddleware(['ADMIN']))
   .input(
     z.object({
-      search: z.string()
+      searchString: z.string()
     })
   )
   .query(async ({ input }) => {
-    return await ServiceCallService.search(input.search);
+    return await ServiceCallService.search(input.searchString);
   });
 
 export const serviceCallRouter = router({

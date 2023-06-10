@@ -35,11 +35,11 @@ const searchQuery = publicProcedure
   .use(isRoleCurryMiddleware(['ADMIN']))
   .input(
     z.object({
-      search: z.string()
+      searchString: z.string()
     })
   )
   .query(async ({ input }) => {
-    return await TankMetadataService.search(input.search);
+    return await TankMetadataService.search(input.searchString);
   });
 
 export const tankMetaDataRouter = router({
