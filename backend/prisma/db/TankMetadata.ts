@@ -54,7 +54,7 @@ export async function deleteTankMetadata(id: number) {
 }
 
 // SEARCH
-export async function search(search: string) {
+export async function searchByString(search: string) {
   return await prisma.tankMetadata.findMany({
     where: {
       OR: [

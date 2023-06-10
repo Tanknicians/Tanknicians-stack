@@ -61,7 +61,7 @@ export async function deleteOne(id: number) {
 // Search requires any STRING and searches all string-based columns
   export async function search(search: string) {
     try {
-      const searchData = serviceCallDB.search(search)
+      const searchData = serviceCallDB.searchByString(search)
       if (!searchData) {
         throw new TRPCError({
           code: "NOT_FOUND",

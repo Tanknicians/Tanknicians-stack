@@ -60,7 +60,7 @@ export async function deleteOne(id: number) {
 // Search requires any STRING and searches all string-based columns
 export async function search(search: string) {
   try {
-    const searchData = userDB.search(search);
+    const searchData = userDB.searchByString(search);
     if (!searchData) {
       throw new TRPCError({
         code: "NOT_FOUND",

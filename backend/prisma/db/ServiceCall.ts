@@ -1,4 +1,5 @@
 import { ServiceCall, PrismaClient } from '@prisma/client';
+import { boolean } from 'zod';
 const prisma = new PrismaClient();
 
 // CREATE
@@ -69,7 +70,7 @@ export async function deleteServiceCall(id: number) {
 }
 
 // SEARCH
-export async function search(search: String) {
+export async function searchByString(search: String) {
   return await prisma.serviceCall.findMany({
     where: {
       OR: [
