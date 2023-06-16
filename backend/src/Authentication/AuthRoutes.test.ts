@@ -1,71 +1,45 @@
-import { faker } from "@faker-js/faker";
-import { Role } from "@prisma/client";
-import { authRouter } from "./AuthRoutes";
+import request from "supertest"
+import express from "express";
+import authRouter from "./AuthRoutes";
+import * as AuthService from "./AuthService";
 
-class MockUser {
-  email: string;
-  password: string;
-  id: number;
-  role: Role;
-  userId: number;
+const app = express();
+app.use(authRouter);
 
-  constructor(role: Role) {
-    this.email = faker.internet.email();
-    this.password = faker.internet.password();
-    this.id = faker.datatype.number();
-    this.userId = 1;
-    this.role = role;
-  }
+describe("Authentication API", () => {
+  test("should login user", async () => {
+    const mockLogin = jest.spyOn(AuthService, "login");
+    const mockReq = { body: { username: "testuser", password: "testpassword" } };
+    const mockRes = { status: jest.fn(), json: jest.fn() };
 
-  public getAdminUser() {
-    return {
-      id: this.id,
-      email: this.email,
-      password: this.password,
-      role: this.role,
-      userId: this.userId,
-    };
-  }
-  public getAdminUserData() {
-    const { id, ...adminUserData } = this.getAdminUser();
-    return adminUserData;
-  }
-  public createCaller() {
-    return authRouter.createCaller({
-      jwtPayload: {
-        id: this.id,
-        email: this.email,
-        role: this.role,
-        userId: this.userId,
-      },
-    });
-  }
-}
+    await request(app).post("/login").send(mockReq.body);
 
-describe("User creation management", () => {
-  const adminUser = new MockUser(Role.ADMIN);
-  const caller = adminUser.createCaller();
-
-  test("should create a user", async () => {
-    await caller.register(adminUser.getAdminUserData());
-  });
-});
-
-describe("User login management", () => {
-  const adminUser = new MockUser(Role.ADMIN);
-  const caller = adminUser.createCaller();
-
-  beforeAll(async () => {
-    await caller.register(adminUser.getAdminUserData());
+    expect(mockLogin).toHaveBeenCalledWith(mockReq, mockRes);
+    expect(mockRes.status).toHaveBeenCalledWith(200);
+    expect(mockRes.json).toHaveBeenCalled();
   });
 
-  test("should login a user", async () => {
-    const result = await caller.login({
-      email: adminUser.email,
-      password: adminUser.password,
-    });
-    expect(result.savedCredentials.role).toEqual(adminUser.role);
-    expect(result.savedCredentials.email).toEqual(adminUser.email);
-    expect(result.savedCredentials.userId).toEqual(adminUser.userId);
+  test("should register user", async () => {
+    const mockRegister = jest.spyOn(AuthService, "register");
+    const mockReq = { body: { username: "testuser", password: "testpassword" } };
+    const mockRes = { status: jest.fn(), json: jest.fn() };
+
+    await request(app).post("/register").send(mockReq.body);
+
+    expect(mockRegister).toHaveBeenCalledWith(mockReq, mockRes);
+    expect(mockRes.status).toHaveBeenCalledWith(200);
+    expect(mockRes.json).toHaveBeenCalled();
+  });
+
+  test("should refresh token", async () => {
+    const mockRefresh = jest.spyOn(AuthService, "refresh");
+    const mockReq = { body: { refreshToken: "testrefresh" } };
+    const mockRes = { status: jest.fn(), json: jest.fn() };
+
+    await request(app).post("/refresh").send(mockReq.body);
+
+    expect(mockRefresh).toHaveBeenCalledWith(mockReq, mockRes);
+    expect(mockRes.status).toHaveBeenCalledWith(200);
+    expect(mockRes.json).toHaveBeenCalled();
   });
 });
