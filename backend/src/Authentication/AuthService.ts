@@ -8,7 +8,6 @@ import {
 } from '../TokenGenerator';
 import { loginDB } from '../../prisma/db/Login';
 import { Request, Response, NextFunction } from 'express';
-import { JwtPayload } from 'jsonwebtoken';
 
 export async function login(req: Request, res: Response) {
   const { email, password } = req.body;
@@ -129,14 +128,13 @@ export function authenticateRoleMiddleWare(roles: string[]) {
       return res.status(401).send({ message: 'No token provided' });
     }
     const token = authHeader.split(' ')[1];
-    let jwtPayload: JwtPayload;
     try {
-      jwtPayload = verifyToken(token);
-      res.locals.jwtPayload = jwtPayload;
+      verifyToken(token);
     } catch (error) {
       return res.status(401).send({ message: 'Invalid token' });
     }
-    if (!roles.includes(jwtPayload.role)) {
+    const decodedToken: any = verifyToken(token); 
+    if (!roles.includes(decodedToken.role)) {
       return res.status(403).send({ message: 'Unauthorized access' });
     }
     next();
