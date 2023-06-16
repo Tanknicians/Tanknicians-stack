@@ -1,4 +1,5 @@
 import { ServiceCall, PrismaClient } from '@prisma/client';
+import { boolean } from 'zod';
 const prisma = new PrismaClient();
 
 // CREATE
@@ -27,7 +28,7 @@ export async function read(id: number) {
 }
 
 // should return the first few latest service calls from a specified tank
-export async function readLatest(tankId: number) {
+export async function readLatestByTankId(tankId: number) {
   return await prisma.serviceCall.findMany({
     where: {
       tankId: tankId
@@ -35,7 +36,16 @@ export async function readLatest(tankId: number) {
     orderBy: {
       id: 'desc'
     },
-    take: 3 // change this for n-service calls to return, currently set >1 to get averages on data
+    take: 5 // change this for n-service calls to return, currently set >1 to get averages on data
+  });
+}
+
+// read ALL service calls for a tank
+export async function readAllByTankId(tankId: number){
+  return await prisma.serviceCall.findMany({
+    where: {
+      tankId: tankId
+    }
   });
 }
 
@@ -56,6 +66,30 @@ export async function deleteServiceCall(id: number) {
     where: {
       id: id
     }
+  });
+}
+
+// SEARCH
+export async function searchByString(search: String) {
+  return await prisma.serviceCall.findMany({
+    where: {
+      OR: [
+        { customerRequest: { contains: String(search) } },
+        { employeeNotes: { contains: String(search) } },
+      ]
+    }
+  });
+}
+
+// SEARCH by date range
+export async function searchByDateTime(startDate: Date, endDate: Date) {
+  return await prisma.serviceCall.findMany({
+    where: {
+      createdOn: {
+        gte: startDate,
+        lte: endDate,
+      },
+    },
   });
 }
 

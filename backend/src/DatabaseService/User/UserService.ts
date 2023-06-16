@@ -1,16 +1,12 @@
-import { userDB } from "./../../../prisma/db/User";
 import * as Prisma from "@prisma/client";
-import { TRPCError } from "@trpc/server";
+import { userDB } from "./../../../prisma/db/User";
 
 export async function create(user: Omit<Prisma.User, "id">) {
   try {
     await userDB.create(user);
+    return { message: "User created successfully" };
   } catch (e) {
-    throw new TRPCError({
-      code: "INTERNAL_SERVER_ERROR",
-      message: "An error occured during create.",
-      cause: e,
-    });
+    throw new Error("An error occurred during create.");
   }
 }
 
@@ -18,61 +14,40 @@ export async function read(id: number) {
   try {
     const user = await userDB.read(id);
     if (!user) {
-      throw new TRPCError({
-        code: "NOT_FOUND",
-        message: `User with id: ${id} not found.`,
-      });
+      throw new Error(`User with id: ${id} not found.`);
     }
     return user;
   } catch (e) {
-    throw new TRPCError({
-      code: "INTERNAL_SERVER_ERROR",
-      message: "An error occured during read",
-      cause: e,
-    });
+    throw new Error("An error occurred during read.");
   }
 }
 
 export async function update(user: Prisma.User) {
   try {
     await userDB.update(user);
+    return { message: "User updated successfully" };
   } catch (e) {
-    throw new TRPCError({
-      code: "INTERNAL_SERVER_ERROR",
-      message: "An error occured during update.",
-      cause: e,
-    });
+    throw new Error("An error occurred during update.");
   }
 }
 
 export async function deleteOne(id: number) {
   try {
     await userDB.deleteUser(id);
+    return { message: "User deleted successfully" };
   } catch (e) {
-    throw new TRPCError({
-      code: "INTERNAL_SERVER_ERROR",
-      message: "An error occured during delete.",
-      cause: e,
-    });
+    throw new Error("An error occurred during delete.");
   }
 }
 
-// Search requires any STRING and searches all columns
 export async function search(search: string) {
   try {
-    const searchData = userDB.search(search);
+    const searchData = userDB.searchByString(search);
     if (!searchData) {
-      throw new TRPCError({
-        code: "NOT_FOUND",
-        message: "No searchUser from search found.",
-      });
+      throw new Error("No User from search found.");
     }
     return searchData;
   } catch (e) {
-    throw new TRPCError({
-      code: "INTERNAL_SERVER_ERROR",
-      message: "An error occured during search.",
-      cause: e,
-    });
+    throw new Error("An error occurred during search.");
   }
 }

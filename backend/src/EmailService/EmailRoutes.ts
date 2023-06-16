@@ -1,11 +1,16 @@
-import { z } from "zod";
-import { publicProcedure, router } from "./../trpc";
+import express from "express";
 import { resetPassword } from "./EmailService";
 
-export const emailRouter = router({
-  resetPassword: publicProcedure
-    .input(z.object({ email: z.string().email() }))
-    .mutation(async ({ input }) => {
-      return resetPassword(input.email);
-    }),
+const emailRouter = express.Router();
+
+emailRouter.post("/reset-password", async (req, res) => {
+  try {
+    const { email } = req.body;
+    const result = await resetPassword(email);
+    res.json(result);
+  } catch (error) {
+    res.status(500).json({ error: "An error occurred during resetPassword." });
+  }
 });
+
+export default emailRouter;
