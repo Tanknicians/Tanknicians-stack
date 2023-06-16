@@ -11,7 +11,6 @@ import { Request, Response, NextFunction } from "express";
 import { JwtPayload } from "jsonwebtoken";
 
 export async function login(req: Request, res: Response) {
-
   const { email, password } = req.body;
   const savedCredentials = await loginDB.read(email);
 
@@ -32,37 +31,28 @@ export async function login(req: Request, res: Response) {
 
   console.log(`login found for ${email}`);
 
-  bcrypt.compare(password, savedCredentials.password, async function (
-    err,
-    samePasswords
-  ) {
-    if (err) {
-      return res.status(500).json({
-        code: "INTERNAL_SERVER_ERROR",
-        message: "Error occurred during password compare",
-        cause: err,
-      });
-    }
+  try {
+    const samePasswords = bcrypt.compare(password, savedCredentials.password);
     if (!samePasswords) {
       return res.status(409).json({
         code: "CONFLICT",
         message: "passwords do not match",
       });
     }
-    try {
-      const token = generateToken(savedCredentials);
-      const refreshToken = generateRefreshToken(savedCredentials);
-      return res.json({ token, refreshToken, savedCredentials });
-    } catch (err) {
-      console.error(err);
-      return res.status(401).json({
-        code: "UNAUTHORIZED",
-        message: "Cannot generate tokens for session",
-        cause: err,
-      });
-    }
-  });
+    const token = generateToken(savedCredentials);
+    const refreshToken = generateRefreshToken(savedCredentials);
+    res.json({ token, refreshToken, savedCredentials }); 
+  } catch (err) {
+    console.error(err);
+    return res.status(401).json({
+      code: "UNAUTHORIZED",
+      message: "Cannot generate tokens for session",
+      cause: err,
+    });
+  }
 }
+
+
 
 export async function register(req: Request, res: Response) {
   const login = req.body;
@@ -84,7 +74,7 @@ export async function register(req: Request, res: Response) {
   }
 
   try {
-    login.password = await bcrypt.hash(login.password, 10);
+    login.password = bcrypt.hash(login.password, 10);
     await loginDB.create(login);
     return res.json({ message: "Registration successful" });
   } catch (error) {
