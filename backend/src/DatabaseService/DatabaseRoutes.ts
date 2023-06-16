@@ -1,5 +1,5 @@
 // required imports: Express and Prisma Database
-import { router } from "trpc";
+import { router } from "./../trpc";
 import { loginRouter } from "./Login/LoginRoutes";
 import { serviceCallRouter } from "./ServiceCall/ServiceCallRoutes";
 import { tankMetaDataRouter } from "./TankMetadata/TankMetadataRoutes";

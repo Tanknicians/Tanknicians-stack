@@ -1,5 +1,5 @@
 import * as Prisma from "@prisma/client";
-import { serviceCallDB } from "prisma/db/ServiceCall";
+import { serviceCallDB } from "../../../prisma/db/ServiceCall";
 import { TRPCError } from "@trpc/server";
 
 export async function create(serviceCall: Omit<Prisma.ServiceCall, "id">) {

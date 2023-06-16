@@ -1,7 +1,7 @@
 import * as Prisma from "@prisma/client";
 import * as jwt from "jsonwebtoken";
 import { randomBytes } from "crypto";
-import { Login } from "types";
+import { Login } from "./types";
 import { z } from "zod";
 
 const jwtSecret = process.env.JWT_SECRET;
