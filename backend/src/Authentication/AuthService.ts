@@ -9,16 +9,17 @@ import {
 
 import { loginDB } from '../../prisma/db/Login';
 import { Request, Response, NextFunction } from 'express';
+import { LoginInput, RefreshInput, RegisterInput } from '../types';
 
 export async function login(req: Request, res: Response) {
-  const { email, password } = req.body;
-  const savedCredentials = await loginDB.read(email);
+  const login = req.body as LoginInput;
+  const savedCredentials = await loginDB.read(login.email);
 
   // Confirm login credentials existed in full in DB
   if (!savedCredentials) {
     return res.status(401).json({
       code: 'UNAUTHORIZED',
-      message: `Login with email: ${email} not found.`
+      message: `Login with email: ${login.email} not found.`
     });
   }
 
@@ -29,9 +30,9 @@ export async function login(req: Request, res: Response) {
     });
   }
 
-  console.log(`login found for ${email}`);
+  console.log(`login found for ${login.email}`);
 
-  const samePasswords = bcrypt.compare(password, savedCredentials.password);
+  const samePasswords = await bcrypt.compare(login.password, savedCredentials.password);
   if (!samePasswords) {
     return res.status(401).json({
       code: 'UNAUTHORIZED',
@@ -53,10 +54,10 @@ export async function login(req: Request, res: Response) {
 }
 
 export async function register(req: Request, res: Response) {
-  const login = req.body;
+  const registration = req.body as RegisterInput;
 
   // Though a role is required, having a string helps more than "null"
-  if (login.role == null) {
+  if (registration.role == null) {
     return res.status(400).json({
       code: 'BAD_REQUEST',
       message: 'Role cannot be empty.'
@@ -64,7 +65,7 @@ export async function register(req: Request, res: Response) {
   }
 
   // Not allowed to register an empty password
-  if (!login.password) {
+  if (!registration.password) {
     return res.status(400).json({
       code: 'BAD_REQUEST',
       message: 'Password cannot be empty.'
@@ -72,8 +73,8 @@ export async function register(req: Request, res: Response) {
   }
 
   try {
-    login.password = bcrypt.hash(login.password, 10);
-    await loginDB.create(login);
+    registration.password = await bcrypt.hash(registration.password, 10);
+    await loginDB.create(registration);
     return res.json({ message: 'Registration successful' });
   } catch (error) {
     console.error(error);
@@ -87,10 +88,11 @@ export async function register(req: Request, res: Response) {
 
 // Generate a new access token using a refresh token
 export async function refresh(req: Request, res: Response) {
-  const { email, refreshToken } = req.body;
+
+  const payload = req.body as RefreshInput;
 
   try {
-    verifyRefreshToken(refreshToken);
+    verifyRefreshToken(payload.refreshToken);
   } catch (error) {
     console.log('Invalid token.');
     return res.status(403).json({
@@ -99,7 +101,7 @@ export async function refresh(req: Request, res: Response) {
     });
   }
 
-  const savedCredentials = await loginDB.read(email);
+  const savedCredentials = await loginDB.read(payload.email);
 
   if (!savedCredentials) {
     return res.status(404).json({
