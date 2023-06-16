@@ -20,7 +20,7 @@ import IconButton from '@mui/material/IconButton';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import { setCredentials } from '../Services/authSlice';
 import loginRandomImages from '../Components/LoginPageRandomImage';
-import { trpc } from '../API/trpcClient';
+import { useLoginMutation } from '../Services/authApiSlice';
 
 function Copyright(props: { [k: string]: unknown }) {
   return (
@@ -48,13 +48,14 @@ const randomImagePath =
 const randomImage = require(`../Assets/Images/${randomImagePath}`);
 
 export default function LoginPage() {
+  const [login, { isLoading }] = useLoginMutation();
+
   // Hooks for API and Routing
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   // FIXME:
   // Implement some feature while isLoading
-  const login = trpc.auth.login.useQuery({email: 'testemail@gmail.com', password: 'hunter2'});
 
   // Error states to be checked for incorrect input
   const [emailAttempt, setEmailError] = useState({
@@ -110,27 +111,28 @@ export default function LoginPage() {
     }
   };
 
-  const loginAttempt = (user: { email: string; password: string }) => {
-    login(
-      {
-        email: user.email,
-        password: user.password
-      },
-      {
-        onError(error) {
-          // Handle error
-          console.log(error);
-          setLoginError({
-            errorMessage: 'Incorrect email or password.',
-            isLoginError: true
-          });
-        },
-        onSuccess: ({ savedCredentials, token }) => {
-          dispatch(setCredentials({ savedCredentials, token }));
-          navigate('/dashboard/Managerial');
-        }
-      }
-    );
+  const loginAttempt = async (user: { email: string; password: string }) => {
+    const { email, password } = user;
+
+    try {
+      const userData = await login({ email, password }).unwrap();
+      dispatch(setCredentials({ ...userData, user }));
+
+      // navigate('/dashboard');
+    } catch (err) {
+      // if (!err?.originalStatus) {
+      //     // isLoading: true until timeout occurs
+      //     setErrMsg('No Server Response');
+      // } else if (err.originalStatus === 400) {
+      //     setErrMsg('Missing Username or Password');
+      // } else if (err.originalStatus === 401) {
+      //     setErrMsg('Unauthorized');
+      // } else {
+      //     setErrMsg('Login Failed');
+      // }
+      console.log(err);
+      // errRef.current.focus();
+    }
   };
 
   return (
