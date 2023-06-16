@@ -1,4 +1,4 @@
-import { Login, PrismaClient } from '@prisma/client';
+import { Login, PrismaClient, Role } from '@prisma/client';
 const prisma = new PrismaClient();
 
 // CREATE
@@ -20,6 +20,17 @@ export async function read(email: string) {
   });
 }
 
+export async function readUserByLoginId(id: number) {
+  return await prisma.login.findUnique({
+    where: {
+      id: id
+    },
+    select: {
+      User: true
+    }
+  })
+}
+
 // UPDATE
 export async function update(login: Login) {
   await prisma.login.update({
@@ -39,6 +50,21 @@ export async function deleteLogin(id: number) {
     }
   });
 }
+
+// SEARCH
+export async function searchByString(search: String) {
+  return await prisma.login.findMany({
+    where: {
+      OR: [
+        { email: { contains: String(search) } },
+        { role: { equals: search.toUpperCase() as Role } }
+        // we can add more parameters as-needed
+      ]
+    }
+  });
+}
+
+
 
 // ALL
 export async function getAll() {

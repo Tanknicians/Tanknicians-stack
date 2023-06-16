@@ -57,24 +57,22 @@ export async function deleteOne(id: number) {
   }
 }
 
-/*
-  // Search requires any STRING and searches all columns
-  export async function search(search: string) {
-    try {
-      const searchData = serviceCallDB.search(search)
-      if (!searchData) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: `No searchUser from search found.`,
-        });
-      }
-      return searchData;
-    } catch(e) {
+// Search requires any STRING and searches all string-based columns
+export async function search(search: string) {
+  try {
+    const searchData = serviceCallDB.searchByString(search);
+    if (!searchData) {
       throw new TRPCError({
-        code: "INTERNAL_SERVER_ERROR",
-        message: "An error occured during search.",
-        cause: e,
+        code: "NOT_FOUND",
+        message: "No searchUser from search found.",
       });
     }
+    return searchData;
+  } catch (e) {
+    throw new TRPCError({
+      code: "INTERNAL_SERVER_ERROR",
+      message: "An error occured during search.",
+      cause: e,
+    });
   }
-  */
+}

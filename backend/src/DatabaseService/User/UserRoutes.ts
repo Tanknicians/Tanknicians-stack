@@ -1,6 +1,7 @@
-import { router, publicProcedure, isRoleCurryMiddleware } from "./../../trpc";
+import { router, publicProcedure, isRoleCurryMiddleware } from "trpc";
 import * as UserService from "./UserService";
-import { User } from "./../../types";
+import { User } from "types";
+import { string, z } from "zod";
 
 const createMutation = publicProcedure
   .use(isRoleCurryMiddleware(["ADMIN"]))
@@ -30,9 +31,21 @@ const deleteMutation = publicProcedure
     return await UserService.deleteOne(input.id);
   });
 
+const searchQuery = publicProcedure
+  .use(isRoleCurryMiddleware(["ADMIN"]))
+  .input(
+    z.object({
+      searchString: z.string(),
+    }),
+  )
+  .query(async ({ input }) => {
+    return await UserService.search(input.searchString);
+  });
+
 export const userRouter = router({
   create: createMutation,
   read: readQuery,
   update: updateMutation,
   delete: deleteMutation,
+  serach: searchQuery,
 });
