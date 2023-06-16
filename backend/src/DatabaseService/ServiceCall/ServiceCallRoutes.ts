@@ -1,51 +1,67 @@
-import { router, publicProcedure, isRoleCurryMiddleware } from "./../../trpc";
+import express from "express";
 import * as ServiceCallService from "./ServiceCallService";
-import { ServiceCall } from "types";
-import { z } from "zod";
+import { ServiceCall } from "@prisma/client";
 
-const createMutation = publicProcedure
-  .use(isRoleCurryMiddleware(["ADMIN"]))
-  .input(ServiceCall.omit({ id: true }))
-  .mutation(async ({ input }) => {
-    return await ServiceCallService.create(input);
-  });
+const serviceCallRouter = express.Router();
 
-const readQuery = publicProcedure
-  .use(isRoleCurryMiddleware(["ADMIN"]))
-  .input(ServiceCall.pick({ id: true }))
-  .query(async ({ input }) => {
-    return await ServiceCallService.read(input.id);
-  });
-
-const updateMutation = publicProcedure
-  .use(isRoleCurryMiddleware(["ADMIN"]))
-  .input(ServiceCall)
-  .mutation(async ({ input }) => {
-    return await ServiceCallService.update(input);
-  });
-
-const deleteMutation = publicProcedure
-  .use(isRoleCurryMiddleware(["ADMIN"]))
-  .input(ServiceCall.pick({ id: true }))
-  .mutation(async ({ input }) => {
-    return await ServiceCallService.deleteOne(input.id);
-  });
-
-const searchQuery = publicProcedure
-  .use(isRoleCurryMiddleware(["ADMIN"]))
-  .input(
-    z.object({
-      searchString: z.string(),
-    }),
-  )
-  .query(async ({ input }) => {
-    return await ServiceCallService.search(input.searchString);
-  });
-
-export const serviceCallRouter = router({
-  create: createMutation,
-  read: readQuery,
-  update: updateMutation,
-  delete: deleteMutation,
-  search: searchQuery,
+// Create ServiceCall
+serviceCallRouter.post("/",  async (req, res) => {
+  try {
+    const input = req.body;
+    const result = await ServiceCallService.create(input);
+    res.json(result);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to create Service Call" });
+  }
 });
+
+// Read ServiceCall
+serviceCallRouter.get("/:id",  async (req, res) => {
+  try {
+    const id = Number(req.params.id);
+    const result = await ServiceCallService.read(id);
+    res.json(result);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to read Service Call" });
+  }
+});
+
+// Update ServiceCall
+serviceCallRouter.put("/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+    const input = req.body;
+    const serviceCallData: ServiceCall = {
+      id,
+      ...input,
+    };
+    const result = await ServiceCallService.update(serviceCallData);
+    res.json(result);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to update Service Call" });
+  }
+});
+
+// Delete ServiceCall
+serviceCallRouter.delete("/:id", async (req, res) => {
+  try {
+    const id = Number(req.params.id);
+    await ServiceCallService.deleteOne(id);
+    res.json({ message: "Service Call deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to delete Service Call" });
+  }
+});
+
+// Search ServiceCall
+serviceCallRouter.get("/search/:searchString", async (req, res) => {
+  try {
+    const searchString = req.params.searchString;
+    const result = await ServiceCallService.search(searchString);
+    res.json(result);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to search Service Call" });
+  }
+});
+
+export default serviceCallRouter;

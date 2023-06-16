@@ -1,16 +1,12 @@
 import * as Prisma from "@prisma/client";
 import { loginDB } from "./../../../prisma/db/Login";
-import { TRPCError } from "@trpc/server";
 
 export async function create(login: Omit<Prisma.Login, "id">) {
   try {
     await loginDB.create(login);
+    return { message: "Login created successfully" };
   } catch (e) {
-    throw new TRPCError({
-      code: "INTERNAL_SERVER_ERROR",
-      message: "An error occured during create.",
-      cause: e,
-    });
+    throw new Error("An error occurred during create.");
   }
 }
 
@@ -18,61 +14,40 @@ export async function read(email: string) {
   try {
     const login = await loginDB.read(email);
     if (!login) {
-      throw new TRPCError({
-        code: "NOT_FOUND",
-        message: `Login with email: ${email} not found.`,
-      });
+      throw new Error(`Login with email: ${email} not found.`);
     }
     return login;
   } catch (e) {
-    throw new TRPCError({
-      code: "INTERNAL_SERVER_ERROR",
-      message: "An error occured during read",
-      cause: e,
-    });
+    throw new Error("An error occurred during read.");
   }
 }
 
 export async function update(login: Prisma.Login) {
   try {
     await loginDB.update(login);
+    return { message: "Login updated successfully" };
   } catch (e) {
-    throw new TRPCError({
-      code: "INTERNAL_SERVER_ERROR",
-      message: "An error occured during update.",
-      cause: e,
-    });
+    throw new Error("An error occurred during update.");
   }
 }
 
 export async function deleteOne(id: number) {
   try {
     await loginDB.deleteLogin(id);
+    return { message: "Login deleted successfully" };
   } catch (e) {
-    throw new TRPCError({
-      code: "INTERNAL_SERVER_ERROR",
-      message: "An error occured during delete.",
-      cause: e,
-    });
+    throw new Error("An error occurred during delete.");
   }
 }
 
-// Search requires any STRING and searches all string-based columns
 export async function search(search: string) {
   try {
     const searchData = loginDB.searchByString(search);
     if (!searchData) {
-      throw new TRPCError({
-        code: "NOT_FOUND",
-        message: "No searchUser from search found.",
-      });
+      throw new Error("No searchUser from search found.");
     }
     return searchData;
   } catch (e) {
-    throw new TRPCError({
-      code: "INTERNAL_SERVER_ERROR",
-      message: "An error occured during search.",
-      cause: e,
-    });
+    throw new Error("An error occurred during search.");
   }
 }
