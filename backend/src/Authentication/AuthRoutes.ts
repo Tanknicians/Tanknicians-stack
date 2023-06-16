@@ -1,34 +1,40 @@
-import { z } from "zod";
-import { router, publicProcedure } from "./../trpc";
 import * as AuthService from "./AuthService";
-import * as Prisma from "@prisma/client";
-import { Login } from "./../types";
+import express from "express";
 
-const loginQuery = publicProcedure
-  .input(Login.pick({ email: true, password: true }))
-  .query(async ({ input }) => {
-    return await AuthService.login(input);
-  });
+const authRouter = express.Router();
 
-const registerMutation = publicProcedure
-  .input(Login.omit({ id: true }))
-  .mutation(async ({ input }) => {
-    return await AuthService.register(input as Omit<Prisma.Login, "id">);
-  });
+// REQUIRED TO INTERPRET JSON FROM HTTP REQUEST BODY
+authRouter.use(express.json());
 
-const refreshMutation = publicProcedure
-  .input(
-    z.object({
-      email: z.string().email(),
-      refreshToken: z.string(),
-    }),
-  )
-  .query(async ({ input }) => {
-    return await AuthService.refresh(input.email, input.refreshToken);
-  });
-
-export const authRouter = router({
-  login: loginQuery,
-  register: registerMutation,
-  refresh: refreshMutation,
+// Login route
+authRouter.post('/login', async (req, res) => {
+  try {
+    const result = await AuthService.login(req, res);
+    res.json(result);
+  } catch (error) {
+    res.status(500).json({ error: 'An error occurred' });
+  }
 });
+
+// Register route
+authRouter.post('/register', async (req, res) => {
+  try {
+    const result = await AuthService.register(req, res);
+    res.json(result);
+  } catch (error) {
+    res.status(500).json({ error: 'An error occurred' });
+  }
+});
+
+// Refresh route
+authRouter.post('/refresh', async (req, res) => {
+  const { email, refreshToken } = req.body;
+  try {
+    const result = await AuthService.refresh(email, refreshToken);
+    res.json(result);
+  } catch (error) {
+    res.status(500).json({ error: 'An error occurred' });
+  }
+});
+
+export default authRouter;
