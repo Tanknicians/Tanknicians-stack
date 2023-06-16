@@ -28,9 +28,8 @@ authRouter.post('/register', async (req, res) => {
 
 // Refresh route
 authRouter.post('/refresh', async (req, res) => {
-  const { email, refreshToken } = req.body;
   try {
-    const result = await AuthService.refresh(email, refreshToken);
+    const result = await AuthService.refresh(req, res);
     res.json(result);
   } catch (error) {
     res.status(500).json({ error: 'An error occurred' });
