@@ -87,19 +87,21 @@ export async function register(req: Request, res: Response) {
 
 // Generate a new access token using a refresh token
 export async function refresh(req: Request, res: Response) {
+
   const { email, refreshToken } = req.body;
   const tokenValidation = verifyRefreshToken(refreshToken);
 
   if (!tokenValidation) {
+    console.log("Invalid token.")
     return res.status(403).json({
       code: 'FORBIDDEN',
       message: 'Refresh token not valid.'
     });
   }
 
-  const dbLoginPayload = await loginDB.read(email);
+  const savedCredentials = await loginDB.read(email);
 
-  if (!dbLoginPayload) {
+  if (!savedCredentials) {
     return res.status(404).json({
       code: 'NOT_FOUND',
       message: 'Login does not exist.'
@@ -107,8 +109,8 @@ export async function refresh(req: Request, res: Response) {
   }
 
   try {
-    const accessToken = generateToken(dbLoginPayload);
-    return res.json({ accessToken });
+    const accessToken = generateToken(savedCredentials);
+    return res.json({ accessToken, savedCredentials });
   } catch (error) {
     console.error(error);
     return res.status(500).json({
