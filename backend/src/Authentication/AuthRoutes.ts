@@ -25,7 +25,6 @@ authRouter.post('/register', async (req, res) => {
 });
 
 // Refresh route
-// Refresh route
 authRouter.post('/refresh', async (req, res) => {
   try {
     await AuthService.refresh(req, res);
