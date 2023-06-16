@@ -6,6 +6,7 @@ import {
   generateRefreshToken,
   verifyToken
 } from '../TokenGenerator';
+
 import { loginDB } from '../../prisma/db/Login';
 import { Request, Response, NextFunction } from 'express';
 
@@ -30,23 +31,23 @@ export async function login(req: Request, res: Response) {
 
   console.log(`login found for ${email}`);
 
-  try {
-    const samePasswords = bcrypt.compare(password, savedCredentials.password);
-    if (!samePasswords) {
-      return res.status(409).json({
-        code: 'CONFLICT',
-        message: 'passwords do not match'
-      });
-    }
-    const token = generateToken(savedCredentials);
-    const refreshToken = generateRefreshToken(savedCredentials);
-    res.json({ token, refreshToken, savedCredentials });
-  } catch (err) {
-    console.error(err);
+  const samePasswords = bcrypt.compare(password, savedCredentials.password);
+  if (!samePasswords) {
     return res.status(401).json({
       code: 'UNAUTHORIZED',
-      message: 'Cannot generate tokens for session',
-      cause: err
+      message: 'passwords do not match'
+    });
+  }
+
+  try {
+    const token = generateToken(savedCredentials);
+    const refreshToken = generateRefreshToken(savedCredentials);
+    return res.json({ token, refreshToken, savedCredentials });
+  } catch (error) {
+    console.error('Error generating tokens:', error);
+    return res.status(500).json({
+      code: 'INTERNAL_SERVER_ERROR',
+      message: 'Failed to generate tokens'
     });
   }
 }
@@ -86,12 +87,11 @@ export async function register(req: Request, res: Response) {
 
 // Generate a new access token using a refresh token
 export async function refresh(req: Request, res: Response) {
-
   const { email, refreshToken } = req.body;
   const tokenValidation = verifyRefreshToken(refreshToken);
 
   if (!tokenValidation) {
-    console.log("Invalid token.")
+    console.log('Invalid token.');
     return res.status(403).json({
       code: 'FORBIDDEN',
       message: 'Refresh token not valid.'
@@ -133,7 +133,7 @@ export function authenticateRoleMiddleWare(roles: string[]) {
     } catch (error) {
       return res.status(401).send({ message: 'Invalid token' });
     }
-    const decodedToken: any = verifyToken(token); 
+    const decodedToken: any = verifyToken(token);
     if (!roles.includes(decodedToken.role)) {
       return res.status(403).send({ message: 'Unauthorized access' });
     }
