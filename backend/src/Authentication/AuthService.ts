@@ -1,14 +1,14 @@
-import * as bcrypt from "bcrypt";
+import * as bcrypt from 'bcrypt';
 
 import {
   generateToken,
   verifyRefreshToken,
   generateRefreshToken,
-  verifyToken,
-} from "../TokenGenerator";
-import { loginDB } from "../../prisma/db/Login";
-import { Request, Response, NextFunction } from "express";
-import { JwtPayload } from "jsonwebtoken";
+  verifyToken
+} from '../TokenGenerator';
+import { loginDB } from '../../prisma/db/Login';
+import { Request, Response, NextFunction } from 'express';
+import { JwtPayload } from 'jsonwebtoken';
 
 export async function login(req: Request, res: Response) {
   const { email, password } = req.body;
@@ -17,15 +17,15 @@ export async function login(req: Request, res: Response) {
   // Confirm login credentials existed in full in DB
   if (!savedCredentials) {
     return res.status(401).json({
-      code: "UNAUTHORIZED",
-      message: `Login with email: ${email} not found.`,
+      code: 'UNAUTHORIZED',
+      message: `Login with email: ${email} not found.`
     });
   }
 
   if (!(savedCredentials.email && savedCredentials.password)) {
     return res.status(401).json({
-      code: "UNAUTHORIZED",
-      message: "User record incomplete",
+      code: 'UNAUTHORIZED',
+      message: 'User record incomplete'
     });
   }
 
@@ -35,24 +35,22 @@ export async function login(req: Request, res: Response) {
     const samePasswords = bcrypt.compare(password, savedCredentials.password);
     if (!samePasswords) {
       return res.status(409).json({
-        code: "CONFLICT",
-        message: "passwords do not match",
+        code: 'CONFLICT',
+        message: 'passwords do not match'
       });
     }
     const token = generateToken(savedCredentials);
     const refreshToken = generateRefreshToken(savedCredentials);
-    res.json({ token, refreshToken, savedCredentials }); 
+    res.json({ token, refreshToken, savedCredentials });
   } catch (err) {
     console.error(err);
     return res.status(401).json({
-      code: "UNAUTHORIZED",
-      message: "Cannot generate tokens for session",
-      cause: err,
+      code: 'UNAUTHORIZED',
+      message: 'Cannot generate tokens for session',
+      cause: err
     });
   }
 }
-
-
 
 export async function register(req: Request, res: Response) {
   const login = req.body;
@@ -60,33 +58,32 @@ export async function register(req: Request, res: Response) {
   // Though a role is required, having a string helps more than "null"
   if (login.role == null) {
     return res.status(400).json({
-      code: "BAD_REQUEST",
-      message: "Role cannot be empty.",
+      code: 'BAD_REQUEST',
+      message: 'Role cannot be empty.'
     });
   }
 
   // Not allowed to register an empty password
   if (!login.password) {
     return res.status(400).json({
-      code: "BAD_REQUEST",
-      message: "Password cannot be empty.",
+      code: 'BAD_REQUEST',
+      message: 'Password cannot be empty.'
     });
   }
 
   try {
     login.password = bcrypt.hash(login.password, 10);
     await loginDB.create(login);
-    return res.json({ message: "Registration successful" });
+    return res.json({ message: 'Registration successful' });
   } catch (error) {
     console.error(error);
     return res.status(500).json({
-      code: "INTERNAL_SERVER_ERROR",
-      message: "An error occurred during registration",
-      cause: error,
+      code: 'INTERNAL_SERVER_ERROR',
+      message: 'An error occurred during registration',
+      cause: error
     });
   }
 }
-
 
 // Generate a new access token using a refresh token
 export async function refresh(req: Request, res: Response) {
@@ -95,8 +92,8 @@ export async function refresh(req: Request, res: Response) {
 
   if (!tokenValidation) {
     return res.status(403).json({
-      code: "FORBIDDEN",
-      message: "Refresh token not valid.",
+      code: 'FORBIDDEN',
+      message: 'Refresh token not valid.'
     });
   }
 
@@ -104,8 +101,8 @@ export async function refresh(req: Request, res: Response) {
 
   if (!dbLoginPayload) {
     return res.status(404).json({
-      code: "NOT_FOUND",
-      message: "Login does not exist.",
+      code: 'NOT_FOUND',
+      message: 'Login does not exist.'
     });
   }
 
@@ -115,13 +112,12 @@ export async function refresh(req: Request, res: Response) {
   } catch (error) {
     console.error(error);
     return res.status(500).json({
-      code: "INTERNAL_SERVER_ERROR",
-      message: "An error occurred while generating the access token.",
-      cause: error,
+      code: 'INTERNAL_SERVER_ERROR',
+      message: 'An error occurred while generating the access token.',
+      cause: error
     });
   }
 }
-
 
 // re-implement role checking middleware, may move this elsewhere
 export function authenticateRoleMiddleWare(roles: string[]) {
