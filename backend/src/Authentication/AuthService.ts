@@ -88,9 +88,10 @@ export async function register(req: Request, res: Response) {
 // Generate a new access token using a refresh token
 export async function refresh(req: Request, res: Response) {
   const { email, refreshToken } = req.body;
-  const tokenValidation = verifyRefreshToken(refreshToken);
 
-  if (!tokenValidation) {
+  try {
+    verifyRefreshToken(refreshToken);
+  } catch (error) {
     console.log('Invalid token.');
     return res.status(403).json({
       code: 'FORBIDDEN',
@@ -119,6 +120,7 @@ export async function refresh(req: Request, res: Response) {
     });
   }
 }
+
 
 // re-implement role checking middleware, may move this elsewhere
 export function authenticateRoleMiddleWare(roles: string[]) {

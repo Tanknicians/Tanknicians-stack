@@ -9,8 +9,7 @@ authRouter.use(express.json());
 // Login route
 authRouter.post('/login', async (req, res) => {
   try {
-    const result = await AuthService.login(req, res);
-    res.json(result);
+    await AuthService.login(req, res);
   } catch (error) {
     res.status(500).json({ error: 'An error occurred' });
   }
@@ -19,21 +18,21 @@ authRouter.post('/login', async (req, res) => {
 // Register route
 authRouter.post('/register', async (req, res) => {
   try {
-    const result = await AuthService.register(req, res);
-    res.json(result);
+    await AuthService.register(req, res);
   } catch (error) {
     res.status(500).json({ error: 'An error occurred' });
   }
 });
 
 // Refresh route
+// Refresh route
 authRouter.post('/refresh', async (req, res) => {
   try {
-    const result = await AuthService.refresh(req, res);
-    res.json(result);
+    await AuthService.refresh(req, res);
   } catch (error) {
     res.status(500).json({ error: 'An error occurred' });
   }
 });
+
 
 export default authRouter;
