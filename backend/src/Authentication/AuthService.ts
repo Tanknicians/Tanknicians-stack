@@ -109,8 +109,8 @@ export async function refresh(req: Request, res: Response) {
   }
 
   try {
-    const accessToken = generateToken(savedCredentials);
-    return res.json({ accessToken, savedCredentials });
+    const token = generateToken(savedCredentials);
+    return res.json({ token, savedCredentials });
   } catch (error) {
     console.error(error);
     return res.status(500).json({
