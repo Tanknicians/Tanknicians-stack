@@ -2,7 +2,7 @@ import cors from "cors";
 import express from "express";
 import authRouter from "./Authentication/AuthRoutes";
 import  databaseRouter  from "./DatabaseService/DatabaseRoutes";
-import { emailRouter } from "./EmailService/EmailRoutes";
+import emailRouter from "./EmailService/EmailRoutes";
 import { logger, httpLogger } from "./LoggingService/pino";
 
 
@@ -24,10 +24,10 @@ app.use(httpLogger);
 app.use("/api/auth", authRouter);
 
 // Database service endpoint
-app.use("/api/database", databaseRouter)
+app.use("/api/database", databaseRouter);
 
 // Email service endpoint
-
+app.use("/api/email", emailRouter);
 
 app.listen(process.env.PORT, () => {
   console.log(`TypeScript with Express http://localhost:${process.env.PORT}/`);
