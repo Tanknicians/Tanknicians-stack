@@ -1,11 +1,10 @@
-import * as trpcExpress from "@trpc/server/adapters/express";
 import cors from "cors";
 import express from "express";
 import authRouter from "./Authentication/AuthRoutes";
 import { emailRouter } from "./EmailService/EmailRoutes";
-import { createContext, router } from "./trpc";
-import { logger, httpLogger } from "./LoggingService/pino";
 import { databaseRouter } from "./DatabaseService/DatabaseRoutes";
+import { logger, httpLogger } from "./LoggingService/pino";
+
 
 // Initialize the express app
 const app = express();
@@ -21,12 +20,12 @@ app.use(cors(corsOptions));
 // pino http logger
 app.use(httpLogger);
 
-// Server startup
-
-
-// Express version
+// Authentication Service endpoint
 app.use("/api/auth", authRouter);
 
+// Database service endpoint
+
+// Email service endpoint
 
 
 app.listen(process.env.PORT, () => {
