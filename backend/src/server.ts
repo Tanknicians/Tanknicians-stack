@@ -1,8 +1,8 @@
 import cors from "cors";
 import express from "express";
 import authRouter from "./Authentication/AuthRoutes";
+import  databaseRouter  from "./DatabaseService/DatabaseRoutes";
 import { emailRouter } from "./EmailService/EmailRoutes";
-import { databaseRouter } from "./DatabaseService/DatabaseRoutes";
 import { logger, httpLogger } from "./LoggingService/pino";
 
 
@@ -24,6 +24,7 @@ app.use(httpLogger);
 app.use("/api/auth", authRouter);
 
 // Database service endpoint
+app.use("/api/database", databaseRouter)
 
 // Email service endpoint
 
