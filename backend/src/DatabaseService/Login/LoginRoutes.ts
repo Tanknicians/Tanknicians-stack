@@ -3,7 +3,6 @@ import * as LoginService from "./LoginService";
 import { Login } from "types";
 import { z } from "zod";
 
-
 const createMutation = publicProcedure
   .use(isRoleCurryMiddleware(["ADMIN"]))
   .input(Login.omit({ id: true }))
@@ -32,12 +31,12 @@ const deleteMutation = publicProcedure
     return await LoginService.deleteOne(input.id);
   });
 
-  const searchQuery = publicProcedure
-  .use(isRoleCurryMiddleware(['ADMIN']))
+const searchQuery = publicProcedure
+  .use(isRoleCurryMiddleware(["ADMIN"]))
   .input(
     z.object({
-      searchString: z.string()
-    })
+      searchString: z.string(),
+    }),
   )
   .query(async ({ input }) => {
     return await LoginService.search(input.searchString);
@@ -48,5 +47,5 @@ export const loginRouter = router({
   read: readQuery,
   update: updateMutation,
   delete: deleteMutation,
-  search: searchQuery
+  search: searchQuery,
 });

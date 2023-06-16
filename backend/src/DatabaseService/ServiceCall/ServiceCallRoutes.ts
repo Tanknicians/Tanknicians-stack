@@ -3,7 +3,6 @@ import * as ServiceCallService from "./ServiceCallService";
 import { ServiceCall } from "types";
 import { z } from "zod";
 
-
 const createMutation = publicProcedure
   .use(isRoleCurryMiddleware(["ADMIN"]))
   .input(ServiceCall.omit({ id: true }))
@@ -32,12 +31,12 @@ const deleteMutation = publicProcedure
     return await ServiceCallService.deleteOne(input.id);
   });
 
-  const searchQuery = publicProcedure
-  .use(isRoleCurryMiddleware(['ADMIN']))
+const searchQuery = publicProcedure
+  .use(isRoleCurryMiddleware(["ADMIN"]))
   .input(
     z.object({
-      searchString: z.string()
-    })
+      searchString: z.string(),
+    }),
   )
   .query(async ({ input }) => {
     return await ServiceCallService.search(input.searchString);
@@ -48,5 +47,5 @@ export const serviceCallRouter = router({
   read: readQuery,
   update: updateMutation,
   delete: deleteMutation,
-  search: searchQuery
+  search: searchQuery,
 });
