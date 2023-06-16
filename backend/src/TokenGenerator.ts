@@ -1,7 +1,9 @@
 import * as Prisma from "@prisma/client";
 import * as jwt from "jsonwebtoken";
+import * as dotenv from "dotenv";
 import { randomBytes } from "crypto";
 
+const config = dotenv.config();
 const jwtSecret = process.env.JWT_SECRET;
 const jwtRefreshSecret = process.env.JWT_REFRESH_SECRET;
 
@@ -38,9 +40,8 @@ export function generateRefreshToken(login: Prisma.Login): string {
 export function verifyToken(token: string) {
   try {
     if (!jwtSecret) {
-      throw new Error("Refresh secret not found.");
+      throw new Error("Secret not found.");
     }
-
     const payload = jwt.verify(token, jwtSecret);
     return payload;
   } catch (error) {
