@@ -48,8 +48,19 @@ export function verifyToken(token: string): JwtPayload {
 }
 
 // verify Refresh Token
-export function verifyRefreshToken(token: string): JwtPayload {
-  if (!jwtRefreshSecret) throw new Error("Refresh secret not found.");
-  const payload = JwtPayload.parse(jwt.verify(token, jwtRefreshSecret));
-  return payload;
+export function verifyRefreshToken(token: string) {
+  try {
+    if (!jwtRefreshSecret) {
+      throw new Error("Refresh secret not found.");
+    }
+
+    const payload = jwt.verify(token, jwtRefreshSecret);
+    return payload;
+  } catch (error) {
+    // Handle the error here
+    console.error("Error verifying refresh token:", error);
+    throw new Error("Refresh token verification failed.");
+  }
 }
+
+
