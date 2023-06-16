@@ -65,7 +65,7 @@ export async function deleteOne(id: number) {
       if (!searchData) {
         throw new TRPCError({
           code: "NOT_FOUND",
-          message: `No searchUser from search found.`,
+          message: "No searchUser from search found.",
         });
       }
       return searchData;
