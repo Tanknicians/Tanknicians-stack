@@ -118,7 +118,7 @@ export default function LoginPage() {
       const userData = await login({ email, password }).unwrap();
       dispatch(setCredentials({ ...userData, user }));
 
-      // navigate('/dashboard');
+      navigate('/dashboard');
     } catch (err) {
       // if (!err?.originalStatus) {
       //     // isLoading: true until timeout occurs

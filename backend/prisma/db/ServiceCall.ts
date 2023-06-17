@@ -1,5 +1,4 @@
 import { ServiceCall, PrismaClient } from '@prisma/client';
-import { boolean } from 'zod';
 const prisma = new PrismaClient();
 
 // CREATE
@@ -41,7 +40,7 @@ export async function readLatestByTankId(tankId: number) {
 }
 
 // read ALL service calls for a tank
-export async function readAllByTankId(tankId: number){
+export async function readAllByTankId(tankId: number) {
   return await prisma.serviceCall.findMany({
     where: {
       tankId: tankId
@@ -75,7 +74,7 @@ export async function searchByString(search: String) {
     where: {
       OR: [
         { customerRequest: { contains: String(search) } },
-        { employeeNotes: { contains: String(search) } },
+        { employeeNotes: { contains: String(search) } }
       ]
     }
   });
@@ -87,9 +86,9 @@ export async function searchByDateTime(startDate: Date, endDate: Date) {
     where: {
       createdOn: {
         gte: startDate,
-        lte: endDate,
-      },
-    },
+        lte: endDate
+      }
+    }
   });
 }
 
