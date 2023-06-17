@@ -1,5 +1,4 @@
 import { ServiceCall, PrismaClient } from '@prisma/client';
-import { boolean } from 'zod';
 const prisma = new PrismaClient();
 
 // CREATE
