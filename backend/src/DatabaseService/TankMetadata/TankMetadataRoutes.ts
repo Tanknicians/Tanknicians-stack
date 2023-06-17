@@ -1,11 +1,13 @@
 import express from "express";
 import * as TankMetadataService from "./TankMetadataService";
 import { TankMetadata } from "@prisma/client";
+import { authenticateRoleMiddleWare } from "../../Authentication/AuthService";
 
 const tankMetaDataRouter = express.Router();
+tankMetaDataRouter.use(express.json());
 
 // Create TankMetadata
-tankMetaDataRouter.post("/", async (req, res) => {
+tankMetaDataRouter.post("/", authenticateRoleMiddleWare(["ADMIN"]), async (req, res) => {
   try {
     const input = req.body;
     const result = await TankMetadataService.create(input);
@@ -16,7 +18,7 @@ tankMetaDataRouter.post("/", async (req, res) => {
 });
 
 // Read TankMetadata
-tankMetaDataRouter.get("/:id", async (req, res) => {
+tankMetaDataRouter.get("/:id", authenticateRoleMiddleWare(["ADMIN", "EMPLOYEE"]), async (req, res) => {
   try {
     const id = Number(req.params.id);
     const result = await TankMetadataService.read(id);
@@ -27,7 +29,7 @@ tankMetaDataRouter.get("/:id", async (req, res) => {
 });
 
 // Update TankMetadata
-tankMetaDataRouter.put("/:id", async (req, res) => {
+tankMetaDataRouter.put("/:id", authenticateRoleMiddleWare(["ADMIN"]), async (req, res) => {
   try {
     const id = req.params.id;
     const input = req.body;
@@ -43,18 +45,18 @@ tankMetaDataRouter.put("/:id", async (req, res) => {
 });
 
 // Delete TankMetadata
-tankMetaDataRouter.delete("/:id", async (req, res) => {
+tankMetaDataRouter.delete("/:id", authenticateRoleMiddleWare(["ADMIN"]), async (req, res) => {
   try {
     const id = Number(req.params.id);
-    await TankMetadataService.deleteOne(id);
-    res.json({ message: "TankMetadata deleted successfully" });
+    const result = await TankMetadataService.deleteOne(id);
+    res.json(result);
   } catch (error) {
     res.status(500).json({ error: "Failed to delete TankMetadata" });
   }
 });
 
 // Search TankMetadata
-tankMetaDataRouter.get("/search/:searchString", async (req, res) => {
+tankMetaDataRouter.get("/search/:searchString", authenticateRoleMiddleWare(["ADMIN"]), async (req, res) => {
   try {
     const searchString = req.params.searchString;
     const result = await TankMetadataService.search(searchString);

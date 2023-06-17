@@ -1,10 +1,13 @@
 import express from "express";
 import * as UserService from "./UserService";
+import { authenticateRoleMiddleWare } from "../../Authentication/AuthService";
+import { User } from "@prisma/client";
 
 const userRouter = express.Router();
+userRouter.use(express.json());
 
 // Create User
-userRouter.post("/", async (req, res) => {
+userRouter.post("/", authenticateRoleMiddleWare(["ADMIN"]), async (req, res) => {
   try {
     const input = req.body;
     const result = await UserService.create(input);
@@ -15,7 +18,7 @@ userRouter.post("/", async (req, res) => {
 });
 
 // Read User
-userRouter.get("/:id", async (req, res) => {
+userRouter.get("/:id", authenticateRoleMiddleWare(["ADMIN", "EMPLOYEE"]), async (req, res) => {
   try {
     const id = Number(req.params.id);
     const result = await UserService.read(id);
@@ -26,11 +29,15 @@ userRouter.get("/:id", async (req, res) => {
 });
 
 // Update User
-userRouter.put("/:id", async (req, res) => {
+userRouter.put("/:id", authenticateRoleMiddleWare(["ADMIN"]), async (req, res) => {
   try {
     const id = req.params.id;
     const input = req.body;
-    const result = await UserService.update(input);
+    const userData: User = {
+      id,
+      ...input
+    }
+    const result = await UserService.update(userData);
     res.json(result);
   } catch (error) {
     res.status(500).json({ error: "Failed to update User" });
@@ -38,18 +45,18 @@ userRouter.put("/:id", async (req, res) => {
 });
 
 // Delete User
-userRouter.delete("/:id", async (req, res) => {
+userRouter.delete("/:id", authenticateRoleMiddleWare(["ADMIN"]), async (req, res) => {
   try {
     const id = Number(req.params.id);
-    await UserService.deleteOne(id);
-    res.json({ message: "User deleted successfully" });
+    const result = await UserService.deleteOne(id);
+    res.json(result);
   } catch (error) {
     res.status(500).json({ error: "Failed to delete User" });
   }
 });
 
 // Search User
-userRouter.get("/search/:searchString", async (req, res) => {
+userRouter.get("/search/:searchString", authenticateRoleMiddleWare(["ADMIN", "EMPLOYEE"]), async (req, res) => {
   try {
     const searchString = req.params.searchString;
     const result = await UserService.search(searchString);

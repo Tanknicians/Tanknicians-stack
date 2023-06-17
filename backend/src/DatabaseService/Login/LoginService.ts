@@ -1,5 +1,7 @@
 import * as Prisma from "@prisma/client";
+import * as bcrypt from 'bcrypt';
 import { loginDB } from "./../../../prisma/db/Login";
+
 
 export async function create(login: Omit<Prisma.Login, "id">) {
   try {
@@ -24,6 +26,7 @@ export async function read(email: string) {
 
 export async function update(login: Prisma.Login) {
   try {
+    login.password = await bcrypt.hash(login.password, 10);
     await loginDB.update(login);
     return { message: "Login updated successfully" };
   } catch (e) {

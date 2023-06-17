@@ -9,7 +9,7 @@ import {
 
 import { loginDB } from '../../prisma/db/Login';
 import { Request, Response, NextFunction } from 'express';
-import { LoginInput, RefreshInput, RegisterInput } from '../types';
+import { LoginInput, RegisterInput } from '../types';
 
 export async function login(req: Request, res: Response) {
   const login = req.body as LoginInput;
@@ -43,7 +43,9 @@ export async function login(req: Request, res: Response) {
   try {
     const token = generateToken(savedCredentials);
     const refreshToken = generateRefreshToken(savedCredentials);
-    return res.json({ token, refreshToken, savedCredentials });
+    res.cookie('jwt', refreshToken, { httpOnly: true, secure: true, maxAge: 24 * 60 * 60 * 1000 });
+    res.json({ token, savedCredentials });
+    return;
   } catch (error) {
     console.error('Error generating tokens:', error);
     return res.status(500).json({
@@ -89,10 +91,11 @@ export async function register(req: Request, res: Response) {
 // Generate a new access token using a refresh token
 export async function refresh(req: Request, res: Response) {
 
-  const payload = req.body as RefreshInput;
+  const email = req.body.email;
+  const refreshToken = req.cookies.jwt;
 
   try {
-    verifyRefreshToken(payload.refreshToken);
+    verifyRefreshToken(refreshToken);
   } catch (error) {
     console.log('Invalid token.');
     return res.status(403).json({
@@ -101,7 +104,7 @@ export async function refresh(req: Request, res: Response) {
     });
   }
 
-  const savedCredentials = await loginDB.read(payload.email);
+  const savedCredentials = await loginDB.read(email);
 
   if (!savedCredentials) {
     return res.status(404).json({
