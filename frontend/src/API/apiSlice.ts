@@ -3,7 +3,7 @@ import {
   fetchBaseQuery,
   BaseQueryFn
 } from '@reduxjs/toolkit/query/react';
-import { setCredentials, logout } from '../Services/authSlice';
+import { setCredentials, logout } from '../Redux/slices/auth/authSlice';
 import { RootState } from '../Redux/store';
 
 const BASE_URL = 'http://localhost:5000';

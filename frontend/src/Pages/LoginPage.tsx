@@ -18,9 +18,9 @@ import { useState } from 'react';
 import InputAdornment from '@mui/material/InputAdornment';
 import IconButton from '@mui/material/IconButton';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
-import { setCredentials } from '../Services/authSlice';
+import { setCredentials } from '../Redux/slices/auth/authSlice';
 import loginRandomImages from '../Components/LoginPageRandomImage';
-import { useLoginMutation } from '../Services/authApiSlice';
+import { useLoginMutation } from '../Redux/slices/auth/authApiSlice';
 
 function Copyright(props: { [k: string]: unknown }) {
   return (
