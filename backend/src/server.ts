@@ -5,6 +5,7 @@ import  databaseRouter  from "./DatabaseService/DatabaseRoutes";
 import emailRouter from "./EmailService/EmailRoutes";
 import { logger, httpLogger } from "./LoggingService/pino";
 
+import cookieParser from 'cookie-parser';
 
 // Initialize the express app
 const app = express();
@@ -19,6 +20,8 @@ const corsOptions = {
 app.use(cors(corsOptions));
 // pino http logger
 app.use(httpLogger);
+// cookie parsing for JWT refresh tokens
+app.use(cookieParser());
 
 // Authentication Service endpoint
 app.use("/api/auth", authRouter);
