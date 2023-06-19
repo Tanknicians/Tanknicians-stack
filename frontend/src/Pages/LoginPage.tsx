@@ -30,6 +30,12 @@ interface LoginFormData {
   remember: boolean;
 }
 
+// Form validation
+const schema = z.object({
+  email: z.string().nonempty(),
+  password: z.string().nonempty()
+});
+
 function Copyright(props: { [k: string]: unknown }) {
   return (
     <Typography
@@ -72,17 +78,9 @@ export default function LoginPage() {
 
   const handleClickShowPassword = () => setShowPassword(show => !show);
 
-  // Form validation
-  const schema = z.object({
-    email: z.string().nonempty(),
-    password: z.string().nonempty()
-  });
-
-  const loginForm = useForm<LoginFormData>({
+  const { control, register, handleSubmit } = useForm<LoginFormData>({
     resolver: zodResolver(schema)
   });
-
-  const { control, register, handleSubmit } = loginForm;
 
   // error checks for form submission
   // add above to useForm<LoginFormData> to use
@@ -96,7 +94,7 @@ export default function LoginPage() {
       const userData = await login(loginData).unwrap();
       dispatch(setCredentials({ ...userData, loginData }));
 
-      navigate('/dashboard');
+      navigate('/dashboard/Managerial');
     } catch (err: any) {
       if (!err?.status) {
         // isLoading: true until timeout occurs
