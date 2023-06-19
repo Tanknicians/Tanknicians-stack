@@ -126,7 +126,6 @@ export async function refresh(req: Request, res: Response) {
   }
 }
 
-
 // re-implement role checking middleware, may move this elsewhere
 export function authenticateRoleMiddleWare(roles: string[]) {
   return async function (req: Request, res: Response, next: NextFunction) {
