@@ -3,9 +3,10 @@ import {
   fetchBaseQuery,
   BaseQueryFn
 } from '@reduxjs/toolkit/query/react';
-import { setCredentials, logout } from '../Redux/slices/auth/authSlice';
-import { RootState } from '../Redux/store';
+import { setCredentials, logout } from '../slices/auth/authSlice';
+import { RootState } from '../store';
 
+// CHANGE THIS FOR PRODUCTION
 const BASE_URL = 'http://localhost:5000';
 
 const baseQuery = fetchBaseQuery({

@@ -1,26 +1,26 @@
-import * as React from 'react';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Link from '@mui/material/Link';
-import Paper from '@mui/material/Paper';
-import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid';
-import Typography from '@mui/material/Typography';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { Avatar } from '@mui/material';
 import InvertColorsOutlinedIcon from '@mui/icons-material/InvertColorsOutlined';
-import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import { useState } from 'react';
-import InputAdornment from '@mui/material/InputAdornment';
-import IconButton from '@mui/material/IconButton';
+import { useLoginMutation } from '../Redux/slices/auth/authApiSlice';
+import loginRandomImages from '../Components/LoginPageRandomImage';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import { setCredentials } from '../Redux/slices/auth/authSlice';
-import loginRandomImages from '../Components/LoginPageRandomImage';
-import { useLoginMutation } from '../Redux/slices/auth/authApiSlice';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import InputAdornment from '@mui/material/InputAdornment';
+import CssBaseline from '@mui/material/CssBaseline';
+import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
+import { Avatar, Container } from '@mui/material';
+import TextField from '@mui/material/TextField';
+import { useNavigate } from 'react-router-dom';
+import Checkbox from '@mui/material/Checkbox';
+import Button from '@mui/material/Button';
+import { useDispatch } from 'react-redux';
+import Paper from '@mui/material/Paper';
+import Link from '@mui/material/Link';
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
+import { useState } from 'react';
+import * as React from 'react';
 
 function Copyright(props: { [k: string]: unknown }) {
   return (
@@ -243,7 +243,6 @@ export default function LoginPage() {
                 label='Remember me'
               />
               <Typography align='center' style={{ color: errorColor }}>
-                {' '}
                 {loginError.errorMessage}
               </Typography>
               <Button
@@ -263,17 +262,16 @@ export default function LoginPage() {
               </Grid>
             </Box>
           </Box>
-          <Box sx={{ my: 4, mx: 4, display: 'flex' }} />
           <Box
             component='footer'
             sx={{
-              mt: 24,
-              mx: 4,
-              display: 'flex',
-              justifyContent: 'center'
+              py: 3,
+              px: 2
             }}
           >
-            <Copyright sx={{ bottom: '0', textAlign: 'center' }} />
+            <Container maxWidth='sm'>
+              <Copyright />
+            </Container>
           </Box>
         </Grid>
       </Grid>
