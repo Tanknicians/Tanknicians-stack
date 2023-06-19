@@ -1,8 +1,8 @@
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+// import PasswordResetPage from './Pages/PasswordResetPage';
+import RequireAuth from './Redux/slices/auth/RequireAuth';
 import DashboardPage from './Pages/DashboardPage';
 import LoginPage from './Pages/LoginPage';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import RequireAuth from './Redux/slices/auth/RequireAuth';
-// import PasswordResetPage from './Pages/PasswordResetPage';
 
 export default function App() {
   return (

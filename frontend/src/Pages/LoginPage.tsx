@@ -1,11 +1,14 @@
 import InvertColorsOutlinedIcon from '@mui/icons-material/InvertColorsOutlined';
+import LoadingProgressButton from '../Components/LoadingProgressButton';
+import { useForm, SubmitHandler, Controller } from 'react-hook-form';
 import { useLoginMutation } from '../Redux/slices/auth/authApiSlice';
 import loginRandomImages from '../Components/LoginPageRandomImage';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import { setCredentials } from '../Redux/slices/auth/authSlice';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import InputAdornment from '@mui/material/InputAdornment';
+import { zodResolver } from '@hookform/resolvers/zod';
 import CssBaseline from '@mui/material/CssBaseline';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
@@ -13,14 +16,19 @@ import { Avatar, Container } from '@mui/material';
 import TextField from '@mui/material/TextField';
 import { useNavigate } from 'react-router-dom';
 import Checkbox from '@mui/material/Checkbox';
-import Button from '@mui/material/Button';
 import { useDispatch } from 'react-redux';
 import Paper from '@mui/material/Paper';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import { useState } from 'react';
-import * as React from 'react';
+import * as z from 'zod';
+
+interface LoginFormData {
+  email: string;
+  password: string;
+  remember: boolean;
+}
 
 function Copyright(props: { [k: string]: unknown }) {
   return (
@@ -49,23 +57,11 @@ const randomImage = require(`../Assets/Images/${randomImagePath}`);
 
 export default function LoginPage() {
   const [login, { isLoading }] = useLoginMutation();
+  const [showPassword, setShowPassword] = useState(false);
 
   // Hooks for API and Routing
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
-  // FIXME:
-  // Implement some feature while isLoading
-
-  // Error states to be checked for incorrect input
-  const [emailAttempt, setEmailError] = useState({
-    isRequired: false,
-    isEmailError: false
-  });
-  const [passwordAttempt, setPasswordError] = useState({
-    isRequired: false,
-    isPasswordError: false
-  });
 
   // Error message for login attempt
   const errorColor = '#d32f2f';
@@ -74,64 +70,47 @@ export default function LoginPage() {
     isLoginError: false
   });
 
-  // Allows email and password errors to be cleared after user input
-  const handleEmailChange = () => {
-    setEmailError({ isRequired: false, isEmailError: false });
-    setLoginError(prevState => ({ ...prevState, isLoginError: false }));
-  };
+  const handleClickShowPassword = () => setShowPassword(show => !show);
 
-  const handlePasswordChange = () => {
-    setPasswordError({ isRequired: false, isPasswordError: false });
-    setLoginError(prevState => ({ ...prevState, isLoginError: false }));
-  };
+  // Form validation
+  const schema = z.object({
+    email: z.string().nonempty(),
+    password: z.string().nonempty()
+  });
+
+  const loginForm = useForm<LoginFormData>({
+    resolver: zodResolver(schema)
+  });
+
+  const { control, register, handleSubmit } = loginForm;
+
+  // error checks for form submission
+  // add above to useForm<LoginFormData> to use
+  // const { errors } = formState;
 
   // Form submission with error checks
-  const handleLoginSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-
-    // Get email and password from input
-    const email = data.get('email');
-    const password = data.get('password');
-
-    // Check for missing input and show user error
-    if (!email) {
-      setEmailError({ isRequired: true, isEmailError: true });
-    } else if (!password) {
-      setPasswordError({ isRequired: true, isPasswordError: true });
-    } else {
-      // Package user data to request access
-      const user = {
-        email: (email as String).trim(),
-        password: (password as String).trim()
-      };
-
-      // API call to login
-      loginAttempt(user);
-    }
-  };
-
-  const loginAttempt = async (user: { email: string; password: string }) => {
-    const { email, password } = user;
+  const onSubmit: SubmitHandler<LoginFormData> = async data => {
+    const { remember, ...loginData } = data;
 
     try {
-      const userData = await login({ email, password }).unwrap();
-      dispatch(setCredentials({ ...userData, user }));
+      const userData = await login(loginData).unwrap();
+      dispatch(setCredentials({ ...userData, loginData }));
 
       navigate('/dashboard');
-    } catch (err) {
-      // if (!err?.originalStatus) {
-      //     // isLoading: true until timeout occurs
-      //     setErrMsg('No Server Response');
-      // } else if (err.originalStatus === 400) {
-      //     setErrMsg('Missing Username or Password');
-      // } else if (err.originalStatus === 401) {
-      //     setErrMsg('Unauthorized');
-      // } else {
-      //     setErrMsg('Login Failed');
-      // }
-      console.log(err);
-      // errRef.current.focus();
+    } catch (err: any) {
+      if (!err?.status) {
+        // isLoading: true until timeout occurs
+        setLoginError({
+          errorMessage: 'No Server Response',
+          isLoginError: true
+        });
+      } else if (err?.status === 400) {
+        setLoginError({ errorMessage: err.data?.message, isLoginError: true });
+      } else if (err?.status === 401) {
+        setLoginError({ errorMessage: err.data?.message, isLoginError: true });
+      } else {
+        setLoginError({ errorMessage: err.data?.message, isLoginError: true });
+      }
     }
   };
 
@@ -175,84 +154,82 @@ export default function LoginPage() {
             <Box
               component='form'
               noValidate
-              onSubmit={handleLoginSubmit}
+              onSubmit={handleSubmit(onSubmit)}
               sx={{ mt: 1 }}
             >
               <TextField
-                margin='normal'
-                required={emailAttempt.isRequired}
-                fullWidth
                 id='email'
                 label='Email Address'
-                name='email'
-                autoComplete='email'
+                margin='normal'
+                {...register('email')}
+                fullWidth
                 autoFocus
-                onChange={handleEmailChange}
-                error={emailAttempt.isEmailError || loginError.isLoginError}
-                helperText={
-                  emailAttempt.isEmailError ? 'Email is required*' : ''
-                }
-                InputProps={{
-                  endAdornment: (emailAttempt.isEmailError ||
-                    loginError.isLoginError) && (
-                    <InputAdornment position='end'>
-                      <IconButton
-                        edge='end'
-                        style={{ pointerEvents: 'none' }}
-                        tabIndex={parseInt('-1')}
-                      >
-                        <ErrorOutlineIcon sx={{ color: errorColor }} />
-                      </IconButton>
-                    </InputAdornment>
-                  )
+                autoComplete='email'
+                required={loginError.isLoginError}
+                error={loginError.isLoginError}
+                onKeyDown={e => {
+                  if (e.key === ' ') {
+                    e.preventDefault();
+                  }
                 }}
               />
               <TextField
+                id='outlined-adornment-password'
                 margin='normal'
-                required={passwordAttempt.isRequired}
-                fullWidth
-                name='password'
+                required={loginError.isLoginError}
+                type={showPassword ? 'text' : 'password'}
                 label='Password'
-                type='password'
-                id='password'
+                {...register('password')}
+                fullWidth
                 autoComplete='current-password'
-                onChange={handlePasswordChange}
-                error={
-                  passwordAttempt.isPasswordError || loginError.isLoginError
-                }
-                helperText={
-                  passwordAttempt.isPasswordError ? 'Password is required*' : ''
-                }
+                error={loginError.isLoginError}
+                onKeyDown={e => {
+                  if (e.key === ' ') {
+                    e.preventDefault();
+                  }
+                }}
                 InputProps={{
-                  endAdornment: (passwordAttempt.isPasswordError ||
-                    loginError.isLoginError) && (
+                  endAdornment: (
                     <InputAdornment position='end'>
                       <IconButton
+                        aria-label='toggle password visibility'
+                        onMouseDown={handleClickShowPassword}
+                        onMouseUp={handleClickShowPassword}
                         edge='end'
-                        style={{ pointerEvents: 'none' }}
-                        tabIndex={parseInt('-1')}
                       >
-                        <ErrorOutlineIcon sx={{ color: errorColor }} />
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
                       </IconButton>
                     </InputAdornment>
                   )
                 }}
               />
-              <FormControlLabel
-                control={<Checkbox value='remember' color='primary' />}
-                label='Remember me'
+              <Controller
+                name='remember'
+                control={control}
+                render={({ field }) => (
+                  <FormControlLabel
+                    control={
+                      <Checkbox {...field} value='remember' color='primary' />
+                    }
+                    label='Remember me'
+                  />
+                )}
               />
-              <Typography align='center' style={{ color: errorColor }}>
+              <Typography
+                align='center'
+                style={{ marginTop: 4, color: errorColor }}
+              >
                 {loginError.errorMessage}
               </Typography>
-              <Button
+              <LoadingProgressButton
                 type='submit'
                 fullWidth
                 variant='contained'
-                sx={{ mt: 3, mb: 2 }}
+                sx={{ mt: 2, mb: 2 }}
+                isLoading={isLoading}
               >
                 Sign In
-              </Button>
+              </LoadingProgressButton>
               <Grid container>
                 <Grid item xs>
                   <Link href='#' variant='body2'>
