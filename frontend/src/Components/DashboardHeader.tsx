@@ -1,5 +1,6 @@
-import ServiceForms from './DashboardContent/ManagerialTabs/ServiceForms';
+import ServiceForm from './DashboardContent/ManagerialTabs/ServiceForm';
 import NotificationsIcon from '@mui/icons-material/Notifications';
+import TabPanel from './DashboardContent/TabPanel';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import HelpIcon from '@mui/icons-material/Help';
@@ -16,7 +17,6 @@ import Tab from '@mui/material/Tab';
 import { useState } from 'react';
 import * as React from 'react';
 import { Box } from '@mui/material';
-import TabPanel from './DashboardContent/ManagerialTabs/TabPanel';
 
 const lightColor = 'rgba(255, 255, 255, 0.7)';
 
@@ -25,7 +25,7 @@ const headerOptions = [
   {
     id: 'Managerial',
     children: [
-      { childId: 'ServiceForms', component: <ServiceForms />, active: 0 },
+      { childId: 'ServiceForm', component: <ServiceForm />, active: 0 },
       { childId: 'Man tab 2', component: <h1>man tab 2</h1>, active: 1 },
       { childId: 'Man tab 3', component: <h1>man tab 3</h1>, active: 2 }
     ]

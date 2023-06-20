@@ -1,6 +1,6 @@
 import Header from '../DashboardHeader';
 import { Box } from '@mui/material';
-import ServiceForms from './ManagerialTabs/ServiceForms';
+import ServiceForms from './ManagerialTabs/ServiceForm';
 import { useState } from 'react';
 
 export default function Managerial(props: any) {
