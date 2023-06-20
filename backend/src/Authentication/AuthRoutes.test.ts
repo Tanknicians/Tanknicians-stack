@@ -1,4 +1,4 @@
-import express, {Request, Response} from "express";
+import express, { Request, Response } from "express";
 import authRouter from "./AuthRoutes";
 import * as AuthService from "./AuthService";
 
@@ -8,8 +8,8 @@ app.use(authRouter);
 // Create a mock request object
 const mockLogin = {
   body: {
-    email: 'testemail@gmail.com',
-    password: 'hunter2',
+    email: "testemail@gmail.com",
+    password: "hunter2",
   },
 } as Request;
 
