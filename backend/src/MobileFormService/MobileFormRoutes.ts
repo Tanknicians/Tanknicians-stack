@@ -1,6 +1,6 @@
 import express from "express";
 import { uploadServiceCall } from "./MobileFormService";
-import { authenticateRoleMiddleWare } from "src/Authentication/AuthService";
+import { authenticateRoleMiddleWare } from "../Authentication/AuthService";
 
 const mobileFormRouter = express.Router();
 mobileFormRouter.use(express.json());
