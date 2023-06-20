@@ -1,4 +1,4 @@
-import {Request, Response} from "express";
+import { Request, Response } from "express";
 import * as AuthService from "./AuthService";
 
 // Create a mock request object
