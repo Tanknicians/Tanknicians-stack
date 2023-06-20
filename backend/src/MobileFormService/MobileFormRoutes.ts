@@ -9,8 +9,8 @@ mobileFormRouter.use(express.json());
 mobileFormRouter.post("/uploadForm", authenticateRoleMiddleWare(["ADMIN", "EMPLOYEE"]), async (req, res) => {
   try {
     const input = req.body; // should probably add a types.ts object here 
-    await uploadServiceCall(input);
-    res.status(200).json({ success: "Form uploaded."});
+    const message = await uploadServiceCall(input); // returns a simple "approved/not approved."
+    res.status(200).json({ success: `Form uploaded. Form ${message}.`});
   } catch (error) {
     res.status(500).json({ error: "Failed to upload form." });
   }

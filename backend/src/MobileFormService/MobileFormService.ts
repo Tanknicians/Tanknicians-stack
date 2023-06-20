@@ -1,10 +1,12 @@
 import * as Prisma from "@prisma/client";
 import { serviceCallDB } from "prisma/db/ServiceCall";
 
-export async function uploadServiceCall(serviceCall: Omit<Prisma.ServiceCall, "id">): Promise<void> {
+export async function uploadServiceCall(serviceCall: Omit<Prisma.ServiceCall, "id">) {
   const submitServiceCall = checkServiceCall(serviceCall);
+  let approvedMessage = serviceCall.isApproved ? "approved" : "not approved";
   try {
     await serviceCallDB.create(submitServiceCall);
+    return approvedMessage;
   } catch (e) {
     throw new Error("An error occurred during create.");
   }
