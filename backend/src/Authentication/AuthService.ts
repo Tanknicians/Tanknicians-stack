@@ -10,6 +10,7 @@ import {
 import { loginDB } from '../../prisma/db/Login';
 import { Request, Response, NextFunction } from 'express';
 import { LoginInput, RegisterInput } from '../types';
+import { JwtPayload } from 'jsonwebtoken';
 
 export async function login(req: Request, res: Response) {
   const login = req.body as LoginInput;
@@ -147,7 +148,7 @@ export function authenticateRoleMiddleWare(roles: string[]) {
     } catch (error) {
       return res.status(401).send({ message: 'Invalid token' });
     }
-    const decodedToken: any = verifyToken(token);
+    const decodedToken: JwtPayload = verifyToken(token);
     if (!roles.includes(decodedToken.role)) {
       return res.status(403).send({ message: 'Unauthorized access' });
     }

@@ -3,7 +3,7 @@ import { serviceCallDB } from "prisma/db/ServiceCall";
 
 export async function uploadServiceCall(serviceCall: Omit<Prisma.ServiceCall, "id">) {
   const submitServiceCall = checkServiceCall(serviceCall);
-  let approvedMessage = serviceCall.isApproved ? "approved" : "not approved";
+  const approvedMessage = serviceCall.isApproved ? "approved" : "not approved";
   try {
     await serviceCallDB.create(submitServiceCall);
     return approvedMessage;
