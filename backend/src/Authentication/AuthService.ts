@@ -1,15 +1,16 @@
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from "bcrypt";
 
 import {
   generateToken,
   verifyRefreshToken,
   generateRefreshToken,
-  verifyToken
-} from '../TokenGenerator';
+  verifyToken,
+} from "../TokenGenerator";
 
-import { loginDB } from '../../prisma/db/Login';
-import { Request, Response, NextFunction } from 'express';
-import { LoginInput, RegisterInput } from '../types';
+import { loginDB } from "../../prisma/db/Login";
+import { Request, Response, NextFunction } from "express";
+import { LoginInput, RegisterInput } from "../types";
+import { JwtPayload } from "jsonwebtoken";
 
 export async function login(req: Request, res: Response) {
   const login = req.body as LoginInput;
@@ -18,16 +19,16 @@ export async function login(req: Request, res: Response) {
   // Confirm login credentials existed in full in DB
   if (!savedCredentials) {
     return res.status(401).json({
-      code: 'UNAUTHORIZED',
-      message: 'Incorrect email/password combination'
+      code: "UNAUTHORIZED",
+      message: "Incorrect email/password combination",
       // message: `Login with email: ${login.email} not found.`
     });
   }
 
   if (!(savedCredentials.email && savedCredentials.password)) {
     return res.status(401).json({
-      code: 'UNAUTHORIZED',
-      message: 'User record incomplete'
+      code: "UNAUTHORIZED",
+      message: "User record incomplete",
     });
   }
 
@@ -35,12 +36,12 @@ export async function login(req: Request, res: Response) {
 
   const samePasswords = await bcrypt.compare(
     login.password,
-    savedCredentials.password
+    savedCredentials.password,
   );
   if (!samePasswords) {
     return res.status(401).json({
-      code: 'UNAUTHORIZED',
-      message: 'Incorrect email/password combination'
+      code: "UNAUTHORIZED",
+      message: "Incorrect email/password combination",
       // message: 'passwords do not match'
     });
   }
@@ -48,18 +49,18 @@ export async function login(req: Request, res: Response) {
   try {
     const token = generateToken(savedCredentials);
     const refreshToken = generateRefreshToken(savedCredentials);
-    res.cookie('jwt', refreshToken, {
+    res.cookie("jwt", refreshToken, {
       httpOnly: true,
       secure: true,
-      maxAge: 24 * 60 * 60 * 1000
+      maxAge: 24 * 60 * 60 * 1000,
     });
-    res.json({ token, savedCredentials });
+    res.status(200).json({ token, savedCredentials });
     return;
   } catch (error) {
-    console.error('Error generating tokens:', error);
+    console.error("Error generating tokens:", error);
     return res.status(500).json({
-      code: 'INTERNAL_SERVER_ERROR',
-      message: 'Failed to generate tokens'
+      code: "INTERNAL_SERVER_ERROR",
+      message: "Failed to generate tokens",
     });
   }
 }
@@ -70,29 +71,29 @@ export async function register(req: Request, res: Response) {
   // Though a role is required, having a string helps more than "null"
   if (registration.role == null) {
     return res.status(400).json({
-      code: 'BAD_REQUEST',
-      message: 'Role cannot be empty.'
+      code: "BAD_REQUEST",
+      message: "Role cannot be empty.",
     });
   }
 
   // Not allowed to register an empty password
   if (!registration.password) {
     return res.status(400).json({
-      code: 'BAD_REQUEST',
-      message: 'Password cannot be empty.'
+      code: "BAD_REQUEST",
+      message: "Password cannot be empty.",
     });
   }
 
   try {
     registration.password = await bcrypt.hash(registration.password, 10);
     await loginDB.create(registration);
-    return res.json({ message: 'Registration successful' });
+    return res.json({ message: "Registration successful" });
   } catch (error) {
     console.error(error);
     return res.status(500).json({
-      code: 'INTERNAL_SERVER_ERROR',
-      message: 'An error occurred during registration',
-      cause: error
+      code: "INTERNAL_SERVER_ERROR",
+      message: "An error occurred during registration",
+      cause: error,
     });
   }
 }
@@ -105,10 +106,10 @@ export async function refresh(req: Request, res: Response) {
   try {
     verifyRefreshToken(refreshToken);
   } catch (error) {
-    console.log('Invalid token.');
+    console.log("Invalid token.");
     return res.status(403).json({
-      code: 'FORBIDDEN',
-      message: 'Refresh token not valid.'
+      code: "FORBIDDEN",
+      message: "Refresh token not valid.",
     });
   }
 
@@ -116,8 +117,8 @@ export async function refresh(req: Request, res: Response) {
 
   if (!savedCredentials) {
     return res.status(404).json({
-      code: 'NOT_FOUND',
-      message: 'Login does not exist.'
+      code: "NOT_FOUND",
+      message: "Login does not exist.",
     });
   }
 
@@ -127,9 +128,9 @@ export async function refresh(req: Request, res: Response) {
   } catch (error) {
     console.error(error);
     return res.status(500).json({
-      code: 'INTERNAL_SERVER_ERROR',
-      message: 'An error occurred while generating the access token.',
-      cause: error
+      code: "INTERNAL_SERVER_ERROR",
+      message: "An error occurred while generating the access token.",
+      cause: error,
     });
   }
 }
@@ -139,17 +140,17 @@ export function authenticateRoleMiddleWare(roles: string[]) {
   return async function (req: Request, res: Response, next: NextFunction) {
     const authHeader = req.headers.authorization;
     if (!authHeader) {
-      return res.status(401).send({ message: 'No token provided' });
+      return res.status(401).send({ message: "No token provided" });
     }
-    const token = authHeader.split(' ')[1];
+    const token = authHeader.split(" ")[1];
     try {
       verifyToken(token);
     } catch (error) {
-      return res.status(401).send({ message: 'Invalid token' });
+      return res.status(401).send({ message: "Invalid token" });
     }
-    const decodedToken: any = verifyToken(token);
+    const decodedToken: JwtPayload = verifyToken(token);
     if (!roles.includes(decodedToken.role)) {
-      return res.status(403).send({ message: 'Unauthorized access' });
+      return res.status(403).send({ message: "Unauthorized access" });
     }
     next();
   };

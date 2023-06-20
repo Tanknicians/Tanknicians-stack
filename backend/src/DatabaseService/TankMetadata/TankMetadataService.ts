@@ -1,4 +1,4 @@
-import * as  Prisma from "@prisma/client";
+import * as Prisma from "@prisma/client";
 import { tankDB } from "./../../../prisma/db/TankMetadata";
 
 export async function create(tank: Omit<Prisma.TankMetadata, "id">) {
