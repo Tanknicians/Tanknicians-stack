@@ -4,8 +4,8 @@ import * as AuthService from "./AuthService";
 // Create a mock request object
 const mockLogin = {
   body: {
-    email: 'testemail@gmail.com',
-    password: 'hunter2',
+    email: "testemail@gmail.com",
+    password: "hunter2",
   },
 } as Request;
 
