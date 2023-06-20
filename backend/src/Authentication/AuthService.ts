@@ -54,7 +54,7 @@ export async function login(req: Request, res: Response) {
       secure: true,
       maxAge: 24 * 60 * 60 * 1000,
     });
-    res.json({ token, savedCredentials });
+    res.status(200).json({ token, savedCredentials });
     return;
   } catch (error) {
     console.error("Error generating tokens:", error);
