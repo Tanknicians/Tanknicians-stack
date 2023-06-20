@@ -1,7 +1,6 @@
 import * as Prisma from "@prisma/client";
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from "bcrypt";
 import { loginDB } from "./../../../prisma/db/Login";
-
 
 export async function create(login: Omit<Prisma.Login, "id">) {
   try {

@@ -1,7 +1,9 @@
 import * as Prisma from "@prisma/client";
 import { serviceCallDB } from "prisma/db/ServiceCall";
 
-export async function uploadServiceCall(serviceCall: Omit<Prisma.ServiceCall, "id">) {
+export async function uploadServiceCall(
+  serviceCall: Omit<Prisma.ServiceCall, "id">,
+) {
   const submitServiceCall = checkServiceCall(serviceCall);
   const approvedMessage = serviceCall.isApproved ? "approved" : "not approved";
   try {
@@ -51,7 +53,6 @@ const paramLimits = {
   phosphateMin: 0.03,
   phosphateMax: 0.24,
 };
-
 
 // currently unused code
 // Standard deviation calculations, takes in an array of Service Calls without "id"
