@@ -1,9 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { RootState } from '../Redux/store';
+import { RootState } from '../../store';
 
 const initialState = {
   user: null,
-  token: null,
+  token: null
 };
 
 const authSlice = createSlice({

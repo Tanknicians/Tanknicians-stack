@@ -1,5 +1,5 @@
-import * as AuthService from "./AuthService";
-import express from "express";
+import * as AuthService from './AuthService';
+import express from 'express';
 
 const authRouter = express.Router();
 
@@ -11,7 +11,9 @@ authRouter.post('/login', async (req, res) => {
   try {
     await AuthService.login(req, res);
   } catch (error) {
-    res.status(500).json({ error: 'An error occurred with the login function.' });
+    res
+      .status(500)
+      .json({ error: 'An error occurred with the login function.' });
   }
 });
 
@@ -20,7 +22,9 @@ authRouter.post('/register', async (req, res) => {
   try {
     await AuthService.register(req, res);
   } catch (error) {
-    res.status(500).json({ error: 'An error occurred with the register function.' });
+    res
+      .status(500)
+      .json({ error: 'An error occurred with the register function.' });
   }
 });
 
@@ -29,9 +33,10 @@ authRouter.post('/refresh', async (req, res) => {
   try {
     await AuthService.refresh(req, res);
   } catch (error) {
-    res.status(500).json({ error: 'An error occurred with the refresh function.' });
+    res
+      .status(500)
+      .json({ error: 'An error occurred with the refresh function.' });
   }
 });
-
 
 export default authRouter;

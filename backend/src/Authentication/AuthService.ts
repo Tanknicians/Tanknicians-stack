@@ -19,7 +19,8 @@ export async function login(req: Request, res: Response) {
   if (!savedCredentials) {
     return res.status(401).json({
       code: 'UNAUTHORIZED',
-      message: `Login with email: ${login.email} not found.`
+      message: 'Incorrect email/password combination'
+      // message: `Login with email: ${login.email} not found.`
     });
   }
 
@@ -32,18 +33,26 @@ export async function login(req: Request, res: Response) {
 
   console.log(`login found for ${login.email}`);
 
-  const samePasswords = await bcrypt.compare(login.password, savedCredentials.password);
+  const samePasswords = await bcrypt.compare(
+    login.password,
+    savedCredentials.password
+  );
   if (!samePasswords) {
     return res.status(401).json({
       code: 'UNAUTHORIZED',
-      message: 'passwords do not match'
+      message: 'Incorrect email/password combination'
+      // message: 'passwords do not match'
     });
   }
 
   try {
     const token = generateToken(savedCredentials);
     const refreshToken = generateRefreshToken(savedCredentials);
-    res.cookie('jwt', refreshToken, { httpOnly: true, secure: true, maxAge: 24 * 60 * 60 * 1000 });
+    res.cookie('jwt', refreshToken, {
+      httpOnly: true,
+      secure: true,
+      maxAge: 24 * 60 * 60 * 1000
+    });
     res.json({ token, savedCredentials });
     return;
   } catch (error) {
@@ -90,7 +99,6 @@ export async function register(req: Request, res: Response) {
 
 // Generate a new access token using a refresh token
 export async function refresh(req: Request, res: Response) {
-
   const email = req.body.email;
   const refreshToken = req.cookies.jwt;
 
