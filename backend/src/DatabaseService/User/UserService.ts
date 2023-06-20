@@ -40,6 +40,8 @@ export async function deleteOne(id: number) {
   }
 }
 
+// This looks to be an expensive search, might be worth
+// monitoring for slowdown once db grows.
 export async function search(search: string) {
   try {
     const searchData = userDB.searchByString(search);

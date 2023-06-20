@@ -11,7 +11,7 @@ export async function uploadServiceCall(
   } catch (e) {
     throw new TRPCError({
       code: "INTERNAL_SERVER_ERROR",
-      message: "An error occured during create.",
+      message: "An error occurred during create.",
       cause: e,
     });
   }

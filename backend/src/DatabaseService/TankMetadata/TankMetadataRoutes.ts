@@ -3,6 +3,11 @@ import * as TankMetadataService from "./TankMetadataService";
 import { TankMetadata } from "@prisma/client";
 import { authenticateRoleMiddleWare } from "../../Authentication/AuthService";
 
+/**
+ * This router is for providing modification access to individual tank
+ * records in the database.
+ */
+
 const tankMetaDataRouter = express.Router();
 tankMetaDataRouter.use(express.json());
 

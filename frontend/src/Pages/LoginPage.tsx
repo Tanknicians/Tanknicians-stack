@@ -39,15 +39,15 @@ const schema = z.object({
 function Copyright(props: { [k: string]: unknown }) {
   return (
     <Typography
-      variant='body2'
-      color='text.secondary'
-      align='center'
+      variant="body2"
+      color="text.secondary"
+      align="center"
       {...props}
     >
-      <Link color='inherit' href='https://tanknicians.com/' target='_blank'>
+      <Link color="inherit" href="https://tanknicians.com/" target="_blank">
         Tanknicians
-      </Link>{' '}
-      {' © '}
+      </Link>{" "}
+      {" © "}
       {new Date().getFullYear()}
     </Typography>
   );
@@ -70,13 +70,14 @@ export default function LoginPage() {
   const navigate = useNavigate();
 
   // Error message for login attempt
-  const errorColor = '#d32f2f';
+  const errorColor = "#d32f2f";
   const [loginError, setLoginError] = useState({
-    errorMessage: '',
-    isLoginError: false
+    errorMessage: "",
+    isLoginError: false,
   });
 
   const handleClickShowPassword = () => setShowPassword(show => !show);
+
 
   const { control, register, handleSubmit } = useForm<LoginFormData>({
     resolver: zodResolver(schema)
@@ -89,6 +90,7 @@ export default function LoginPage() {
   // Form submission with error checks
   const onSubmit: SubmitHandler<LoginFormData> = async data => {
     const { remember, ...loginData } = data;
+
 
     try {
       const userData = await login(loginData).unwrap();
@@ -114,7 +116,7 @@ export default function LoginPage() {
 
   return (
     <ThemeProvider theme={theme}>
-      <Grid container component='main' sx={{ height: '100vh' }}>
+      <Grid container component="main" sx={{ height: "100vh" }}>
         <CssBaseline />
         <Grid
           item
@@ -123,13 +125,13 @@ export default function LoginPage() {
           md={7}
           sx={{
             backgroundImage: `url(${randomImage})`,
-            backgroundRepeat: 'no-repeat',
-            backgroundColor: t =>
-              t.palette.mode === 'light'
+            backgroundRepeat: "no-repeat",
+            backgroundColor: (t) =>
+              t.palette.mode === "light"
                 ? t.palette.grey[50]
                 : t.palette.grey[900],
-            backgroundSize: 'cover',
-            backgroundPosition: 'center'
+            backgroundSize: "cover",
+            backgroundPosition: "center",
           }}
         />
         <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
@@ -138,19 +140,19 @@ export default function LoginPage() {
               mt: 8,
               mb: 10,
               mx: 4,
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center'
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
             }}
           >
-            <Avatar sx={{ m: 1, bgcolor: 'primary.main' }}>
+            <Avatar sx={{ m: 1, bgcolor: "primary.main" }}>
               <InvertColorsOutlinedIcon />
             </Avatar>
-            <Typography component='h1' variant='h5'>
+            <Typography component="h1" variant="h5">
               Log in
             </Typography>
             <Box
-              component='form'
+              component="form"
               noValidate
               onSubmit={handleSubmit(onSubmit)}
               sx={{ mt: 1 }}
@@ -198,7 +200,7 @@ export default function LoginPage() {
                         {showPassword ? <VisibilityOff /> : <Visibility />}
                       </IconButton>
                     </InputAdornment>
-                  )
+                  ),
                 }}
               />
               <Controller
@@ -230,7 +232,7 @@ export default function LoginPage() {
               </LoadingProgressButton>
               <Grid container>
                 <Grid item xs>
-                  <Link href='#' variant='body2'>
+                  <Link href="#" variant="body2">
                     Forgot password?
                   </Link>
                 </Grid>
@@ -238,7 +240,7 @@ export default function LoginPage() {
             </Box>
           </Box>
           <Box
-            component='footer'
+            component="footer"
             sx={{
               py: 3,
               px: 2
