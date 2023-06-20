@@ -25,8 +25,8 @@ describe("Authentication API", () => {
 
   */
 
-  // not ready
-  /*
+// not ready
+/*
   test("should register user", async () => {
     const mockRegister = jest.spyOn(AuthService, "register");
     const mockReq = { body: { username: "testuser", password: "testpassword" } };
@@ -40,7 +40,7 @@ describe("Authentication API", () => {
   });
   */
 
-  /*
+/*
   test("should refresh token", async () => {
     const mockRefresh = jest.spyOn(AuthService, "refresh");
     const mockReq = {
