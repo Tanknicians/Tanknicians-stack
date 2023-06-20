@@ -1,26 +1,23 @@
-import * as Prisma from "@prisma/client";
-import { serviceCallDB } from "prisma/db/ServiceCall";
-import { TRPCError } from "@trpc/server";
+import * as Prisma from '@prisma/client';
+import { serviceCallDB } from '../../prisma/db/ServiceCall';
 
 export async function uploadServiceCall(
-  serviceCall: Omit<Prisma.ServiceCall, "id">,
-): Promise<void> {
+  serviceCall: Omit<Prisma.ServiceCall, 'id'>
+) {
   const submitServiceCall = checkServiceCall(serviceCall);
+  const approvedMessage = serviceCall.isApproved ? 'approved' : 'not approved';
   try {
     await serviceCallDB.create(submitServiceCall);
+    return approvedMessage;
   } catch (e) {
-    throw new TRPCError({
-      code: "INTERNAL_SERVER_ERROR",
-      message: "An error occurred during create.",
-      cause: e,
-    });
+    throw new Error('An error occurred during create.');
   }
 }
 
 // run checks on the service call and make sure parameters are valid
-export function checkServiceCall(
-  serviceCall: Omit<Prisma.ServiceCall, "id">,
-): Omit<Prisma.ServiceCall, "id"> {
+function checkServiceCall(
+  serviceCall: Omit<Prisma.ServiceCall, 'id'>
+): Omit<Prisma.ServiceCall, 'id'> {
   const { alkalinity, calcium, nitrate, phosphate } = serviceCall;
 
   if (
@@ -54,11 +51,12 @@ const paramLimits = {
   nitrateMin: 1,
   nitrateMax: 20,
   phosphateMin: 0.03,
-  phosphateMax: 0.24,
+  phosphateMax: 0.24
 };
 
+// currently unused code
 // Standard deviation calculations, takes in an array of Service Calls without "id"
-function calculateStandardDeviation(data: Omit<Prisma.ServiceCall, "id">[]): {
+function calculateStandardDeviation(data: Omit<Prisma.ServiceCall, 'id'>[]): {
   nitrate: number;
   phosphate: number;
   calcium: number;
@@ -73,7 +71,7 @@ function calculateStandardDeviation(data: Omit<Prisma.ServiceCall, "id">[]): {
       params.phosphate += current.phosphate;
       return params;
     },
-    { alkalinity: 0, calcium: 0, nitrate: 0, phosphate: 0 },
+    { alkalinity: 0, calcium: 0, nitrate: 0, phosphate: 0 }
   );
 
   meanValues.nitrate /= data.length;
@@ -94,7 +92,7 @@ function calculateStandardDeviation(data: Omit<Prisma.ServiceCall, "id">[]): {
       params.alkalinity += alkalinityDiff * alkalinityDiff;
       return params;
     },
-    { nitrate: 0, phosphate: 0, calcium: 0, alkalinity: 0 },
+    { nitrate: 0, phosphate: 0, calcium: 0, alkalinity: 0 }
   );
 
   // Calculate the standard deviation using the non-population formula
@@ -103,13 +101,12 @@ function calculateStandardDeviation(data: Omit<Prisma.ServiceCall, "id">[]): {
     nitrate: Math.sqrt(squaredDifferences.nitrate / (data.length - 1)),
     phosphate: Math.sqrt(squaredDifferences.phosphate / (data.length - 1)),
     calcium: Math.sqrt(squaredDifferences.calcium / (data.length - 1)),
-    alkalinity: Math.sqrt(squaredDifferences.alkalinity / (data.length - 1)),
+    alkalinity: Math.sqrt(squaredDifferences.alkalinity / (data.length - 1))
   };
   return standardDeviation;
 }
 
 /* This code used to be part of the MobileFormService "checkServiceCall" code, may be recycled later.
-
 // No error checking needed if previous do not exist. New customers won't have previous service call forms.
   const previousServiceCalls = await serviceCallDB.readLatest(
     serviceCall.tankId,

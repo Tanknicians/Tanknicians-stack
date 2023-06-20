@@ -1,4 +1,3 @@
-import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Box,
   FormControl,
@@ -8,19 +7,21 @@ import {
   RadioGroup,
   TextField
 } from '@mui/material';
-import { useForm, SubmitHandler, Controller } from 'react-hook-form';
-import LoadingProgressButton from '../../LoadingProgressButton';
 import {
   serviceFormFieldQuestionsBoolean,
   serviceFormFieldQuestionsNumeric,
+  serviceFormFieldQuestionsText,
   ServiceFormData,
   serviceFormSchema
 } from './serviceFormTypesandData';
-import { useState } from 'react';
+import { useUploadServiceCallMutation } from '../../../Redux/slices/forms/servicecallApiSlice';
+import { useForm, SubmitHandler, Controller } from 'react-hook-form';
+import LoadingProgressButton from '../../LoadingProgressButton';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 export default function ServiceForm() {
-  // form Mutation will go here
-  const [isLoading, setIsLoading] = useState(false);
+  // Service call form submission api call
+  const [uploadServiceCall, { isLoading }] = useUploadServiceCallMutation();
 
   const { control, register, handleSubmit, formState } =
     useForm<ServiceFormData>({
@@ -41,15 +42,25 @@ export default function ServiceForm() {
         pestAPresent: false,
         pestBPresent: false,
         pestCPresent: false,
-        pestDPresent: false
+        pestDPresent: false,
+        customerRequest: '',
+        employeeNotes: ''
       },
       resolver: zodResolver(serviceFormSchema)
     });
 
   const { errors } = formState;
 
+  console.log(errors);
+
   const onSubmit: SubmitHandler<ServiceFormData> = (data: any) => {
     console.log(data);
+
+    try {
+      uploadServiceCall(data).unwrap();
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   // Only allow numbers and decimal points
@@ -95,13 +106,29 @@ export default function ServiceForm() {
               aria-labelledby={`${label}-controlled-radio-buttons-group`}
               {...field}
             >
-              <FormControlLabel value='false' control={<Radio />} label='No' />
-              <FormControlLabel value='true' control={<Radio />} label='Yes' />
+              <FormControlLabel value={false} control={<Radio />} label='No' />
+              <FormControlLabel value={true} control={<Radio />} label='Yes' />
             </RadioGroup>
           )}
         />
       </FormControl>
     ));
+
+  const renderedServiceFormQuestionsText = serviceFormFieldQuestionsText.map(
+    ({ id, label }, index) => (
+      <TextField
+        key={id}
+        autoFocus={index === 0}
+        id={`${id}-input`}
+        label={label}
+        margin='normal'
+        {...register(id)}
+        required={!!errors?.[id]}
+        error={!!errors?.[id]}
+        helperText={errors?.[id]?.message}
+      />
+    )
+  );
 
   return (
     // temporary styling
@@ -125,6 +152,8 @@ export default function ServiceForm() {
         {renderedServiceFormQuestionsNumeric}
         {/* Questions with expected boolean answers */}
         {renderedServiceFormQuestionsBoolean}
+        {/* Questions with expected text answers */}
+        {renderedServiceFormQuestionsText}
         <Box sx={{ display: 'flex', justifyContent: 'center' }}>
           <LoadingProgressButton
             type='submit'

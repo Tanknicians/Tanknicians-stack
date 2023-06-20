@@ -22,6 +22,8 @@ export interface ServiceFormData {
   pestBPresent: boolean;
   pestCPresent: boolean;
   pestDPresent: boolean;
+  customerRequest: string;
+  employeeNotes: string;
 }
 
 export const serviceFormSchema = z.object({
@@ -51,7 +53,9 @@ export const serviceFormSchema = z.object({
   pestAPresent: z.boolean(),
   pestBPresent: z.boolean(),
   pestCPresent: z.boolean(),
-  pestDPresent: z.boolean()
+  pestDPresent: z.boolean(),
+  customerRequest: z.string(),
+  employeeNotes: z.string()
 });
 
 type ServiceFormFieldId =
@@ -75,12 +79,25 @@ type ServiceFormFieldId =
   | 'pestAPresent'
   | 'pestBPresent'
   | 'pestCPresent'
-  | 'pestDPresent';
+  | 'pestDPresent'
+  | 'customerRequest'
+  | 'employeeNotes';
 
 interface ServiceFormFieldQuestion {
   id: ServiceFormFieldId;
   label: string;
 }
+
+export const serviceFormFieldQuestionsText: ServiceFormFieldQuestion[] = [
+  {
+    id: 'customerRequest',
+    label: 'Customer Request'
+  },
+  {
+    id: 'employeeNotes',
+    label: 'Employee Notes'
+  }
+];
 
 export const serviceFormFieldQuestionsNumeric: ServiceFormFieldQuestion[] = [
   {
