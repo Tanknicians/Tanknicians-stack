@@ -1,11 +1,6 @@
 import Prisma from "@prisma/client";
-import { generateSecret, generateToken } from "./TokenGenerator";
+import { generateToken } from "./TokenGenerator";
 
-let testSecret: string;
-
-beforeAll(() => {
-  testSecret = generateSecret();
-});
 
 test("return token for complete login", () => {
   const userLogin: Prisma.Login = {
@@ -18,3 +13,5 @@ test("return token for complete login", () => {
 
   expect(generateToken(userLogin)).not.toBe(null);
 });
+
+
