@@ -1,5 +1,8 @@
 import { z } from 'zod';
 
+// employeeId: number;
+// tankId: number;
+
 export interface ServiceFormData {
   alkalinity: number;
   calcium: number;

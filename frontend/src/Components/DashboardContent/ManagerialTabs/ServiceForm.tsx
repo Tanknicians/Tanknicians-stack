@@ -47,6 +47,11 @@ export default function ServiceForm() {
         employeeNotes: ''
       },
       resolver: zodResolver(serviceFormSchema)
+      // mode: 'onBlur',
+      // reValidateMode: 'onChange',
+      // shouldFocusError: true,
+      // shouldUnregister: true,
+      // criteriaMode: 'firstError'
     });
 
   const { errors } = formState;
@@ -100,14 +105,24 @@ export default function ServiceForm() {
           rules={{ required: true }}
           control={control}
           name={id}
-          render={({ field }) => (
+          render={({ field: { onChange, ...rest } }) => (
             <RadioGroup
               row
               aria-labelledby={`${label}-controlled-radio-buttons-group`}
-              {...field}
+              {...rest}
             >
-              <FormControlLabel value={false} control={<Radio />} label='No' />
-              <FormControlLabel value={true} control={<Radio />} label='Yes' />
+              <FormControlLabel
+                onChange={() => onChange(false)}
+                value={false}
+                control={<Radio />}
+                label='No'
+              />
+              <FormControlLabel
+                onChange={() => onChange(true)}
+                value={true}
+                control={<Radio />}
+                label='Yes'
+              />
             </RadioGroup>
           )}
         />
@@ -115,10 +130,9 @@ export default function ServiceForm() {
     ));
 
   const renderedServiceFormQuestionsText = serviceFormFieldQuestionsText.map(
-    ({ id, label }, index) => (
+    ({ id, label }) => (
       <TextField
         key={id}
-        autoFocus={index === 0}
         id={`${id}-input`}
         label={label}
         margin='normal'
