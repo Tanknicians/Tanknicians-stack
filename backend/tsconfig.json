@@ -5,7 +5,7 @@
     "jsx": "react-jsx" /* Specify what JSX code is generated. */,
     "module": "commonjs" /* Specify what module code is generated. */,
     "rootDirs": [
-      "./backend/src"
+      "./src"
     ] /* Allow multiple folders to be treated as one when resolving modules. */,
     "esModuleInterop": true /* Emit additional JavaScript to ease support for importing CommonJS modules. This enables 'allowSyntheticDefaultImports' for type compatibility. */,
     "forceConsistentCasingInFileNames": true /* Ensure that casing is correct in imports. */,

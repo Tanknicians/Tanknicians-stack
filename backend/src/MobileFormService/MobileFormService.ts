@@ -1,24 +1,21 @@
 import * as Prisma from "@prisma/client";
-import { serviceCallDB } from "prisma/db/ServiceCall";
-import { TRPCError } from "@trpc/server";
+import { serviceCallDB } from "../../prisma/db/ServiceCall";
 
 export async function uploadServiceCall(
   serviceCall: Omit<Prisma.ServiceCall, "id">,
-): Promise<void> {
+) {
   const submitServiceCall = checkServiceCall(serviceCall);
+  const approvedMessage = serviceCall.isApproved ? "approved" : "not approved";
   try {
     await serviceCallDB.create(submitServiceCall);
+    return approvedMessage;
   } catch (e) {
-    throw new TRPCError({
-      code: "INTERNAL_SERVER_ERROR",
-      message: "An error occured during create.",
-      cause: e,
-    });
+    throw new Error("An error occurred during create.");
   }
 }
 
 // run checks on the service call and make sure parameters are valid
-export function checkServiceCall(
+function checkServiceCall(
   serviceCall: Omit<Prisma.ServiceCall, "id">,
 ): Omit<Prisma.ServiceCall, "id"> {
   const { alkalinity, calcium, nitrate, phosphate } = serviceCall;
@@ -57,6 +54,7 @@ const paramLimits = {
   phosphateMax: 0.24,
 };
 
+// currently unused code
 // Standard deviation calculations, takes in an array of Service Calls without "id"
 function calculateStandardDeviation(data: Omit<Prisma.ServiceCall, "id">[]): {
   nitrate: number;
@@ -109,7 +107,6 @@ function calculateStandardDeviation(data: Omit<Prisma.ServiceCall, "id">[]): {
 }
 
 /* This code used to be part of the MobileFormService "checkServiceCall" code, may be recycled later.
-
 // No error checking needed if previous do not exist. New customers won't have previous service call forms.
   const previousServiceCalls = await serviceCallDB.readLatest(
     serviceCall.tankId,

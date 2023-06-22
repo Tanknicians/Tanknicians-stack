@@ -1,11 +1,13 @@
-import * as trpcExpress from "@trpc/server/adapters/express";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 import express from "express";
-import { authRouter } from "./Authentication/AuthRoutes";
-import { emailRouter } from "./EmailService/EmailRoutes";
-import { createContext, router } from "./trpc";
+
+import authRouter from "./Authentication/AuthRoutes";
+import databaseRouter from "./DatabaseService/DatabaseRoutes";
+import emailRouter from "./EmailService/EmailRoutes";
+import mobileFormRouter from "./MobileFormService/MobileFormRoutes";
+
 import { logger, httpLogger } from "./LoggingService/pino";
-import { databaseRouter } from "./DatabaseService/DatabaseRoutes";
 
 // Initialize the express app
 const app = express();
@@ -15,31 +17,17 @@ const corsOptions = {
   origin: "http://localhost:3000",
   credentials: true,
 };
-
 // Allow for web-browser usage
-app.use(cors(corsOptions));
-// pino http logger
-app.use(httpLogger);
+app.use(cors(corsOptions)).use(httpLogger).use(cookieParser());
 
-// Server startup
-const appRouter = router({
-  email: emailRouter,
-  auth: authRouter,
-  db: databaseRouter,
-});
-
-app.use(
-  "/api",
-  trpcExpress.createExpressMiddleware({
-    router: appRouter,
-    createContext,
-  }),
-);
+// Service endpoints
+app
+  .use("/api/auth", authRouter)
+  .use("/api/database", databaseRouter)
+  .use("/api/email", emailRouter)
+  .use("/api/mobile", mobileFormRouter);
 
 app.listen(process.env.PORT, () => {
   console.log(`TypeScript with Express http://localhost:${process.env.PORT}/`);
   logger.info(`Server up and listening on port ${process.env.PORT}`);
 });
-
-type AppRouter = typeof appRouter;
-export type { AppRouter };

@@ -1,16 +1,12 @@
-import * as Prisma from "@prisma/client";
 import { serviceCallDB } from "../../../prisma/db/ServiceCall";
-import { TRPCError } from "@trpc/server";
+import * as Prisma from "@prisma/client";
 
 export async function create(serviceCall: Omit<Prisma.ServiceCall, "id">) {
   try {
     await serviceCallDB.create(serviceCall);
+    return { message: "Service Call created successfully" };
   } catch (e) {
-    throw new TRPCError({
-      code: "INTERNAL_SERVER_ERROR",
-      message: "An error occured during create.",
-      cause: e,
-    });
+    throw new Error("An error occurred during create.");
   }
 }
 
@@ -18,61 +14,40 @@ export async function read(id: number) {
   try {
     const serviceCall = await serviceCallDB.read(id);
     if (!serviceCall) {
-      throw new TRPCError({
-        code: "NOT_FOUND",
-        message: `ServiceCall with id: ${id} not found.`,
-      });
+      throw new Error(`Service Call with id: ${id} not found.`);
     }
     return serviceCall;
   } catch (e) {
-    throw new TRPCError({
-      code: "INTERNAL_SERVER_ERROR",
-      message: "An error occured during read",
-      cause: e,
-    });
+    throw new Error("An error occurred during read.");
   }
 }
 
 export async function update(serviceCall: Prisma.ServiceCall) {
   try {
     await serviceCallDB.update(serviceCall);
+    return { message: "Service Call updated successfully" };
   } catch (e) {
-    throw new TRPCError({
-      code: "INTERNAL_SERVER_ERROR",
-      message: "An error occured during update.",
-      cause: e,
-    });
+    throw new Error("An error occurred during update.");
   }
 }
 
 export async function deleteOne(id: number) {
   try {
     await serviceCallDB.deleteServiceCall(id);
+    return { message: "Service Call deleted successfully" };
   } catch (e) {
-    throw new TRPCError({
-      code: "INTERNAL_SERVER_ERROR",
-      message: "An error occured during delete.",
-      cause: e,
-    });
+    throw new Error("An error occurred during delete.");
   }
 }
 
-// Search requires any STRING and searches all string-based columns
 export async function search(search: string) {
   try {
     const searchData = serviceCallDB.searchByString(search);
     if (!searchData) {
-      throw new TRPCError({
-        code: "NOT_FOUND",
-        message: "No searchUser from search found.",
-      });
+      throw new Error("No Service Call from search found.");
     }
     return searchData;
   } catch (e) {
-    throw new TRPCError({
-      code: "INTERNAL_SERVER_ERROR",
-      message: "An error occured during search.",
-      cause: e,
-    });
+    throw new Error("An error occurred during search.");
   }
 }

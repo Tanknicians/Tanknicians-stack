@@ -1,51 +1,94 @@
-import { router, publicProcedure, isRoleCurryMiddleware } from "trpc";
+import express from "express";
 import * as TankMetadataService from "./TankMetadataService";
-import { TankMetadata } from "types";
-import { z } from "zod";
+import { TankMetadata } from "@prisma/client";
+import { authenticateRoleMiddleWare } from "../../Authentication/AuthService";
 
-const createMutation = publicProcedure
-  .use(isRoleCurryMiddleware(["ADMIN"]))
-  .input(TankMetadata.omit({ id: true }))
-  .mutation(async ({ input }) => {
-    return await TankMetadataService.create(input);
-  });
+/**
+ * This router is for providing modification access to individual tank
+ * records in the database.
+ */
 
-const readQuery = publicProcedure
-  .use(isRoleCurryMiddleware(["ADMIN"]))
-  .input(TankMetadata.pick({ id: true }))
-  .query(async ({ input }) => {
-    return await TankMetadataService.read(input.id);
-  });
+const tankMetaDataRouter = express.Router();
+tankMetaDataRouter.use(express.json());
 
-const updateMutation = publicProcedure
-  .use(isRoleCurryMiddleware(["ADMIN"]))
-  .input(TankMetadata)
-  .mutation(async ({ input }) => {
-    return await TankMetadataService.update(input);
-  });
+// Create TankMetadata
+tankMetaDataRouter.post(
+  "/",
+  authenticateRoleMiddleWare(["ADMIN"]),
+  async (req, res) => {
+    try {
+      const input = req.body;
+      const result = await TankMetadataService.create(input);
+      res.json(result);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to create TankMetadata" });
+    }
+  },
+);
 
-const deleteMutation = publicProcedure
-  .use(isRoleCurryMiddleware(["ADMIN"]))
-  .input(TankMetadata.pick({ id: true }))
-  .mutation(async ({ input }) => {
-    return await TankMetadataService.deleteOne(input.id);
-  });
+// Read TankMetadata
+tankMetaDataRouter.get(
+  "/:id",
+  authenticateRoleMiddleWare(["ADMIN", "EMPLOYEE"]),
+  async (req, res) => {
+    try {
+      const id = Number(req.params.id);
+      const result = await TankMetadataService.read(id);
+      res.json(result);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to read TankMetadata" });
+    }
+  },
+);
 
-const searchQuery = publicProcedure
-  .use(isRoleCurryMiddleware(["ADMIN"]))
-  .input(
-    z.object({
-      searchString: z.string(),
-    }),
-  )
-  .query(async ({ input }) => {
-    return await TankMetadataService.search(input.searchString);
-  });
+// Update TankMetadata
+tankMetaDataRouter.put(
+  "/:id",
+  authenticateRoleMiddleWare(["ADMIN"]),
+  async (req, res) => {
+    try {
+      const id = req.params.id;
+      const input = req.body;
+      const tankData: TankMetadata = {
+        id,
+        ...input,
+      };
+      const result = await TankMetadataService.update(tankData);
+      res.json(result);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to update TankMetadata" });
+    }
+  },
+);
 
-export const tankMetaDataRouter = router({
-  create: createMutation,
-  read: readQuery,
-  update: updateMutation,
-  delete: deleteMutation,
-  search: searchQuery,
-});
+// Delete TankMetadata
+tankMetaDataRouter.delete(
+  "/:id",
+  authenticateRoleMiddleWare(["ADMIN"]),
+  async (req, res) => {
+    try {
+      const id = Number(req.params.id);
+      const result = await TankMetadataService.deleteOne(id);
+      res.json(result);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to delete TankMetadata" });
+    }
+  },
+);
+
+// Search TankMetadata
+tankMetaDataRouter.get(
+  "/search/:searchString",
+  authenticateRoleMiddleWare(["ADMIN"]),
+  async (req, res) => {
+    try {
+      const searchString = req.params.searchString;
+      const result = await TankMetadataService.search(searchString);
+      res.json(result);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to search TankMetadata" });
+    }
+  },
+);
+
+export default tankMetaDataRouter;

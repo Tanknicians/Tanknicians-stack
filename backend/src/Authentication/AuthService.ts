@@ -1,136 +1,157 @@
-// in here we may or may not use axios
-import * as Prisma from "@prisma/client";
 import * as bcrypt from "bcrypt";
 
 import {
   generateToken,
   verifyRefreshToken,
   generateRefreshToken,
+  verifyToken,
 } from "../TokenGenerator";
+
 import { loginDB } from "../../prisma/db/Login";
+import { Request, Response, NextFunction } from "express";
+import { LoginInput, RegisterInput } from "../types";
+import { JwtPayload } from "jsonwebtoken";
 
-import { TRPCError } from "@trpc/server";
-
-export async function login(login: { email: string; password: string }) {
-  const { email, password } = login;
-
-  // Retrieve login saved credentials based on username/email
+export async function login(req: Request, res: Response) {
+  const login = req.body as LoginInput;
   const savedCredentials = await loginDB.read(login.email);
 
   // Confirm login credentials existed in full in DB
   if (!savedCredentials) {
-    throw new TRPCError({
+    return res.status(401).json({
       code: "UNAUTHORIZED",
-      message: `Login with email: ${email} not found.`,
+      message: "Incorrect email/password combination",
+      // message: `Login with email: ${login.email} not found.`
     });
   }
+
   if (!(savedCredentials.email && savedCredentials.password)) {
-    throw new TRPCError({
+    return res.status(401).json({
       code: "UNAUTHORIZED",
       message: "User record incomplete",
     });
   }
 
-  console.log(`login found for ${email}`);
+  console.log(`login found for ${login.email}`);
 
-  return new Promise<{
-    token: string;
-    refreshToken: string;
-    savedCredentials: Prisma.Login;
-  }>((resolve, reject) => {
-    bcrypt.compare(
-      password,
-      savedCredentials.password,
-      async function (err, samePasswords) {
-        if (err) {
-          reject(
-            new TRPCError({
-              code: "INTERNAL_SERVER_ERROR",
-              message: "Error occurred during password compare",
-              cause: err,
-            }),
-          );
-          return;
-        }
-        if (!samePasswords) {
-          reject(
-            new TRPCError({
-              code: "CONFLICT",
-              message: "passwords do not match",
-            }),
-          );
-          return;
-        }
-        try {
-          const secret = process.env.JWT_SECRET;
-          const token = generateToken(secret, savedCredentials);
-          const refreshToken = generateRefreshToken(savedCredentials);
-          resolve({ token, refreshToken, savedCredentials });
-        } catch (err) {
-          console.error(err);
-          reject(
-            new TRPCError({
-              code: "UNAUTHORIZED",
-              message: "Cannot generate token for session",
-              cause: err,
-            }),
-          );
-        }
-      },
-    );
-  });
+  const samePasswords = await bcrypt.compare(
+    login.password,
+    savedCredentials.password,
+  );
+  if (!samePasswords) {
+    return res.status(401).json({
+      code: "UNAUTHORIZED",
+      message: "Incorrect email/password combination",
+      // message: 'passwords do not match'
+    });
+  }
+
+  try {
+    const token = generateToken(savedCredentials);
+    const refreshToken = generateRefreshToken(savedCredentials);
+    res.cookie("jwt", refreshToken, {
+      httpOnly: true,
+      secure: true,
+      maxAge: 24 * 60 * 60 * 1000,
+    });
+    res.status(200).json({ token, savedCredentials });
+    return;
+  } catch (error) {
+    console.error("Error generating tokens:", error);
+    return res.status(500).json({
+      code: "INTERNAL_SERVER_ERROR",
+      message: "Failed to generate tokens",
+    });
+  }
 }
 
-export async function register(login: Omit<Prisma.Login, "id">) {
-  // though a role is required, having a string helps more than "null"
-  if (login.role == null) {
-    throw new TRPCError({
+export async function register(req: Request, res: Response) {
+  const registration = req.body as RegisterInput;
+
+  // Though a role is required, having a string helps more than "null"
+  if (registration.role == null) {
+    return res.status(400).json({
       code: "BAD_REQUEST",
       message: "Role cannot be empty.",
     });
   }
 
-  // not allowed to register an empty password
-  if (login.password) {
-    login.password = await bcrypt.hash(login.password, 10);
-  } else {
-    throw new TRPCError({
+  // Not allowed to register an empty password
+  if (!registration.password) {
+    return res.status(400).json({
       code: "BAD_REQUEST",
       message: "Password cannot be empty.",
     });
   }
 
   try {
-    await loginDB.create(login);
+    registration.password = await bcrypt.hash(registration.password, 10);
+    await loginDB.create(registration);
+    return res.json({ message: "Registration successful" });
   } catch (error) {
-    throw new TRPCError({
+    console.error(error);
+    return res.status(500).json({
       code: "INTERNAL_SERVER_ERROR",
-      message: "An error occured during registration",
+      message: "An error occurred during registration",
       cause: error,
     });
   }
 }
 
 // Generate a new access token using a refresh token
-export async function refresh(email: string, refreshToken: string) {
-  const tokenValidation = verifyRefreshToken(refreshToken);
+export async function refresh(req: Request, res: Response) {
+  const email = req.body.email;
+  const refreshToken = req.cookies.jwt;
 
-  if (!tokenValidation) {
-    throw new TRPCError({
+  try {
+    verifyRefreshToken(refreshToken);
+  } catch (error) {
+    console.log("Invalid token.");
+    return res.status(403).json({
       code: "FORBIDDEN",
       message: "Refresh token not valid.",
     });
   }
 
-  const dbLoginPayload = await loginDB.read(email);
+  const savedCredentials = await loginDB.read(email);
 
-  if (!dbLoginPayload) {
-    throw new TRPCError({
+  if (!savedCredentials) {
+    return res.status(404).json({
       code: "NOT_FOUND",
       message: "Login does not exist.",
     });
   }
-  const secret = process.env.JWT_SECRET;
-  // Generate and return a new ACCESS token
-  return generateToken(secret, dbLoginPayload);
+
+  try {
+    const token = generateToken(savedCredentials);
+    return res.json({ token, savedCredentials });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      code: "INTERNAL_SERVER_ERROR",
+      message: "An error occurred while generating the access token.",
+      cause: error,
+    });
+  }
+}
+
+// re-implement role checking middleware, may move this elsewhere
+export function authenticateRoleMiddleWare(roles: string[]) {
+  return async function (req: Request, res: Response, next: NextFunction) {
+    const authHeader = req.headers.authorization;
+    if (!authHeader) {
+      return res.status(401).send({ message: "No token provided" });
+    }
+    const token = authHeader.split(" ")[1];
+    try {
+      verifyToken(token);
+    } catch (error) {
+      return res.status(401).send({ message: "Invalid token" });
+    }
+    const decodedToken: JwtPayload = verifyToken(token);
+    if (!roles.includes(decodedToken.data.role)) {
+      return res.status(403).send({ message: "Unauthorized access" });
+    }
+    next();
+  };
 }

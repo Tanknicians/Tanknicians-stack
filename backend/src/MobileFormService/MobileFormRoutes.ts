@@ -1,14 +1,23 @@
-import { router, publicProcedure, isRoleCurryMiddleware } from "./../trpc";
-import { ServiceCall } from "./../types";
+import express from "express";
 import { uploadServiceCall } from "./MobileFormService";
+import { authenticateRoleMiddleWare } from "../Authentication/AuthService";
 
-const uploadFormMutation = publicProcedure
-  .use(isRoleCurryMiddleware(["ADMIN", "EMPLOYEE"]))
-  .input(ServiceCall.omit({ id: true }))
-  .mutation(async ({ input }) => {
-    return await uploadServiceCall(input);
-  });
+const mobileFormRouter = express.Router();
+mobileFormRouter.use(express.json());
 
-export const mobileFormRouter = router({
-  uploadForm: uploadFormMutation,
-});
+// Upload form for mobile.
+mobileFormRouter.post(
+  "/uploadForm",
+  authenticateRoleMiddleWare(["ADMIN", "EMPLOYEE"]),
+  async (req, res) => {
+    try {
+      const input = req.body; // should probably add a types.ts object here
+      const message = await uploadServiceCall(input); // returns a simple "approved/not approved."
+      res.status(200).json({ success: `Form uploaded. Form ${message}.` });
+    } catch (error) {
+      res.status(500).json({ error: "Failed to upload form." });
+    }
+  },
+);
+
+export default mobileFormRouter;
