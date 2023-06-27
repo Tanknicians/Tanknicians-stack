@@ -1,7 +1,7 @@
 import * as Prisma from "@prisma/client";
 import { serviceCallDB } from "../../prisma/db/ServiceCall";
-import { userDB } from "prisma/db/User";
-import { tankDB } from "prisma/db/TankMetadata";
+import { userDB } from "../../prisma/db/User";
+import { tankDB } from "../../prisma/db/TankMetadata";
 
 export async function uploadServiceCall(
   serviceCall: Omit<Prisma.ServiceCall, "id">,
