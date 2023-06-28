@@ -65,7 +65,7 @@ export async function getAllUsers() {
 }
 
 export async function searchUsers(search: string) {
-  if (search == "" || search == null)
+  if (search === "" || search == null)
     return { invalid: "search string cannot be empty" };
   try {
     return await userDB.searchByString(search);
