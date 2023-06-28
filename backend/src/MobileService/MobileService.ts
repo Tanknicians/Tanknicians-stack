@@ -56,28 +56,23 @@ const paramLimits = {
   phosphateMax: 0.24,
 };
 
-
-
 export async function getAllUsers() {
-  try{
+  try {
     return await userDB.getAll();
   } catch (error) {
     return { error: "Failed to get users." };
   }
 }
 
-
-
-
 export async function searchUsers(search: string) {
-  if (search == "" || search == null) return {"invalid": "search string cannot be empty"}
+  if (search == "" || search == null)
+    return { invalid: "search string cannot be empty" };
   try {
     return await userDB.searchByString(search);
   } catch (error) {
     return { error: "Failed to search users." };
   }
 }
-
 
 export async function getAllTanks() {
   try {
@@ -88,15 +83,13 @@ export async function getAllTanks() {
 }
 
 export async function getTanksByUserId(userId: number) {
-  if (userId < 1) return ({"invalid": "userId must be a positive integer."});
+  if (userId < 1) return { invalid: "userId must be a positive integer." };
   try {
     return await tankDB.readTanksByUserId(userId);
   } catch (error) {
-    return {error: "Could not get tanks from user ID"};
+    return { error: "Could not get tanks from user ID" };
   }
 }
-
-
 
 // currently unused code
 // Standard deviation calculations, takes in an array of Service Calls without "id"
