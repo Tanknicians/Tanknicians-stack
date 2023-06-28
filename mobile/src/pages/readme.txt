@@ -1,1 +1,0 @@
-This file is for storing main pages of the application that will be rendered at app level.
