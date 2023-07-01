@@ -5,7 +5,7 @@ import express from "express";
 import authRouter from "./Authentication/AuthRoutes";
 import databaseRouter from "./DatabaseService/DatabaseRoutes";
 import emailRouter from "./EmailService/EmailRoutes";
-import mobileFormRouter from "./MobileFormService/MobileFormRoutes";
+import mobileRouter from "./MobileService/MobileRoutes";
 
 import { logger, httpLogger } from "./LoggingService/pino";
 
@@ -25,7 +25,7 @@ app
   .use("/api/auth", authRouter)
   .use("/api/database", databaseRouter)
   .use("/api/email", emailRouter)
-  .use("/api/mobile", mobileFormRouter);
+  .use("/api/mobile", mobileRouter);
 
 app.listen(process.env.PORT, () => {
   console.log(`TypeScript with Express http://localhost:${process.env.PORT}/`);
