@@ -25,7 +25,7 @@ export async function read(id: number) {
   });
 }
 
-export async function readTanksByCustomerId(customerId: number) {
+export async function readTanksByUserId(customerId: number) {
   return await prisma.tankMetadata.findMany({
     where: {
       customerId: customerId
