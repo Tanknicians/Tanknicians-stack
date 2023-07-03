@@ -8,5 +8,6 @@
 
 Commands for running Expo with ExpoGo app on physical device:
 
-1. ngrok http <server PORT>
-2. npx expo start --tunnel
+1. npm install ngrok -g
+2. ngrok http <server PORT>
+3. npx expo start --tunnel
