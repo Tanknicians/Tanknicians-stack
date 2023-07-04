@@ -3,11 +3,12 @@ import { BarCodeScanner, PermissionStatus } from 'expo-barcode-scanner';
 import PermissionsScreen from './src/screens/PermissionsScreen';
 import { Provider as PaperProvider } from 'react-native-paper';
 import { NavigationContainer } from '@react-navigation/native';
+import ServiceCallForm from './src/components/ServiceCallForm';
 import { PersistGate } from 'redux-persist/integration/react';
 import QRScannerScreen from './src/screens/QRScannerScreen';
 import { store, persistor } from './src/redux/store';
-import React, { useEffect, useState } from 'react';
 import LoginScreen from './src/screens/LoginScreen';
+import React, { useEffect, useState } from 'react';
 import type { Routes } from './src/types/Routes';
 import { StatusBar } from 'expo-status-bar';
 import { Provider } from 'react-redux';
@@ -62,6 +63,10 @@ const App = () => {
               <Stack.Screen
                 name='QRScannerScreen'
                 component={QRScannerScreen}
+              />
+              <Stack.Screen
+                name='ServiceCallForm'
+                component={ServiceCallForm}
               />
             </Stack.Navigator>
           </PaperProvider>

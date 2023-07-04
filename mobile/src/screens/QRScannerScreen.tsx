@@ -1,13 +1,17 @@
-import { View, StyleSheet, Button, TouchableOpacity } from 'react-native';
 import { BarCodeScanner, BarCodeScannerResult } from 'expo-barcode-scanner';
+import { View, StyleSheet, Button, TouchableOpacity } from 'react-native';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { setTankId } from '../redux/slices/forms/servicecallTankSlice';
 import { SCREEN_HEIGHT, SCREEN_WIDTH } from '../types/Constants';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import BarcodeMask from 'react-native-barcode-mask';
 import { Ionicons } from '@expo/vector-icons';
+import { Routes } from '../types/Routes';
 import React, { useState } from 'react';
 
 // Color for mask and reverse camera button
 import { MAIN_COLOR } from '../types/Constants';
+import { useDispatch } from 'react-redux';
 
 // Allows to scan QR code only if in mask area
 const finderWidth: number = 280;
@@ -15,9 +19,12 @@ const finderHeight: number = 230;
 const viewMinX = (SCREEN_WIDTH - finderWidth) / 2;
 const viewMinY = (SCREEN_HEIGHT - finderHeight) / 2;
 
-const QRScannerScreen = () => {
+type Props = NativeStackScreenProps<Routes, 'QRScannerScreen'>;
+
+const QRScannerScreen = ({ navigation }: Props) => {
   const [type, setType] = useState<any>(BarCodeScanner.Constants.Type.back);
   const [scanned, setScanned] = useState<boolean>(false);
+  const dispatch = useDispatch();
 
   const handleBarCodeScanned = (scanningResult: BarCodeScannerResult) => {
     if (!scanned) {
@@ -33,6 +40,8 @@ const QRScannerScreen = () => {
         setScanned(true);
         // ! TODO: Handle scanned QR code data and navigate to form with user/tank data
         alert(`Bar code with type ${type} and data ${data} has been scanned!`);
+        dispatch(setTankId({ tankId: data }));
+        navigation.navigate('ServiceCallForm');
       }
     }
   };

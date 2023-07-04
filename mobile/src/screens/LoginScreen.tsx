@@ -1,3 +1,4 @@
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Text, TextInput, Button, HelperText } from 'react-native-paper';
 import { useForm, SubmitHandler, Controller } from 'react-hook-form';
 import { useLoginMutation } from '../redux/slices/auth/authApiSlice';
@@ -9,11 +10,10 @@ import { MAIN_COLOR } from '../types/Constants';
 import { StatusBar } from 'expo-status-bar';
 import { useDispatch } from 'react-redux';
 import { StyleSheet } from 'react-native';
+import { Routes } from '../types/Routes';
 import Logo from '../components/Logo';
 import * as React from 'react';
 import { z } from 'zod';
-import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { Routes } from '../types/Routes';
 
 type LoginFormData = {
   email: string;
@@ -50,7 +50,10 @@ const LoginScreen = ({ navigation }: Props) => {
     try {
       const userData = await login(loginData).unwrap();
       console.log('success', userData);
-      dispatch(setCredentials({ ...userData, loginData }));
+
+      const { token, savedCredentials } = userData;
+
+      dispatch(setCredentials({ user: savedCredentials, token }));
       navigation.replace('QRScannerScreen');
     } catch (err: any) {
       console.log(err);

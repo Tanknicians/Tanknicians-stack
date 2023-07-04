@@ -1,17 +1,20 @@
+import servicecallClientTankReducer from './slices/forms/servicecallTankSlice';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { persistReducer, persistStore } from 'redux-persist';
 import { setupListeners } from '@reduxjs/toolkit/query';
-import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import { apiSlice } from './api/apiSlice';
 import authReducer from './slices/auth/authSlice';
+import { apiSlice } from './api/apiSlice';
 
 const persistConfig = {
-  key: 'root',
-  storage: AsyncStorage
+  key: 'auth',
+  storage: AsyncStorage,
+  whitelist: ['auth']
 };
 
 const rootReducer = combineReducers({
   auth: authReducer,
+  servicecallClientTank: servicecallClientTankReducer,
   [apiSlice.reducerPath]: apiSlice.reducer
 });
 
