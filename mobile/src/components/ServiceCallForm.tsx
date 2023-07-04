@@ -5,7 +5,12 @@ import {
 import { useUploadServiceCallMutation } from '../redux/slices/forms/servicecallApiSlice';
 import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { Text, TextInput, SegmentedButtons } from 'react-native-paper';
+import {
+  Text,
+  TextInput,
+  SegmentedButtons,
+  HelperText
+} from 'react-native-paper';
 import { useForm, SubmitHandler, Controller } from 'react-hook-form';
 import { selectCurrentUser } from '../redux/slices/auth/authSlice';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -60,9 +65,9 @@ const ServiceCallForm = ({ navigation }: Props) => {
 
   const { errors } = formState;
 
-  console.log(errors);
+  console.log('React Hook Form errors: ', errors);
 
-  const onSubmit: SubmitHandler<ServiceFormData> = (data: any) => {
+  const onSubmit: SubmitHandler<ServiceFormData> = async (data: any) => {
     const dataWithEmployeeandTankId = {
       ...data,
       employeeId: employeeId?.userId,
@@ -70,39 +75,46 @@ const ServiceCallForm = ({ navigation }: Props) => {
     };
     console.log(dataWithEmployeeandTankId);
     try {
-      uploadServiceCall(dataWithEmployeeandTankId).unwrap();
+      const response = await uploadServiceCall(
+        dataWithEmployeeandTankId
+      ).unwrap();
+      console.log(response);
       dispatch(clearTankId());
-      navigation.navigate('QRScannerScreen');
+      navigation.replace('QRScannerScreen');
     } catch (error) {
       console.log(error);
     }
   };
   const renderedServiceFormQuestionsNumeric =
-    serviceFormFieldQuestionsNumeric.map(({ id, label }, index) => (
-      <View key={id} style={styles.inputView}>
-        <Text style={styles.label}>{label}</Text>
-        <Controller
-          control={control}
-          name={id}
-          rules={{ required: true }}
-          render={({ field: { onChange, onBlur, value } }) => (
-            <MaskedTextInput
-              mask='9.99'
-              onBlur={onBlur}
-              type='number'
-              onChangeText={number => {
-                onChange(parseFloat(number));
-              }}
-              value={value?.toString() ?? ''} // Convert value to a string explicitly or set it as an empty string if undefined
-              autoFocus={index === 0}
-              placeholder='0.00'
-              keyboardType='numeric'
-              style={styles.input}
-            />
-          )}
-        />
-      </View>
-    ));
+    serviceFormFieldQuestionsNumeric.map(({ id, label }, index) => {
+      return (
+        <View key={id} style={styles.inputView}>
+          <Text style={styles.label}>{label}</Text>
+          <Controller
+            control={control}
+            name={id}
+            rules={{ required: true }}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <MaskedTextInput
+                autoFocus={index === 0}
+                type='number'
+                keyboardType='numeric'
+                mask='9.999'
+                placeholder='0.00'
+                onBlur={onBlur}
+                onChangeText={value => onChange(parseFloat(value))}
+                value={value?.toString() ?? ''} // Convert value to a string explicitly or set it as an empty string if undefined
+                style={[styles.input, errors?.[id] && styles.errorInput]}
+                defaultValue=''
+              />
+            )}
+          />
+          <HelperText type='error' visible={!!errors[id]}>
+            {errors[id]?.message}
+          </HelperText>
+        </View>
+      );
+    });
 
   const renderedServiceFormQuestionsBoolean =
     serviceFormFieldQuestionsBoolean.map(({ id, label }) => (
@@ -174,20 +186,20 @@ const ServiceCallForm = ({ navigation }: Props) => {
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.title}>ServiceCallForm </Text>
-      <ScrollView style={styles.scrollView}>
+      <ScrollView style={styles.scrollView} keyboardDismissMode='on-drag'>
         {/* Questions with expected numeric answers */}
         {renderedServiceFormQuestionsNumeric}
         {/* Questions with expected boolean answers */}
         {renderedServiceFormQuestionsBoolean}
         {/* Questions with expected text answers */}
         {renderedServiceFormQuestionsText}
-        <TouchableOpacity
-          onPress={handleSubmit(onSubmit)}
-          style={styles.submitButton}
-        >
-          <Text style={styles.submitButtonText}>Submit</Text>
-        </TouchableOpacity>
       </ScrollView>
+      <TouchableOpacity
+        onPress={handleSubmit(onSubmit)}
+        style={styles.submitButton}
+      >
+        <Text style={styles.submitButtonText}>Submit</Text>
+      </TouchableOpacity>
     </SafeAreaView>
   );
 };
@@ -204,24 +216,31 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 40,
     color: MAIN_COLOR,
-    marginTop: 10,
-    marginBottom: 40
+    marginTop: 20,
+    marginBottom: 20
   },
   input: {
-    height: 40,
+    height: 50,
     marginHorizontal: 0,
     marginVertical: 5,
     paddingHorizontal: 5,
     borderWidth: 1,
     borderRadius: 10
   },
+  errorInput: {
+    borderColor: '#ad373d',
+    borderWidth: 2
+  },
   inputView: {
     marginBottom: 10
   },
-  label: { marginBottom: 10 },
+  label: {},
   scrollView: {
     marginHorizontal: 20,
-    width: '80%'
+    width: '90%',
+    borderWidth: 1,
+    borderRadius: 10,
+    padding: 10
   },
   submitButton: {
     width: '80%',
@@ -230,7 +249,7 @@ const styles = StyleSheet.create({
     height: 50,
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 40,
+    marginTop: 20,
     marginBottom: 10
   },
   submitButtonText: {

@@ -4,10 +4,10 @@ import { z } from 'zod';
 // tankId: number;
 
 export type ServiceFormData = {
-  alkalinity: number | undefined;
-  calcium: number | undefined;
-  nitrate: number | undefined;
-  phosphate: number | undefined;
+  alkalinity: number;
+  calcium: number;
+  nitrate: number;
+  phosphate: number;
   ATOOperational: boolean;
   ATOReservoirFilled: boolean;
   chemFilterAdjusted: boolean;
@@ -31,14 +31,20 @@ export type ServiceFormData = {
 
 export const serviceFormSchema = z.object({
   alkalinity: z.number({
-    required_error: 'Alkalinity is required'
+    required_error: 'Alkalinity is required',
+    invalid_type_error: 'Alkalinity must be a number'
   }),
-  calcium: z.number({ required_error: 'Calcium is required' }),
+  calcium: z.number({
+    required_error: 'Calcium is required',
+    invalid_type_error: 'Calcium must be a number'
+  }),
   nitrate: z.number({
-    required_error: 'Nitrate is required'
+    required_error: 'Nitrate is required',
+    invalid_type_error: 'Nitrate must be a number'
   }),
   phosphate: z.number({
-    required_error: 'Phosphate is required'
+    required_error: 'Phosphate is required',
+    invalid_type_error: 'Phosphate must be a number'
   }),
   ATOOperational: z.boolean(),
   ATOReservoirFilled: z.boolean(),

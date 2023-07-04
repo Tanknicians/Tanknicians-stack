@@ -6,7 +6,8 @@ export const servicecallApiSlice = apiSlice.injectEndpoints({
       query: serviceCall => ({
         url: `/api/mobile/uploadForm`,
         method: 'POST',
-        body: { ...serviceCall }
+        body: { ...serviceCall },
+        responseHandler: 'text'
       })
     })
   })

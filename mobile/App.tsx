@@ -23,6 +23,7 @@ const Stack = createNativeStackNavigator<Routes>();
 
 const App = () => {
   const isSignedIn = getIsSignedIn();
+  console.log('isSignedIn: ', isSignedIn);
   const [cameraPermission, setCameraPermission] = useState<boolean | null>(
     null
   );
@@ -31,15 +32,26 @@ const App = () => {
     const getPermissionsAsync = async () => {
       const { status: cameraStatus } =
         await BarCodeScanner.getPermissionsAsync();
+      console.log('cameraStatus', cameraStatus);
       setCameraPermission(cameraStatus === PermissionStatus.GRANTED);
     };
 
     getPermissionsAsync();
   }, []);
 
-  if (cameraPermission == null) {
-    // still loading
-    return null;
+  // if (cameraPermission == null) {
+  //   // still loading
+  //   return null;
+  // }
+
+  let initialRouteName: keyof Routes | undefined;
+
+  if (isSignedIn) {
+    initialRouteName = cameraPermission
+      ? 'QRScannerScreen'
+      : 'PermissionsScreen';
+  } else {
+    initialRouteName = 'LoginScreen';
   }
 
   return (
@@ -53,21 +65,26 @@ const App = () => {
                 animationTypeForReplace: 'push'
               }}
               // ! QRScannerScreen will be replaced with home screen
-              initialRouteName={isSignedIn ? 'QRScannerScreen' : 'LoginScreen'}
+              initialRouteName={initialRouteName}
             >
-              <Stack.Screen name='LoginScreen' component={LoginScreen} />
-              <Stack.Screen
-                name='PermissionsScreen'
-                component={PermissionsScreen}
-              />
-              <Stack.Screen
-                name='QRScannerScreen'
-                component={QRScannerScreen}
-              />
-              <Stack.Screen
-                name='ServiceCallForm'
-                component={ServiceCallForm}
-              />
+              {!isSignedIn ? (
+                <Stack.Screen name='LoginScreen' component={LoginScreen} />
+              ) : (
+                <>
+                  <Stack.Screen
+                    name='PermissionsScreen'
+                    component={PermissionsScreen}
+                  />
+                  <Stack.Screen
+                    name='QRScannerScreen'
+                    component={QRScannerScreen}
+                  />
+                  <Stack.Screen
+                    name='ServiceCallForm'
+                    component={ServiceCallForm}
+                  />
+                </>
+              )}
             </Stack.Navigator>
           </PaperProvider>
         </NavigationContainer>

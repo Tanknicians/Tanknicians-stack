@@ -1,7 +1,7 @@
 import { BarCodeScanner, BarCodeScannerResult } from 'expo-barcode-scanner';
-import { View, StyleSheet, Button, TouchableOpacity } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { setTankId } from '../redux/slices/forms/servicecallTankSlice';
+import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import { SCREEN_HEIGHT, SCREEN_WIDTH } from '../types/Constants';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import BarcodeMask from 'react-native-barcode-mask';
@@ -41,7 +41,7 @@ const QRScannerScreen = ({ navigation }: Props) => {
         // ! TODO: Handle scanned QR code data and navigate to form with user/tank data
         alert(`Bar code with type ${type} and data ${data} has been scanned!`);
         dispatch(setTankId({ tankId: data }));
-        navigation.navigate('ServiceCallForm');
+        navigation.replace('ServiceCallForm');
       }
     }
   };
@@ -73,14 +73,6 @@ const QRScannerScreen = ({ navigation }: Props) => {
                 color={MAIN_COLOR}
               />
             </TouchableOpacity>
-            {/* Temporary button. Should be replaced to navigate to form */}
-            {scanned && (
-              <Button
-                color={MAIN_COLOR}
-                title='Scan Again'
-                onPress={() => setScanned(false)}
-              />
-            )}
           </View>
         </BarCodeScanner>
       </View>

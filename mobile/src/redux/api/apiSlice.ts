@@ -11,7 +11,8 @@ import { RootState } from '../store';
 // const BASE_URL = 'http://10.0.2.2:5006';
 // This URL works for physical device when npx expo start --tunnel is executed
 // ! The url will be given by ngrok after running the command ngrok http 5006
-const BASE_URL = 'https://3883-97-100-138-146.ngrok.io';
+const BASE_URL =
+  'https://eda3-2603-9001-2e00-1465-51ff-c9ec-db83-1b57.ngrok.io';
 
 const baseQuery = fetchBaseQuery({
   baseUrl: BASE_URL,

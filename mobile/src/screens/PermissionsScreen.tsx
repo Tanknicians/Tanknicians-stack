@@ -14,8 +14,6 @@ import type { Routes } from '../types/Routes';
 type Props = NativeStackScreenProps<Routes, 'PermissionsScreen'>;
 
 const PermissionsScreen = ({ navigation }: Props): React.ReactElement => {
-  console.log('Rendering PermissionsScreen...');
-
   const [hasCameraPermission, setHasCameraPermission] = useState<
     boolean | null
   >();
@@ -23,13 +21,13 @@ const PermissionsScreen = ({ navigation }: Props): React.ReactElement => {
   useEffect(() => {
     (async () => {
       const { status } = await BarCodeScanner.requestPermissionsAsync();
-      setHasCameraPermission(status === 'granted');
+      setHasCameraPermission(status === PermissionStatus.GRANTED);
     })();
   }, []);
 
   useEffect(() => {
     const checkCameraPermission = async () => {
-      if (hasCameraPermission === true) {
+      if (hasCameraPermission) {
         navigation.replace('QRScannerScreen');
       } else if (hasCameraPermission === false) {
         await Linking.openSettings();

@@ -1,25 +1,28 @@
-import * as Prisma from "@prisma/client";
-import { serviceCallDB } from "../../prisma/db/ServiceCall";
-import { userDB } from "../../prisma/db/User";
-import { tankDB } from "../../prisma/db/TankMetadata";
+import * as Prisma from '@prisma/client';
+import { serviceCallDB } from '../../prisma/db/ServiceCall';
+import { userDB } from '../../prisma/db/User';
+import { tankDB } from '../../prisma/db/TankMetadata';
 
 export async function uploadServiceCall(
-  serviceCall: Omit<Prisma.ServiceCall, "id">,
+  serviceCall: Omit<Prisma.ServiceCall, 'id'>
 ) {
+  console.log('uploadServiceCall called');
   const submitServiceCall = checkServiceCall(serviceCall);
-  const approvedMessage = serviceCall.isApproved ? "approved" : "not approved";
+  const approvedMessage = serviceCall.isApproved ? 'approved' : 'not approved';
+  console.log('approvedMessage: ', approvedMessage);
   try {
     await serviceCallDB.create(submitServiceCall);
     return approvedMessage;
   } catch (e) {
-    throw new Error("An error occurred during create.");
+    throw new Error('An error occurred during create.');
   }
 }
 
 // run checks on the service call and make sure parameters are valid
 function checkServiceCall(
-  serviceCall: Omit<Prisma.ServiceCall, "id">,
-): Omit<Prisma.ServiceCall, "id"> {
+  serviceCall: Omit<Prisma.ServiceCall, 'id'>
+): Omit<Prisma.ServiceCall, 'id'> {
+  console.log('checkServiceCall called');
   const { alkalinity, calcium, nitrate, phosphate } = serviceCall;
 
   if (
@@ -53,24 +56,24 @@ const paramLimits = {
   nitrateMin: 1,
   nitrateMax: 20,
   phosphateMin: 0.03,
-  phosphateMax: 0.24,
+  phosphateMax: 0.24
 };
 
 export async function getAllUsers() {
   try {
     return await userDB.getAll();
   } catch (error) {
-    return { error: "Failed to get users." };
+    return { error: 'Failed to get users.' };
   }
 }
 
 export async function searchUsers(search: string) {
-  if (search === "" || search == null)
-    return { invalid: "search string cannot be empty" };
+  if (search === '' || search == null)
+    return { invalid: 'search string cannot be empty' };
   try {
     return await userDB.searchByString(search);
   } catch (error) {
-    return { error: "Failed to search users." };
+    return { error: 'Failed to search users.' };
   }
 }
 
@@ -78,22 +81,22 @@ export async function getAllTanks() {
   try {
     return await tankDB.getAll();
   } catch (error) {
-    return { error: "Failed to get tank list." };
+    return { error: 'Failed to get tank list.' };
   }
 }
 
 export async function getTanksByUserId(userId: number) {
-  if (userId < 1) return { invalid: "userId must be a positive integer." };
+  if (userId < 1) return { invalid: 'userId must be a positive integer.' };
   try {
     return await tankDB.readTanksByUserId(userId);
   } catch (error) {
-    return { error: "Could not get tanks from user ID" };
+    return { error: 'Could not get tanks from user ID' };
   }
 }
 
 // currently unused code
 // Standard deviation calculations, takes in an array of Service Calls without "id"
-function calculateStandardDeviation(data: Omit<Prisma.ServiceCall, "id">[]): {
+function calculateStandardDeviation(data: Omit<Prisma.ServiceCall, 'id'>[]): {
   nitrate: number;
   phosphate: number;
   calcium: number;
@@ -108,7 +111,7 @@ function calculateStandardDeviation(data: Omit<Prisma.ServiceCall, "id">[]): {
       params.phosphate += current.phosphate;
       return params;
     },
-    { alkalinity: 0, calcium: 0, nitrate: 0, phosphate: 0 },
+    { alkalinity: 0, calcium: 0, nitrate: 0, phosphate: 0 }
   );
 
   meanValues.nitrate /= data.length;
@@ -129,7 +132,7 @@ function calculateStandardDeviation(data: Omit<Prisma.ServiceCall, "id">[]): {
       params.alkalinity += alkalinityDiff * alkalinityDiff;
       return params;
     },
-    { nitrate: 0, phosphate: 0, calcium: 0, alkalinity: 0 },
+    { nitrate: 0, phosphate: 0, calcium: 0, alkalinity: 0 }
   );
 
   // Calculate the standard deviation using the non-population formula
@@ -138,7 +141,7 @@ function calculateStandardDeviation(data: Omit<Prisma.ServiceCall, "id">[]): {
     nitrate: Math.sqrt(squaredDifferences.nitrate / (data.length - 1)),
     phosphate: Math.sqrt(squaredDifferences.phosphate / (data.length - 1)),
     calcium: Math.sqrt(squaredDifferences.calcium / (data.length - 1)),
-    alkalinity: Math.sqrt(squaredDifferences.alkalinity / (data.length - 1)),
+    alkalinity: Math.sqrt(squaredDifferences.alkalinity / (data.length - 1))
   };
   return standardDeviation;
 }
