@@ -29,22 +29,25 @@ export type ServiceFormData = {
   employeeNotes: string;
 };
 
+// Type errors occur when field is empty
+// First 4 fields are transformed to numbers
+// after having input
 export const serviceFormSchema = z.object({
   alkalinity: z.number({
-    required_error: 'Alkalinity is required',
-    invalid_type_error: 'Alkalinity must be a number'
+    // required_error: 'Alkalinity is required',
+    invalid_type_error: 'Alkalinity is required*'
   }),
   calcium: z.number({
-    required_error: 'Calcium is required',
-    invalid_type_error: 'Calcium must be a number'
+    // required_error: 'Calcium is required',
+    invalid_type_error: 'Calcium is required*'
   }),
   nitrate: z.number({
-    required_error: 'Nitrate is required',
-    invalid_type_error: 'Nitrate must be a number'
+    // required_error: 'Nitrate is required',
+    invalid_type_error: 'Nitrate is required*'
   }),
   phosphate: z.number({
-    required_error: 'Phosphate is required',
-    invalid_type_error: 'Phosphate must be a number'
+    // required_error: 'Phosphate is required',
+    invalid_type_error: 'Phosphate is required*'
   }),
   ATOOperational: z.boolean(),
   ATOReservoirFilled: z.boolean(),
@@ -99,12 +102,12 @@ interface ServiceFormFieldQuestion {
 
 export const serviceFormFieldQuestionsText: ServiceFormFieldQuestion[] = [
   {
-    id: 'customerRequest',
-    label: 'Customer Request'
-  },
-  {
     id: 'employeeNotes',
     label: 'Employee Notes'
+  },
+  {
+    id: 'customerRequest',
+    label: 'Customer Request'
   }
 ];
 

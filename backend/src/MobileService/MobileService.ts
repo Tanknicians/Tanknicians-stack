@@ -6,10 +6,8 @@ import { tankDB } from '../../prisma/db/TankMetadata';
 export async function uploadServiceCall(
   serviceCall: Omit<Prisma.ServiceCall, 'id'>
 ) {
-  console.log('uploadServiceCall called');
   const submitServiceCall = checkServiceCall(serviceCall);
   const approvedMessage = serviceCall.isApproved ? 'approved' : 'not approved';
-  console.log('approvedMessage: ', approvedMessage);
   try {
     await serviceCallDB.create(submitServiceCall);
     return approvedMessage;
@@ -22,7 +20,6 @@ export async function uploadServiceCall(
 function checkServiceCall(
   serviceCall: Omit<Prisma.ServiceCall, 'id'>
 ): Omit<Prisma.ServiceCall, 'id'> {
-  console.log('checkServiceCall called');
   const { alkalinity, calcium, nitrate, phosphate } = serviceCall;
 
   if (

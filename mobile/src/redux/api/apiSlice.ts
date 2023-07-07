@@ -12,7 +12,7 @@ import { RootState } from '../store';
 // This URL works for physical device when npx expo start --tunnel is executed
 // ! The url will be given by ngrok after running the command ngrok http 5006
 const BASE_URL =
-  'https://eda3-2603-9001-2e00-1465-51ff-c9ec-db83-1b57.ngrok.io';
+  'https://a315-2603-9001-2e00-1465-3168-35bb-aac0-d829.ngrok.io';
 
 const baseQuery = fetchBaseQuery({
   baseUrl: BASE_URL,
@@ -37,7 +37,7 @@ const baseQueryWithReauth: BaseQueryFn = async (args, api, extraOptions) => {
       api,
       extraOptions
     );
-    console.log(refreshResult);
+    console.log('refresh result: ', refreshResult);
     if (refreshResult?.data) {
       const user = (api.getState() as RootState).auth.user;
       // store the new token

@@ -1,17 +1,19 @@
 import { BarCodeScanner, BarCodeScannerResult } from 'expo-barcode-scanner';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { setTankId } from '../redux/slices/forms/servicecallTankSlice';
-import { View, StyleSheet, TouchableOpacity } from 'react-native';
-import { SCREEN_HEIGHT, SCREEN_WIDTH } from '../types/Constants';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import BarcodeMask from 'react-native-barcode-mask';
 import { Ionicons } from '@expo/vector-icons';
+import { useDispatch } from 'react-redux';
 import { Routes } from '../types/Routes';
 import React, { useState } from 'react';
-
-// Color for mask and reverse camera button
-import { MAIN_COLOR } from '../types/Constants';
-import { useDispatch } from 'react-redux';
+import {
+  SCREEN_HEIGHT,
+  SCREEN_WIDTH,
+  SECONDARY_COLOR,
+  TERTIARY_COLOR
+} from '../types/Constants';
 
 // Allows to scan QR code only if in mask area
 const finderWidth: number = 280;
@@ -28,7 +30,7 @@ const QRScannerScreen = ({ navigation }: Props) => {
 
   const handleBarCodeScanned = (scanningResult: BarCodeScannerResult) => {
     if (!scanned) {
-      const { type, data, bounds: { origin } = {} } = scanningResult;
+      const { data, bounds: { origin } = {} } = scanningResult;
       // @ts-ignore
       const { x, y } = origin;
       if (
@@ -39,11 +41,12 @@ const QRScannerScreen = ({ navigation }: Props) => {
       ) {
         setScanned(true);
         // ! TODO: Handle scanned QR code data and navigate to form with user/tank data
-        alert(`Bar code with type ${type} and data ${data} has been scanned!`);
+        // alert(`Bar code with type ${type} and data ${data} has been scanned!`);
         dispatch(setTankId({ tankId: data }));
         navigation.replace('ServiceCallForm');
       }
     }
+    setScanned(false);
   };
 
   // Toggle between front and back camera
@@ -64,13 +67,18 @@ const QRScannerScreen = ({ navigation }: Props) => {
           barCodeTypes={[BarCodeScanner.Constants.BarCodeType.qr]}
           style={styles.scanner}
         >
-          <BarcodeMask edgeColor={MAIN_COLOR} showAnimatedLine />
+          <BarcodeMask
+            edgeColor={TERTIARY_COLOR}
+            showAnimatedLine
+            animatedLineColor={TERTIARY_COLOR}
+          />
           <View style={styles.overlay}>
+            <Text style={styles.promptText}>Scan Tank QR Code</Text>
             <TouchableOpacity onPress={toggleCameraType}>
               <Ionicons
                 name='camera-reverse-outline'
                 size={70}
-                color={MAIN_COLOR}
+                color={TERTIARY_COLOR}
               />
             </TouchableOpacity>
           </View>
@@ -85,7 +93,9 @@ export default QRScannerScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'black'
+    backgroundColor: SECONDARY_COLOR,
+    paddingTop: 30,
+    paddingBottom: 30
   },
   barcodeContainer: {
     flex: 1,
@@ -100,7 +110,8 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'transparent',
     alignItems: 'center',
-    justifyContent: 'flex-end',
+    justifyContent: 'space-between',
+    marginTop: 60,
     marginBottom: 100,
     padding: 16
   },
@@ -112,5 +123,11 @@ const styles = StyleSheet.create({
     fontSize: 18,
     margin: 5,
     color: 'white'
+  },
+  promptText: {
+    fontSize: 34,
+    color: TERTIARY_COLOR,
+    fontWeight: 'bold',
+    textAlign: 'center'
   }
 });

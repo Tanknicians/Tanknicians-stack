@@ -1,20 +1,32 @@
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { Text, TextInput, Button, HelperText } from 'react-native-paper';
+import {
+  View,
+  Alert,
+  TouchableOpacity,
+  Platform,
+  Keyboard
+} from 'react-native';
 import { useForm, SubmitHandler, Controller } from 'react-hook-form';
 import { useLoginMutation } from '../redux/slices/auth/authApiSlice';
 import { setCredentials } from '../redux/slices/auth/authSlice';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { View, Alert, TouchableOpacity } from 'react-native';
+import LoadingScreen from '../components/LoadingScreen';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { MAIN_COLOR } from '../types/Constants';
+import { Text, TextInput } from 'react-native-paper';
+import {
+  PRIMARY_COLOR,
+  SECONDARY_COLOR,
+  TERTIARY_COLOR,
+  ERROR_COLOR
+} from '../types/Constants';
 import { StatusBar } from 'expo-status-bar';
 import { useDispatch } from 'react-redux';
 import { StyleSheet } from 'react-native';
 import { Routes } from '../types/Routes';
+import React, { useState } from 'react';
 import Logo from '../components/Logo';
-import * as React from 'react';
 import { z } from 'zod';
-
 type LoginFormData = {
   email: string;
   password: string;
@@ -30,6 +42,10 @@ type Props = NativeStackScreenProps<Routes, 'LoginScreen'>;
 
 const LoginScreen = ({ navigation }: Props) => {
   const [login, { isLoading }] = useLoginMutation();
+  const [loginError, setLoginError] = useState({
+    errorMessage: '',
+    isLoginError: false
+  });
   const dispatch = useDispatch();
   const {
     control,
@@ -49,146 +65,194 @@ const LoginScreen = ({ navigation }: Props) => {
     console.log(loginData);
     try {
       const userData = await login(loginData).unwrap();
-      console.log('success', userData);
-
       const { token, savedCredentials } = userData;
 
+      // No need to navigate to QRScannerScreen, as the user will be redirected to it
+      // automatically by the App component
       dispatch(setCredentials({ user: savedCredentials, token }));
-      navigation.replace('QRScannerScreen');
     } catch (err: any) {
       console.log(err);
-      // if (!err?.status) {
-      //   // isLoading: true until timeout occurs
-      //   setLoginError({
-      //     errorMessage: 'No Server Response',
-      //     isLoginError: true
-      //   });
-      // } else if (err?.status === 400) {
-      //   setLoginError({ errorMessage: err.data?.message, isLoginError: true });
-      // } else if (err?.status === 401) {
-      //   setLoginError({ errorMessage: err.data?.message, isLoginError: true });
-      // } else {
-      //   setLoginError({ errorMessage: err.data?.message, isLoginError: true });
-      // }
+      if (!err?.status) {
+        // isLoading: true until timeout occurs
+        setLoginError({
+          errorMessage: 'No Server Response',
+          isLoginError: true
+        });
+      } else if (err?.status === 400) {
+        setLoginError({ errorMessage: err.data?.message, isLoginError: true });
+      } else if (err?.status === 401) {
+        setLoginError({ errorMessage: err.data?.message, isLoginError: true });
+      } else {
+        setLoginError({ errorMessage: err.data?.message, isLoginError: true });
+      }
     }
   };
 
+  const onPressForgotPassword = () => {
+    console.log('Function not implemented.');
+  };
+
   return (
-    <SafeAreaView style={style.loginContainer}>
-      <Logo />
-      <Text style={style.title} variant='displayLarge'>
-        Tanknicians
-      </Text>
-      <>
-        <View style={style.inputView}>
-          <Controller
-            name='email'
-            control={control}
-            rules={{
-              required: true
-            }}
-            render={({ field: { onChange, onBlur, value } }) => (
+    <SafeAreaView style={styles.loginContainer}>
+      <StatusBar style='light' />
+      {isLoading && <LoadingScreen />}
+      <KeyboardAwareScrollView
+        style={styles.keyboardAwareContainer}
+        contentContainerStyle={styles.keyboardAwareContent}
+        keyboardDismissMode='on-drag'
+        keyboardOpeningTime={0}
+        keyboardShouldPersistTaps={'handled'}
+        enableOnAndroid={true}
+        scrollEnabled={false}
+        enableAutomaticScroll={true}
+        // Values below are not finalized
+        extraScrollHeight={Platform.select({
+          ios: 100,
+          android: 120
+        })}
+      >
+        <Logo />
+        <Text style={styles.title} variant='displayLarge'>
+          Tanknicians
+        </Text>
+        <Controller
+          name='email'
+          control={control}
+          rules={{
+            required: true
+          }}
+          render={({ field: { onChange, onBlur, value } }) => (
+            <View style={styles.inputView}>
+              <Text style={styles.label}>Email Address</Text>
               <TextInput
                 placeholder='Email Address'
                 onBlur={onBlur}
-                onChangeText={value => onChange(value)}
-                value={value}
-                style={style.textInput}
-                activeUnderlineColor={MAIN_COLOR}
+                mode='outlined'
+                onChangeText={onChange}
+                activeUnderlineColor={SECONDARY_COLOR}
+                activeOutlineColor={PRIMARY_COLOR}
+                outlineStyle={loginError.isLoginError && styles.errorInput}
+                style={styles.inputText}
                 autoCorrect={false}
+                value={value}
               />
-            )}
-          />
-          {/* {errors?.email && <Text>This field is required.</Text>}
-      <HelperText type='error' visible={!!errors?.email}>
-      {errors?.email?.message}
-    </HelperText> */}
-        </View>
-        <View style={style.inputView}>
-          <Controller
-            name='password'
-            control={control}
-            rules={{
-              required: true
-            }}
-            render={({ field: { onChange, onBlur, value } }) => (
+            </View>
+          )}
+        />
+        <Controller
+          name='password'
+          control={control}
+          rules={{
+            required: true
+          }}
+          render={({ field: { onChange, onBlur, value } }) => (
+            <View style={styles.inputView}>
+              <Text style={styles.label}>Password</Text>
               <TextInput
                 placeholder='Password'
                 onBlur={onBlur}
-                onChangeText={value => onChange(value)}
-                value={value}
+                mode='outlined'
+                onChangeText={onChange}
+                activeUnderlineColor={SECONDARY_COLOR}
+                activeOutlineColor={PRIMARY_COLOR}
+                outlineStyle={loginError.isLoginError && styles.errorInput}
+                style={styles.inputText}
                 secureTextEntry={true}
-                style={style.textInput}
-                activeUnderlineColor={MAIN_COLOR}
                 autoCorrect={false}
+                value={value}
               />
-            )}
-          />
-          {/* {errors.password && <Text>This field is required.</Text>} */}
+            </View>
+          )}
+        />
+        <View style={styles.forgotPasswordContainer}>
+          <TouchableOpacity onPress={onPressForgotPassword}>
+            <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
+          </TouchableOpacity>
         </View>
+        {loginError?.isLoginError && (
+          <Text style={styles.errorText}>{loginError.errorMessage}</Text>
+        )}
         <TouchableOpacity
-          onPress={handleSubmit(onSubmit)}
-          style={style.submitButton}
+          style={styles.submitButton}
+          onPress={() => {
+            handleSubmit(onSubmit)();
+            Keyboard.dismiss();
+          }}
+          disabled={isLoading}
         >
-          <Text style={style.submitButtonText}>Login</Text>
+          <Text style={styles.submitButtonText}>Login</Text>
         </TouchableOpacity>
-      </>
+      </KeyboardAwareScrollView>
     </SafeAreaView>
   );
 };
 
-const style = StyleSheet.create({
+const styles = StyleSheet.create({
   loginContainer: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    backgroundColor: SECONDARY_COLOR
   },
   title: {
     fontWeight: 'bold',
     fontSize: 50,
-    color: MAIN_COLOR,
-    marginTop: 10,
-    marginBottom: 40
+    color: TERTIARY_COLOR,
+    marginTop: 14,
+    marginBottom: 18,
+    paddingBottom: 8
+  },
+  errorInput: {
+    borderColor: ERROR_COLOR,
+    borderWidth: 3
+  },
+  errorText: {
+    color: ERROR_COLOR,
+    fontSize: 16
+  },
+  forgotPasswordContainer: {
+    width: '100%',
+    alignItems: 'flex-end',
+    marginBottom: 20
+  },
+  forgotPasswordText: {
+    color: TERTIARY_COLOR,
+    fontSize: 14,
+    textDecorationLine: 'underline'
+  },
+  keyboardAwareContainer: {
+    flex: 1
+  },
+  keyboardAwareContent: {
+    flexGrow: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  label: {
+    color: TERTIARY_COLOR,
+    fontSize: 16
   },
   inputView: {
-    width: '80%',
-    backgroundColor: '#ccc',
-    borderRadius: 25,
-    height: 50,
-    marginBottom: 20,
-    justifyContent: 'center',
-    padding: 20
+    width: '100%',
+    marginVertical: 10,
+    justifyContent: 'center'
   },
-  textInput: {
-    height: 30,
-    backgroundColor: 'inherit'
+  inputText: {
+    height: 50
   },
   submitButton: {
     width: '80%',
-    backgroundColor: MAIN_COLOR,
+    backgroundColor: PRIMARY_COLOR,
     borderRadius: 25,
     height: 50,
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 40,
+    marginTop: 24,
     marginBottom: 10
   },
   submitButtonText: {
-    color: 'white',
+    color: TERTIARY_COLOR,
     fontSize: 20
-  },
-  header: {
-    backgroundColor: 'blue',
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  form: {
-    backgroundColor: 'grey',
-    flex: 1,
-    width: '100%',
-    justifyContent: 'flex-start',
-    alignItems: 'center'
   }
 });
 

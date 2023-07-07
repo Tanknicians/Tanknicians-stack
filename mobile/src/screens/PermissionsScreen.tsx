@@ -1,6 +1,6 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { BarCodeScanner, PermissionStatus } from 'expo-barcode-scanner';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StyleSheet, View, Text, Image } from 'react-native';
 import { ImageRequireSource, Linking } from 'react-native';
@@ -71,8 +71,7 @@ const styles = StyleSheet.create({
     fontSize: 38,
     fontWeight: 'bold',
     maxWidth: '80%',
-    paddingBottom: CONTENT_SPACING * 2,
-    backgroundColor: 'grey'
+    paddingBottom: CONTENT_SPACING * 2
   },
   banner: {
     position: 'absolute',

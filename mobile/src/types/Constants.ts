@@ -2,7 +2,10 @@ import { Dimensions, Platform } from 'react-native';
 // import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export const CONTENT_SPACING = 15;
-export const MAIN_COLOR = '#1c74d4';
+export const PRIMARY_COLOR = '#1a72ce';
+export const SECONDARY_COLOR = '#0a1929';
+export const TERTIARY_COLOR = '#F3FAFF';
+export const ERROR_COLOR = '#ad373d';
 // export const SAFE_AREA_PADDING = () => {
 //   const insets = useSafeAreaInsets();
 

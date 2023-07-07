@@ -3,7 +3,14 @@ import {
   selectCurrentClientTank
 } from '../redux/slices/forms/servicecallTankSlice';
 import { useUploadServiceCallMutation } from '../redux/slices/forms/servicecallApiSlice';
-import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import {
+  Keyboard,
+  Platform,
+  StyleSheet,
+  TouchableOpacity,
+  View
+} from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import {
   Text,
@@ -16,8 +23,13 @@ import { selectCurrentUser } from '../redux/slices/auth/authSlice';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaskedTextInput } from 'react-native-mask-text';
 import { useSelector, useDispatch } from 'react-redux';
+import {
+  PRIMARY_COLOR,
+  SECONDARY_COLOR,
+  TERTIARY_COLOR,
+  ERROR_COLOR
+} from '../types/Constants';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { MAIN_COLOR } from '../types/Constants';
 import { Routes } from '../types/Routes';
 import {
   serviceFormFieldQuestionsBoolean,
@@ -26,7 +38,9 @@ import {
   ServiceFormData,
   serviceFormSchema
 } from '../serviceFormTypesandData';
-import React from 'react';
+import LoadingScreen from './LoadingScreen';
+import { StatusBar } from 'expo-status-bar';
+import React, { useRef } from 'react';
 
 type Props = NativeStackScreenProps<Routes, 'ServiceCallForm'>;
 
@@ -36,7 +50,15 @@ const ServiceCallForm = ({ navigation }: Props) => {
   const employeeId = useSelector(selectCurrentUser);
   const dispatch = useDispatch();
 
-  console.log('TankId: ', clientTankId);
+  const scrollViewRef = useRef<KeyboardAwareScrollView>(null);
+
+  const scrollToTop = () => {
+    if (scrollViewRef.current) {
+      scrollViewRef.current.scrollToPosition(0, 0, true);
+    }
+  };
+
+  console.log('clientTankId: ', clientTankId);
 
   const { control, handleSubmit, formState } = useForm<ServiceFormData>({
     defaultValues: {
@@ -65,7 +87,9 @@ const ServiceCallForm = ({ navigation }: Props) => {
 
   const { errors } = formState;
 
-  console.log('React Hook Form errors: ', errors);
+  if (!!errors) scrollToTop();
+
+  console.log('Errors: ', errors);
 
   const onSubmit: SubmitHandler<ServiceFormData> = async (data: any) => {
     const dataWithEmployeeandTankId = {
@@ -73,46 +97,56 @@ const ServiceCallForm = ({ navigation }: Props) => {
       employeeId: employeeId?.userId,
       tankId: clientTankId
     };
-    console.log(dataWithEmployeeandTankId);
+
     try {
       const response = await uploadServiceCall(
         dataWithEmployeeandTankId
       ).unwrap();
-      console.log(response);
+      console.log('response; ', response);
       dispatch(clearTankId());
       navigation.replace('QRScannerScreen');
-    } catch (error) {
-      console.log(error);
+    } catch (err: any) {
+      if (!err?.status) {
+        // isLoading: true until timeout occurs
+        console.log('No Server Response');
+      } else if (err?.status === 400) {
+        console.log(err.data?.message);
+      } else if (err?.status === 401) {
+        console.log(err.data?.message);
+      } else {
+        console.log(err.data?.message);
+      }
     }
   };
+
   const renderedServiceFormQuestionsNumeric =
     serviceFormFieldQuestionsNumeric.map(({ id, label }, index) => {
       return (
-        <View key={id} style={styles.inputView}>
-          <Text style={styles.label}>{label}</Text>
-          <Controller
-            control={control}
-            name={id}
-            rules={{ required: true }}
-            render={({ field: { onChange, onBlur, value } }) => (
+        <Controller
+          key={id}
+          control={control}
+          name={id}
+          rules={{ required: true }}
+          render={({ field: { onChange, onBlur, value } }) => (
+            <>
+              <Text style={styles.label}>{label}</Text>
               <MaskedTextInput
-                autoFocus={index === 0}
                 type='number'
                 keyboardType='numeric'
                 mask='9.999'
                 placeholder='0.00'
                 onBlur={onBlur}
-                onChangeText={value => onChange(parseFloat(value))}
                 value={value?.toString() ?? ''} // Convert value to a string explicitly or set it as an empty string if undefined
+                onChangeText={value => onChange(parseFloat(value))}
                 style={[styles.input, errors?.[id] && styles.errorInput]}
                 defaultValue=''
               />
-            )}
-          />
-          <HelperText type='error' visible={!!errors[id]}>
-            {errors[id]?.message}
-          </HelperText>
-        </View>
+              <HelperText type='error' visible={!!errors[id]}>
+                {errors[id]?.message}
+              </HelperText>
+            </>
+          )}
+        />
       );
     });
 
@@ -125,11 +159,12 @@ const ServiceCallForm = ({ navigation }: Props) => {
         rules={{ required: true }}
         render={({ field: { onChange, value } }) => {
           const handleValueChange = (newValue: string) => {
+            Keyboard.dismiss();
             onChange(newValue === 'true' ? true : false);
           };
           return (
-            <View>
-              <Text style={{ marginBottom: 10 }}>{label}</Text>
+            <>
+              <Text style={styles.label}>{label}</Text>
               <SegmentedButtons
                 value={value ? 'true' : 'false'}
                 onValueChange={handleValueChange}
@@ -137,24 +172,24 @@ const ServiceCallForm = ({ navigation }: Props) => {
                   {
                     label: 'No',
                     value: 'false',
-                    checkedColor: '#333',
+                    checkedColor: TERTIARY_COLOR,
                     style: value
-                      ? { backgroundColor: 'white' }
-                      : { backgroundColor: '#dcd7d7' }
+                      ? { backgroundColor: TERTIARY_COLOR }
+                      : { backgroundColor: '#6a6e75' }
                   },
                   {
                     label: 'Yes',
                     value: 'true',
-                    checkedColor: 'white',
-                    uncheckedColor: MAIN_COLOR,
+                    checkedColor: TERTIARY_COLOR,
+                    uncheckedColor: PRIMARY_COLOR,
                     style: value
-                      ? { backgroundColor: MAIN_COLOR }
-                      : { backgroundColor: 'white' }
+                      ? { backgroundColor: PRIMARY_COLOR }
+                      : { backgroundColor: TERTIARY_COLOR }
                   }
                 ]}
-                style={{ marginBottom: 20 }}
+                style={styles.segmentedButtons}
               />
-            </View>
+            </>
           );
         }}
       />
@@ -168,38 +203,66 @@ const ServiceCallForm = ({ navigation }: Props) => {
         name={id}
         rules={{ required: true }}
         render={({ field: { onChange, onBlur, value } }) => (
-          <TextInput
-            key={id}
-            id={`${id}-input`}
-            label={label}
-            onBlur={onBlur}
-            onChangeText={onChange}
-            value={value !== undefined ? String(value) : ''} // Convert value to a string explicitly or set it as an empty string if undefined
-            mode='outlined'
-            multiline
-            error={!!errors?.[id]}
-          />
+          <>
+            <Text style={styles.label}>{`${label} (optional)`}</Text>
+            <TextInput
+              key={id}
+              id={`${id}-input`}
+              mode='outlined'
+              onBlur={onBlur}
+              onChangeText={onChange}
+              activeOutlineColor={PRIMARY_COLOR}
+              value={value !== undefined ? String(value) : ''} // Convert value to a string explicitly or set it as an empty string if undefined
+              error={!!errors?.[id]}
+              style={{
+                marginBottom: 14
+              }}
+              multiline
+            />
+          </>
         )}
       />
     )
   );
+
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.title}>ServiceCallForm </Text>
-      <ScrollView style={styles.scrollView} keyboardDismissMode='on-drag'>
+      <StatusBar style='light' />
+      {isLoading && <LoadingScreen />}
+      <View style={styles.headerContainer}>
+        <Text style={styles.header}>Service-Call Form</Text>
+      </View>
+      <KeyboardAwareScrollView
+        ref={scrollViewRef}
+        style={styles.keyboardAwareContainer}
+        contentContainerStyle={styles.keyboardAwareContent}
+        keyboardDismissMode='on-drag'
+        keyboardOpeningTime={0}
+        keyboardShouldPersistTaps={'handled'}
+        enableOnAndroid={true}
+        enableAutomaticScroll={true}
+        enableResetScrollToCoords={false}
+        // Values below are not finalized
+        extraScrollHeight={Platform.select({
+          ios: 200,
+          android: 120
+        })}
+      >
         {/* Questions with expected numeric answers */}
         {renderedServiceFormQuestionsNumeric}
         {/* Questions with expected boolean answers */}
         {renderedServiceFormQuestionsBoolean}
         {/* Questions with expected text answers */}
         {renderedServiceFormQuestionsText}
-      </ScrollView>
-      <TouchableOpacity
-        onPress={handleSubmit(onSubmit)}
-        style={styles.submitButton}
-      >
-        <Text style={styles.submitButtonText}>Submit</Text>
-      </TouchableOpacity>
+        <View style={styles.submitButtonContainer}>
+          <TouchableOpacity
+            onPress={handleSubmit(onSubmit)}
+            style={styles.submitButton}
+          >
+            <Text style={styles.submitButtonText}>Submit</Text>
+          </TouchableOpacity>
+        </View>
+      </KeyboardAwareScrollView>
     </SafeAreaView>
   );
 };
@@ -210,14 +273,29 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    backgroundColor: SECONDARY_COLOR,
+    paddingBottom: 30
   },
-  title: {
+  keyboardAwareContainer: {
+    flex: 1,
+    backgroundColor: TERTIARY_COLOR,
+    width: '100%',
+    borderWidth: 1,
+    borderRadius: 4
+  },
+  headerContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%'
+  },
+  header: {
+    fontStyle: 'italic',
     fontWeight: 'bold',
-    fontSize: 40,
-    color: MAIN_COLOR,
-    marginTop: 20,
-    marginBottom: 20
+    fontSize: 34,
+    color: '#F3FAFF',
+    marginTop: 15,
+    marginBottom: 15
   },
   input: {
     height: 50,
@@ -225,35 +303,41 @@ const styles = StyleSheet.create({
     marginVertical: 5,
     paddingHorizontal: 5,
     borderWidth: 1,
-    borderRadius: 10
+    borderRadius: 5
   },
   errorInput: {
-    borderColor: '#ad373d',
+    borderColor: ERROR_COLOR,
     borderWidth: 2
   },
   inputView: {
-    marginBottom: 10
+    marginBottom: 5
   },
-  label: {},
-  scrollView: {
-    marginHorizontal: 20,
-    width: '90%',
-    borderWidth: 1,
-    borderRadius: 10,
-    padding: 10
+  label: {
+    fontSize: 16
+  },
+  segmentedButtons: { marginTop: 8, marginBottom: 20 },
+  keyboardAwareContent: {
+    flexGrow: 1,
+    justifyContent: 'center',
+    padding: 24,
+    paddingBottom: 20
+  },
+  submitButtonContainer: {
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   submitButton: {
     width: '80%',
-    backgroundColor: MAIN_COLOR,
+    backgroundColor: PRIMARY_COLOR,
     borderRadius: 25,
     height: 50,
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 20,
-    marginBottom: 10
+    marginBottom: 40
   },
   submitButtonText: {
-    color: 'white',
+    color: TERTIARY_COLOR,
     fontSize: 20
   }
 });
