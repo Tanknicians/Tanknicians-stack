@@ -6,7 +6,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import BarcodeMask from 'react-native-barcode-mask';
 import { Ionicons } from '@expo/vector-icons';
 import { useDispatch } from 'react-redux';
-import { Routes } from '../types/Routes';
+import { Routes, SERVICECALLFORMSCREEN } from '../types/Routes';
 import React, { useState } from 'react';
 import {
   SCREEN_HEIGHT,
@@ -43,7 +43,7 @@ const QRScannerScreen = ({ navigation }: Props) => {
         // ! TODO: Handle scanned QR code data and navigate to form with user/tank data
         // alert(`Bar code with type ${type} and data ${data} has been scanned!`);
         dispatch(setTankId({ tankId: data }));
-        navigation.replace('ServiceCallForm');
+        navigation.replace(SERVICECALLFORMSCREEN);
       }
     }
     setScanned(false);

@@ -1,9 +1,41 @@
+import { useUploadServiceCallMutation } from '../redux/slices/forms/servicecallApiSlice';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { useForm, SubmitHandler, Controller } from 'react-hook-form';
+import { selectCurrentUser } from '../redux/slices/auth/authSlice';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import LoadingSpinner from '../components/LoadingSpinner';
+import { QRSCANNERSCREEN, Routes } from '../types/Routes';
+import { MaskedTextInput } from 'react-native-mask-text';
+import { useSelector, useDispatch } from 'react-redux';
+import { zodResolver } from '@hookform/resolvers/zod';
 import {
   clearTankId,
   selectCurrentClientTank
 } from '../redux/slices/forms/servicecallTankSlice';
-import { useUploadServiceCallMutation } from '../redux/slices/forms/servicecallApiSlice';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { StatusBar } from 'expo-status-bar';
+import {
+  serviceFormFieldQuestionsBoolean,
+  serviceFormFieldQuestionsNumeric,
+  serviceFormFieldQuestionsText,
+  ServiceFormData,
+  serviceFormSchema,
+  defaultServiceFormValues
+} from '../types/serviceFormTypesandData';
+import {
+  Text,
+  TextInput,
+  SegmentedButtons,
+  HelperText
+} from 'react-native-paper';
+import React, { useRef } from 'react';
+import {
+  PRIMARY_COLOR,
+  SECONDARY_COLOR,
+  TERTIARY_COLOR,
+  ERROR_COLOR,
+  QUARTERNARY_COLOR
+} from '../types/Constants';
 import {
   Keyboard,
   Platform,
@@ -11,38 +43,8 @@ import {
   TouchableOpacity,
   View
 } from 'react-native';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import {
-  Text,
-  TextInput,
-  SegmentedButtons,
-  HelperText
-} from 'react-native-paper';
-import { useForm, SubmitHandler, Controller } from 'react-hook-form';
-import { selectCurrentUser } from '../redux/slices/auth/authSlice';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { MaskedTextInput } from 'react-native-mask-text';
-import { useSelector, useDispatch } from 'react-redux';
-import {
-  PRIMARY_COLOR,
-  SECONDARY_COLOR,
-  TERTIARY_COLOR,
-  ERROR_COLOR
-} from '../types/Constants';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Routes } from '../types/Routes';
-import {
-  serviceFormFieldQuestionsBoolean,
-  serviceFormFieldQuestionsNumeric,
-  serviceFormFieldQuestionsText,
-  ServiceFormData,
-  serviceFormSchema
-} from '../serviceFormTypesandData';
-import LoadingScreen from './LoadingScreen';
-import { StatusBar } from 'expo-status-bar';
-import React, { useRef } from 'react';
 
-type Props = NativeStackScreenProps<Routes, 'ServiceCallForm'>;
+type Props = NativeStackScreenProps<Routes, 'ServiceCallFormScreen'>;
 
 const ServiceCallForm = ({ navigation }: Props) => {
   const [uploadServiceCall, { isLoading }] = useUploadServiceCallMutation();
@@ -50,6 +52,7 @@ const ServiceCallForm = ({ navigation }: Props) => {
   const employeeId = useSelector(selectCurrentUser);
   const dispatch = useDispatch();
 
+  // Used to scroll to the top of the screen when there are errors
   const scrollViewRef = useRef<KeyboardAwareScrollView>(null);
 
   const scrollToTop = () => {
@@ -61,36 +64,16 @@ const ServiceCallForm = ({ navigation }: Props) => {
   console.log('clientTankId: ', clientTankId);
 
   const { control, handleSubmit, formState } = useForm<ServiceFormData>({
-    defaultValues: {
-      ATOOperational: false,
-      ATOReservoirFilled: false,
-      chemFilterAdjusted: false,
-      doserAdjustementOrManualDosing: false,
-      dosingReservoirsFull: false,
-      floorsCheckedForSpillsOrDirt: false,
-      glassCleanedInside: false,
-      glassCleanedOutside: false,
-      mechFilterChanged: false,
-      pumpsClearedOfDebris: false,
-      saltCreepCleaned: false,
-      skimmerCleanedAndOperational: false,
-      waterChanged: false,
-      pestAPresent: false,
-      pestBPresent: false,
-      pestCPresent: false,
-      pestDPresent: false,
-      customerRequest: '',
-      employeeNotes: ''
-    },
+    defaultValues: defaultServiceFormValues,
     resolver: zodResolver(serviceFormSchema)
   });
 
   const { errors } = formState;
 
-  if (!!errors) scrollToTop();
+  // Scroll to top if there are errors
+  if (errors && Object.keys(errors).length > 0) scrollToTop();
 
   console.log('Errors: ', errors);
-
   const onSubmit: SubmitHandler<ServiceFormData> = async (data: any) => {
     const dataWithEmployeeandTankId = {
       ...data,
@@ -104,7 +87,7 @@ const ServiceCallForm = ({ navigation }: Props) => {
       ).unwrap();
       console.log('response; ', response);
       dispatch(clearTankId());
-      navigation.replace('QRScannerScreen');
+      navigation.replace(QRSCANNERSCREEN);
     } catch (err: any) {
       if (!err?.status) {
         // isLoading: true until timeout occurs
@@ -134,6 +117,7 @@ const ServiceCallForm = ({ navigation }: Props) => {
                 type='number'
                 keyboardType='numeric'
                 mask='9.999'
+                autoFocus={index === 0 ? true : false}
                 placeholder='0.00'
                 onBlur={onBlur}
                 value={value?.toString() ?? ''} // Convert value to a string explicitly or set it as an empty string if undefined
@@ -175,7 +159,7 @@ const ServiceCallForm = ({ navigation }: Props) => {
                     checkedColor: TERTIARY_COLOR,
                     style: value
                       ? { backgroundColor: TERTIARY_COLOR }
-                      : { backgroundColor: '#6a6e75' }
+                      : { backgroundColor: QUARTERNARY_COLOR }
                   },
                   {
                     label: 'Yes',
@@ -228,7 +212,7 @@ const ServiceCallForm = ({ navigation }: Props) => {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar style='light' />
-      {isLoading && <LoadingScreen />}
+      {isLoading && <LoadingSpinner />}
       <View style={styles.headerContainer}>
         <Text style={styles.header}>Service-Call Form</Text>
       </View>

@@ -11,7 +11,7 @@ import { useForm, SubmitHandler, Controller } from 'react-hook-form';
 import { useLoginMutation } from '../redux/slices/auth/authApiSlice';
 import { setCredentials } from '../redux/slices/auth/authSlice';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import LoadingScreen from '../components/LoadingScreen';
+import LoadingSpinner from '../components/LoadingSpinner';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Text, TextInput } from 'react-native-paper';
 import {
@@ -27,6 +27,7 @@ import { Routes } from '../types/Routes';
 import React, { useState } from 'react';
 import Logo from '../components/Logo';
 import { z } from 'zod';
+
 type LoginFormData = {
   email: string;
   password: string;
@@ -40,7 +41,7 @@ const schema = z.object({
 
 type Props = NativeStackScreenProps<Routes, 'LoginScreen'>;
 
-const LoginScreen = ({ navigation }: Props) => {
+const LoginScreen = () => {
   const [login, { isLoading }] = useLoginMutation();
   const [loginError, setLoginError] = useState({
     errorMessage: '',
@@ -95,7 +96,7 @@ const LoginScreen = ({ navigation }: Props) => {
   return (
     <SafeAreaView style={styles.loginContainer}>
       <StatusBar style='light' />
-      {isLoading && <LoadingScreen />}
+      {isLoading && <LoadingSpinner />}
       <KeyboardAwareScrollView
         style={styles.keyboardAwareContainer}
         contentContainerStyle={styles.keyboardAwareContent}

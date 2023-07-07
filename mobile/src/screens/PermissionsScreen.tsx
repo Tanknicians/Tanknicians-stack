@@ -5,7 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { StyleSheet, View, Text, Image } from 'react-native';
 import { ImageRequireSource, Linking } from 'react-native';
 import { CONTENT_SPACING } from '../types/Constants';
-import type { Routes } from '../types/Routes';
+import { QRSCANNERSCREEN, type Routes } from '../types/Routes';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 // const BANNER_IMAGE =
@@ -28,7 +28,7 @@ const PermissionsScreen = ({ navigation }: Props): React.ReactElement => {
   useEffect(() => {
     const checkCameraPermission = async () => {
       if (hasCameraPermission) {
-        navigation.replace('QRScannerScreen');
+        navigation.replace(QRSCANNERSCREEN);
       } else if (hasCameraPermission === false) {
         await Linking.openSettings();
       }

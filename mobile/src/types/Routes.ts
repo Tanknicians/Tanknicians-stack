@@ -2,9 +2,10 @@ export type Routes = {
   LoginScreen: undefined;
   PermissionsScreen: undefined;
   QRScannerScreen: undefined;
-  ServiceCallForm: undefined;
-  // MediaPage: {
-  //   path: string;
-  //   type: 'video' | 'photo';
-  // };
+  ServiceCallFormScreen: undefined;
 };
+
+export const LOGINSCREEN = 'LoginScreen';
+export const PERMISSIONSSCREEN = 'PermissionsScreen';
+export const QRSCANNERSCREEN = 'QRScannerScreen';
+export const SERVICECALLFORMSCREEN = 'ServiceCallFormScreen';

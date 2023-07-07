@@ -1,13 +1,17 @@
 import { z } from 'zod';
 
-// employeeId: number;
-// tankId: number;
+export type ServiceFormData = NumericQuestions &
+  BooleanQuestions &
+  TextQuestions;
 
-export type ServiceFormData = {
+type NumericQuestions = {
   alkalinity: number;
   calcium: number;
   nitrate: number;
   phosphate: number;
+};
+
+type BooleanQuestions = {
   ATOOperational: boolean;
   ATOReservoirFilled: boolean;
   chemFilterAdjusted: boolean;
@@ -25,10 +29,34 @@ export type ServiceFormData = {
   pestBPresent: boolean;
   pestCPresent: boolean;
   pestDPresent: boolean;
+};
+
+type TextQuestions = {
   customerRequest: string;
   employeeNotes: string;
 };
 
+export const defaultServiceFormValues: Partial<ServiceFormData> = {
+  ATOOperational: false,
+  ATOReservoirFilled: false,
+  chemFilterAdjusted: false,
+  doserAdjustementOrManualDosing: false,
+  dosingReservoirsFull: false,
+  floorsCheckedForSpillsOrDirt: false,
+  glassCleanedInside: false,
+  glassCleanedOutside: false,
+  mechFilterChanged: false,
+  pumpsClearedOfDebris: false,
+  saltCreepCleaned: false,
+  skimmerCleanedAndOperational: false,
+  waterChanged: false,
+  pestAPresent: false,
+  pestBPresent: false,
+  pestCPresent: false,
+  pestDPresent: false,
+  customerRequest: '',
+  employeeNotes: ''
+};
 // Type errors occur when field is empty
 // First 4 fields are transformed to numbers
 // after having input
@@ -103,7 +131,7 @@ interface ServiceFormFieldQuestion {
 export const serviceFormFieldQuestionsText: ServiceFormFieldQuestion[] = [
   {
     id: 'employeeNotes',
-    label: 'Employee Notes'
+    label: 'Notes'
   },
   {
     id: 'customerRequest',
