@@ -21,7 +21,7 @@ import {
   ServiceFormData,
   serviceFormSchema,
   defaultServiceFormValues
-} from '../types/serviceFormTypesandData';
+} from '../types/ServiceFormandData';
 import {
   Text,
   TextInput,
@@ -35,7 +35,7 @@ import {
   TERTIARY_COLOR,
   ERROR_COLOR,
   QUARTERNARY_COLOR
-} from '../types/Constants';
+} from '../types/Styling';
 import {
   Keyboard,
   Platform,

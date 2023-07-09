@@ -1,4 +1,4 @@
-import { PRIMARY_COLOR, TERTIARY_COLOR } from '../types/Constants';
+import { PRIMARY_COLOR, TERTIARY_COLOR } from '../types/Styling';
 import { IconButton } from 'react-native-paper';
 import { View } from 'react-native';
 import * as React from 'react';

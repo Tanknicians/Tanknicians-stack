@@ -1,15 +1,19 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { NavigationContainer } from '@react-navigation/native';
 import ServiceCallFormScreen from '../screens/ServiceCallFormScreen';
-import PermissionsScreen from '../screens/PermissionsScreen';
+import { selectCurrentToken } from '../redux/slices/auth/authSlice';
+import { NavigationContainer } from '@react-navigation/native';
 import QRScannerScreen from '../screens/QRScannerScreen';
 import LoginScreen from '../screens/LoginScreen';
+import { useSelector } from 'react-redux';
 import { Routes } from '../types/Routes';
 import * as React from 'react';
 
 const Stack = createNativeStackNavigator<Routes>();
 
-const AuthNavigator = ({ isSignedIn }: { isSignedIn: boolean | null }) => {
+const AuthNavigator = () => {
+  const isSignedIn = !!useSelector(selectCurrentToken);
+  console.log('isSignedIn: ', isSignedIn);
+
   return (
     <NavigationContainer>
       <Stack.Navigator
@@ -22,10 +26,6 @@ const AuthNavigator = ({ isSignedIn }: { isSignedIn: boolean | null }) => {
           <Stack.Screen name='LoginScreen' component={LoginScreen} />
         ) : (
           <>
-            <Stack.Screen
-              name='PermissionsScreen'
-              component={PermissionsScreen}
-            />
             <Stack.Screen name='QRScannerScreen' component={QRScannerScreen} />
             <Stack.Screen
               name='ServiceCallFormScreen'

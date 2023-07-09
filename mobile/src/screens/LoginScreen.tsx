@@ -19,11 +19,10 @@ import {
   SECONDARY_COLOR,
   TERTIARY_COLOR,
   ERROR_COLOR
-} from '../types/Constants';
+} from '../types/Styling';
 import { StatusBar } from 'expo-status-bar';
 import { useDispatch } from 'react-redux';
 import { StyleSheet } from 'react-native';
-import { Routes } from '../types/Routes';
 import React, { useState } from 'react';
 import Logo from '../components/Logo';
 import { z } from 'zod';
@@ -38,8 +37,6 @@ const schema = z.object({
   email: z.string().nonempty(),
   password: z.string().nonempty()
 });
-
-type Props = NativeStackScreenProps<Routes, 'LoginScreen'>;
 
 const LoginScreen = () => {
   const [login, { isLoading }] = useLoginMutation();

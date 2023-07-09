@@ -1,19 +1,23 @@
-import { BarCodeScanner, BarCodeScannerResult } from 'expo-barcode-scanner';
+import {
+  BarCodeScanner,
+  BarCodeScannerResult,
+  PermissionStatus
+} from 'expo-barcode-scanner';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { setTankId } from '../redux/slices/forms/servicecallTankSlice';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { setTankId } from '../redux/slices/forms/servicecallTankSlice';
+import { Routes, SERVICECALLFORMSCREEN } from '../types/Routes';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import BarcodeMask from 'react-native-barcode-mask';
+import React, { useEffect, useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { useDispatch } from 'react-redux';
-import { Routes, SERVICECALLFORMSCREEN } from '../types/Routes';
-import React, { useState } from 'react';
 import {
   SCREEN_HEIGHT,
   SCREEN_WIDTH,
   SECONDARY_COLOR,
   TERTIARY_COLOR
-} from '../types/Constants';
+} from '../types/Styling';
 
 // Allows to scan QR code only if in mask area
 const finderWidth: number = 280;
@@ -25,14 +29,47 @@ type Props = NativeStackScreenProps<Routes, 'QRScannerScreen'>;
 
 const QRScannerScreen = ({ navigation }: Props) => {
   const [type, setType] = useState<any>(BarCodeScanner.Constants.Type.back);
+  const [hasPermission, setHasPermission] = useState<boolean | null>(null);
   const [scanned, setScanned] = useState<boolean>(false);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    const getBarCodeScannerPermissions = async () => {
+      const { status } = await BarCodeScanner.requestPermissionsAsync();
+      setHasPermission(status === PermissionStatus.GRANTED);
+    };
+
+    getBarCodeScannerPermissions();
+  }, []);
+
+  if (hasPermission === null) {
+    return (
+      <View style={styles.permissionContainer}>
+        <Text style={styles.promptText}>Requesting for camera permission</Text>
+      </View>
+    );
+  }
+  if (hasPermission === false) {
+    return (
+      <View style={styles.permissionContainer}>
+        <Text style={styles.promptText}>
+          No access to camera. {'\n\n'}Please enable camera permission in phone
+          settings
+        </Text>
+      </View>
+    );
+  }
 
   const handleBarCodeScanned = (scanningResult: BarCodeScannerResult) => {
     if (!scanned) {
       const { data, bounds: { origin } = {} } = scanningResult;
       // @ts-ignore
       const { x, y } = origin;
+
+      /* Only allow to scan QR code if in mask area
+      / Then navigate to ServiceCallFormScreen
+      / and set tankId from the scanned QR code 
+      */
       if (
         x >= viewMinX &&
         y >= viewMinY &&
@@ -40,8 +77,6 @@ const QRScannerScreen = ({ navigation }: Props) => {
         y <= viewMinY + finderHeight / 2
       ) {
         setScanned(true);
-        // ! TODO: Handle scanned QR code data and navigate to form with user/tank data
-        // alert(`Bar code with type ${type} and data ${data} has been scanned!`);
         dispatch(setTankId({ tankId: data }));
         navigation.replace(SERVICECALLFORMSCREEN);
       }
@@ -73,7 +108,7 @@ const QRScannerScreen = ({ navigation }: Props) => {
             animatedLineColor={TERTIARY_COLOR}
           />
           <View style={styles.overlay}>
-            <Text style={styles.promptText}>Scan Tank QR Code</Text>
+            <Text style={styles.QRScanPromptText}>Scan Tank QR Code</Text>
             <TouchableOpacity onPress={toggleCameraType}>
               <Ionicons
                 name='camera-reverse-outline'
@@ -96,6 +131,13 @@ const styles = StyleSheet.create({
     backgroundColor: SECONDARY_COLOR,
     paddingTop: 30,
     paddingBottom: 30
+  },
+  permissionContainer: {
+    flex: 1,
+    backgroundColor: SECONDARY_COLOR,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 16
   },
   barcodeContainer: {
     flex: 1,
@@ -125,6 +167,11 @@ const styles = StyleSheet.create({
     color: 'white'
   },
   promptText: {
+    fontSize: 18,
+    color: TERTIARY_COLOR,
+    textAlign: 'center'
+  },
+  QRScanPromptText: {
     fontSize: 34,
     color: TERTIARY_COLOR,
     fontWeight: 'bold',

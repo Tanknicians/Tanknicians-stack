@@ -24,12 +24,13 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.tanknicians.tankniciansmobile",
+      "userInterfaceStyle": "light",
       "infoPlist": {
         "NSCameraUsageDescription": "This app uses the camera to let a user scan QR codes ."
       }
     },
     "android": {
-      "permissions": ["CAMERA"],
+      "userInterfaceStyle": "light",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
