@@ -1,10 +1,10 @@
-import { Button, ButtonProps, CircularProgress, styled } from '@mui/material';
+import { Button, ButtonProps, CircularProgress, styled } from "@mui/material";
 
 const CustomButton = styled(Button)<ButtonProps>(({ theme }) => ({
-  '&.Mui-disabled': {
-    pointerEvents: 'none',
-    backgroundColor: 'initial'
-  }
+  "&.Mui-disabled": {
+    pointerEvents: "none",
+    backgroundColor: "initial",
+  },
 }));
 
 type MyCustomButtonProps = ButtonProps & {

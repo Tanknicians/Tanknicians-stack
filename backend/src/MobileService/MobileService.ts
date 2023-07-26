@@ -3,6 +3,21 @@ import { serviceCallDB } from "../../prisma/db/ServiceCall";
 import { userDB } from "../../prisma/db/User";
 import { tankDB } from "../../prisma/db/TankMetadata";
 
+/**
+ * This service seeks to provide the Service Call Form
+ * functions that can validate form content and ensure
+ * record creation
+ *
+ * There are also some basic computations sketched out
+ * near the bottom of source but they will likely be
+ * replaced with a suitable statistical package, for
+ * ease of reliability. This can also help us reduce
+ * bugs when doing higher level computations for generating
+ *
+ */
+
+// This function returns bool indicating success of
+// validation(a precursor to record creation)
 export async function uploadServiceCall(
   serviceCall: Omit<Prisma.ServiceCall, "id">,
 ) {

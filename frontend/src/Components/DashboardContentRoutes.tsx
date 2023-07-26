@@ -10,18 +10,18 @@
 // import IconButton from '@mui/material/IconButton';
 // import SearchIcon from '@mui/icons-material/Search';
 // import RefreshIcon from '@mui/icons-material/Refresh';
-import Managerial from './DashboardContent/Managerial';
-import Database from './DashboardContent/DataBaseView';
-import Analytics from './DashboardContent/Analytics';
-import { Route, Routes } from 'react-router-dom';
+import Managerial from "./DashboardContent/Managerial";
+import Database from "./DashboardContent/DataBaseView";
+import Analytics from "./DashboardContent/Analytics";
+import { Route, Routes } from "react-router-dom";
 
 export default function Content() {
   return (
-    <div className='content-wrapper'>
+    <div className="content-wrapper">
       <Routes>
-        <Route path='/Managerial' element={<Managerial />} />
-        <Route path='/Database' element={<Database />} />
-        <Route path='/Analytics' element={<Analytics />} />
+        <Route path="/Managerial" element={<Managerial />} />
+        <Route path="/Database" element={<Database />} />
+        <Route path="/Analytics" element={<Analytics />} />
       </Routes>
     </div>
   );

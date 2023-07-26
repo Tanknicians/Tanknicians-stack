@@ -5,19 +5,19 @@ import {
   FormLabel,
   Radio,
   RadioGroup,
-  TextField
-} from '@mui/material';
+  TextField,
+} from "@mui/material";
 import {
   serviceFormFieldQuestionsBoolean,
   serviceFormFieldQuestionsNumeric,
   serviceFormFieldQuestionsText,
   ServiceFormData,
-  serviceFormSchema
-} from './serviceFormTypesandData';
-import { useUploadServiceCallMutation } from '../../../Redux/slices/forms/servicecallApiSlice';
-import { useForm, SubmitHandler, Controller } from 'react-hook-form';
-import LoadingProgressButton from '../../LoadingProgressButton';
-import { zodResolver } from '@hookform/resolvers/zod';
+  serviceFormSchema,
+} from "./serviceFormTypesandData";
+import { useUploadServiceCallMutation } from "../../../Redux/slices/forms/servicecallApiSlice";
+import { useForm, SubmitHandler, Controller } from "react-hook-form";
+import LoadingProgressButton from "../../LoadingProgressButton";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 export default function ServiceForm() {
   // Service call form submission api call
@@ -43,10 +43,10 @@ export default function ServiceForm() {
         pestBPresent: false,
         pestCPresent: false,
         pestDPresent: false,
-        customerRequest: '',
-        employeeNotes: ''
+        customerRequest: "",
+        employeeNotes: "",
       },
-      resolver: zodResolver(serviceFormSchema)
+      resolver: zodResolver(serviceFormSchema),
       // mode: 'onBlur',
       // reValidateMode: 'onChange',
       // shouldFocusError: true,
@@ -85,9 +85,9 @@ export default function ServiceForm() {
         autoFocus={index === 0}
         id={`${id}-input`}
         label={label}
-        margin='normal'
+        margin="normal"
         {...register(id, { valueAsNumber: true })}
-        inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+        inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
         onKeyDown={handleKeyDown}
         required={!!errors?.[id]}
         error={!!errors?.[id]}
@@ -115,13 +115,13 @@ export default function ServiceForm() {
                 onChange={() => onChange(false)}
                 value={false}
                 control={<Radio />}
-                label='No'
+                label="No"
               />
               <FormControlLabel
                 onChange={() => onChange(true)}
                 value={true}
                 control={<Radio />}
-                label='Yes'
+                label="Yes"
               />
             </RadioGroup>
           )}
@@ -135,31 +135,31 @@ export default function ServiceForm() {
         key={id}
         id={`${id}-input`}
         label={label}
-        margin='normal'
+        margin="normal"
         {...register(id)}
         required={!!errors?.[id]}
         error={!!errors?.[id]}
         helperText={errors?.[id]?.message}
       />
-    )
+    ),
   );
 
   return (
     // temporary styling
     <Box
       sx={{
-        height: '100vh'
+        height: "100vh",
       }}
     >
       <Box
-        component='form'
+        component="form"
         noValidate
         onSubmit={handleSubmit(onSubmit)}
         sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          flexDirection: 'column'
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          flexDirection: "column",
         }}
       >
         {/* Questions with expected numeric answers */}
@@ -168,10 +168,10 @@ export default function ServiceForm() {
         {renderedServiceFormQuestionsBoolean}
         {/* Questions with expected text answers */}
         {renderedServiceFormQuestionsText}
-        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+        <Box sx={{ display: "flex", justifyContent: "center" }}>
           <LoadingProgressButton
-            type='submit'
-            variant='contained'
+            type="submit"
+            variant="contained"
             sx={{ mt: 2, mb: 2 }}
             isLoading={isLoading}
           >
