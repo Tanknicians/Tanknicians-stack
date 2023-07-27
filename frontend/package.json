@@ -19,6 +19,7 @@
     "@types/react": "^18.0.28",
     "@types/react-dom": "^18.0.11",
     "@types/react-redux": "^7.1.25",
+    "chart.js": "^4.3.2",
     "dotenv": "^16.3.1",
     "nodemailer": "^6.9.1",
     "react": "^18.2.0",
@@ -42,7 +43,11 @@
     "format": "rome format src --write"
   },
   "browserslist": {
-    "production": [">0.2%", "not dead", "not op_mini all"],
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
     "development": [
       "last 1 chrome version",
       "last 1 firefox version",
