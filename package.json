@@ -5,7 +5,8 @@
   "main": "jest.config.js",
   "scripts": {
     "test": "test",
-    "dev": "concurrently \"cd backend && npm run generate && npm start\" \"cd frontend && npm start\" "
+    "dev": "concurrently \"cd backend && npm run generate && npm start\" \"cd frontend && npm start\" ",
+    "format": "rome format src --write"
   },
   "repository": {
     "type": "git",
