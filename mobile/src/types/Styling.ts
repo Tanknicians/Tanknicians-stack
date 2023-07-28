@@ -1,5 +1,4 @@
-import { Dimensions, Platform } from 'react-native';
-
+import { useWindowDimensions } from 'react-native';
 export const CONTENT_SPACING = 15;
 
 // Colors
@@ -9,8 +8,7 @@ export const TERTIARY_COLOR = '#F3FAFF'; // Light blue
 export const QUARTERNARY_COLOR = '#6a6e75'; // Gray
 export const ERROR_COLOR = '#ad373d'; // Red
 
-export const SCREEN_WIDTH = Dimensions.get('window').width;
-export const SCREEN_HEIGHT = Platform.select<number>({
-  android: Dimensions.get('screen').height,
-  ios: Dimensions.get('window').height
-}) as number;
+export const getScreenDimensions = () => {
+  const { height, width } = useWindowDimensions();
+  return { SCREEN_HEIGHT: height, SCREEN_WIDTH: width };
+};

@@ -8,10 +8,10 @@ import { RootState } from '../store';
 
 // ! CHANGE THIS FOR PRODUCTION
 // This URL works for android emulator when npx expo start --localhost --android is executed
-const BASE_URL = 'http://10.0.2.2:5006';
+const BASE_URL = 'http://10.0.2.2:5000';
 // This URL works for physical device when npx expo start --tunnel is executed
-// ! The url will be given by ngrok after running the command ngrok http 5006
-// const BASE_URL = 'https://7152-2603-9001-2e00-1465-a10f-21d0-d767-2b0.ngrok.io';
+// ! The url will be given by ngrok after running the command ngrok http 5000
+// const BASE_URL = 'https://ba02-186-29-186-139.ngrok.io';
 
 const baseQuery = fetchBaseQuery({
   baseUrl: BASE_URL,

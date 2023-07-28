@@ -1,5 +1,4 @@
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import {
   View,
   Alert,
@@ -64,10 +63,12 @@ const LoginScreen = () => {
     try {
       const userData = await login(loginData).unwrap();
       const { token, savedCredentials } = userData;
-
+      console.log('token: ', token);
+      console.log('savedCredentials: ', savedCredentials);
       // No need to navigate to QRScannerScreen, as the user will be redirected to it
       // automatically by the App component
       dispatch(setCredentials({ user: savedCredentials, token }));
+      console.log('Login successful.');
     } catch (err: any) {
       console.log(err);
       if (!err?.status) {
@@ -235,9 +236,7 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     justifyContent: 'center'
   },
-  inputText: {
-    height: 50
-  },
+  inputText: {},
   submitButton: {
     width: '80%',
     backgroundColor: PRIMARY_COLOR,
