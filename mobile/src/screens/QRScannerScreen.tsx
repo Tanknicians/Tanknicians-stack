@@ -13,21 +13,21 @@ import React, { useEffect, useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { useDispatch } from 'react-redux';
 import {
-  SCREEN_HEIGHT,
-  SCREEN_WIDTH,
   SECONDARY_COLOR,
-  TERTIARY_COLOR
+  TERTIARY_COLOR,
+  getScreenDimensions
 } from '../types/Styling';
 
 // Allows to scan QR code only if in mask area
 const finderWidth: number = 280;
 const finderHeight: number = 230;
-const viewMinX = (SCREEN_WIDTH - finderWidth) / 2;
-const viewMinY = (SCREEN_HEIGHT - finderHeight) / 2;
 
 type Props = NativeStackScreenProps<Routes, 'QRScannerScreen'>;
 
 const QRScannerScreen = ({ navigation }: Props) => {
+  const { SCREEN_HEIGHT, SCREEN_WIDTH } = getScreenDimensions();
+  const viewMinX = (SCREEN_WIDTH - finderWidth) / 2;
+  const viewMinY = (SCREEN_HEIGHT - finderHeight) / 2;
   const [type, setType] = useState<any>(BarCodeScanner.Constants.Type.back);
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
   const [scanned, setScanned] = useState<boolean>(false);

@@ -12,6 +12,7 @@ const Stack = createNativeStackNavigator<Routes>();
 
 const AuthNavigator = () => {
   const isSignedIn = !!useSelector(selectCurrentToken);
+  const initialRouteName = isSignedIn ? 'QRScannerScreen' : 'LoginScreen';
   console.log('isSignedIn: ', isSignedIn);
 
   return (
@@ -21,10 +22,9 @@ const AuthNavigator = () => {
           headerShown: false,
           animationTypeForReplace: 'push'
         }}
+        initialRouteName={initialRouteName}
       >
-        {!isSignedIn ? (
-          <Stack.Screen name='LoginScreen' component={LoginScreen} />
-        ) : (
+        {isSignedIn ? (
           <>
             <Stack.Screen name='QRScannerScreen' component={QRScannerScreen} />
             <Stack.Screen
@@ -32,6 +32,8 @@ const AuthNavigator = () => {
               component={ServiceCallFormScreen}
             />
           </>
+        ) : (
+          <Stack.Screen name='LoginScreen' component={LoginScreen} />
         )}
       </Stack.Navigator>
     </NavigationContainer>
