@@ -134,6 +134,7 @@ const LoginScreen = () => {
                 style={styles.inputText}
                 autoCorrect={false}
                 value={value}
+                disabled={isLoading} // Disable input while loading
               />
             </View>
           )}
@@ -159,12 +160,16 @@ const LoginScreen = () => {
                 secureTextEntry={true}
                 autoCorrect={false}
                 value={value}
+                disabled={isLoading} // Disable input while loading
               />
             </View>
           )}
         />
         <View style={styles.forgotPasswordContainer}>
-          <TouchableOpacity onPress={onPressForgotPassword}>
+          <TouchableOpacity
+            onPress={onPressForgotPassword}
+            disabled={isLoading}
+          >
             <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
           </TouchableOpacity>
         </View>
