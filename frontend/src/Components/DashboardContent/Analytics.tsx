@@ -1,6 +1,5 @@
-import Header from '../DashboardHeader';
-import { Box } from '@mui/material';
-import { useState } from 'react';
+import Header from "../DashboardHeader";
+import { Box } from "@mui/material";
 
 export default function Analytics(props: any) {
   // const {handleDrawerToggle, ...other} = props
@@ -12,8 +11,8 @@ export default function Analytics(props: any) {
   return (
     <div>
       {/* <Header tabSelect = {setPageContentHandler} selection = "Analytics"/> */}
-      <Header selection='Analytics' />
-      <Box sx={{ flex: 1, py: 6, px: 4, bgcolor: '#eaeff1' }}>
+      <Header selection="Analytics" />
+      <Box sx={{ flex: 1, py: 6, px: 4, bgcolor: "#eaeff1" }}>
         {/* {pageContent} */}
       </Box>
     </div>
