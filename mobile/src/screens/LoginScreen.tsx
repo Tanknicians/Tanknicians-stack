@@ -87,7 +87,7 @@ const LoginScreen = () => {
   };
 
   const onPressForgotPassword = () => {
-    console.log('Function not implemented.');
+    console.log('onPressForgotPassword Function not implemented.');
   };
 
   return (
