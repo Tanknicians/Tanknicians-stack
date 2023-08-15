@@ -1,23 +1,23 @@
-import './../config';
-import { resetPassword, sendEmail } from './EmailService';
+import "./../config";
+import { resetPassword, sendEmail } from "./EmailService";
 
-describe('email service', () => {
+describe("email service", () => {
   const testEmail = process.env.TEST_EMAIL as string;
 
-  test('has defined test email', () => {
+  test("has defined test email", () => {
     expect(testEmail).toBeDefined();
   });
 
-  test('can send test emails', async () => {
+  test("can send test emails", async () => {
     const res = await sendEmail(
       testEmail,
-      'Test Email',
-      'This is a test email.'
+      "Test Email",
+      "This is a test email.",
     );
-    expect(res.includes('Email sent:'));
+    expect(res.includes("Email sent:"));
   });
-  test('can send reset email', async () => {
+  test("can send reset email", async () => {
     const res = await resetPassword(testEmail);
-    expect(res.includes('Email sent:'));
+    expect(res.includes("Email sent:"));
   });
 });
