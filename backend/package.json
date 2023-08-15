@@ -5,6 +5,7 @@
   "main": "server.ts",
   "scripts": {
     "test": "jest",
+    "test:watch": "jest --watch",
     "start": "nodemon src/server.ts",
     "lint": "rome check src",
     "format": "rome format src --write",
