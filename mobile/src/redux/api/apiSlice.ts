@@ -7,11 +7,12 @@ import { setCredentials, logout } from '../slices/auth/authSlice';
 import { RootState } from '../store';
 
 // ! CHANGE THIS FOR PRODUCTION
-// This URL works for android emulator when npx expo start --localhost --android is executed
-const BASE_URL = 'http://10.0.2.2:5000';
-// This URL works for physical device when npx expo start --tunnel is executed
+// This URL works for android emulator when "npm start" is executed
+// const BASE_URL = 'http://10.0.2.2:5000';
+// This URL works for physical device when "npm start" is executed
 // ! The url will be given by ngrok after running the command ngrok http 5000
-// const BASE_URL = 'https://ba02-186-29-186-139.ngrok.io';
+const BASE_URL =
+  'https://d320-2603-9001-2e00-1465-74fe-bcfa-fe3e-388d.ngrok.io';
 
 const baseQuery = fetchBaseQuery({
   baseUrl: BASE_URL,

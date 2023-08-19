@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: SECONDARY_COLOR,
-    paddingTop: 30,
+    paddingTop: 20,
     paddingBottom: 30
   },
   permissionContainer: {
@@ -150,11 +150,11 @@ const styles = StyleSheet.create({
   },
   overlay: {
     flex: 1,
-    backgroundColor: 'transparent',
+    backgroundColor: '',
     alignItems: 'center',
     justifyContent: 'space-between',
     marginTop: 60,
-    marginBottom: 100,
+    marginBottom: '10%',
     padding: 16
   },
   flipButton: {
@@ -175,6 +175,7 @@ const styles = StyleSheet.create({
     fontSize: 34,
     color: TERTIARY_COLOR,
     fontWeight: 'bold',
-    textAlign: 'center'
+    textAlign: 'center',
+    zIndex: 10
   }
 });
