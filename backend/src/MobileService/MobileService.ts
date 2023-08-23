@@ -2,10 +2,9 @@ import * as Prisma from "@prisma/client";
 import { serviceCallDB } from "../../prisma/db/ServiceCall";
 import { userDB } from "../../prisma/db/User";
 import { tankDB } from "../../prisma/db/TankMetadata";
+import { ServiceCall } from "src/zodTypes";
 
-export async function uploadServiceCall(
-  serviceCall: Omit<Prisma.ServiceCall, "id">,
-) {
+export async function uploadServiceCall(serviceCall: ServiceCall) {
   const submitServiceCall = checkServiceCall(serviceCall);
   const approvedMessage = serviceCall.isApproved ? "approved" : "not approved";
   try {
@@ -17,9 +16,7 @@ export async function uploadServiceCall(
 }
 
 // run checks on the service call and make sure parameters are valid
-function checkServiceCall(
-  serviceCall: Omit<Prisma.ServiceCall, "id">,
-): Omit<Prisma.ServiceCall, "id"> {
+function checkServiceCall(serviceCall: ServiceCall): ServiceCall {
   const { alkalinity, calcium, nitrate, phosphate } = serviceCall;
 
   if (
@@ -93,7 +90,7 @@ export async function getTanksByUserId(userId: number) {
 
 // currently unused code
 // Standard deviation calculations, takes in an array of Service Calls without "id"
-function calculateStandardDeviation(data: Omit<Prisma.ServiceCall, "id">[]): {
+function calculateStandardDeviation(data: ServiceCall[]): {
   nitrate: number;
   phosphate: number;
   calcium: number;

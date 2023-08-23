@@ -1,8 +1,9 @@
-import { ServiceCall, PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
+import { ServiceCall, ServiceCallCreate } from 'src/zodTypes';
 const prisma = new PrismaClient();
 
 // CREATE
-export async function create(form: Omit<ServiceCall, 'id'>) {
+export async function create(form: ServiceCallCreate) {
   const { employeeId, tankId, ...formData } = form;
   await prisma.serviceCall.create({
     data: {
