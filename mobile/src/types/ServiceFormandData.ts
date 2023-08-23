@@ -57,25 +57,21 @@ export const defaultServiceFormValues: Partial<ServiceFormData> = {
   customerRequest: '',
   employeeNotes: ''
 };
-// Type errors occur when field is empty
+
 // First 4 fields are transformed to numbers
 // after having input
 export const serviceFormSchema = z.object({
   alkalinity: z.number({
-    // required_error: 'Alkalinity is required',
-    invalid_type_error: 'Alkalinity is required*'
+    required_error: 'Alkalinity is required',
   }),
   calcium: z.number({
-    // required_error: 'Calcium is required',
-    invalid_type_error: 'Calcium is required*'
+    required_error: 'Calcium is required',
   }),
   nitrate: z.number({
-    // required_error: 'Nitrate is required',
-    invalid_type_error: 'Nitrate is required*'
+    required_error: 'Nitrate is required',
   }),
   phosphate: z.number({
-    // required_error: 'Phosphate is required',
-    invalid_type_error: 'Phosphate is required*'
+    required_error: 'Phosphate is required',
   }),
   ATOOperational: z.boolean(),
   ATOReservoirFilled: z.boolean(),
@@ -142,7 +138,8 @@ export const serviceFormFieldQuestionsText: ServiceFormFieldQuestion[] = [
 export const serviceFormFieldQuestionsNumeric: ServiceFormFieldQuestion[] = [
   {
     id: 'alkalinity',
-    label: 'Alkalinity'
+    label: 'Alkalinity',
+  
   },
   {
     id: 'calcium',
