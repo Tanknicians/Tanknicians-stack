@@ -1,5 +1,5 @@
 import express from "express";
-import { validateRequestBody, ValidatedRequest } from "src/zodTypes";
+import { validateRequestBody, ValidatedRequest } from "../zodTypes";
 import { z } from "zod";
 import { resetPassword } from "./EmailService";
 

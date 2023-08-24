@@ -8,7 +8,7 @@ import {
   ServiceCallRequest,
   serviceCallSchema,
   validateRequestBody,
-} from "src/zodTypes";
+} from "../../zodTypes";
 
 const serviceCallRouter = express.Router();
 serviceCallRouter.use(express.json());
