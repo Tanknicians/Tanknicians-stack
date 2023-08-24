@@ -7,6 +7,7 @@ import {
   uploadServiceCall,
 } from "./MobileService";
 import { authenticateRoleMiddleWare } from "../Authentication/AuthService";
+import { serviceCallCreateSchema, validateRequestBody } from "../zodTypes";
 
 const mobileRouter = express.Router();
 mobileRouter.use(express.json());
@@ -15,12 +16,10 @@ mobileRouter.use(express.json());
 mobileRouter.post(
   "/uploadForm",
   authenticateRoleMiddleWare(["ADMIN", "EMPLOYEE"]),
+  validateRequestBody(serviceCallCreateSchema),
   async (req, res) => {
     try {
-      const input = req.body; // should probably add a types.ts object here
-
-      // add if-else error checking of 'input' and throw specified errors
-
+      const input = req.body; 
       const message = await uploadServiceCall(input); // returns a simple "approved/not approved."
       res.status(200).json({ success: `Form uploaded. Form ${message}.` });
     } catch (error) {
@@ -64,9 +63,6 @@ mobileRouter.get(
   async (req, res) => {
     try {
       const searchString = req.body.search;
-
-      // add if-else error checking of 'searchString' and throw specified errors
-
       const userSearch = searchUsers(searchString);
       res.status(200).json(userSearch);
     } catch (error) {
