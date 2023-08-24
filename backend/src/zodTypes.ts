@@ -16,7 +16,7 @@ export const validateRequestBody =
     }
   };
 
-export const userSchema = z
+export const loginSchema = z
   .object({
     email: z.string({ required_error: "Email is required" }).email(),
     password: z
@@ -30,8 +30,8 @@ export const userSchema = z
   })
   .strict();
 
-export type User = z.infer<typeof userSchema>;
-export type UserRequest = ValidatedRequest<User>;
+export type Login = z.infer<typeof loginSchema>;
+export type LoginRequest = ValidatedRequest<Login>;
 
 export const serviceCallSchema = z.object({
   id: z.number(),
