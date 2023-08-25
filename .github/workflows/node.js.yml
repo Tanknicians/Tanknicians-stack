@@ -39,7 +39,9 @@ jobs:
       - name: Build application
         working-directory: backend
         run: npm run build --if-present
-
+      - name: Generate Prisma
+        working-directory: backend
+        run: npm run generate
       - name: Run database migrations
         working-directory: backend
         run: npx prisma migrate deploy
