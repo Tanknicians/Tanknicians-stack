@@ -42,9 +42,9 @@ export async function deleteOne(id: number) {
   }
 }
 
-export async function search(search: string) {
+export async function search(search: string, page: number) {
   try {
-    const searchData = loginDB.searchByString(search);
+    const searchData = loginDB.searchByString(search, page);
     if (!searchData) {
       throw new Error("No searchUser from search found.");
     }

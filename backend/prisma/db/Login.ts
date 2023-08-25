@@ -1,4 +1,5 @@
 import { Login, PrismaClient, Role } from '@prisma/client';
+import { number } from 'zod';
 const prisma = new PrismaClient();
 
 // CREATE
@@ -52,8 +53,10 @@ export async function deleteLogin(id: number) {
 }
 
 // SEARCH
-export async function searchByString(search: String) {
+export async function searchByString(search: String, page: number) {
   return await prisma.login.findMany({
+    skip: (page-1) * 25,
+    take: 25,
     where: {
       OR: [
         { email: { contains: String(search) } },
@@ -65,10 +68,12 @@ export async function searchByString(search: String) {
 }
 
 
-
 // ALL
-export async function getAll() {
-  return await prisma.login.findMany();
+export async function getAll(page: number) {
+  return await prisma.login.findMany({
+    skip: (page-1) * 25,
+    take: 25
+  });
 }
 
 export * as loginDB from './Login';
