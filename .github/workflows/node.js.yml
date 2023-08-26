@@ -8,6 +8,13 @@ on:
 
 jobs:
   test:
+    env:
+          DATABASE_URL: mysql://prisma:prisma@localhost:3306/prisma
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          JWT_REFRESH_SECRET: ${{ secrets.JWT_REFRESH_SECRET }}
+          EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
+          EMAIL_USERNAME: ${{ secrets.EMAIL_USERNAME }}
+          TEST_EMAIL: ${{ secrets.TEST_EMAIL }}
     runs-on: ubuntu-latest
 
     strategy:
@@ -39,7 +46,9 @@ jobs:
       - name: Build application
         working-directory: backend
         run: npm run build --if-present
-
+      - name: Generate Prisma
+        working-directory: backend
+        run: npm run generate
       - name: Run database migrations
         working-directory: backend
         run: npx prisma migrate deploy
@@ -49,10 +58,3 @@ jobs:
       - name: Run tests
         working-directory: backend
         run: npm test
-        env:
-          DATABASE_URL: mysql://prisma:prisma@localhost:3306/prisma
-          JWT_SECRET: ${{ secrets.JWT_SECRET }}
-          JWT_REFRESH_SECRET: ${{ secrets.JWT_REFRESH_SECRET }}
-          EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
-          EMAIL_USERNAME: ${{ secrets.EMAIL_USERNAME }}
-          TEST_EMAIL: ${{ secrets.TEST_EMAIL }}
