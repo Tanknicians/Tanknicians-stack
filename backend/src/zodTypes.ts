@@ -33,6 +33,10 @@ export const loginSchema = z
 export type Login = z.infer<typeof loginSchema>;
 export type LoginRequest = ValidatedRequest<Login>;
 
+export const authLogin = loginSchema.omit({ role: true });
+export type AuthLogin = z.infer<typeof authLogin>;
+export type AuthLoginRequest = ValidatedRequest<AuthLogin>;
+
 export const serviceCallSchema = z.object({
   id: z.number(),
   isApproved: z.boolean().optional(),
@@ -75,3 +79,7 @@ export const serviceCallCreateSchema = serviceCallSchema.omit({ id: true });
 
 export type ServiceCallCreate = z.infer<typeof serviceCallCreateSchema>;
 export type ServiceCallCreateRequest = ValidatedRequest<ServiceCallCreate>;
+
+export const emailSchema = z.object({ email: z.string().email() });
+export type Email = z.infer<typeof emailSchema>;
+export type EmailRequest = ValidatedRequest<Email>;

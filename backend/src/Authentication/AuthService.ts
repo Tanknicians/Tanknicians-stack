@@ -11,15 +11,9 @@ import { loginDB } from "../../prisma/db/Login";
 import { Request, Response, NextFunction } from "express";
 import { RegisterInput } from "../types";
 import { JwtPayload } from "jsonwebtoken";
-import { loginSchema, ValidatedRequest } from "src/zodTypes";
-import { z } from "zod";
+import { AuthLogin } from "./AuthRoutes";
 
-const authLogin = loginSchema.omit({ role: true });
-type AuthLogin = z.infer<typeof authLogin>;
-export type LoginRequest = ValidatedRequest<AuthLogin>;
-
-export async function login(req: LoginRequest, res: Response) {
-  const login = req.body;
+export async function login(login: AuthLogin, res: Response) {
   const savedCredentials = await loginDB.read(login.email);
 
   // Confirm login credentials existed in full in DB
@@ -105,10 +99,11 @@ export async function register(req: Request, res: Response) {
 }
 
 // Generate a new access token using a refresh token
-export async function refresh(req: Request, res: Response) {
-  const email = req.body.email;
-  const refreshToken = req.cookies.jwt;
-
+export async function refresh(
+  email: string,
+  refreshToken: string,
+  res: Response,
+) {
   try {
     verifyRefreshToken(refreshToken);
   } catch (error) {

@@ -1,5 +1,15 @@
 import * as AuthService from "./AuthService";
-import express from "express";
+import express, { NextFunction, Response, Request } from "express";
+import {
+  authLogin,
+  AuthLoginRequest,
+  EmailRequest,
+  emailSchema,
+  validateRequestBody,
+} from "src/zodTypes";
+import { loginSchema, ValidatedRequest } from "src/zodTypes";
+import { z } from "zod";
+import emailRouter from "src/EmailService/EmailRoutes";
 
 const authRouter = express.Router();
 
@@ -7,15 +17,19 @@ const authRouter = express.Router();
 authRouter.use(express.json());
 
 // Login route
-authRouter.post("/login", async (req, res) => {
-  try {
-    await AuthService.login(req, res);
-  } catch (error) {
-    res
-      .status(500)
-      .json({ error: "An error occurred with the login function." });
-  }
-});
+authRouter.post(
+  "/login",
+  validateRequestBody(authLogin),
+  async (req: AuthLoginRequest, res) => {
+    try {
+      await AuthService.login(req.body, res);
+    } catch (error) {
+      res
+        .status(500)
+        .json({ error: "An error occurred with the login function." });
+    }
+  },
+);
 
 // Register route
 authRouter.post("/register", async (req, res) => {
@@ -28,15 +42,29 @@ authRouter.post("/register", async (req, res) => {
   }
 });
 
-// Refresh route
-authRouter.post("/refresh", async (req, res) => {
+const validateJwtToken = (req: Request, res: Response, next: NextFunction) => {
   try {
-    await AuthService.refresh(req, res);
+    z.string().parse(req.cookies.jwt);
+    next();
   } catch (error) {
-    res
-      .status(500)
-      .json({ error: "An error occurred with the refresh function." });
+    res.status(400).json({ error: "Invalid refresh token." });
   }
-});
+};
+
+// Refresh route
+authRouter.post(
+  "/refresh",
+  validateRequestBody(emailSchema),
+  validateJwtToken,
+  async (req: EmailRequest, res) => {
+    try {
+      await AuthService.refresh(req.body.email, req.cookies.jwt, res);
+    } catch (error) {
+      res
+        .status(500)
+        .json({ error: "An error occurred with the refresh function." });
+    }
+  },
+);
 
 export default authRouter;
