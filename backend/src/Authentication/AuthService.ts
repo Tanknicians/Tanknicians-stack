@@ -9,11 +9,17 @@ import {
 
 import { loginDB } from "../../prisma/db/Login";
 import { Request, Response, NextFunction } from "express";
-import { LoginInput, RegisterInput } from "../types";
+import { RegisterInput } from "../types";
 import { JwtPayload } from "jsonwebtoken";
+import { loginSchema, ValidatedRequest } from "src/zodTypes";
+import { z } from "zod";
 
-export async function login(req: Request, res: Response) {
-  const login = req.body as LoginInput;
+const authLogin = loginSchema.omit({ role: true });
+type AuthLogin = z.infer<typeof authLogin>;
+export type LoginRequest = ValidatedRequest<AuthLogin>;
+
+export async function login(req: LoginRequest, res: Response) {
+  const login = req.body;
   const savedCredentials = await loginDB.read(login.email);
 
   // Confirm login credentials existed in full in DB

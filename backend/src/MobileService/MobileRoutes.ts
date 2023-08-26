@@ -1,7 +1,5 @@
 import express from "express";
-import {
-  uploadServiceCall,
-} from "./MobileService";
+import { uploadServiceCall } from "./MobileService";
 import { authenticateRoleMiddleWare } from "../Authentication/AuthService";
 import {
   serviceCallCreateSchema,
