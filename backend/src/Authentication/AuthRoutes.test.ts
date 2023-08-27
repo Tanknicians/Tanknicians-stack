@@ -4,8 +4,8 @@ import { AuthLogin, AuthLoginRequest } from "../zodTypes";
 
 // Create a mock request object
 const mockLogin = {
-    email: "testemail@gmail.com",
-    password: "hunter2",
+  email: "testemail@gmail.com",
+  password: "hunter2",
 } as AuthLogin;
 
 const mockResponse: Partial<Response> = {
