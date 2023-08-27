@@ -1,13 +1,12 @@
 import { Request, Response } from "express";
 import * as AuthService from "./AuthService";
+import { AuthLogin, AuthLoginRequest } from "../zodTypes";
 
 // Create a mock request object
 const mockLogin = {
-  body: {
     email: "testemail@gmail.com",
     password: "hunter2",
-  },
-} as Request;
+} as AuthLogin;
 
 const mockResponse: Partial<Response> = {
   status: jest.fn().mockReturnThis(),
