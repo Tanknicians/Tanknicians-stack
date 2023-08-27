@@ -6,10 +6,9 @@ import {
   EmailRequest,
   emailSchema,
   validateRequestBody,
-} from "src/zodTypes";
-import { loginSchema, ValidatedRequest } from "src/zodTypes";
+} from "../zodTypes";
+
 import { z } from "zod";
-import emailRouter from "src/EmailService/EmailRoutes";
 
 const authRouter = express.Router();
 

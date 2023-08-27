@@ -11,7 +11,7 @@ import { loginDB } from "../../prisma/db/Login";
 import { Request, Response, NextFunction } from "express";
 import { RegisterInput } from "../types";
 import { JwtPayload } from "jsonwebtoken";
-import { AuthLogin } from "./AuthRoutes";
+import { AuthLogin } from "../zodTypes";
 
 export async function login(login: AuthLogin, res: Response) {
   const savedCredentials = await loginDB.read(login.email);
