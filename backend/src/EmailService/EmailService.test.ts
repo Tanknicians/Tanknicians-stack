@@ -2,6 +2,9 @@ import "./../config";
 import { resetPassword, sendEmail } from "./EmailService";
 
 const testEmail = process.env.TEST_EMAIL;
+if (!testEmail) {
+  throw new Error("TEST_EMAIL not set");
+}
 
 test("send email", async () => {
   expect(testEmail).not.toBeUndefined();
