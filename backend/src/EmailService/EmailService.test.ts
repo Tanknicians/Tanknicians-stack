@@ -3,6 +3,9 @@ import { resetPassword, sendEmail } from "./EmailService";
 
 describe("email service", () => {
   const testEmail = process.env.TEST_EMAIL as string;
+  if (!testEmail) {
+    throw new Error("TEST_EMAIL not defined");
+  }
 
   test("has defined test email", () => {
     expect(testEmail).toBeDefined();

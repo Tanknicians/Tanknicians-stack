@@ -1,18 +1,18 @@
-import { TankMetadata, PrismaClient, TankType } from '@prisma/client';
+import { TankMetadata, PrismaClient, TankType } from "@prisma/client";
 const prisma = new PrismaClient();
 
 // CREATE
-export async function create(tank: Omit<TankMetadata, 'id'>) {
-  const {customerId, ...tankData } = tank;
+export async function create(tank: Omit<TankMetadata, "id">) {
+  const { customerId, ...tankData } = tank;
   await prisma.tankMetadata.create({
     data: {
       ...tankData,
       Customer: {
         connect: {
-          id: customerId
-        }
-      }
-    }
+          id: customerId,
+        },
+      },
+    },
   });
 }
 
@@ -20,16 +20,16 @@ export async function create(tank: Omit<TankMetadata, 'id'>) {
 export async function read(id: number) {
   return await prisma.tankMetadata.findUnique({
     where: {
-      id: id
-    }
+      id: id,
+    },
   });
 }
 
 export async function readTanksByUserId(customerId: number) {
   return await prisma.tankMetadata.findMany({
     where: {
-      customerId: customerId
-    }
+      customerId: customerId,
+    },
   });
 }
 
@@ -37,9 +37,9 @@ export async function readTanksByUserId(customerId: number) {
 export async function update(tank: TankMetadata) {
   await prisma.tankMetadata.update({
     where: {
-      id: tank.id
+      id: tank.id,
     },
-    data: tank
+    data: tank,
   });
 }
 
@@ -48,8 +48,8 @@ export async function update(tank: TankMetadata) {
 export async function deleteTankMetadata(id: number) {
   await prisma.tankMetadata.delete({
     where: {
-      id: id
-    }
+      id: id,
+    },
   });
 }
 
@@ -59,9 +59,9 @@ export async function searchByString(search: string) {
     where: {
       OR: [
         { description: { contains: search } },
-        { type: { equals: search.toUpperCase() as TankType } }
-      ]
-    }
+        { type: { equals: search.toUpperCase() as TankType } },
+      ],
+    },
   });
 }
 
@@ -77,11 +77,9 @@ export async function searchByDateTime(startDate: Date, endDate: Date) {
   });
 }
 
-
-
 // ALL
 export async function getAll() {
   return await prisma.tankMetadata.findMany();
 }
 
-export * as tankDB from './TankMetadata';
+export * as tankDB from "./TankMetadata";
