@@ -2,7 +2,7 @@ import "./../config";
 import { resetPassword, sendEmail } from "./EmailService";
 
 describe("email service", () => {
-  const testEmail = process.env.TEST_EMAIL as string;
+  const testEmail = process.env.TEST_EMAIL;
   if (!testEmail) {
     throw new Error("TEST_EMAIL not defined");
   }
