@@ -17,8 +17,7 @@ export const validateRequestBody =
 export const loginSchema = z
   .object({
     email: z.string({ required_error: "Email is required" }).email(),
-    password: z
-      .string({ required_error: "Password is required" }),
+    password: z.string({ required_error: "Password is required" }),
     role: z.enum(["ADMIN", "EMPLOYEE", "CUSTOMER"], {
       errorMap: () => ({
         message: "Role must be ADMIN, EMPLOYEE, or CUSTOMER",
