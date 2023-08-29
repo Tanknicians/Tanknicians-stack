@@ -36,6 +36,7 @@ userRouter.get(
   },
 );
 
+// Read all Users and Tanks
 userRouter.get(
   "/getAllUsersAndTanks",
   authenticateRoleMiddleWare(["ADMIN", "EMPLOYEE"]),
