@@ -62,16 +62,16 @@ export const defaultServiceFormValues: Partial<ServiceFormData> = {
 // after having input
 export const serviceFormSchema = z.object({
   alkalinity: z.number({
-    required_error: 'Alkalinity is required',
+    required_error: 'Alkalinity reading is required*'
   }),
   calcium: z.number({
-    required_error: 'Calcium is required',
+    required_error: 'Calcium reading is required*'
   }),
   nitrate: z.number({
-    required_error: 'Nitrate is required',
+    required_error: 'Nitrate reading is required*'
   }),
   phosphate: z.number({
-    required_error: 'Phosphate is required',
+    required_error: 'Phosphate reading is required*'
   }),
   ATOOperational: z.boolean(),
   ATOReservoirFilled: z.boolean(),
@@ -138,8 +138,7 @@ export const serviceFormFieldQuestionsText: ServiceFormFieldQuestion[] = [
 export const serviceFormFieldQuestionsNumeric: ServiceFormFieldQuestion[] = [
   {
     id: 'alkalinity',
-    label: 'Alkalinity',
-  
+    label: 'Alkalinity'
   },
   {
     id: 'calcium',

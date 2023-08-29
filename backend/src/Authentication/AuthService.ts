@@ -1,4 +1,4 @@
-import * as bcrypt from "bcryptjs";
+import * as bcrypt from 'bcryptjs';
 
 import {
   generateToken,
@@ -7,10 +7,10 @@ import {
   verifyToken
 } from '../TokenGenerator';
 
-import { loginDB } from "../../prisma/db/Login";
-import { Request, Response, NextFunction } from "express";
-import { RegisterInput } from "../types";
-import { AuthLogin } from "../zodTypes";
+import { loginDB } from '../../prisma/db/Login';
+import { Request, Response, NextFunction } from 'express';
+import { RegisterInput } from '../types';
+import { AuthLogin } from '../zodTypes';
 
 export async function login(login: AuthLogin, res: Response) {
   const savedCredentials = await loginDB.read(login.email);
@@ -101,8 +101,9 @@ export async function register(req: Request, res: Response) {
 export async function refresh(
   email: string,
   refreshToken: string,
-  res: Response,
+  res: Response
 ) {
+  console.log('refreshing token');
   try {
     verifyRefreshToken(refreshToken);
   } catch (error) {

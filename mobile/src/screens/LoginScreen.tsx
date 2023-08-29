@@ -77,12 +77,15 @@ const LoginScreen = () => {
           errorMessage: 'No Server Response',
           isLoginError: true
         });
-      } else if (err?.status === 400) {
-        setLoginError({ errorMessage: err.data?.message, isLoginError: true });
-      } else if (err?.status === 401) {
-        setLoginError({ errorMessage: err.data?.message, isLoginError: true });
       } else {
-        setLoginError({ errorMessage: err.data?.message, isLoginError: true });
+        console.log(
+          `Login error ${err.status}: `,
+          err.data?.error.issues[0].message
+        );
+        setLoginError({
+          errorMessage: err.data?.error.issues[0].message,
+          isLoginError: true
+        });
       }
     }
   };
@@ -196,7 +199,8 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: SECONDARY_COLOR
+    backgroundColor: SECONDARY_COLOR,
+    position: 'relative'
   },
   title: {
     fontWeight: 'bold',

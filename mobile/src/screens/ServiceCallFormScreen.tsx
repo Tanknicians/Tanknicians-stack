@@ -92,12 +92,11 @@ const ServiceCallForm = ({ navigation }: Props) => {
       if (!err?.status) {
         // isLoading: true until timeout occurs
         console.log('No Server Response');
-      } else if (err?.status === 400) {
-        console.log(err.data?.message);
-      } else if (err?.status === 401) {
-        console.log(err.data?.message);
       } else {
-        console.log(err.data?.message);
+        console.log(
+          `Login error ${err.status}: `,
+          err.data?.error.issues[0].message
+        );
       }
     }
   };
@@ -212,7 +211,7 @@ const ServiceCallForm = ({ navigation }: Props) => {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar style='light' />
-      {isLoading && <LoadingSpinner />}
+      {/* {isLoading && <LoadingSpinner />} */}
       <View style={styles.headerContainer}>
         <Text style={styles.header}>Service-Call Form</Text>
       </View>
@@ -242,6 +241,7 @@ const ServiceCallForm = ({ navigation }: Props) => {
           <TouchableOpacity
             onPress={handleSubmit(onSubmit)}
             style={styles.submitButton}
+            disabled={isLoading}
           >
             <Text style={styles.submitButtonText}>Submit</Text>
           </TouchableOpacity>

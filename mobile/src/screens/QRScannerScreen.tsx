@@ -107,8 +107,10 @@ const QRScannerScreen = ({ navigation }: Props) => {
             showAnimatedLine
             animatedLineColor={TERTIARY_COLOR}
           />
+          <View style={styles.headerContainer}>
+            <Text style={styles.header}>Scan Tank QR Code</Text>
+          </View>
           <View style={styles.overlay}>
-            <Text style={styles.QRScanPromptText}>Scan Tank QR Code</Text>
             <TouchableOpacity onPress={toggleCameraType}>
               <Ionicons
                 name='camera-reverse-outline'
@@ -142,7 +144,8 @@ const styles = StyleSheet.create({
   barcodeContainer: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    position: 'relative'
   },
   scanner: {
     ...StyleSheet.absoluteFillObject,
@@ -150,9 +153,9 @@ const styles = StyleSheet.create({
   },
   overlay: {
     flex: 1,
-    backgroundColor: '',
+    flexDirection: 'column',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-end',
     marginTop: 60,
     marginBottom: '10%',
     padding: 16
@@ -171,11 +174,19 @@ const styles = StyleSheet.create({
     color: TERTIARY_COLOR,
     textAlign: 'center'
   },
-  QRScanPromptText: {
-    fontSize: 34,
-    color: TERTIARY_COLOR,
+  headerContainer: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
+    position: 'absolute',
+    backgroundColor: SECONDARY_COLOR
+  },
+  header: {
+    fontStyle: 'italic',
     fontWeight: 'bold',
-    textAlign: 'center',
-    zIndex: 10
+    fontSize: 34,
+    color: '#F3FAFF',
+    paddingBottom: 15
   }
 });
