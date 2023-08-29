@@ -1,7 +1,14 @@
 import express from "express";
 import * as ServiceCallService from "./ServiceCallService";
-import { ServiceCall } from "@prisma/client";
 import { authenticateRoleMiddleWare } from "../../Authentication/AuthService";
+import {
+  ServiceCall,
+  ServiceCallCreateRequest,
+  serviceCallCreateSchema,
+  ServiceCallRequest,
+  serviceCallSchema,
+  validateRequestBody,
+} from "../../zodTypes";
 
 const serviceCallRouter = express.Router();
 serviceCallRouter.use(express.json());
@@ -10,7 +17,8 @@ serviceCallRouter.use(express.json());
 serviceCallRouter.post(
   "/",
   authenticateRoleMiddleWare(["EMPLOYEE"]),
-  async (req, res) => {
+  validateRequestBody(serviceCallCreateSchema),
+  async (req: ServiceCallCreateRequest, res) => {
     try {
       const input = req.body;
       const result = await ServiceCallService.create(input);
@@ -40,13 +48,15 @@ serviceCallRouter.get(
 serviceCallRouter.put(
   "/:id",
   authenticateRoleMiddleWare(["ADMIN"]),
-  async (req, res) => {
+  validateRequestBody(serviceCallSchema),
+  async (req: ServiceCallRequest, res) => {
     try {
-      const id = req.params.id;
+      const id = parseInt(req.params.id);
       const input = req.body;
       const serviceCallData: ServiceCall = {
-        id,
         ...input,
+        //we are just going to take the id from the url, but right now we also request it in the body. TODO: later
+        id,
       };
       const result = await ServiceCallService.update(serviceCallData);
       res.json(result);

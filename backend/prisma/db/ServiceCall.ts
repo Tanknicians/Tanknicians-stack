@@ -1,19 +1,20 @@
-import { ServiceCall, PrismaClient } from '@prisma/client';
+import { PrismaClient } from "@prisma/client";
+import { ServiceCall, ServiceCallCreate } from "src/zodTypes";
 const prisma = new PrismaClient();
 
 // CREATE
-export async function create(form: Omit<ServiceCall, 'id'>) {
+export async function create(form: ServiceCallCreate) {
   const { employeeId, tankId, ...formData } = form;
   await prisma.serviceCall.create({
     data: {
       ...formData,
       Employee: {
-        connect: { id: employeeId }
+        connect: { id: employeeId },
       },
       TankMetadata: {
-        connect: { id: tankId }
-      }
-    }
+        connect: { id: tankId },
+      },
+    },
   });
 }
 
@@ -21,8 +22,8 @@ export async function create(form: Omit<ServiceCall, 'id'>) {
 export async function read(id: number) {
   return await prisma.serviceCall.findUnique({
     where: {
-      id: id
-    }
+      id: id,
+    },
   });
 }
 
@@ -30,12 +31,12 @@ export async function read(id: number) {
 export async function readLatestByTankId(tankId: number) {
   return await prisma.serviceCall.findMany({
     where: {
-      tankId: tankId
+      tankId: tankId,
     },
     orderBy: {
-      id: 'desc'
+      id: "desc",
     },
-    take: 5 // change this for n-service calls to return, currently set >1 to get averages on data
+    take: 5, // change this for n-service calls to return, currently set >1 to get averages on data
   });
 }
 
@@ -43,8 +44,8 @@ export async function readLatestByTankId(tankId: number) {
 export async function readAllByTankId(tankId: number) {
   return await prisma.serviceCall.findMany({
     where: {
-      tankId: tankId
-    }
+      tankId: tankId,
+    },
   });
 }
 
@@ -52,9 +53,9 @@ export async function readAllByTankId(tankId: number) {
 export async function update(serviceCall: ServiceCall) {
   await prisma.serviceCall.update({
     where: {
-      id: serviceCall.id
+      id: serviceCall.id,
     },
-    data: serviceCall
+    data: serviceCall,
   });
 }
 
@@ -63,8 +64,8 @@ export async function update(serviceCall: ServiceCall) {
 export async function deleteServiceCall(id: number) {
   await prisma.serviceCall.delete({
     where: {
-      id: id
-    }
+      id: id,
+    },
   });
 }
 
@@ -74,9 +75,9 @@ export async function searchByString(search: String) {
     where: {
       OR: [
         { customerRequest: { contains: String(search) } },
-        { employeeNotes: { contains: String(search) } }
-      ]
-    }
+        { employeeNotes: { contains: String(search) } },
+      ],
+    },
   });
 }
 
@@ -86,9 +87,9 @@ export async function searchByDateTime(startDate: Date, endDate: Date) {
     where: {
       createdOn: {
         gte: startDate,
-        lte: endDate
-      }
-    }
+        lte: endDate,
+      },
+    },
   });
 }
 
@@ -99,4 +100,4 @@ export async function getAll() {
 
 // SEARCH (needs to be implemented)
 
-export * as serviceCallDB from './ServiceCall';
+export * as serviceCallDB from "./ServiceCall";

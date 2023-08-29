@@ -1,5 +1,5 @@
 import * as Prisma from "@prisma/client";
-import * as bcrypt from "bcrypt";
+import * as bcrypt from "bcryptjs";
 import { loginDB } from "./../../../prisma/db/Login";
 
 export async function create(login: Omit<Prisma.Login, "id">) {
@@ -42,9 +42,9 @@ export async function deleteOne(id: number) {
   }
 }
 
-export async function search(search: string) {
+export async function search(search: string, page: number) {
   try {
-    const searchData = loginDB.searchByString(search);
+    const searchData = loginDB.searchByString(search, page);
     if (!searchData) {
       throw new Error("No searchUser from search found.");
     }

@@ -1,18 +1,26 @@
 import "./../config";
 import { resetPassword, sendEmail } from "./EmailService";
 
-const testEmail = process.env.TEST_EMAIL;
+describe("email service", () => {
+  const testEmail = process.env.TEST_EMAIL;
+  if (!testEmail) {
+    throw new Error("TEST_EMAIL not defined");
+  }
 
-test("send email", async () => {
-  expect(testEmail).not.toBeUndefined();
-  if (testEmail === undefined) throw new Error("TEST_EMAIL not set");
-  const res = await sendEmail(testEmail, "Test Email", "This is a test email.");
-  expect(res.includes("Email sent:"));
-});
+  test("has defined test email", () => {
+    expect(testEmail).toBeDefined();
+  });
 
-test("send reset password", async () => {
-  expect(testEmail).not.toBeUndefined();
-  if (testEmail === undefined) throw new Error("TEST_EMAIL not set");
-  const res = await resetPassword(testEmail);
-  expect(res.includes("Email sent:"));
+  test("can send test emails", async () => {
+    const res = await sendEmail(
+      testEmail,
+      "Test Email",
+      "This is a test email.",
+    );
+    expect(res.includes("Email sent:"));
+  });
+  test("can send reset email", async () => {
+    const res = await resetPassword(testEmail);
+    expect(res.includes("Email sent:"));
+  });
 });

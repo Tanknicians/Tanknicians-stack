@@ -1,12 +1,12 @@
-import { User, PrismaClient } from '@prisma/client';
+import { User, PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 // CREATE
-export async function create(user: Omit<User, 'id'>) {
+export async function create(user: Omit<User, "id">) {
   await prisma.user.create({
     data: {
-      ...user
-    }
+      ...user,
+    },
   });
 }
 
@@ -14,41 +14,41 @@ export async function create(user: Omit<User, 'id'>) {
 export async function read(id: number) {
   return await prisma.user.findUnique({
     where: {
-      id: id
-    }
+      id: id,
+    },
   });
 }
 
 export async function readLoginByUserId(id: number) {
   return await prisma.user.findUnique({
     where: {
-      id: id
+      id: id,
     },
     select: {
-      login: true
-    }
+      login: true,
+    },
   });
 }
 
 export async function readEmployeeServiceCallsByUserId(id: number) {
   return await prisma.user.findMany({
     where: {
-      id: id
+      id: id,
     },
     select: {
-      EmployeeServiceCalls: true
-    }
+      EmployeeServiceCalls: true,
+    },
   });
 }
 
 export async function readTankMetadataByUserId(id: number) {
   return await prisma.user.findMany({
     where: {
-      id: id
+      id: id,
     },
     select: {
-      OwnedTanks: true
-    }
+      OwnedTanks: true,
+    },
   });
 }
 
@@ -56,9 +56,9 @@ export async function readTankMetadataByUserId(id: number) {
 export async function update(user: User) {
   await prisma.user.update({
     where: {
-      id: user.id
+      id: user.id,
     },
-    data: user
+    data: user,
   });
 }
 
@@ -67,8 +67,8 @@ export async function update(user: User) {
 export async function deleteUser(id: number) {
   await prisma.user.delete({
     where: {
-      id: id
-    }
+      id: id,
+    },
   });
 }
 
@@ -81,9 +81,9 @@ export async function searchByString(search: String) {
         { middleName: { contains: String(search) } },
         { lastName: { contains: String(search) } },
         { address: { contains: String(search) } },
-        { phone: { contains: String(search) } }
-      ]
-    }
+        { phone: { contains: String(search) } },
+      ],
+    },
   });
 }
 
@@ -92,4 +92,4 @@ export async function getAll() {
   return await prisma.user.findMany();
 }
 
-export * as userDB from './User';
+export * as userDB from "./User";

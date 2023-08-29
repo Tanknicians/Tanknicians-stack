@@ -1,4 +1,4 @@
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from "bcryptjs";
 
 import {
   generateToken,
@@ -7,13 +7,12 @@ import {
   verifyToken
 } from '../TokenGenerator';
 
-import { loginDB } from '../../prisma/db/Login';
-import { Request, Response, NextFunction } from 'express';
-import { LoginInput, RegisterInput } from '../types';
-import { JwtPayload } from 'jsonwebtoken';
+import { loginDB } from "../../prisma/db/Login";
+import { Request, Response, NextFunction } from "express";
+import { RegisterInput } from "../types";
+import { AuthLogin } from "../zodTypes";
 
-export async function login(req: Request, res: Response) {
-  const login = req.body as LoginInput;
+export async function login(login: AuthLogin, res: Response) {
   const savedCredentials = await loginDB.read(login.email);
 
   // Confirm login credentials existed in full in DB
@@ -99,10 +98,11 @@ export async function register(req: Request, res: Response) {
 }
 
 // Generate a new access token using a refresh token
-export async function refresh(req: Request, res: Response) {
-  const email = req.body.email;
-  const refreshToken = req.cookies.jwt;
-
+export async function refresh(
+  email: string,
+  refreshToken: string,
+  res: Response,
+) {
   try {
     verifyRefreshToken(refreshToken);
   } catch (error) {
@@ -148,7 +148,7 @@ export function authenticateRoleMiddleWare(roles: string[]) {
     } catch (error) {
       return res.status(401).send({ message: 'Invalid token' });
     }
-    const decodedToken: JwtPayload = verifyToken(token);
+    const decodedToken = verifyToken(token);
     if (!roles.includes(decodedToken.data.role)) {
       return res.status(403).send({ message: 'Unauthorized access' });
     }
