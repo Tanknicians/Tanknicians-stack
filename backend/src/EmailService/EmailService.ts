@@ -24,10 +24,9 @@ export async function sendEmail(to: string, subject: string, text: string) {
   return new Promise<string>((resolve, reject) => {
     transporter.sendMail(mailOptions, function (error, info) {
       if (error) {
-        console.log(error);
+        console.error(error);
         reject(error);
       } else {
-        console.log(`Email sent: ${info.response}`);
         resolve(info.response);
       }
     });
