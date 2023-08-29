@@ -1,5 +1,19 @@
+import SMTPTransport from "nodemailer/lib/smtp-transport";
 import "./../config";
 import { resetPassword, sendEmail } from "./EmailService";
+
+jest.mock("nodemailer", () => ({
+  // return Email sent:
+  createTransport: () => ({
+    sendMail: (
+      _: unknown,
+      cb: (
+        err: Error | null,
+        info: Partial<SMTPTransport.SentMessageInfo>,
+      ) => void,
+    ) => cb(null, { response: "Email sent:" }),
+  }),
+}));
 
 describe("email service", () => {
   const testEmail = process.env.TEST_EMAIL;
