@@ -39,15 +39,16 @@ userRouter.get(
 userRouter.get(
   "/getAllUsersAndTanks",
   authenticateRoleMiddleWare(["ADMIN", "EMPLOYEE"]),
-  async (_req, res) => {
+  async (req, res) => {
     try {
-      // userservice that gets ALL users and ALL their tanks
-      
+      const includeTanks = req.params.includeTanks;
+      const result = await UserService.readAll(!!includeTanks);
+      res.json(result);
     } catch (error) {
-      res.status(500).json({error: "Failed to get Users and Tanks"});
+      res.status(500).json({ error: "Failed to get Users and Tanks" });
     }
   },
-)
+);
 
 // Update User
 userRouter.put(

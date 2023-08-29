@@ -22,6 +22,15 @@ export async function read(id: number) {
   }
 }
 
+export async function readAll(includeTanks?: boolean) {
+  try {
+    const users = await userDB.getAllUsersAndTanks(!!includeTanks);
+    return users;
+  } catch (e) {
+    throw new Error("An error occurred during readAll.");
+  }
+}
+
 export async function update(user: Prisma.User) {
   try {
     await userDB.update(user);
