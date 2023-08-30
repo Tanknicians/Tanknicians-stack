@@ -103,6 +103,7 @@ export async function refresh(
   refreshToken: string,
   res: Response,
 ) {
+  console.log("refreshing token");
   try {
     verifyRefreshToken(refreshToken);
   } catch (error) {
