@@ -92,4 +92,13 @@ export async function getAll() {
   return await prisma.user.findMany();
 }
 
+// ALL + OwnedTanks
+export async function getAllUsersAndTanks(includeTanks: boolean) {
+  return await prisma.user.findMany({
+    include: {
+      OwnedTanks: includeTanks
+    }
+  });
+}
+
 export * as userDB from "./User";
