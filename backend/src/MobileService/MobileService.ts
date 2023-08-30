@@ -3,12 +3,12 @@ import { ServiceCall } from "../zodTypes";
 
 export async function uploadServiceCall(serviceCall: ServiceCall) {
   const submitServiceCall = checkServiceCall(serviceCall);
-  const approvedMessage = serviceCall.isApproved ? 'approved' : 'not approved';
+  const approvedMessage = serviceCall.isApproved ? "approved" : "not approved";
   try {
     await serviceCallDB.create(submitServiceCall);
     return approvedMessage;
   } catch (e) {
-    throw new Error('An error occurred during create.');
+    throw new Error("An error occurred during create.");
   }
 }
 
@@ -46,7 +46,7 @@ const paramLimits = {
   nitrateMin: 1,
   nitrateMax: 20,
   phosphateMin: 0.03,
-  phosphateMax: 0.24
+  phosphateMax: 0.24,
 };
 
 // removed unused code

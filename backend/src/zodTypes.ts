@@ -1,6 +1,6 @@
-import { Schema, z } from 'zod';
-import { NextFunction, Response, Request } from 'express';
-import { ParamsDictionary } from 'express-serve-static-core';
+import { Schema, z } from "zod";
+import { NextFunction, Response, Request } from "express";
+import { ParamsDictionary } from "express-serve-static-core";
 
 export type ValidatedRequest<T> = Request<ParamsDictionary, unknown, T>;
 
@@ -16,13 +16,13 @@ export const validateRequestBody =
 
 export const loginSchema = z
   .object({
-    email: z.string({ required_error: 'Email is required' }).email(),
-    password: z.string({ required_error: 'Password is required' }),
-    role: z.enum(['ADMIN', 'EMPLOYEE', 'CUSTOMER'], {
+    email: z.string({ required_error: "Email is required" }).email(),
+    password: z.string({ required_error: "Password is required" }),
+    role: z.enum(["ADMIN", "EMPLOYEE", "CUSTOMER"], {
       errorMap: () => ({
-        message: 'Role must be ADMIN, EMPLOYEE, or CUSTOMER'
-      })
-    })
+        message: "Role must be ADMIN, EMPLOYEE, or CUSTOMER",
+      }),
+    }),
   })
   .strict();
 
@@ -65,7 +65,7 @@ export const serviceCallSchema = z.object({
   pestCPresent: z.boolean(),
   pestDPresent: z.boolean(),
   employeeId: z.number().int(),
-  tankId: z.number().int()
+  tankId: z.number().int(),
 });
 
 export type ServiceCall = z.infer<typeof serviceCallSchema>;

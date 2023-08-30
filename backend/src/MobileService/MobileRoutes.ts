@@ -21,9 +21,9 @@ mobileRouter.post(
       const message = await uploadServiceCall(input);
       res.status(200).json({ success: `Form uploaded. Form ${message}.` });
     } catch (error) {
-      res.status(500).json({ error: 'Failed to upload form.' });
+      res.status(500).json({ error: "Failed to upload form." });
     }
-  }
+  },
 );
 
 export default mobileRouter;
