@@ -51,9 +51,9 @@ export async function deleteOne(id: number) {
 
 // This looks to be an expensive search, might be worth
 // monitoring for slowdown once db grows.
-export async function search(search: string) {
+export async function search(search: string, page: number) {
   try {
-    const searchData = userDB.searchByString(search);
+    const searchData = userDB.searchByString(search, page);
     if (!searchData) {
       throw new Error("No User from search found.");
     }
