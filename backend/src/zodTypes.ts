@@ -65,7 +65,7 @@ export const serviceCallSchema = z.object({
   pestCPresent: z.boolean(),
   pestDPresent: z.boolean(),
   employeeId: z.number().int(),
-  tankId: z.number().int(),
+  tankId: z.number().int().optional(),
 });
 
 export type ServiceCall = z.infer<typeof serviceCallSchema>;
