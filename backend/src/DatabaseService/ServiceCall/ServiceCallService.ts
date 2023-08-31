@@ -40,9 +40,9 @@ export async function deleteOne(id: number) {
   }
 }
 
-export async function search(search: string) {
+export async function search(search: string, page: number) {
   try {
-    const searchData = serviceCallDB.searchByString(search);
+    const searchData = serviceCallDB.searchByString(search, page);
     if (!searchData) {
       throw new Error("No Service Call from search found.");
     }

@@ -93,7 +93,8 @@ userRouter.get(
   async (req, res) => {
     try {
       const searchString = req.params.searchString;
-      const result = await UserService.search(searchString);
+      const pageNumber = req.body.page;
+      const result = await UserService.search(searchString, pageNumber);
       res.json(result);
     } catch (error) {
       res.status(500).json({ error: "Failed to search User" });
