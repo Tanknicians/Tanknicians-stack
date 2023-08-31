@@ -15,7 +15,7 @@ export async function uploadServiceCall(serviceCall: ServiceCall) {
 // run checks on the service call and make sure parameters are valid
 function checkServiceCall(serviceCall: ServiceCall): ServiceCall {
 
-  if (serviceCall.tankId == null || serviceCall.tankId == undefined || serviceCall.tankId < 1) {
+  if (serviceCall.tankId == null || serviceCall.tankId === undefined || serviceCall.tankId < 1) {
       serviceCall.tankId = 0;
       serviceCall.isApproved = false;
       return serviceCall;
