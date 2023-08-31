@@ -1,4 +1,5 @@
 import ServiceForm from './DashboardContent/ManagerialTabs/ServiceForm';
+import DefaultChartsTab from './DashboardContent/AnalyticsTabs/DefaultCharts';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import TabPanel from './DashboardContent/TabPanel';
 import Typography from '@mui/material/Typography';
@@ -26,8 +27,8 @@ const headerOptions = [
     id: 'Managerial',
     children: [
       { childId: 'ServiceForm', component: <ServiceForm />, active: 0 },
-      { childId: 'Man tab 2', component: <h1>man tab 2</h1>, active: 1 },
-      { childId: 'Man tab 3', component: <h1>man tab 3</h1>, active: 2 }
+      { childId: 'Manage Employees', component: <h1>search employee by name/phone/etc, or show all employees for crud ops</h1>, active: 1 },
+      { childId: 'Manage Clients', component: <h1>search customers by name/phone/etc, or show all customers for crud ops</h1>, active: 2 }
     ]
   },
   {
@@ -41,9 +42,8 @@ const headerOptions = [
   {
     id: 'Analytics',
     children: [
-      { childId: 'Anal tab 1', component: <h1>Anal tab 1</h1>, active: 0 },
-      { childId: 'Anal tab 2', component: <h1>Anal tab 2</h1>, active: 1 },
-      { childId: 'Anal tab 3', component: <h1>Anal tab 3</h1>, active: 2 }
+      { childId: 'Tank Charts', component: <DefaultChartsTab/>, active: 0 },
+      { childId: 'Custom charts', component: <h1>user defined charts go here</h1>, active: 1 },
     ]
   }
 ];
