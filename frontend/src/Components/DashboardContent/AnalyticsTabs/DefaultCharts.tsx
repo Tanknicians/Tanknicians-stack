@@ -35,7 +35,7 @@ export default function DefaultChartsTab() {
 
     const clientDataObj: ClientData[]= [
         {
-            name: "doe, John",
+            name: "Doe, John",
             phone: 1231231234,
             tanksIDs: [1,2,3,4],
         },
@@ -98,7 +98,7 @@ export default function DefaultChartsTab() {
                     {clientDataObj.map(({ name, tanksIDs}, key) => (
                         <div>
                             <ListItemButton onClick={() => toggleSubMenu(name)} key = {name}>
-                                <ListItemText primary={"Name: " + name } />
+                                <ListItemText primary={name } />
                                 {(name === openItemId) ? <ExpandLess /> : <ExpandMore />}
                             </ListItemButton>
 
