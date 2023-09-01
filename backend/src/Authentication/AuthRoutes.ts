@@ -1,14 +1,16 @@
-import * as AuthService from "./AuthService";
-import express, { NextFunction, Response, Request } from "express";
+import * as AuthService from './AuthService';
+import express, { NextFunction, Response, Request } from 'express';
 import {
   authLogin,
   AuthLoginRequest,
+  authRegister,
+  AuthRegisterRequest,
   EmailRequest,
   emailSchema,
-  validateRequestBody,
-} from "../zodTypes";
+  validateRequestBody
+} from '../zodTypes';
 
-import { z } from "zod";
+import { z } from 'zod';
 
 const authRouter = express.Router();
 
@@ -17,7 +19,7 @@ authRouter.use(express.json());
 
 // Login route
 authRouter.post(
-  "/login",
+  '/login',
   validateRequestBody(authLogin),
   async (req: AuthLoginRequest, res) => {
     try {
@@ -25,34 +27,39 @@ authRouter.post(
     } catch (error) {
       res
         .status(500)
-        .json({ error: "An error occurred with the login function." });
+        .json({ error: 'An error occurred with the login function.' });
     }
-  },
+  }
 );
 
 // Register route
-authRouter.post("/register", async (req, res) => {
-  try {
-    await AuthService.register(req, res);
-  } catch (error) {
-    res
-      .status(500)
-      .json({ error: "An error occurred with the register function." });
+authRouter.post(
+  '/register',
+  validateRequestBody(authRegister),
+  async (req: AuthRegisterRequest, res) => {
+    const register = req.body;
+    try {
+      await AuthService.register(register, res);
+    } catch (error) {
+      res
+        .status(500)
+        .json({ error: 'An error occurred with the register function.' });
+    }
   }
-});
+);
 
 const validateJwtToken = (req: Request, res: Response, next: NextFunction) => {
   try {
     z.string().parse(req.cookies.jwt);
     next();
   } catch (error) {
-    res.status(400).json({ error: "Invalid refresh token." });
+    res.status(400).json({ error: 'Invalid refresh token.' });
   }
 };
 
 // Refresh route
 authRouter.post(
-  "/refresh",
+  '/refresh',
   validateRequestBody(emailSchema),
   validateJwtToken,
   async (req: EmailRequest, res) => {
@@ -61,9 +68,9 @@ authRouter.post(
     } catch (error) {
       res
         .status(500)
-        .json({ error: "An error occurred with the refresh function." });
+        .json({ error: 'An error occurred with the refresh function.' });
     }
-  },
+  }
 );
 
 export default authRouter;
