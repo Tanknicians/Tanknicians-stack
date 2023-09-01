@@ -59,8 +59,16 @@ export async function readByDateTime(tankId: number, startDate: Date, endDate: D
         lte: endDate,
       },
     },
+    select: {
+      createdOn: true,
+      alkalinity: true,
+      calcium: true,
+      nitrate: true,
+      phosphate: true,
+    },
   });
 }
+
 
 // UPDATE
 export async function update(serviceCall: ServiceCall) {
