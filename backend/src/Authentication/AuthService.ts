@@ -9,8 +9,25 @@ import {
 
 import { loginDB } from "../../prisma/db/Login";
 import { Request, Response, NextFunction } from "express";
-import { RegisterInput } from "../types";
-import { AuthLogin } from "../zodTypes";
+import { AuthLogin, AuthRegister } from "../zodTypes";
+import { randomBytes } from "crypto";
+
+// we can modify this for password generating
+// note: length of password is more important than randomness of password in security
+function generateRandomPassword(length: number): string {
+  const charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  const password = [];
+  const randomBytesCount = Math.ceil((length * 3) / 4); // 3 bytes for every 4 characters to ensure randomness
+
+  const randomValues = randomBytes(randomBytesCount);
+
+  for (let i = 0; i < length; i++) {
+    const randomIndex = randomValues.readUInt8(i % randomBytesCount) % charset.length;
+    password.push(charset[randomIndex]);
+  }
+
+  return password.join('');
+}
 
 export async function login(login: AuthLogin, res: Response) {
   const savedCredentials = await loginDB.read(login.email);
@@ -64,8 +81,7 @@ export async function login(login: AuthLogin, res: Response) {
   }
 }
 
-export async function register(req: Request, res: Response) {
-  const registration = req.body as RegisterInput;
+export async function register(registration: AuthRegister, res: Response) {
 
   // Though a role is required, having a string helps more than "null"
   if (registration.role == null) {
@@ -75,17 +91,18 @@ export async function register(req: Request, res: Response) {
     });
   }
 
-  // Not allowed to register an empty password
-  if (!registration.password) {
-    return res.status(400).json({
-      code: "BAD_REQUEST",
-      message: "Password cannot be empty.",
-    });
+  // move the data to a format with a generated password
+  const registerData = {
+    ...registration,
+    password: generateRandomPassword(32)
   }
 
   try {
-    registration.password = await bcrypt.hash(registration.password, 10);
-    await loginDB.create(registration);
+
+    // email the password should go here
+
+    registerData.password = await bcrypt.hash(registerData.password, 10);
+    await loginDB.create(registerData);
     return res.json({ message: "Registration successful" });
   } catch (error) {
     console.error(error);
