@@ -1,12 +1,12 @@
-import { serviceCallDB } from "../../../prisma/db/ServiceCall";
-import { ServiceCall, ServiceCallCreate } from "src/zodTypes";
+import { serviceCallDB } from '../../../prisma/db/ServiceCall';
+import { ServiceCall, ServiceCallCreate } from 'src/zodTypes';
 
 export async function create(serviceCall: ServiceCallCreate) {
   try {
     await serviceCallDB.create(serviceCall);
-    return { message: "Service Call created successfully" };
+    return { message: 'Service Call created successfully' };
   } catch (e) {
-    throw new Error("An error occurred during create.");
+    throw new Error('An error occurred during create.');
   }
 }
 
@@ -18,25 +18,32 @@ export async function read(id: number) {
     }
     return serviceCall;
   } catch (e) {
-    throw new Error("An error occurred during read.");
+    throw new Error('An error occurred during read.');
   }
 }
 
-// 
-export async function readAllByDate(tankId: number, startDate: Date, endDate: Date) {
-
+//
+export async function readAllByDate(
+  tankId: number,
+  startDate: Date,
+  endDate: Date
+) {
   interface ReturnDataSchema {
     tankId: number;
-    alkalinity: [number, Date][];
-    calcium: [number, Date][];
-    nitrate: [number, Date][];
-    phosphate: [number, Date][];
+    alkalinity: { date: Date; value: number }[];
+    calcium: { date: Date; value: number }[];
+    nitrate: { date: Date; value: number }[];
+    phosphate: { date: Date; value: number }[];
   }
 
   try {
-    const serviceCalls = await serviceCallDB.readByDateTime(tankId, startDate, endDate);
+    const serviceCalls = await serviceCallDB.readByDateTime(
+      tankId,
+      startDate,
+      endDate
+    );
     if (serviceCalls === null) {
-      throw new Error(`Service Calls for id: ${tankId} not found.`)
+      throw new Error(`Service Calls for id: ${tankId} not found.`);
     }
 
     const returnData: ReturnDataSchema = {
@@ -45,38 +52,48 @@ export async function readAllByDate(tankId: number, startDate: Date, endDate: Da
       calcium: [],
       nitrate: [],
       phosphate: []
-    }
-  
-    serviceCalls.forEach(serviceCall => {
-      returnData.alkalinity.push([serviceCall.alkalinity, serviceCall.createdOn]);
-      returnData.calcium.push([serviceCall.calcium, serviceCall.createdOn]); 
-      returnData.nitrate.push([serviceCall.nitrate, serviceCall.createdOn]); 
-      returnData.phosphate.push([serviceCall.phosphate, serviceCall.createdOn]);
-    });
-    
-    return returnData;
+    };
 
+    serviceCalls.forEach(serviceCall => {
+      returnData.alkalinity.push({
+        date: serviceCall.createdOn,
+        value: serviceCall.alkalinity
+      });
+      returnData.calcium.push({
+        date: serviceCall.createdOn,
+        value: serviceCall.calcium
+      });
+      returnData.nitrate.push({
+        date: serviceCall.createdOn,
+        value: serviceCall.nitrate
+      });
+      returnData.phosphate.push({
+        date: serviceCall.createdOn,
+        value: serviceCall.phosphate
+      });
+    });
+
+    return JSON.stringify(returnData);
   } catch (e) {
-    throw new Error("An error occurred during read of range.");
+    throw new Error('An error occurred during read of range.');
   }
-  
 }
 
 export async function update(serviceCall: ServiceCall) {
   try {
     await serviceCallDB.update(serviceCall);
-    return { message: "Service Call updated successfully" };
+    return { message: 'Service Call updated successfully' };
   } catch (e) {
-    throw new Error("An error occurred during update.");
+    throw new Error('An error occurred during update.');
   }
 }
 
 export async function deleteOne(id: number) {
   try {
     await serviceCallDB.deleteServiceCall(id);
-    return { message: "Service Call deleted successfully" };
+    return { message: 'Service Call deleted successfully' };
   } catch (e) {
-    throw new Error("An error occurred during delete.");
+    throw new Error('An error occurred during delete.');
   }
 }
 
@@ -84,10 +101,10 @@ export async function search(search: string, page: number) {
   try {
     const searchData = serviceCallDB.searchByString(search, page);
     if (!searchData) {
-      throw new Error("No Service Call from search found.");
+      throw new Error('No Service Call from search found.');
     }
     return searchData;
   } catch (e) {
-    throw new Error("An error occurred during search.");
+    throw new Error('An error occurred during search.');
   }
 }
