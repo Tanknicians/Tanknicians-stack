@@ -44,6 +44,22 @@ serviceCallRouter.get(
   },
 );
 
+serviceCallRouter.get(
+  "/allByTankAndRange",
+  authenticateRoleMiddleWare(["ADMIN"]),
+  async (req, res) => {
+    try {
+      const tankId = req.body.tankId;
+      const start = req.body.start as Date;
+      const end = req.body.end as Date;
+      const result = await ServiceCallService.readAllByDate(tankId, start, end);
+      res.json(result);
+    } catch (error) {
+      res.status(500).json({error: "Failed to read Service Calls by tankID and given date range."})
+    }
+  }
+)
+
 // Update ServiceCall
 serviceCallRouter.put(
   "/:id",
