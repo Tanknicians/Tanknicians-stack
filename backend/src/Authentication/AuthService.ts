@@ -11,21 +11,20 @@ import { loginDB } from "../../prisma/db/Login";
 import { Request, Response, NextFunction } from "express";
 import { AuthLogin, AuthRegister } from "../zodTypes";
 import { randomBytes } from "crypto";
+import { sendEmail } from "src/EmailService/EmailService";
 
 // we can modify this for password generating
 // note: length of password is more important than randomness of password in security
 function generateRandomPassword(length: number): string {
+  // we do NOT need unique characters for a more secure password
   const charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   const password = [];
   const randomBytesCount = Math.ceil((length * 3) / 4); // 3 bytes for every 4 characters to ensure randomness
-
   const randomValues = randomBytes(randomBytesCount);
-
   for (let i = 0; i < length; i++) {
     const randomIndex = randomValues.readUInt8(i % randomBytesCount) % charset.length;
     password.push(charset[randomIndex]);
   }
-
   return password.join('');
 }
 
@@ -83,24 +82,25 @@ export async function login(login: AuthLogin, res: Response) {
 
 export async function register(registration: AuthRegister, res: Response) {
 
-  // Though a role is required, having a string helps more than "null"
-  if (registration.role == null) {
-    return res.status(400).json({
-      code: "BAD_REQUEST",
-      message: "Role cannot be empty.",
-    });
-  }
-
   // move the data to a format with a generated password
   const registerData = {
     ...registration,
+    // generate password on registration, currently set to size of 32 characters
     password: generateRandomPassword(32)
   }
 
   try {
-
-    // email the password should go here
-
+    // email the Registration data
+    const emailText = 
+    `Your email and password combination is: \n
+    EMAIL: ${registerData.email} \n
+    PASSWORD: ${registerData.password} \n
+    
+    If you lose this password, please ask your admin to send a reset email.
+    `
+    // we should find a way to verify that the email was sent
+    await sendEmail(registerData.email, "New Registration", emailText);
+    // after sending, hash/encrypt and send info to database 
     registerData.password = await bcrypt.hash(registerData.password, 10);
     await loginDB.create(registerData);
     return res.json({ message: "Registration successful" });
