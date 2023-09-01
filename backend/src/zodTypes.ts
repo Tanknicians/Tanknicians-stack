@@ -23,15 +23,22 @@ export const loginSchema = z
         message: "Role must be ADMIN, EMPLOYEE, or CUSTOMER",
       }),
     }),
+    userId: z.number({required_error: "Must be a positive integer."}).positive()
   })
   .strict();
 
 export type Login = z.infer<typeof loginSchema>;
 export type LoginRequest = ValidatedRequest<Login>;
 
-export const authLogin = loginSchema.omit({ role: true });
+// this will be used to log-in existing Logins
+export const authLogin = loginSchema.omit({ role: true, userId: true });
 export type AuthLogin = z.infer<typeof authLogin>;
 export type AuthLoginRequest = ValidatedRequest<AuthLogin>;
+
+// this will be used to register new Logins
+export const authRegister = loginSchema.omit({password: true});
+export type AuthRegister = z.infer<typeof authRegister>;
+export type AuthRegisterRequest = ValidatedRequest<AuthRegister>;
 
 export const serviceCallSchema = z.object({
   id: z.number(),
