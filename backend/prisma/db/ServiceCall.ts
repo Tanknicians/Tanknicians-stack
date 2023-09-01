@@ -49,6 +49,19 @@ export async function readAllByTankId(tankId: number) {
   });
 }
 
+// READ range of service calls for a single tank
+export async function readByDateTime(tankId: number, startDate: Date, endDate: Date) {
+  return await prisma.serviceCall.findMany({
+    where: {
+      tankId: tankId,
+      createdOn: {
+        gte: startDate,
+        lte: endDate,
+      },
+    },
+  });
+}
+
 // UPDATE
 export async function update(serviceCall: ServiceCall) {
   await prisma.serviceCall.update({
@@ -83,17 +96,6 @@ export async function searchByString(search: String, page: number) {
   });
 }
 
-// SEARCH by date range
-export async function searchByDateTime(startDate: Date, endDate: Date) {
-  return await prisma.serviceCall.findMany({
-    where: {
-      createdOn: {
-        gte: startDate,
-        lte: endDate,
-      },
-    },
-  });
-}
 
 // ALL
 export async function getAll() {
