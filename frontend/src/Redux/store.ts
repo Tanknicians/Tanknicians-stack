@@ -18,8 +18,7 @@ const persistConfig = {
   key: 'root',
   version: 1,
   storage,
-  whitelist: ['auth'],
-  blacklist: [apiSlice.reducerPath]
+  whitelist: ['auth']
 };
 
 const rootReducer = combineReducers({
