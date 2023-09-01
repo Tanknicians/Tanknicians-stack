@@ -11,7 +11,7 @@ import { loginDB } from '../../prisma/db/Login';
 import { Request, Response, NextFunction } from 'express';
 import { AuthLogin, AuthRegister } from '../zodTypes';
 import { randomBytes } from 'crypto';
-import { sendEmail } from 'src/EmailService/EmailService';
+import { sendEmail } from '../EmailService/EmailService';
 
 // we can modify this for password generating
 // note: length of password is more important than randomness of password in security
