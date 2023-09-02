@@ -29,6 +29,21 @@ export const loginSchema = z
 export type Login = z.infer<typeof loginSchema>;
 export type LoginRequest = ValidatedRequest<Login>;
 
+const tokenData = loginSchema.extend({ id: z.number(), userId: z.number() });
+
+export const tokenSchema = z.object({
+  data: tokenData,
+  isRefreshToken: z.literal(false),
+});
+
+export type Token = z.infer<typeof tokenSchema>;
+
+export const refreshTokenSchema = z.object({
+  data: tokenData,
+  isRefreshToken: z.literal(true),
+});
+export type RefreshToken = z.infer<typeof refreshTokenSchema>;
+
 export const authLogin = loginSchema.omit({ role: true });
 export type AuthLogin = z.infer<typeof authLogin>;
 export type AuthLoginRequest = ValidatedRequest<AuthLogin>;
