@@ -60,12 +60,11 @@ model ServiceCall {
   createdOn  DateTime @default(now())
   billed      Boolean
 
-  customerRequest   String
-  employeeNotes     String
-  notesUpdated      DateTime
-
+  customerRequest   String?
+  employeeNotes     String?
   // adding this to potentially allow messages for whomever needs to see why a service call wasn't approved
-  notApprovedNotes String
+  notApprovedNotes  String?
+  notesUpdated      DateTime?
 
   alkalinity Float
   calcium    Float

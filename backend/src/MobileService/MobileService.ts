@@ -15,7 +15,12 @@ export async function uploadServiceCall(serviceCall: ServiceCall) {
 // run checks on the service call and make sure parameters are valid
 function checkServiceCall(serviceCall: ServiceCall): ServiceCall {
 
-  // Put in function to check if Notes were added to employeeNotes or customerRequest
+  if (
+    serviceCall.employeeNotes ||
+    serviceCall.customerRequest
+  ) {
+    serviceCall.notesUpdated = new Date();
+  }
 
   if (
     serviceCall.tankId == null ||
@@ -26,6 +31,7 @@ function checkServiceCall(serviceCall: ServiceCall): ServiceCall {
     serviceCall.isApproved = false;
     serviceCall.notApprovedNotes =
       "No tankID was recorded. Check QR code for damage.";
+    serviceCall.notesUpdated = new Date();
     return serviceCall;
   }
 
@@ -44,6 +50,7 @@ function checkServiceCall(serviceCall: ServiceCall): ServiceCall {
     serviceCall.isApproved = false;
     serviceCall.notApprovedNotes =
       "One or more of the parameters (Alkalinity, Calcium, Nitrate, and/or Phosphate) outside of acceptable range.";
+    serviceCall.notesUpdated = new Date();
   }
   // return the flagged/unflagged service call
   return serviceCall;
