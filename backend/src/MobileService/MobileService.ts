@@ -14,11 +14,7 @@ export async function uploadServiceCall(serviceCall: ServiceCall) {
 
 // run checks on the service call and make sure parameters are valid
 function checkServiceCall(serviceCall: ServiceCall): ServiceCall {
-
-  if (
-    serviceCall.employeeNotes ||
-    serviceCall.customerRequest
-  ) {
+  if (serviceCall.employeeNotes || serviceCall.customerRequest) {
     serviceCall.notesUpdated = new Date();
   }
 
