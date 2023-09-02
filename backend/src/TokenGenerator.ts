@@ -2,7 +2,7 @@ import * as Prisma from "@prisma/client";
 import * as jwt from "jsonwebtoken";
 import * as dotenv from "dotenv";
 import { randomBytes } from "crypto";
-import { JwtPayload } from "jsonwebtoken";
+
 import {
   RefreshToken,
   refreshTokenSchema,
