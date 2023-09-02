@@ -58,9 +58,14 @@ model ServiceCall {
 
   isApproved Boolean  @default(false) // for admin to approve the ServiceCall
   createdOn  DateTime @default(now())
+  billed      Boolean
 
-  customerRequest String
-  employeeNotes String
+  customerRequest   String
+  employeeNotes     String
+  notesUpdated      DateTime
+
+  // adding this to potentially allow messages for whomever needs to see why a service call wasn't approved
+  notApprovedNotes String
 
   alkalinity Float
   calcium    Float
@@ -80,6 +85,7 @@ model ServiceCall {
   saltCreepCleaned               Boolean
   skimmerCleanedAndOperational   Boolean
   waterChanged                   Boolean
+  waterTestedRecordedDated       Boolean
 
   pestAPresent Boolean
   pestBPresent Boolean

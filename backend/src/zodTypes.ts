@@ -56,6 +56,10 @@ export const serviceCallSchema = z.object({
   customerRequest: z.string(),
   employeeNotes: z.string(),
 
+  notesUpdated: z.date().optional(),
+  // server use only for not-approved notes
+  notApprovedNotes: z.string().optional(),
+
   alkalinity: z.number(),
   calcium: z.number(),
   nitrate: z.number(),
@@ -74,6 +78,7 @@ export const serviceCallSchema = z.object({
   saltCreepCleaned: z.boolean(),
   skimmerCleanedAndOperational: z.boolean(),
   waterChanged: z.boolean(),
+  waterTestedRecordedDated: z.boolean(),
 
   pestAPresent: z.boolean(),
   pestBPresent: z.boolean(),
