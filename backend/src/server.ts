@@ -17,8 +17,11 @@ const corsOptions = {
   origin: "http://localhost:3000",
   credentials: true,
 };
+
 // Allow for web-browser usage
-app.use(cors(corsOptions)).use(httpLogger).use(cookieParser());
+app.use(cors(corsOptions));
+app.use(httpLogger);
+app.use(cookieParser());
 
 // Service endpoints
 app
