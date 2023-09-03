@@ -1,60 +1,60 @@
-import express from "express";
-import * as UserService from "./API";
-import { authenticateRoleMiddleWare } from "../../Authentication/API";
-import { User } from "@prisma/client";
+import express from 'express';
+import * as UserService from './API';
+import { authenticateRoleMiddleWare } from '../../Authentication/API';
+import { User } from '@prisma/client';
 
 const userRouter = express.Router();
 userRouter.use(express.json());
 
 // Create User
 userRouter.post(
-  "/",
-  authenticateRoleMiddleWare(["ADMIN"]),
+  '/',
+  authenticateRoleMiddleWare(['ADMIN']),
   async (req, res) => {
     try {
       const input = req.body;
       const result = await UserService.create(input);
       res.json(result);
     } catch (error) {
-      res.status(500).json({ error: "Failed to create User" });
+      res.status(500).json({ error: 'Failed to create User' });
     }
   },
 );
 
 // Read User
 userRouter.get(
-  "/:id",
-  authenticateRoleMiddleWare(["ADMIN", "EMPLOYEE"]),
+  '/:id',
+  authenticateRoleMiddleWare(['ADMIN', 'EMPLOYEE']),
   async (req, res) => {
     try {
       const id = Number(req.params.id);
       const result = await UserService.read(id);
       res.json(result);
     } catch (error) {
-      res.status(500).json({ error: "Failed to read User" });
+      res.status(500).json({ error: 'Failed to read User' });
     }
   },
 );
 
 // Read all Users and Tanks
 userRouter.get(
-  "/",
-  authenticateRoleMiddleWare(["ADMIN", "EMPLOYEE"]),
+  '/',
+  authenticateRoleMiddleWare(['ADMIN', 'EMPLOYEE']),
   async (req, res) => {
     try {
-      const includeTanks = req.params.includeTanks?.toLowerCase() === "true";
+      const includeTanks = req.params.includeTanks?.toLowerCase() === 'true';
       const result = await UserService.readAll(includeTanks);
       res.json(result);
     } catch (error) {
-      res.status(500).json({ error: "Failed to get Users and Tanks" });
+      res.status(500).json({ error: 'Failed to get Users and Tanks' });
     }
   },
 );
 
 // Update User
 userRouter.put(
-  "/:id",
-  authenticateRoleMiddleWare(["ADMIN"]),
+  '/:id',
+  authenticateRoleMiddleWare(['ADMIN']),
   async (req, res) => {
     try {
       const id = req.params.id;
@@ -66,30 +66,30 @@ userRouter.put(
       const result = await UserService.update(userData);
       res.json(result);
     } catch (error) {
-      res.status(500).json({ error: "Failed to update User" });
+      res.status(500).json({ error: 'Failed to update User' });
     }
   },
 );
 
 // Delete User
 userRouter.delete(
-  "/:id",
-  authenticateRoleMiddleWare(["ADMIN"]),
+  '/:id',
+  authenticateRoleMiddleWare(['ADMIN']),
   async (req, res) => {
     try {
       const id = Number(req.params.id);
       const result = await UserService.deleteOne(id);
       res.json(result);
     } catch (error) {
-      res.status(500).json({ error: "Failed to delete User" });
+      res.status(500).json({ error: 'Failed to delete User' });
     }
   },
 );
 
 // Search User
 userRouter.get(
-  "/search/:searchString",
-  authenticateRoleMiddleWare(["ADMIN", "EMPLOYEE"]),
+  '/search/:searchString',
+  authenticateRoleMiddleWare(['ADMIN', 'EMPLOYEE']),
   async (req, res) => {
     try {
       const searchString = req.params.searchString;
@@ -97,7 +97,7 @@ userRouter.get(
       const result = await UserService.search(searchString, pageNumber);
       res.json(result);
     } catch (error) {
-      res.status(500).json({ error: "Failed to search User" });
+      res.status(500).json({ error: 'Failed to search User' });
     }
   },
 );

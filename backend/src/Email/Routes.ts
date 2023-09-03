@@ -1,11 +1,11 @@
-import express from "express";
-import { validateRequestBody, emailSchema, EmailRequest } from "../zodTypes";
-import { resetPassword } from "./API";
+import express from 'express';
+import { validateRequestBody, emailSchema, EmailRequest } from '../zodTypes';
+import { resetPassword } from './API';
 
 const emailRouter = express.Router();
 
 emailRouter.post(
-  "/reset-password",
+  '/reset-password',
   validateRequestBody(emailSchema),
   async (req: EmailRequest, res) => {
     try {
@@ -15,7 +15,7 @@ emailRouter.post(
     } catch (error) {
       res
         .status(500)
-        .json({ error: "An error occurred during resetPassword." });
+        .json({ error: 'An error occurred during resetPassword.' });
     }
   },
 );

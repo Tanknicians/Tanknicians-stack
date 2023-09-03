@@ -1,6 +1,6 @@
-import { Schema, z } from "zod";
-import { NextFunction, Response, Request } from "express";
-import { ParamsDictionary } from "express-serve-static-core";
+import { Schema, z } from 'zod';
+import { NextFunction, Response, Request } from 'express';
+import { ParamsDictionary } from 'express-serve-static-core';
 
 export type ValidatedRequest<T> = Request<ParamsDictionary, unknown, T>;
 
@@ -16,15 +16,15 @@ export const validateRequestBody =
 
 export const loginSchema = z
   .object({
-    email: z.string({ required_error: "Email is required" }).email(),
-    password: z.string({ required_error: "Password is required" }),
-    role: z.enum(["ADMIN", "EMPLOYEE", "CUSTOMER"], {
+    email: z.string({ required_error: 'Email is required' }).email(),
+    password: z.string({ required_error: 'Password is required' }),
+    role: z.enum(['ADMIN', 'EMPLOYEE', 'CUSTOMER'], {
       errorMap: () => ({
-        message: "Role must be ADMIN, EMPLOYEE, or CUSTOMER",
+        message: 'Role must be ADMIN, EMPLOYEE, or CUSTOMER',
       }),
     }),
     userId: z
-      .number({ required_error: "Must be a positive integer." })
+      .number({ required_error: 'Must be a positive integer.' })
       .positive(),
   })
   .strict();

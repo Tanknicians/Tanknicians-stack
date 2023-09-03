@@ -1,13 +1,13 @@
-import Prisma from "@prisma/client";
-import { generateToken } from "./Generator";
+import Prisma from '@prisma/client';
+import { generateToken } from './Generator';
 
-describe("token generator", () => {
-  it("will return a valid token for complete login", () => {
+describe('token generator', () => {
+  it('will return a valid token for complete login', () => {
     const userLogin: Prisma.Login = {
       id: 0,
-      email: "email",
-      password: "pw",
-      role: "CUSTOMER",
+      email: 'email',
+      password: 'pw',
+      role: 'CUSTOMER',
       userId: 1,
     };
 

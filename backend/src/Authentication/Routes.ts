@@ -1,5 +1,5 @@
-import * as AuthService from "./API";
-import express, { NextFunction, Response, Request } from "express";
+import * as AuthService from './API';
+import express, { NextFunction, Response, Request } from 'express';
 import {
   authLogin,
   AuthLoginRequest,
@@ -8,9 +8,9 @@ import {
   EmailRequest,
   emailSchema,
   validateRequestBody,
-} from "../zodTypes";
+} from '../zodTypes';
 
-import { z } from "zod";
+import { z } from 'zod';
 
 const authRouter = express.Router();
 
@@ -19,7 +19,7 @@ authRouter.use(express.json());
 
 // Login route
 authRouter.post(
-  "/login",
+  '/login',
   validateRequestBody(authLogin),
   async (req: AuthLoginRequest, res) => {
     try {
@@ -27,14 +27,14 @@ authRouter.post(
     } catch (error) {
       res
         .status(500)
-        .json({ error: "An error occurred with the login function." });
+        .json({ error: 'An error occurred with the login function.' });
     }
   },
 );
 
 // Register route
 authRouter.post(
-  "/register",
+  '/register',
   validateRequestBody(authRegister),
   async (req: AuthRegisterRequest, res) => {
     const register = req.body;
@@ -43,7 +43,7 @@ authRouter.post(
     } catch (error) {
       res
         .status(500)
-        .json({ error: "An error occurred with the register function." });
+        .json({ error: 'An error occurred with the register function.' });
     }
   },
 );
@@ -53,13 +53,13 @@ const validateJwtToken = (req: Request, res: Response, next: NextFunction) => {
     z.string().parse(req.cookies.jwt);
     next();
   } catch (error) {
-    res.status(400).json({ error: "Invalid refresh token." });
+    res.status(400).json({ error: 'Invalid refresh token.' });
   }
 };
 
 // Refresh route
 authRouter.post(
-  "/refresh",
+  '/refresh',
   validateRequestBody(emailSchema),
   validateJwtToken,
   async (req: EmailRequest, res) => {
@@ -68,7 +68,7 @@ authRouter.post(
     } catch (error) {
       res
         .status(500)
-        .json({ error: "An error occurred with the refresh function." });
+        .json({ error: 'An error occurred with the refresh function.' });
     }
   },
 );
