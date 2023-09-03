@@ -86,8 +86,8 @@ export async function register(registration: AuthRegister, res: Response) {
   // move the data to a format with a generated password
   const registerData = {
     ...registration,
-    // generate password on registration, currently set to size of 32 characters
-    password: generateRandomPassword(32)
+    // generate password on registration, currently set to size of 16 characters
+    password: generateRandomPassword(16)
   };
 
   try {
