@@ -2,7 +2,7 @@ import Prisma from '@prisma/client';
 import { generateToken } from './Generator';
 
 describe('token generator', () => {
-  test('will return valid token for complete login', () => {
+  it('will return a valid token for complete login', () => {
     const userLogin: Prisma.Login = {
       id: 0,
       email: 'email',

@@ -15,7 +15,7 @@ import { sendEmail } from '../Email/API';
 
 // we can modify this for password generating
 // note: length of password is more important than randomness of password in security
-function generateRandomPassword(length: number): string {
+export function generateRandomPassword(length: number): string {
   // we do NOT need unique characters for a more secure password
   const charset =
     'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -99,11 +99,16 @@ export async function register(registration: AuthRegister, res: Response) {
     If you lose this password, please ask your admin to send a reset email.
     `;
     // we should find a way to verify that the email was sent
-    await sendEmail(registerData.email, 'New Registration', emailText);
+    const confirmation = await sendEmail(
+      registerData.email,
+      'New Registration',
+      emailText
+    );
+    console.log(confirmation);
     // after sending, hash/encrypt and send info to database
     registerData.password = await bcrypt.hash(registerData.password, 10);
     await loginDB.create(registerData);
-    return res.json({ message: 'Registration successful' });
+    return res.status(200).json({ message: 'Registration successful' });
   } catch (error) {
     console.error(error);
     return res.status(500).json({
@@ -141,7 +146,7 @@ export async function refresh(
   }
 
   try {
-    const token = generateToken(savedCredentials);
+    const token = generateToken(savedCredentials!);
     return res.json({ token, savedCredentials });
   } catch (error) {
     console.error(error);
