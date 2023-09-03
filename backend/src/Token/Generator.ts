@@ -2,7 +2,13 @@ import * as Prisma from "@prisma/client";
 import * as jwt from "jsonwebtoken";
 import * as dotenv from "dotenv";
 import { randomBytes } from "crypto";
-import { JwtPayload } from "jsonwebtoken";
+
+import {
+  RefreshToken,
+  refreshTokenSchema,
+  Token,
+  tokenSchema,
+} from "./zodTypes";
 
 dotenv.config();
 const jwtSecret = process.env.JWT_SECRET;
@@ -17,7 +23,7 @@ export function generateSecret(): string {
 export function generateToken(login: Prisma.Login): string {
   if (!jwtSecret) throw new Error("JWT secret not found.");
   const expiresIn = "24h";
-  const payload = {
+  const payload: Token = {
     data: login,
     isRefreshToken: false,
   };
@@ -28,7 +34,7 @@ export function generateToken(login: Prisma.Login): string {
 export function generateRefreshToken(login: Prisma.Login): string {
   if (!jwtRefreshSecret) throw new Error("Refresh secret not found.");
   const expiresIn = "7d";
-  const payload = {
+  const payload: RefreshToken = {
     data: login,
     isRefreshToken: true,
   };
@@ -41,8 +47,8 @@ export function verifyToken(token: string) {
     if (!jwtSecret) {
       throw new Error("Secret not found.");
     }
-    const payload = jwt.verify(token, jwtSecret) as JwtPayload;
-    return payload;
+    const payload = jwt.verify(token, jwtSecret);
+    return tokenSchema.parse(payload);
   } catch (error) {
     // Handle the error here
     console.error("Error verifying token:", error);
@@ -56,8 +62,8 @@ export function verifyRefreshToken(token: string) {
     if (!jwtRefreshSecret) {
       throw new Error("Refresh secret not found.");
     }
-    const payload = jwt.verify(token, jwtRefreshSecret) as JwtPayload;
-    return payload;
+    const payload = jwt.verify(token, jwtRefreshSecret);
+    return refreshTokenSchema.parse(payload);
   } catch (error) {
     // Handle the error here
     console.error("Error verifying refresh token:", error);

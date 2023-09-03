@@ -38,12 +38,12 @@ userRouter.get(
 
 // Read all Users and Tanks
 userRouter.get(
-  '/getAllUsersAndTanks',
-  authenticateRoleMiddleWare(['ADMIN', 'EMPLOYEE']),
+  "/",
+  authenticateRoleMiddleWare(["ADMIN", "EMPLOYEE"]),
   async (req, res) => {
     try {
-      const includeTanks = req.params.includeTanks;
-      const result = await UserService.readAll(!!includeTanks);
+      const includeTanks = req.params.includeTanks?.toLowerCase() === "true";
+      const result = await UserService.readAll(includeTanks);
       res.json(result);
     } catch (error) {
       res.status(500).json({ error: 'Failed to get Users and Tanks' });
