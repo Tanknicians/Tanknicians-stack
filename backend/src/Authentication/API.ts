@@ -146,7 +146,7 @@ export async function refresh(
   }
 
   try {
-    const token = generateToken(savedCredentials!);
+    const token = generateToken(savedCredentials);
     return res.json({ token, savedCredentials });
   } catch (error) {
     console.error(error);
