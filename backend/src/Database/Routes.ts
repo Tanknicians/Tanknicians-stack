@@ -1,8 +1,8 @@
 import express from "express";
-import loginRouter from "./Login/LoginRoutes";
-import serviceCallRouter from "./ServiceCall/ServiceCallRoutes";
-import tankMetaDataRouter from "./TankMetadata/TankMetadataRoutes";
-import userRouter from "./User/UserRoutes";
+import loginRouter from "./Login/Routes";
+import serviceCallRouter from "./ServiceCall/Routes";
+import tankMetaDataRouter from "./TankMetadata/Routes";
+import userRouter from "./User/Routes";
 
 const databaseRouter = express();
 

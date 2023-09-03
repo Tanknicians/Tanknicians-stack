@@ -1,4 +1,4 @@
-import * as AuthService from './AuthService';
+import * as AuthService from './API';
 import express, { NextFunction, Response, Request } from 'express';
 import {
   authLogin,

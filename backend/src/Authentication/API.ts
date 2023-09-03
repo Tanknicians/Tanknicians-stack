@@ -5,13 +5,13 @@ import {
   verifyRefreshToken,
   generateRefreshToken,
   verifyToken
-} from '../TokenGenerator';
+} from '../Token/Generator';
 
 import { loginDB } from '../../prisma/db/Login';
 import { Request, Response, NextFunction } from 'express';
 import { AuthLogin, AuthRegister } from '../zodTypes';
 import { randomBytes } from 'crypto';
-import { sendEmail } from '../EmailService/EmailService';
+import { sendEmail } from '../Email/API';
 
 // we can modify this for password generating
 // note: length of password is more important than randomness of password in security
