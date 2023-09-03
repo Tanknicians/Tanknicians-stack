@@ -13,14 +13,6 @@ import { useEffect } from 'react';
 import { idText } from 'typescript';
 
 export default function DefaultChartsTab() {
-  const [openItemId, setOpenItemId] = useState<number | null>(null);
-  const [listToggle, setListToggle] = useState(true);
-  const { data, error, isLoading } = useGetClientsQuery(true);
-
-  const handleListToggle = () => {
-    setListToggle(!listToggle);
-  };
-
   interface OwnedTanks {
     id: number;
   }
@@ -30,19 +22,23 @@ export default function DefaultChartsTab() {
     lastName: string;
     id: number;
   }
+  interface UseGetClientsQuery {
+    data: UserData[] | null;
+    error: Error | undefined;
+    isLoading: boolean;
+  }
+
+  const [openItemId, setOpenItemId] = useState<number | null>(null);
+  const [listToggle, setListToggle] = useState(true);
+  const { data, error, isLoading } = useGetClientsQuery<UseGetClientsQuery>(true);
+
 
   let myUserData: UserData[] | null = null;
-
-  useEffect(() => {
-    async function fetchData() {
-      try {
-      } catch (error) {
-        myUserData = data;
-      } finally {
-      }
-    }
-    fetchData();
-  }, [data, error, isLoading]);
+  myUserData = data;
+  
+  const handleListToggle = () => {
+    setListToggle(!listToggle);
+  };
 
   const toggleSubMenu = (itemId: number) => {
     if (openItemId === itemId) {
@@ -62,46 +58,56 @@ export default function DefaultChartsTab() {
     setListToggle(false);
   };
 
-  return (
-    <div>
-      <List
-        sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}
-        component='nav'
-        aria-labelledby='nested-list-subheader'
-        subheader={
-          <ListSubheader component='div' id='nested-list-subheader'>
-            Clients{' '}
-            <IconButton onClick={handleListToggle}>
-              <MenuIcon />
-            </IconButton>
-          </ListSubheader>
-        }
-      >
-        <Collapse in={listToggle}>
-          {myUserData.map(({ id, firstName, lastName, OwnedTanks }) => (
-            <div>
-              <ListItemButton onClick={() => toggleSubMenu(id)} key={id}>
-                <ListItemText primary={id} />
-                {id === openItemId ? <ExpandLess /> : <ExpandMore />}
-              </ListItemButton>
+  if (myUserData != null){
+    return (
+      <div>
+        <List
+          sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}
+          component='nav'
+          aria-labelledby='nested-list-subheader'
+          subheader={
+            <ListSubheader component='div' id='nested-list-subheader'>
+              Clients{' '}
+              <IconButton onClick={handleListToggle}>
+                <MenuIcon />
+              </IconButton>
+            </ListSubheader>
+          }
+        >
+          <Collapse in={listToggle}>
+            
+         { myUserData?.map(({ id, firstName, lastName, OwnedTanks }) => (
+              <div>
+                <ListItemButton onClick={() => toggleSubMenu(id)} key={id}>
+                  <ListItemText primary={firstName + " " + lastName} />
+                  {id === openItemId ? <ExpandLess /> : <ExpandMore />}
+                </ListItemButton>
+  
+                <Collapse in={id === openItemId} timeout='auto' unmountOnExit>
+                  <List component='div' disablePadding>
+                    {OwnedTanks.map(({ id }) => (
+                      <ListItemButton
+                        sx={{ pl: 4 }}
+                        onClick={() => handleRequestChart(id)}
+                        key={id}
+                      >
+                        <ListItemText primary={"Select Tank " + id} />
+                      </ListItemButton>
+                    ))}
+                  </List>
+                </Collapse>
+              </div>
+            ))}
+          </Collapse>
+        </List>
+      </div>
+    );
 
-              <Collapse in={id === openItemId} timeout='auto' unmountOnExit>
-                <List component='div' disablePadding>
-                  {OwnedTanks.map(({ id }) => (
-                    <ListItemButton
-                      sx={{ pl: 4 }}
-                      onClick={() => handleRequestChart(id)}
-                      key={id}
-                    >
-                      <ListItemText primary={id} />
-                    </ListItemButton>
-                  ))}
-                </List>
-              </Collapse>
-            </div>
-          ))}
-        </Collapse>
-      </List>
-    </div>
-  );
+  }else{
+    return(
+      <div>error</div>
+    )
+  }
+ 
+  
 }
