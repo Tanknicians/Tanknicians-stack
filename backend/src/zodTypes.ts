@@ -51,7 +51,8 @@ export type AuthLoginRequest = ValidatedRequest<AuthLogin>;
 export const serviceCallSchema = z.object({
   id: z.number(),
   isApproved: z.boolean().optional(),
-  createdOn: z.date().optional(),
+  createdOn: z.date(),
+  billed: z.boolean(),
 
   customerRequest: z.string().optional(),
   employeeNotes: z.string().optional(),
