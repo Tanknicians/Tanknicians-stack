@@ -10,77 +10,46 @@ import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useGetClientsQuery } from '../../../Redux/slices/users/userManagementSlice';
 import { useEffect } from 'react';
+import { idText } from 'typescript';
 
 export default function DefaultChartsTab() {
-  const [openItemId, setOpenItemId] = useState<string | null>(null);
+  const [openItemId, setOpenItemId] = useState<number | null>(null);
+  const [listToggle, setListToggle] = useState(true);
   const { data, error, isLoading } = useGetClientsQuery(true);
 
-  console.log('My Data: ' + data);
+  const handleListToggle = () => {
+    setListToggle(!listToggle);
+  };
 
-  //   useEffect(() => {
-  //     async function fetchData() {
-  //       try {
-  //         console.log("My Data: "+data);
-  //       } catch (error) {
-  //         console.error(error);
-  //       } finally {
-  //       }
-  //     }
-  //     fetchData();
-  //   }, [data, error, isLoading]);
+  interface OwnedTanks {
+    id: number;
+  }
+  interface UserData {
+    OwnedTanks: OwnedTanks[];
+    firstName: string;
+    lastName: string;
+    id: number;
+  }
 
-  const toggleSubMenu = (itemId: string) => {
+  let myUserData: UserData[] | null = null;
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+      } catch (error) {
+        myUserData = data;
+      } finally {
+      }
+    }
+    fetchData();
+  }, [data, error, isLoading]);
+
+  const toggleSubMenu = (itemId: number) => {
     if (openItemId === itemId) {
       setOpenItemId(null);
     } else {
       setOpenItemId(itemId);
     }
-  };
-
-  interface ClientData {
-    name: string;
-    address: string;
-    phone: number;
-    tanksIDs: number[];
-  }
-
-  const clientDataObj: ClientData[] = [
-    {
-      name: 'Doe, John',
-      address: '',
-      phone: 1231231234,
-      tanksIDs: [1, 2, 3, 4]
-    },
-    {
-      name: 'Mitchell, Will',
-      address: '',
-      phone: 1231231234,
-      tanksIDs: [5]
-    },
-    {
-      name: 'Martinez, Carlos',
-      address: '',
-      phone: 1231231234,
-      tanksIDs: [6, 7]
-    },
-    {
-      name: 'Hocker, Harry',
-      address: '',
-      phone: 1231231234,
-      tanksIDs: [8]
-    },
-    {
-      name: 'Thomar, Harmeyer',
-      address: '',
-      phone: 1231231234,
-      tanksIDs: [9, 10, 11, 12, 13]
-    }
-  ];
-
-  const [listToggle, setListToggle] = useState(true);
-
-  const handleListToggle = () => {
-    setListToggle(!listToggle);
   };
 
   const handleRequestChart = (tankID: number) => {
@@ -109,22 +78,22 @@ export default function DefaultChartsTab() {
         }
       >
         <Collapse in={listToggle}>
-          {clientDataObj.map(({ name, tanksIDs }, key) => (
+          {myUserData.map(({ id, firstName, lastName, OwnedTanks }) => (
             <div>
-              <ListItemButton onClick={() => toggleSubMenu(name)} key={name}>
-                <ListItemText primary={name} />
-                {name === openItemId ? <ExpandLess /> : <ExpandMore />}
+              <ListItemButton onClick={() => toggleSubMenu(id)} key={id}>
+                <ListItemText primary={id} />
+                {id === openItemId ? <ExpandLess /> : <ExpandMore />}
               </ListItemButton>
 
-              <Collapse in={name === openItemId} timeout='auto' unmountOnExit>
+              <Collapse in={id === openItemId} timeout='auto' unmountOnExit>
                 <List component='div' disablePadding>
-                  {tanksIDs.map(tankID => (
+                  {OwnedTanks.map(({ id }) => (
                     <ListItemButton
                       sx={{ pl: 4 }}
-                      onClick={() => handleRequestChart(tankID)}
-                      key={tankID}
+                      onClick={() => handleRequestChart(id)}
+                      key={id}
                     >
-                      <ListItemText primary={tankID} />
+                      <ListItemText primary={id} />
                     </ListItemButton>
                   ))}
                 </List>
