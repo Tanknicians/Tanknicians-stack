@@ -49,7 +49,7 @@ export type AuthLogin = z.infer<typeof authLogin>;
 export type AuthLoginRequest = ValidatedRequest<AuthLogin>;
 
 export const serviceCallSchema = z.object({
-  id: z.number(),
+  id: z.number().int(),
   isApproved: z.boolean().optional(),
   createdOn: z.date(),
   billed: z.boolean(),
