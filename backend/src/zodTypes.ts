@@ -47,7 +47,7 @@ export const refreshTokenSchema = z.object({
 });
 export type RefreshToken = z.infer<typeof refreshTokenSchema>;
 
-export const authLogin = loginSchema.omit({ role: true });
+export const authLogin = loginSchema.omit({ role: true, userId: true });
 export type AuthLogin = z.infer<typeof authLogin>;
 export type AuthLoginRequest = ValidatedRequest<AuthLogin>;
 
