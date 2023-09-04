@@ -22,63 +22,6 @@ export async function read(id: number) {
   }
 }
 
-//
-export async function readAllByDate(
-  tankId: number,
-  startDate: Date,
-  endDate: Date
-) {
-  interface ReturnDataSchema {
-    tankId: number;
-    alkalinity: { date: Date; value: number }[];
-    calcium: { date: Date; value: number }[];
-    nitrate: { date: Date; value: number }[];
-    phosphate: { date: Date; value: number }[];
-  }
-
-  try {
-    const serviceCalls = await serviceCallDB.readByDateTime(
-      tankId,
-      startDate,
-      endDate
-    );
-    if (serviceCalls === null) {
-      throw new Error(`Service Calls for id: ${tankId} not found.`);
-    }
-
-    const returnData: ReturnDataSchema = {
-      tankId: tankId,
-      alkalinity: [],
-      calcium: [],
-      nitrate: [],
-      phosphate: []
-    };
-
-    serviceCalls.forEach(serviceCall => {
-      returnData.alkalinity.push({
-        date: serviceCall.createdOn,
-        value: serviceCall.alkalinity
-      });
-      returnData.calcium.push({
-        date: serviceCall.createdOn,
-        value: serviceCall.calcium
-      });
-      returnData.nitrate.push({
-        date: serviceCall.createdOn,
-        value: serviceCall.nitrate
-      });
-      returnData.phosphate.push({
-        date: serviceCall.createdOn,
-        value: serviceCall.phosphate
-      });
-    });
-
-    return JSON.stringify(returnData);
-  } catch (e) {
-    throw new Error('An error occurred during read of range.');
-  }
-}
-
 export async function update(serviceCall: ServiceCall) {
   try {
     await serviceCallDB.update(serviceCall);

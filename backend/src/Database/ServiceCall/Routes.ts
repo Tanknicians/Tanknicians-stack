@@ -1,6 +1,6 @@
-import express from "express";
-import * as ServiceCallService from "./ServiceCallService";
-import { authenticateRoleMiddleWare } from "../../Authentication/AuthService";
+import express from 'express';
+import * as ServiceCallService from './API';
+import { authenticateRoleMiddleWare } from '../../Authentication/API';
 import {
   ServiceCall,
   ServiceCallCreateRequest,
@@ -8,15 +8,15 @@ import {
   ServiceCallRequest,
   serviceCallSchema,
   validateRequestBody,
-} from "../../zodTypes";
+} from '../../zodTypes';
 
 const serviceCallRouter = express.Router();
 serviceCallRouter.use(express.json());
 
 // Create ServiceCall
 serviceCallRouter.post(
-  "/",
-  authenticateRoleMiddleWare(["EMPLOYEE"]),
+  '/',
+  authenticateRoleMiddleWare(['EMPLOYEE']),
   validateRequestBody(serviceCallCreateSchema),
   async (req: ServiceCallCreateRequest, res) => {
     try {
@@ -24,22 +24,22 @@ serviceCallRouter.post(
       const result = await ServiceCallService.create(input);
       res.json(result);
     } catch (error) {
-      res.status(500).json({ error: "Failed to create Service Call" });
+      res.status(500).json({ error: 'Failed to create Service Call' });
     }
   },
 );
 
 // Read ServiceCall
 serviceCallRouter.get(
-  "/:id",
-  authenticateRoleMiddleWare(["ADMIN"]),
+  '/:id',
+  authenticateRoleMiddleWare(['ADMIN']),
   async (req, res) => {
     try {
       const id = Number(req.params.id);
       const result = await ServiceCallService.read(id);
       res.json(result);
     } catch (error) {
-      res.status(500).json({ error: "Failed to read Service Call" });
+      res.status(500).json({ error: 'Failed to read Service Call' });
     }
   },
 );
@@ -62,8 +62,8 @@ serviceCallRouter.get(
 
 // Update ServiceCall
 serviceCallRouter.put(
-  "/:id",
-  authenticateRoleMiddleWare(["ADMIN"]),
+  '/:id',
+  authenticateRoleMiddleWare(['ADMIN']),
   validateRequestBody(serviceCallSchema),
   async (req: ServiceCallRequest, res) => {
     try {
@@ -77,30 +77,30 @@ serviceCallRouter.put(
       const result = await ServiceCallService.update(serviceCallData);
       res.json(result);
     } catch (error) {
-      res.status(500).json({ error: "Failed to update Service Call" });
+      res.status(500).json({ error: 'Failed to update Service Call' });
     }
   },
 );
 
 // Delete ServiceCall
 serviceCallRouter.delete(
-  "/:id",
-  authenticateRoleMiddleWare(["ADMIN"]),
+  '/:id',
+  authenticateRoleMiddleWare(['ADMIN']),
   async (req, res) => {
     try {
       const id = Number(req.params.id);
       const result = await ServiceCallService.deleteOne(id);
       res.json(result);
     } catch (error) {
-      res.status(500).json({ error: "Failed to delete Service Call" });
+      res.status(500).json({ error: 'Failed to delete Service Call' });
     }
   },
 );
 
 // Search ServiceCall
 serviceCallRouter.get(
-  "/search/:searchString",
-  authenticateRoleMiddleWare(["ADMIN"]),
+  '/search/:searchString',
+  authenticateRoleMiddleWare(['ADMIN']),
   async (req, res) => {
     try {
       const searchString = req.params.searchString;
@@ -108,7 +108,7 @@ serviceCallRouter.get(
       const result = await ServiceCallService.search(searchString, pageNumber);
       res.json(result);
     } catch (error) {
-      res.status(500).json({ error: "Failed to search Service Call" });
+      res.status(500).json({ error: 'Failed to search Service Call' });
     }
   },
 );
