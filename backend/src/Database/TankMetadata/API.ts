@@ -1,12 +1,12 @@
-import * as Prisma from "@prisma/client";
-import { tankDB } from "./../../../prisma/db/TankMetadata";
+import * as Prisma from '@prisma/client';
+import { tankDB } from '../../../prisma/db/TankMetadata';
 
-export async function create(tank: Omit<Prisma.TankMetadata, "id">) {
+export async function create(tank: Omit<Prisma.TankMetadata, 'id'>) {
   try {
     await tankDB.create(tank);
-    return { message: "TankMetadata created successfully" };
+    return { message: 'TankMetadata created successfully' };
   } catch (e) {
-    throw new Error("An error occurred during create.");
+    throw new Error('An error occurred during create.');
   }
 }
 
@@ -18,25 +18,25 @@ export async function read(id: number) {
     }
     return tank;
   } catch (e) {
-    throw new Error("An error occurred during read.");
+    throw new Error('An error occurred during read.');
   }
 }
 
 export async function update(tank: Prisma.TankMetadata) {
   try {
     await tankDB.update(tank);
-    return { message: "TankMetadata updated successfully" };
+    return { message: 'TankMetadata updated successfully' };
   } catch (e) {
-    throw new Error("An error occurred during update.");
+    throw new Error('An error occurred during update.');
   }
 }
 
 export async function deleteOne(id: number) {
   try {
     await tankDB.deleteTankMetadata(id);
-    return { message: "TankMetadata deleted successfully" };
+    return { message: 'TankMetadata deleted successfully' };
   } catch (e) {
-    throw new Error("An error occurred during delete.");
+    throw new Error('An error occurred during delete.');
   }
 }
 
@@ -44,10 +44,10 @@ export async function search(search: string, page: number) {
   try {
     const searchData = tankDB.searchByString(search, page);
     if (!searchData) {
-      throw new Error("No TankMetadata from search found.");
+      throw new Error('No TankMetadata from search found.');
     }
     return searchData;
   } catch (e) {
-    throw new Error("An error occurred during search.");
+    throw new Error('An error occurred during search.');
   }
 }

@@ -1,6 +1,6 @@
-import { Schema, z } from "zod";
-import { NextFunction, Response, Request } from "express";
-import { ParamsDictionary } from "express-serve-static-core";
+import { Schema, z } from 'zod';
+import { NextFunction, Response, Request } from 'express';
+import { ParamsDictionary } from 'express-serve-static-core';
 
 export type ValidatedRequest<T> = Request<ParamsDictionary, unknown, T>;
 
@@ -16,13 +16,16 @@ export const validateRequestBody =
 
 export const loginSchema = z
   .object({
-    email: z.string({ required_error: "Email is required" }).email(),
-    password: z.string({ required_error: "Password is required" }),
-    role: z.enum(["ADMIN", "EMPLOYEE", "CUSTOMER"], {
+    email: z.string({ required_error: 'Email is required' }).email(),
+    password: z.string({ required_error: 'Password is required' }),
+    role: z.enum(['ADMIN', 'EMPLOYEE', 'CUSTOMER'], {
       errorMap: () => ({
-        message: "Role must be ADMIN, EMPLOYEE, or CUSTOMER",
+        message: 'Role must be ADMIN, EMPLOYEE, or CUSTOMER',
       }),
     }),
+    userId: z
+      .number({ required_error: 'Must be a positive integer.' })
+      .positive(),
   })
   .strict();
 
@@ -47,6 +50,11 @@ export type RefreshToken = z.infer<typeof refreshTokenSchema>;
 export const authLogin = loginSchema.omit({ role: true });
 export type AuthLogin = z.infer<typeof authLogin>;
 export type AuthLoginRequest = ValidatedRequest<AuthLogin>;
+
+// this will be used to register new Logins
+export const authRegister = loginSchema.omit({ password: true });
+export type AuthRegister = z.infer<typeof authRegister>;
+export type AuthRegisterRequest = ValidatedRequest<AuthRegister>;
 
 export const serviceCallSchema = z.object({
   id: z.number().int(),
