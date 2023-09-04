@@ -49,12 +49,16 @@ export type AuthLogin = z.infer<typeof authLogin>;
 export type AuthLoginRequest = ValidatedRequest<AuthLogin>;
 
 export const serviceCallSchema = z.object({
-  id: z.number(),
+  id: z.number().int(),
   isApproved: z.boolean().optional(),
-  createdOn: z.date().optional(),
+  createdOn: z.date(),
+  billed: z.boolean(),
 
-  customerRequest: z.string(),
-  employeeNotes: z.string(),
+  customerRequest: z.string().optional(),
+  employeeNotes: z.string().optional(),
+  // server use only for not-approved notes
+  notApprovedNotes: z.string().optional(),
+  notesUpdated: z.date().optional(),
 
   alkalinity: z.number(),
   calcium: z.number(),
@@ -74,6 +78,7 @@ export const serviceCallSchema = z.object({
   saltCreepCleaned: z.boolean(),
   skimmerCleanedAndOperational: z.boolean(),
   waterChanged: z.boolean(),
+  waterTestedRecordedDated: z.boolean(),
 
   pestAPresent: z.boolean(),
   pestBPresent: z.boolean(),

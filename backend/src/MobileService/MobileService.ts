@@ -21,6 +21,8 @@ function checkServiceCall(serviceCall: ServiceCall): ServiceCall {
   ) {
     serviceCall.tankId = 0;
     serviceCall.isApproved = false;
+    serviceCall.notApprovedNotes =
+      "No tankID was recorded. Check QR code for damage.";
     return serviceCall;
   }
 
@@ -37,6 +39,8 @@ function checkServiceCall(serviceCall: ServiceCall): ServiceCall {
     phosphate > paramLimits.phosphateMax
   ) {
     serviceCall.isApproved = false;
+    serviceCall.notApprovedNotes =
+      "One or more of the parameters (Alkalinity, Calcium, Nitrate, and/or Phosphate) outside of acceptable range.";
   }
   // return the flagged/unflagged service call
   return serviceCall;
