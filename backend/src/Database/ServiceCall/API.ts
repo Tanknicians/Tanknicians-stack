@@ -22,8 +22,11 @@ export async function read(id: number) {
   }
 }
 
-export async function readAllByDate(tankId: number, startDate: Date, endDate: Date) {
-
+export async function readAllByDate(
+  tankId: number,
+  startDate: Date,
+  endDate: Date,
+) {
   interface ReturnDataSchema {
     tankId: number;
     alkalinity: [number, Date][];
@@ -33,9 +36,13 @@ export async function readAllByDate(tankId: number, startDate: Date, endDate: Da
   }
 
   try {
-    const serviceCalls = await serviceCallDB.readByDateTime(tankId, startDate, endDate);
+    const serviceCalls = await serviceCallDB.readByDateTime(
+      tankId,
+      startDate,
+      endDate,
+    );
     if (serviceCalls === null) {
-      throw new Error(`Service Calls for id: ${tankId} not found.`)
+      throw new Error(`Service Calls for id: ${tankId} not found.`);
     }
 
     let returnData: ReturnDataSchema = {
@@ -43,22 +50,23 @@ export async function readAllByDate(tankId: number, startDate: Date, endDate: Da
       alkalinity: [],
       calcium: [],
       nitrate: [],
-      phosphate: []
-    }
+      phosphate: [],
+    };
 
-    serviceCalls.forEach(serviceCall => {
-      returnData.alkalinity.push([serviceCall.alkalinity, serviceCall.createdOn]);
-      returnData.calcium.push([serviceCall.calcium, serviceCall.createdOn]); 
-      returnData.nitrate.push([serviceCall.nitrate, serviceCall.createdOn]); 
+    serviceCalls.forEach((serviceCall) => {
+      returnData.alkalinity.push([
+        serviceCall.alkalinity,
+        serviceCall.createdOn,
+      ]);
+      returnData.calcium.push([serviceCall.calcium, serviceCall.createdOn]);
+      returnData.nitrate.push([serviceCall.nitrate, serviceCall.createdOn]);
       returnData.phosphate.push([serviceCall.phosphate, serviceCall.createdOn]);
     });
 
     return returnData;
-
   } catch (e) {
-    throw new Error("An error occurred during read of range.");
+    throw new Error('An error occurred during read of range.');
   }
-
 }
 
 export async function update(serviceCall: ServiceCall) {
@@ -90,5 +98,3 @@ export async function search(search: string, page: number) {
     throw new Error('An error occurred during search.');
   }
 }
-
-

@@ -9,6 +9,7 @@ import {
   serviceCallSchema,
   validateRequestBody,
 } from '../../zodTypes';
+import { z } from 'zod';
 
 const serviceCallRouter = express.Router();
 serviceCallRouter.use(express.json());
@@ -45,20 +46,22 @@ serviceCallRouter.get(
 );
 
 serviceCallRouter.get(
-  "/allByTankAndRange",
-  authenticateRoleMiddleWare(["ADMIN"]),
+  '/allByTankAndRange',
+  authenticateRoleMiddleWare(['ADMIN']),
   async (req, res) => {
     try {
-      const tankId = req.body.tankId;
-      const start = req.body.start as Date;
-      const end = req.body.end as Date;
+      const tankId = z.coerce.number().parse(req.query.tankId);
+      const start = z.coerce.date().parse(req.query.start);
+      const end = z.coerce.date().parse(req.query.end);
       const result = await ServiceCallService.readAllByDate(tankId, start, end);
       res.json(result);
     } catch (error) {
-      res.status(500).json({error: "Failed to read Service Calls by tankID and given date range."})
+      res.status(500).json({
+        error: 'Failed to read Service Calls by tankID and given date range.',
+      });
     }
-  }
-)
+  },
+);
 
 // Update ServiceCall
 serviceCallRouter.put(
