@@ -108,11 +108,14 @@ export default function DefaultChartsTab() {
         </List>
         <div style={{alignContent: 'center', width:'100%'}}>
           {toggleShowCharts && TankData.map((d)=> (
-            <Card variant="outlined" sx={{ maxWidth: '80%', minWidth: '50%'}}>
-              <CardContent >
-                <LineChart data={d}/>
-              </CardContent>
-            </Card>
+            <div>
+              <h3>{d.datasets[0].label}</h3>
+              <Card variant="outlined" sx={{ maxWidth: '80%', minWidth: '50%'}}>
+                <CardContent >
+                  <LineChart data={d}/>
+                </CardContent>
+              </Card>
+            </div>
           ))}                     
         </div>
         
