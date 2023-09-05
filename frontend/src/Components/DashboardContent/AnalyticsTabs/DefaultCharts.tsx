@@ -5,14 +5,19 @@ import ListItemText from '@mui/material/ListItemText';
 import Collapse from '@mui/material/Collapse';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
+import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
 import { useState } from 'react';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useGetClientsQuery } from '../../../Redux/slices/users/userManagementSlice';
-import { useEffect } from 'react';
-import { idText } from 'typescript';
+import { useGetTankDataQuery } from '../../../Redux/slices/tanks/tankDataSlice';
+import LineChart from '../../../Components/ChartJS/LineChart';
+import { TankData } from './DUMMYDATA';
 
 export default function DefaultChartsTab() {
+  // interfaces to appease sadistict TS kink enjoyers
   interface OwnedTanks {
     id: number;
   }
@@ -22,20 +27,24 @@ export default function DefaultChartsTab() {
     lastName: string;
     id: number;
   }
-  interface UseGetClientsQuery {
+  interface UseQuery {
     data: UserData[] | null;
     error: Error | undefined;
     isLoading: boolean;
   }
 
+  // List toggle controls
+  const [toggleShowCharts, setToggleShowCharts] = useState(false)
   const [openItemId, setOpenItemId] = useState<number | null>(null);
   const [listToggle, setListToggle] = useState(true);
-  const { data, error, isLoading } = useGetClientsQuery<UseGetClientsQuery>(true);
+  const { data, error, isLoading } = useGetClientsQuery<UseQuery>(true);
+  // const { data, error, isLoading } = useGetTankDataQuery<UseQuery>(tankID);
 
-
+  // Temporary hack to get users and their tanks from DB
   let myUserData: UserData[] | null = null;
   myUserData = data;
   
+  // List menu/submenu toggle handlers
   const handleListToggle = () => {
     setListToggle(!listToggle);
   };
@@ -48,14 +57,11 @@ export default function DefaultChartsTab() {
     }
   };
 
+  // on selection of users tankID, generate charts
   const handleRequestChart = (tankID: number) => {
     console.log('TankID: ' + tankID);
-    // make api call for data
-
-    // let data = apiCall();
-    // data = formatChartdata(data);
-    // setFormattedData(data);
     setListToggle(false);
+    setToggleShowCharts(true);  
   };
 
   if (myUserData != null){
@@ -100,6 +106,16 @@ export default function DefaultChartsTab() {
             ))}
           </Collapse>
         </List>
+        <div style={{alignContent: 'center', width:'100%'}}>
+          {toggleShowCharts && TankData.map((d)=> (
+            <Card variant="outlined" sx={{ maxWidth: '80%', minWidth: '50%'}}>
+              <CardContent >
+                <LineChart data={d}/>
+              </CardContent>
+            </Card>
+          ))}                     
+        </div>
+        
       </div>
     );
 

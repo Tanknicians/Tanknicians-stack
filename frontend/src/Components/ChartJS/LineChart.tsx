@@ -19,14 +19,14 @@ ChartJS.register(
 )
 
 // incoming object has data packet and option
-interface RequiredChartData {
+export interface RequiredChartData {
     data: ChartData<"line", (number | null)[], unknown>,
-    options: ChartOptions;    
+    
 };
 
-function LineChart ({ data, options} : RequiredChartData){
+function LineChart ({ data } : RequiredChartData){
 
-    return <Line data = { data } options={ options } />;
+    return <Line data = { data }  />;
 }
 export default LineChart;
 
