@@ -18,7 +18,7 @@ userRouter.post(
     } catch (error) {
       res.status(500).json({ error: 'Failed to create User' });
     }
-  }
+  },
 );
 
 // Read User
@@ -33,7 +33,7 @@ userRouter.get(
     } catch (error) {
       res.status(500).json({ error: 'Failed to read User' });
     }
-  }
+  },
 );
 
 // Read all Users and Tanks
@@ -48,7 +48,7 @@ userRouter.get(
     } catch (error) {
       res.status(500).json({ error: 'Failed to get Users and Tanks' });
     }
-  }
+  },
 );
 
 // Update User
@@ -61,14 +61,14 @@ userRouter.put(
       const input = req.body;
       const userData: User = {
         id,
-        ...input
+        ...input,
       };
       const result = await UserService.update(userData);
       res.json(result);
     } catch (error) {
       res.status(500).json({ error: 'Failed to update User' });
     }
-  }
+  },
 );
 
 // Delete User
@@ -83,7 +83,7 @@ userRouter.delete(
     } catch (error) {
       res.status(500).json({ error: 'Failed to delete User' });
     }
-  }
+  },
 );
 
 // Search User
@@ -99,7 +99,7 @@ userRouter.get(
     } catch (error) {
       res.status(500).json({ error: 'Failed to search User' });
     }
-  }
+  },
 );
 
 export default userRouter;
