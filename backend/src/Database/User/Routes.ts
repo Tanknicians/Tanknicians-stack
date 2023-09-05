@@ -42,7 +42,7 @@ userRouter.get(
   authenticateRoleMiddleWare(['ADMIN', 'EMPLOYEE']),
   async (req, res) => {
     try {
-      const includeTanks = req.params.includeTanks?.toLowerCase() === 'true';
+      const includeTanks = req.query.includeTanks === 'true';
       const result = await UserService.readAll(includeTanks);
       res.json(result);
     } catch (error) {
