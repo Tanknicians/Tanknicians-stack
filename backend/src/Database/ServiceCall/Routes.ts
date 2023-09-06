@@ -45,12 +45,13 @@ serviceCallRouter.get(
   },
 );
 
+// get all Service Calls from a tank ID and a start and end date
 serviceCallRouter.get(
-  '/allByTankAndRange',
+  '/range/:tankId',
   authenticateRoleMiddleWare(['ADMIN']),
   async (req, res) => {
     try {
-      const tankId = z.coerce.number().parse(req.query.tankId);
+      const tankId = z.coerce.number().parse(req.params.tankId);
       const start = z.coerce.date().parse(req.query.start);
       const end = z.coerce.date().parse(req.query.end);
       const result = await ServiceCallService.readAllByDate(tankId, start, end);
