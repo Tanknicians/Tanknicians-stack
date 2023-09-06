@@ -18,6 +18,7 @@ import Tab from '@mui/material/Tab';
 import { useState } from 'react';
 import * as React from 'react';
 import { Box } from '@mui/material';
+import CustomChart from './DashboardContent/AnalyticsTabs/CustomCharts';
 
 const lightColor = 'rgba(255, 255, 255, 0.7)';
 
@@ -27,8 +28,26 @@ const headerOptions = [
     id: 'Managerial',
     children: [
       { childId: 'ServiceForm', component: <ServiceForm />, active: 0 },
-      { childId: 'Manage Employees', component: <h1>search employee by name/phone/etc, or show all employees for crud ops</h1>, active: 1 },
-      { childId: 'Manage Clients', component: <h1>search customers by name/phone/etc, or show all customers for crud ops</h1>, active: 2 }
+      {
+        childId: 'Manage Employees',
+        component: (
+          <h1>
+            search employee by name/phone/etc, or show all employees for crud
+            ops
+          </h1>
+        ),
+        active: 1
+      },
+      {
+        childId: 'Manage Clients',
+        component: (
+          <h1>
+            search customers by name/phone/etc, or show all customers for crud
+            ops
+          </h1>
+        ),
+        active: 2
+      }
     ]
   },
   {
@@ -42,8 +61,8 @@ const headerOptions = [
   {
     id: 'Analytics',
     children: [
-      { childId: 'Tank Charts', component: <DefaultChartsTab/>, active: 0 },
-      { childId: 'Custom charts', component: <h1>user defined charts go here</h1>, active: 1 },
+      { childId: 'Tank Charts', component: <DefaultChartsTab />, active: 0 },
+      { childId: 'Custom charts', component: <CustomChart />, active: 1 }
     ]
   }
 ];
