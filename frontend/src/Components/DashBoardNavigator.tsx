@@ -8,9 +8,11 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import { Link } from "react-router-dom";
 import PeopleIcon from '@mui/icons-material/People';
-import DnsRoundedIcon from '@mui/icons-material/DnsRounded';
-import PermMediaOutlinedIcon from '@mui/icons-material/PhotoSizeSelectActual';
+import ShowChartIcon from '@mui/icons-material/ShowChart';
 import { useState } from 'react' 
+import BorderColorIcon from '@mui/icons-material/BorderColor';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import BadgeIcon from '@mui/icons-material/Badge';
 
 const item = {
   py: '2px',
@@ -40,19 +42,29 @@ export default function Navigator( props: DrawerProps) {
       id: 'Admin',
       children: [
         { 
-          id: 'Managerial', 
-          icon: <PeopleIcon />,
+          id: 'Service Forms', 
+          icon: <BorderColorIcon />,
           onClick: () => { setActiveIndex(0) }
         },
         { 
-          id: 'Database',
-          icon: <DnsRoundedIcon />,
+          id: 'Employees',
+          icon: <BadgeIcon />,
           onClick: () => { setActiveIndex(1) }
         },
         { 
-          id: 'Analytics',
-          icon: <PermMediaOutlinedIcon />,
+          id: 'Clients',
+          icon: <PeopleIcon />,
           onClick: () => { setActiveIndex(2) }
+        },
+        { 
+          id: 'Analytics',
+          icon: <ShowChartIcon />,
+          onClick: () => { setActiveIndex(3) }
+        },
+        { 
+          id: 'Data Export',
+          icon: <ContentCopyIcon />,
+          onClick: () => { setActiveIndex(4) }
         },
       ]
     }
