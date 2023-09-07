@@ -10,10 +10,10 @@ export default function Analytics(){
     return(
         <div>
         <Header selection ='Analytics' />
-        <div style = {style}>
+        <div >
             <DefaultCharts/>
         </div>
-        <div style = {style}>
+        <div >
             <CustomChart/>
         </div>
     </div>

@@ -107,7 +107,7 @@ export default function DefaultCharts() {
           </Collapse>
         </List>
         <h2>One Chart Demo</h2>
-        <div style={{alignContent: 'center', width:'100%'}}>
+        <div style={{alignContent: 'center', width:'50%', position:'relative'}}>
           {toggleShowCharts && TankData.map((d)=> (
             <div>
               <h3>{d.datasets[0].label}</h3>
