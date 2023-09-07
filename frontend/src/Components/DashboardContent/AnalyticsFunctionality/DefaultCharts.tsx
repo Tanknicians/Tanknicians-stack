@@ -13,10 +13,10 @@ import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useGetClientsQuery } from '../../../Redux/slices/users/userManagementSlice';
 import { useGetTankDataQuery } from '../../../Redux/slices/tanks/tankDataSlice';
-import LineChart from '../../../Components/ChartJS/LineChart';
+import LineChart from '../../ChartJS/LineChart';
 import { TankData } from './DUMMYDATA';
 
-export default function DefaultChartsTab() {
+export default function DefaultCharts() {
   // interfaces to appease sadistict TS kink enjoyers
   interface OwnedTanks {
     id: number;
@@ -38,6 +38,7 @@ export default function DefaultChartsTab() {
   const [openItemId, setOpenItemId] = useState<number | null>(null);
   const [listToggle, setListToggle] = useState(true);
   const { data, error, isLoading } = useGetClientsQuery<UseQuery>(true);
+  console.log(data, error, isLoading)
   // const { data, error, isLoading } = useGetTankDataQuery<UseQuery>(tankID);
 
   // Temporary hack to get users and their tanks from DB
