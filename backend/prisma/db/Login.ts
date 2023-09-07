@@ -1,5 +1,4 @@
 import { Login, PrismaClient, Role } from "@prisma/client";
-import { number } from "zod";
 const prisma = new PrismaClient();
 
 // CREATE

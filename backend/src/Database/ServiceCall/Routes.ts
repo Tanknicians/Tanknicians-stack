@@ -9,6 +9,7 @@ import {
   serviceCallSchema,
   validateRequestBody,
 } from '../../zodTypes';
+import { z } from 'zod';
 
 const serviceCallRouter = express.Router();
 serviceCallRouter.use(express.json());
@@ -40,6 +41,34 @@ serviceCallRouter.get(
       res.json(result);
     } catch (error) {
       res.status(500).json({ error: 'Failed to read Service Call' });
+    }
+  },
+);
+
+// get all Service Calls from a tank ID and a start and end date
+serviceCallRouter.get(
+  '/range/:tankId',
+  authenticateRoleMiddleWare(['ADMIN']),
+  async (req, res) => {
+    const result = z
+      .object({
+        tankId: z.coerce.number(),
+        start: z.coerce.date(),
+        end: z.coerce.date(),
+      })
+      .safeParse({ ...req.query, ...req.params });
+    if (!result.success) {
+      return res.status(400).json({ error: result.error.errors });
+    }
+    const { tankId, start, end } = result.data;
+
+    try {
+      const result = await ServiceCallService.readAllByDate(tankId, start, end);
+      res.json(result);
+    } catch (error) {
+      res.status(500).json({
+        error: 'Failed to read Service Calls by tankID and given date range.',
+      });
     }
   },
 );
