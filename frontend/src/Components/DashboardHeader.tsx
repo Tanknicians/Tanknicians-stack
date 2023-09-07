@@ -1,4 +1,4 @@
-import ServiceForm from './DashboardContent/ManagerialTabs/ServiceForm';
+import ServiceForm from './DashboardContent/ServiceFormsFunctionality/ServiceForm';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import TabPanel from './DashboardContent/TabPanel';
 import Typography from '@mui/material/Typography';
@@ -23,27 +23,36 @@ const lightColor = 'rgba(255, 255, 255, 0.7)';
 // ChildId acts as Label for tab
 const headerOptions = [
   {
-    id: 'Managerial',
+    id: 'Service Forms',
     children: [
-      { childId: 'ServiceForm', component: <ServiceForm />, active: 0 },
-      { childId: 'Man tab 2', component: <h1>man tab 2</h1>, active: 1 },
-      { childId: 'Man tab 3', component: <h1>man tab 3</h1>, active: 2 }
+      { childId: 'Flagged Forms', active: 0 },
+      { childId: 'Create Service Call Form', active: 1 },
     ]
   },
   {
-    id: 'Database',
+    id: 'Employees',
     children: [
-      { childId: 'Dat tab 1', component: <h1>Dat tab 1</h1>, active: 0 },
-      { childId: 'Dat tab 2', component: <h1>Dat tab 2</h1>, active: 1 },
-      { childId: 'Dat tab 3', component: <h1>Dat tab 3</h1>, active: 2 }
+      { childId: 'Review Employees', active: 0 },
+    ]
+  },
+  {
+    id: 'Clients',
+    children: [
+      { childId: 'Review Clients', active: 0 },
+      
     ]
   },
   {
     id: 'Analytics',
     children: [
-      { childId: 'Anal tab 1', component: <h1>Anal tab 1</h1>, active: 0 },
-      { childId: 'Anal tab 2', component: <h1>Anal tab 2</h1>, active: 1 },
-      { childId: 'Anal tab 3', component: <h1>Anal tab 3</h1>, active: 2 }
+      { childId: 'Review Core Tank Charts', active: 0 },
+      { childId: 'Create Custom Chart', active: 1 },
+    ]
+  },
+  {
+    id: 'Data Export',
+    children: [
+      { childId: 'View and Export Data', active: 0 },
     ]
   }
 ];
@@ -70,12 +79,6 @@ export default function Header(props: HeaderProps) {
 
   // State for tracking current active tab for STYLING
   const [activeIndex, setActiveIndex] = useState(0);
-
-  // When clicking a tab, invoke this function to select the tab and change the styling to indicate active tab
-  // const choseTab = (input: any, index: number) => {
-  //   tabSelect(input);
-  //   setActiveIndex(index);
-  // };
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setActiveIndex(newValue);
@@ -112,11 +115,11 @@ export default function Header(props: HeaderProps) {
         </Tabs>
       </Box>
 
-      {headerSettings?.children.map(({ childId, component, active }) => (
+      {/* {headerSettings?.children.map(({ childId, component, active }) => (
         <TabPanel key={childId} value={activeIndex} index={active}>
           {component}
         </TabPanel>
-      ))}
+      ))} */}
     </React.Fragment>
   );
 }

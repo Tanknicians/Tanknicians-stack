@@ -13,7 +13,7 @@ import {
   serviceFormFieldQuestionsText,
   ServiceFormData,
   serviceFormSchema
-} from './serviceFormTypesandData';
+} from '../serviceFormTypesandData';
 import { useUploadServiceCallMutation } from '../../../Redux/slices/forms/servicecallApiSlice';
 import { useForm, SubmitHandler, Controller } from 'react-hook-form';
 import LoadingProgressButton from '../../LoadingProgressButton';
