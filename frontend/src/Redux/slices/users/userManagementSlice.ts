@@ -5,7 +5,7 @@ export const userManagementSlice = apiSlice.injectEndpoints({
     getClients: builder.query<any, boolean>({
       query: includeTanks => {
         return {
-          url: `/api/database/user/getAllUsersAndTanks`,
+          url: `/api/database/user/`,
           method: 'GET',
           params: { includeTanks: includeTanks }
         };

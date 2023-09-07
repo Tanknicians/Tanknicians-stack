@@ -70,8 +70,10 @@ export async function deleteServiceCall(id: number) {
 }
 
 // SEARCH
-export async function searchByString(search: String) {
+export async function searchByString(search: String, page: number) {
   return await prisma.serviceCall.findMany({
+    skip: (page - 1) * 25,
+    take: 25,
     where: {
       OR: [
         { customerRequest: { contains: String(search) } },

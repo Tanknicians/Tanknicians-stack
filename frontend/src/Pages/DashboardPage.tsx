@@ -3,7 +3,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
-import Navigator from '../Components/DashBoardNavigator';
+import Navigator from '../Components/DashboardNavigator';
 import Content from '../Components/DashboardContentRoutes';
 import AppBar from '@mui/material/AppBar';
 import Avatar from '@mui/material/Avatar';
