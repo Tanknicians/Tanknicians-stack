@@ -82,7 +82,6 @@ export default function DefaultCharts() {
           }
         >
           <Collapse in={listToggle}>
-            
          { myUserData?.map(({ id, firstName, lastName, OwnedTanks }) => (
               <div>
                 <ListItemButton onClick={() => toggleSubMenu(id)} key={id}>
@@ -107,6 +106,7 @@ export default function DefaultCharts() {
             ))}
           </Collapse>
         </List>
+        <h2>One Chart Demo</h2>
         <div style={{alignContent: 'center', width:'100%'}}>
           {toggleShowCharts && TankData.map((d)=> (
             <div>
