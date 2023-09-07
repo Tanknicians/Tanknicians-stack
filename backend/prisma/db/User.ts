@@ -73,8 +73,10 @@ export async function deleteUser(id: number) {
 }
 
 // SEARCH
-export async function searchByString(search: String) {
+export async function searchByString(search: String, page: number) {
   return await prisma.user.findMany({
+    skip: (page - 1) * 25,
+    take: 25,
     where: {
       OR: [
         { firstName: { contains: String(search) } },

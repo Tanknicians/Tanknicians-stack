@@ -1,6 +1,6 @@
-import { Schema, z } from "zod";
-import { NextFunction, Response, Request } from "express";
-import { ParamsDictionary } from "express-serve-static-core";
+import { Schema, z } from 'zod';
+import { NextFunction, Response, Request } from 'express';
+import { ParamsDictionary } from 'express-serve-static-core';
 
 export type ValidatedRequest<T> = Request<ParamsDictionary, unknown, T>;
 
@@ -16,30 +16,57 @@ export const validateRequestBody =
 
 export const loginSchema = z
   .object({
-    email: z.string({ required_error: "Email is required" }).email(),
-    password: z.string({ required_error: "Password is required" }),
-    role: z.enum(["ADMIN", "EMPLOYEE", "CUSTOMER"], {
+    email: z.string({ required_error: 'Email is required' }).email(),
+    password: z.string({ required_error: 'Password is required' }),
+    role: z.enum(['ADMIN', 'EMPLOYEE', 'CUSTOMER'], {
       errorMap: () => ({
-        message: "Role must be ADMIN, EMPLOYEE, or CUSTOMER",
+        message: 'Role must be ADMIN, EMPLOYEE, or CUSTOMER',
       }),
     }),
+    userId: z
+      .number({ required_error: 'Must be a positive integer.' })
+      .positive(),
   })
   .strict();
 
 export type Login = z.infer<typeof loginSchema>;
 export type LoginRequest = ValidatedRequest<Login>;
 
-export const authLogin = loginSchema.omit({ role: true });
+const tokenData = loginSchema.extend({ id: z.number(), userId: z.number() });
+
+export const tokenSchema = z.object({
+  data: tokenData,
+  isRefreshToken: z.literal(false),
+});
+
+export type Token = z.infer<typeof tokenSchema>;
+
+export const refreshTokenSchema = z.object({
+  data: tokenData,
+  isRefreshToken: z.literal(true),
+});
+export type RefreshToken = z.infer<typeof refreshTokenSchema>;
+
+export const authLogin = loginSchema.omit({ role: true, userId: true });
 export type AuthLogin = z.infer<typeof authLogin>;
 export type AuthLoginRequest = ValidatedRequest<AuthLogin>;
 
-export const serviceCallSchema = z.object({
-  id: z.number(),
-  isApproved: z.boolean().optional(),
-  createdOn: z.date().optional(),
+// this will be used to register new Logins
+export const authRegister = loginSchema.omit({ password: true });
+export type AuthRegister = z.infer<typeof authRegister>;
+export type AuthRegisterRequest = ValidatedRequest<AuthRegister>;
 
-  customerRequest: z.string(),
-  employeeNotes: z.string(),
+export const serviceCallSchema = z.object({
+  id: z.number().int(),
+  isApproved: z.boolean().optional(),
+  createdOn: z.date(),
+  billed: z.boolean(),
+
+  customerRequest: z.string().optional(),
+  employeeNotes: z.string().optional(),
+  // server use only for not-approved notes
+  notApprovedNotes: z.string().optional(),
+  notesUpdated: z.date().optional(),
 
   alkalinity: z.number(),
   calcium: z.number(),
@@ -59,13 +86,14 @@ export const serviceCallSchema = z.object({
   saltCreepCleaned: z.boolean(),
   skimmerCleanedAndOperational: z.boolean(),
   waterChanged: z.boolean(),
+  waterTestedRecordedDated: z.boolean(),
 
   pestAPresent: z.boolean(),
   pestBPresent: z.boolean(),
   pestCPresent: z.boolean(),
   pestDPresent: z.boolean(),
   employeeId: z.number().int(),
-  tankId: z.number().int(),
+  tankId: z.number().int().optional(),
 });
 
 export type ServiceCall = z.infer<typeof serviceCallSchema>;
