@@ -50,10 +50,19 @@ serviceCallRouter.get(
   '/range/:tankId',
   authenticateRoleMiddleWare(['ADMIN']),
   async (req, res) => {
+    const result = z
+      .object({
+        tankId: z.coerce.number(),
+        start: z.coerce.date(),
+        end: z.coerce.date(),
+      })
+      .safeParse({ ...req.query, ...req.params });
+    if (!result.success) {
+      return res.status(400).json({ error: result.error.errors });
+    }
+    const { tankId, start, end } = result.data;
+
     try {
-      const tankId = z.coerce.number().parse(req.params.tankId);
-      const start = z.coerce.date().parse(req.query.start);
-      const end = z.coerce.date().parse(req.query.end);
       const result = await ServiceCallService.readAllByDate(tankId, start, end);
       res.json(result);
     } catch (error) {
