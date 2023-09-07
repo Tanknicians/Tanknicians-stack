@@ -45,7 +45,7 @@ export async function readAllByDate(
       throw new Error(`Service Calls for id: ${tankId} not found.`);
     }
 
-    let returnData: ReturnDataSchema = {
+    const returnData: ReturnDataSchema = {
       tankId: tankId,
       alkalinity: [],
       calcium: [],
