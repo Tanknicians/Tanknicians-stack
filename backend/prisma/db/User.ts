@@ -98,8 +98,8 @@ export async function getAll() {
 export async function getAllUsersAndTanks(includeTanks: boolean) {
   return await prisma.user.findMany({
     include: {
-      OwnedTanks: includeTanks
-    }
+      OwnedTanks: includeTanks,
+    },
   });
 }
 
