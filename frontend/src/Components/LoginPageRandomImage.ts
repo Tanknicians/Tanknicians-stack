@@ -22,5 +22,5 @@ const loginRandomImages = [
   'wave3.jpg',
   'wave4.jpg',
   'whaleShark.jpg'
-]
-export default loginRandomImages
+];
+export default loginRandomImages;

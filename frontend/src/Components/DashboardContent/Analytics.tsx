@@ -1,6 +1,6 @@
-import Header from '../DashboardHeader'
-import DefaultCharts from './AnalyticsFunctionality/DefaultCharts'
-import CustomChart from './AnalyticsFunctionality/CustomCharts'
+import Header from '../DashboardHeader';
+import DefaultCharts from './AnalyticsFunctionality/DefaultCharts';
+import CustomChart from './AnalyticsFunctionality/CustomCharts';
 
 export default function Analytics() {
   return (
@@ -10,5 +10,5 @@ export default function Analytics() {
       <DefaultCharts />
       <CustomChart />
     </div>
-  )
+  );
 }

@@ -1,18 +1,18 @@
-import Divider from '@mui/material/Divider'
-import Drawer, { DrawerProps } from '@mui/material/Drawer'
-import List from '@mui/material/List'
-import Box from '@mui/material/Box'
-import ListItem from '@mui/material/ListItem'
-import ListItemButton from '@mui/material/ListItemButton'
-import ListItemIcon from '@mui/material/ListItemIcon'
-import ListItemText from '@mui/material/ListItemText'
-import { Link } from 'react-router-dom'
-import PeopleIcon from '@mui/icons-material/People'
-import ShowChartIcon from '@mui/icons-material/ShowChart'
-import { useState } from 'react'
-import BorderColorIcon from '@mui/icons-material/BorderColor'
-import ContentCopyIcon from '@mui/icons-material/ContentCopy'
-import BadgeIcon from '@mui/icons-material/Badge'
+import Divider from '@mui/material/Divider';
+import Drawer, { DrawerProps } from '@mui/material/Drawer';
+import List from '@mui/material/List';
+import Box from '@mui/material/Box';
+import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import { Link } from 'react-router-dom';
+import PeopleIcon from '@mui/icons-material/People';
+import ShowChartIcon from '@mui/icons-material/ShowChart';
+import { useState } from 'react';
+import BorderColorIcon from '@mui/icons-material/BorderColor';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import BadgeIcon from '@mui/icons-material/Badge';
 
 const item = {
   py: '2px',
@@ -21,19 +21,19 @@ const item = {
   '&:hover': {
     bgcolor: 'rgba(255, 255, 255, 0.08)'
   }
-}
+};
 
 const itemCategory = {
   boxShadow: '0 -1px 0 rgb(255,255,255,0.1) inset',
   py: 1.5,
   px: 3
-}
+};
 
 export default function Navigator(props: DrawerProps) {
   // Admin features represents a list of panels that contain content.
   // Our list has one panel, "Admin".
   // Admin has three children, each with a text label, icon, and highlight state: active or not active.
-  const [activeIndex, setActiveIndex] = useState(0)
+  const [activeIndex, setActiveIndex] = useState(0);
 
   const dashboardFeatures = [
     {
@@ -44,40 +44,40 @@ export default function Navigator(props: DrawerProps) {
           id: 'Service Forms',
           icon: <BorderColorIcon />,
           onClick: () => {
-            setActiveIndex(0)
+            setActiveIndex(0);
           }
         },
         {
           id: 'Employees',
           icon: <BadgeIcon />,
           onClick: () => {
-            setActiveIndex(1)
+            setActiveIndex(1);
           }
         },
         {
           id: 'Clients',
           icon: <PeopleIcon />,
           onClick: () => {
-            setActiveIndex(2)
+            setActiveIndex(2);
           }
         },
         {
           id: 'Analytics',
           icon: <ShowChartIcon />,
           onClick: () => {
-            setActiveIndex(3)
+            setActiveIndex(3);
           }
         },
         {
           id: 'Data Export',
           icon: <ContentCopyIcon />,
           onClick: () => {
-            setActiveIndex(4)
+            setActiveIndex(4);
           }
         }
       ]
     }
-  ]
+  ];
 
   return (
     <Drawer variant='permanent' {...props}>
@@ -116,5 +116,5 @@ export default function Navigator(props: DrawerProps) {
         ))}
       </List>
     </Drawer>
-  )
+  );
 }

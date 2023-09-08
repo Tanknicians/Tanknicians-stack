@@ -1,4 +1,4 @@
-import { apiSlice } from '../../api/apiSlice'
+import { apiSlice } from '../../api/apiSlice';
 
 export const userManagementSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -8,10 +8,10 @@ export const userManagementSlice = apiSlice.injectEndpoints({
           url: `/api/database/user/`,
           method: 'GET',
           params: { includeTanks: includeTanks }
-        }
+        };
       }
     })
   })
-})
+});
 
-export const { useGetClientsQuery } = userManagementSlice
+export const { useGetClientsQuery } = userManagementSlice;

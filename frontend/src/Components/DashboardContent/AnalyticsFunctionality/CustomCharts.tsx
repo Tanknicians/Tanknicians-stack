@@ -1,4 +1,4 @@
-import LineChart from '../../../Components/ChartJS/LineChart'
+import LineChart from '../../../Components/ChartJS/LineChart';
 
 export default function CustomChart() {
   const TankData = {
@@ -15,11 +15,11 @@ export default function CustomChart() {
         borderColor: 'Blue'
       }
     ]
-  }
+  };
   return (
     <div style={{ width: '50%', position: 'relative' }}>
       <h2>Two charts Demo</h2>
       <LineChart data={TankData} />;
     </div>
-  )
+  );
 }

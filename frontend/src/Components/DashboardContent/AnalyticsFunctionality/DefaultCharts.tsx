@@ -1,69 +1,69 @@
-import ListSubheader from '@mui/material/ListSubheader'
-import List from '@mui/material/List'
-import ListItemButton from '@mui/material/ListItemButton'
-import ListItemText from '@mui/material/ListItemText'
-import Collapse from '@mui/material/Collapse'
-import ExpandLess from '@mui/icons-material/ExpandLess'
-import ExpandMore from '@mui/icons-material/ExpandMore'
-import Card from '@mui/material/Card'
-import CardActions from '@mui/material/CardActions'
-import CardContent from '@mui/material/CardContent'
-import { useState } from 'react'
-import IconButton from '@mui/material/IconButton'
-import MenuIcon from '@mui/icons-material/Menu'
-import { useGetClientsQuery } from '../../../Redux/slices/users/userManagementSlice'
-import { useGetTankDataQuery } from '../../../Redux/slices/tanks/tankDataSlice'
-import LineChart from '../../ChartJS/LineChart'
-import { TankData } from './DUMMYDATA'
+import ListSubheader from '@mui/material/ListSubheader';
+import List from '@mui/material/List';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemText from '@mui/material/ListItemText';
+import Collapse from '@mui/material/Collapse';
+import ExpandLess from '@mui/icons-material/ExpandLess';
+import ExpandMore from '@mui/icons-material/ExpandMore';
+import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
+import { useState } from 'react';
+import IconButton from '@mui/material/IconButton';
+import MenuIcon from '@mui/icons-material/Menu';
+import { useGetClientsQuery } from '../../../Redux/slices/users/userManagementSlice';
+import { useGetTankDataQuery } from '../../../Redux/slices/tanks/tankDataSlice';
+import LineChart from '../../ChartJS/LineChart';
+import { TankData } from './DUMMYDATA';
 
 export default function DefaultCharts() {
   // interfaces to appease sadistict TS kink enjoyers
   interface OwnedTanks {
-    id: number
+    id: number;
   }
   interface UserData {
-    OwnedTanks: OwnedTanks[]
-    firstName: string
-    lastName: string
-    id: number
+    OwnedTanks: OwnedTanks[];
+    firstName: string;
+    lastName: string;
+    id: number;
   }
   interface UseQuery {
-    data: UserData[] | null
-    error: Error | undefined
-    isLoading: boolean
+    data: UserData[] | null;
+    error: Error | undefined;
+    isLoading: boolean;
   }
 
   // List toggle controls
-  const [toggleShowCharts, setToggleShowCharts] = useState(false)
-  const [openItemId, setOpenItemId] = useState<number | null>(null)
-  const [listToggle, setListToggle] = useState(true)
-  const { data, error, isLoading } = useGetClientsQuery<UseQuery>(true)
-  console.log(data, error, isLoading)
+  const [toggleShowCharts, setToggleShowCharts] = useState(false);
+  const [openItemId, setOpenItemId] = useState<number | null>(null);
+  const [listToggle, setListToggle] = useState(true);
+  const { data, error, isLoading } = useGetClientsQuery<UseQuery>(true);
+  console.log(data, error, isLoading);
   // const { data, error, isLoading } = useGetTankDataQuery<UseQuery>(tankID);
 
   // Temporary hack to get users and their tanks from DB
-  let myUserData: UserData[] | null = null
-  myUserData = data
+  let myUserData: UserData[] | null = null;
+  myUserData = data;
 
   // List menu/submenu toggle handlers
   const handleListToggle = () => {
-    setListToggle(!listToggle)
-  }
+    setListToggle(!listToggle);
+  };
 
   const toggleSubMenu = (itemId: number) => {
     if (openItemId === itemId) {
-      setOpenItemId(null)
+      setOpenItemId(null);
     } else {
-      setOpenItemId(itemId)
+      setOpenItemId(itemId);
     }
-  }
+  };
 
   // on selection of users tankID, generate charts
   const handleRequestChart = (tankID: number) => {
-    console.log('TankID: ' + tankID)
-    setListToggle(false)
-    setToggleShowCharts(true)
-  }
+    console.log('TankID: ' + tankID);
+    setListToggle(false);
+    setToggleShowCharts(true);
+  };
 
   if (myUserData != null) {
     return (
@@ -126,8 +126,8 @@ export default function DefaultCharts() {
             ))}
         </div>
       </div>
-    )
+    );
   } else {
-    return <div>error</div>
+    return <div>error</div>;
   }
 }

@@ -1,8 +1,8 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 // import PasswordResetPage from './Pages/PasswordResetPage';
-import RequireAuth from './Redux/slices/auth/RequireAuth'
-import DashboardPage from './Pages/DashboardPage'
-import LoginPage from './Pages/LoginPage'
+import RequireAuth from './Redux/slices/auth/RequireAuth';
+import DashboardPage from './Pages/DashboardPage';
+import LoginPage from './Pages/LoginPage';
 
 export default function App() {
   return (
@@ -17,5 +17,5 @@ export default function App() {
         </Route>
       </Routes>
     </BrowserRouter>
-  )
+  );
 }

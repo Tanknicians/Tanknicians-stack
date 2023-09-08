@@ -1,4 +1,4 @@
-import { apiSlice } from '../../api/apiSlice'
+import { apiSlice } from '../../api/apiSlice';
 
 export const userTankApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -12,6 +12,6 @@ export const userTankApiSlice = apiSlice.injectEndpoints({
       })
     })
   })
-})
+});
 
-export const { useUserWithTanksQuery } = userTankApiSlice
+export const { useUserWithTanksQuery } = userTankApiSlice;

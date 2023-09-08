@@ -1,4 +1,4 @@
-import { apiSlice } from '../../api/apiSlice'
+import { apiSlice } from '../../api/apiSlice';
 
 export const servicecallApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -10,6 +10,6 @@ export const servicecallApiSlice = apiSlice.injectEndpoints({
       })
     })
   })
-})
+});
 
-export const { useUploadServiceCallMutation } = servicecallApiSlice
+export const { useUploadServiceCallMutation } = servicecallApiSlice;

@@ -1,25 +1,25 @@
-import Autocomplete from '@mui/material/Autocomplete'
-import TextField from '@mui/material/TextField'
-import parse from 'autosuggest-highlight/parse'
-import match from 'autosuggest-highlight/match'
-import React from 'react'
+import Autocomplete from '@mui/material/Autocomplete';
+import TextField from '@mui/material/TextField';
+import parse from 'autosuggest-highlight/parse';
+import match from 'autosuggest-highlight/match';
+import React from 'react';
 
 type OptionsList = {
-  optionsList: UserOption[]
+  optionsList: UserOption[];
   handleUserSelected: (
     _event: React.SyntheticEvent,
     value: UserOption | null
-  ) => void
-}
+  ) => void;
+};
 
 export type UserOption = {
-  id: number
-  firstName: string
-  middleName: string
-  lastName: string
-  address: string
-  phone: string
-}
+  id: number;
+  firstName: string;
+  middleName: string;
+  lastName: string;
+  address: string;
+  phone: string;
+};
 
 const styles = {
   groupLabelContainer: {
@@ -42,7 +42,7 @@ const styles = {
   customerNameandGroupLabel: {
     width: '50%'
   }
-}
+};
 
 export default function UserSearchBar({
   optionsList,
@@ -75,8 +75,8 @@ export default function UserSearchBar({
       renderOption={(props, option, { inputValue }) => {
         const matches = match(option.firstName, inputValue, {
           insideWords: true
-        })
-        const parts = parse(option.firstName, matches)
+        });
+        const parts = parse(option.firstName, matches);
 
         return (
           <li {...props} style={styles.optionLabel}>
@@ -98,8 +98,8 @@ export default function UserSearchBar({
             </span>
             <span id='customer-address'>{option.address}</span>
           </li>
-        )
+        );
       }}
     />
-  )
+  );
 }

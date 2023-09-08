@@ -7,26 +7,26 @@ import {
   PERSIST,
   PURGE,
   REGISTER
-} from 'redux-persist'
-import authReducer from './slices/auth/authSlice'
-import { configureStore } from '@reduxjs/toolkit'
-import storage from 'redux-persist/lib/storage'
-import { apiSlice } from './api/apiSlice'
-import { combineReducers } from 'redux'
+} from 'redux-persist';
+import authReducer from './slices/auth/authSlice';
+import { configureStore } from '@reduxjs/toolkit';
+import storage from 'redux-persist/lib/storage';
+import { apiSlice } from './api/apiSlice';
+import { combineReducers } from 'redux';
 
 const persistConfig = {
   key: 'root',
   version: 1,
   storage,
   whitelist: ['auth']
-}
+};
 
 const rootReducer = combineReducers({
   auth: authReducer,
   [apiSlice.reducerPath]: apiSlice.reducer
-})
+});
 
-const persistedReducer = persistReducer(persistConfig, rootReducer)
+const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 export const store = configureStore({
   reducer: persistedReducer,
@@ -37,8 +37,8 @@ export const store = configureStore({
       }
     }).concat(apiSlice.middleware),
   devTools: true
-})
+});
 
-export const persistor = persistStore(store)
+export const persistor = persistStore(store);
 
-export type RootState = ReturnType<typeof store.getState>
+export type RootState = ReturnType<typeof store.getState>;

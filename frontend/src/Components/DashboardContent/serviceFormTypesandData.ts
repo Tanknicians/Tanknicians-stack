@@ -1,32 +1,32 @@
-import { z } from 'zod'
+import { z } from 'zod';
 
 // employeeId: number;
 // tankId: number;
 
 export interface ServiceFormData {
-  alkalinity: number
-  calcium: number
-  nitrate: number
-  phosphate: number
-  ATOOperational: boolean
-  ATOReservoirFilled: boolean
-  chemFilterAdjusted: boolean
-  doserAdjustementOrManualDosing: boolean
-  dosingReservoirsFull: boolean
-  floorsCheckedForSpillsOrDirt: boolean
-  glassCleanedInside: boolean
-  glassCleanedOutside: boolean
-  mechFilterChanged: boolean
-  pumpsClearedOfDebris: boolean
-  saltCreepCleaned: boolean
-  skimmerCleanedAndOperational: boolean
-  waterChanged: boolean
-  pestAPresent: boolean
-  pestBPresent: boolean
-  pestCPresent: boolean
-  pestDPresent: boolean
-  customerRequest: string
-  employeeNotes: string
+  alkalinity: number;
+  calcium: number;
+  nitrate: number;
+  phosphate: number;
+  ATOOperational: boolean;
+  ATOReservoirFilled: boolean;
+  chemFilterAdjusted: boolean;
+  doserAdjustementOrManualDosing: boolean;
+  dosingReservoirsFull: boolean;
+  floorsCheckedForSpillsOrDirt: boolean;
+  glassCleanedInside: boolean;
+  glassCleanedOutside: boolean;
+  mechFilterChanged: boolean;
+  pumpsClearedOfDebris: boolean;
+  saltCreepCleaned: boolean;
+  skimmerCleanedAndOperational: boolean;
+  waterChanged: boolean;
+  pestAPresent: boolean;
+  pestBPresent: boolean;
+  pestCPresent: boolean;
+  pestDPresent: boolean;
+  customerRequest: string;
+  employeeNotes: string;
 }
 
 export const serviceFormSchema = z.object({
@@ -59,7 +59,7 @@ export const serviceFormSchema = z.object({
   pestDPresent: z.boolean(),
   customerRequest: z.string(),
   employeeNotes: z.string()
-})
+});
 
 type ServiceFormFieldId =
   | 'alkalinity'
@@ -84,11 +84,11 @@ type ServiceFormFieldId =
   | 'pestCPresent'
   | 'pestDPresent'
   | 'customerRequest'
-  | 'employeeNotes'
+  | 'employeeNotes';
 
 interface ServiceFormFieldQuestion {
-  id: ServiceFormFieldId
-  label: string
+  id: ServiceFormFieldId;
+  label: string;
 }
 
 export const serviceFormFieldQuestionsText: ServiceFormFieldQuestion[] = [
@@ -100,7 +100,7 @@ export const serviceFormFieldQuestionsText: ServiceFormFieldQuestion[] = [
     id: 'employeeNotes',
     label: 'Employee Notes'
   }
-]
+];
 
 export const serviceFormFieldQuestionsNumeric: ServiceFormFieldQuestion[] = [
   {
@@ -119,7 +119,7 @@ export const serviceFormFieldQuestionsNumeric: ServiceFormFieldQuestion[] = [
     id: 'phosphate',
     label: 'Phosphate'
   }
-]
+];
 
 export const serviceFormFieldQuestionsBoolean: ServiceFormFieldQuestion[] = [
   {
@@ -191,4 +191,4 @@ export const serviceFormFieldQuestionsBoolean: ServiceFormFieldQuestion[] = [
     id: 'pestDPresent',
     label: 'Pest D Present'
   }
-]
+];

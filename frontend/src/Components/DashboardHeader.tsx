@@ -1,24 +1,24 @@
-import ServiceForm from './DashboardContent/ServiceFormsFunctionality/ServiceForm'
-import NotificationsIcon from '@mui/icons-material/Notifications'
-import TabPanel from './DashboardContent/TabPanel'
-import Typography from '@mui/material/Typography'
-import IconButton from '@mui/material/IconButton'
-import HelpIcon from '@mui/icons-material/Help'
-import MenuIcon from '@mui/icons-material/Menu'
-import Toolbar from '@mui/material/Toolbar'
-import Tooltip from '@mui/material/Tooltip'
-import AppBar from '@mui/material/AppBar'
-import Avatar from '@mui/material/Avatar'
-import Button from '@mui/material/Button'
-import Grid from '@mui/material/Grid'
-import Link from '@mui/material/Link'
-import Tabs from '@mui/material/Tabs'
-import Tab from '@mui/material/Tab'
-import { useState } from 'react'
-import * as React from 'react'
-import { Box } from '@mui/material'
+import ServiceForm from './DashboardContent/ServiceFormsFunctionality/ServiceForm';
+import NotificationsIcon from '@mui/icons-material/Notifications';
+import TabPanel from './DashboardContent/TabPanel';
+import Typography from '@mui/material/Typography';
+import IconButton from '@mui/material/IconButton';
+import HelpIcon from '@mui/icons-material/Help';
+import MenuIcon from '@mui/icons-material/Menu';
+import Toolbar from '@mui/material/Toolbar';
+import Tooltip from '@mui/material/Tooltip';
+import AppBar from '@mui/material/AppBar';
+import Avatar from '@mui/material/Avatar';
+import Button from '@mui/material/Button';
+import Grid from '@mui/material/Grid';
+import Link from '@mui/material/Link';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import { useState } from 'react';
+import * as React from 'react';
+import { Box } from '@mui/material';
 
-const lightColor = 'rgba(255, 255, 255, 0.7)'
+const lightColor = 'rgba(255, 255, 255, 0.7)';
 
 // ChildId acts as Label for tab
 const headerOptions = [
@@ -48,34 +48,34 @@ const headerOptions = [
     id: 'Data Export',
     children: [{ childId: 'View and Export Data', active: 0 }]
   }
-]
+];
 
 function a11yProps(index: number) {
   return {
     id: `simple-tab-${index}`,
     'aria-controls': `simple-tabpanel-${index}`
-  }
+  };
 }
 
 type HeaderProps = {
   // tabSelect: any; // (input:React.FC) => void | any; // any until
-  selection: string
-}
+  selection: string;
+};
 
 export default function Header(props: HeaderProps) {
   // Pull selection and onDrawerToggle from props
   // const { tabSelect, selection } = props;
-  const { selection } = props
+  const { selection } = props;
 
   // get the header settings that match the current
-  const headerSettings = headerOptions.find((item) => item.id === selection)
+  const headerSettings = headerOptions.find((item) => item.id === selection);
 
   // State for tracking current active tab for STYLING
-  const [activeIndex, setActiveIndex] = useState(0)
+  const [activeIndex, setActiveIndex] = useState(0);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-    setActiveIndex(newValue)
-  }
+    setActiveIndex(newValue);
+  };
 
   return (
     <React.Fragment>
@@ -114,5 +114,5 @@ export default function Header(props: HeaderProps) {
         </TabPanel>
       ))} */}
     </React.Fragment>
-  )
+  );
 }

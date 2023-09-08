@@ -6,22 +6,22 @@ import {
   Radio,
   RadioGroup,
   TextField
-} from '@mui/material'
+} from '@mui/material';
 import {
   serviceFormFieldQuestionsBoolean,
   serviceFormFieldQuestionsNumeric,
   serviceFormFieldQuestionsText,
   ServiceFormData,
   serviceFormSchema
-} from '../serviceFormTypesandData'
-import { useUploadServiceCallMutation } from '../../../Redux/slices/forms/servicecallApiSlice'
-import { useForm, SubmitHandler, Controller } from 'react-hook-form'
-import LoadingProgressButton from '../../LoadingProgressButton'
-import { zodResolver } from '@hookform/resolvers/zod'
+} from '../serviceFormTypesandData';
+import { useUploadServiceCallMutation } from '../../../Redux/slices/forms/servicecallApiSlice';
+import { useForm, SubmitHandler, Controller } from 'react-hook-form';
+import LoadingProgressButton from '../../LoadingProgressButton';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 export default function ServiceForm() {
   // Service call form submission api call
-  const [uploadServiceCall, { isLoading }] = useUploadServiceCallMutation()
+  const [uploadServiceCall, { isLoading }] = useUploadServiceCallMutation();
 
   const { control, register, handleSubmit, formState } =
     useForm<ServiceFormData>({
@@ -52,31 +52,31 @@ export default function ServiceForm() {
       // shouldFocusError: true,
       // shouldUnregister: true,
       // criteriaMode: 'firstError'
-    })
+    });
 
-  const { errors } = formState
+  const { errors } = formState;
 
-  console.log(errors)
+  console.log(errors);
 
   const onSubmit: SubmitHandler<ServiceFormData> = (data: any) => {
-    console.log(data)
+    console.log(data);
 
     try {
-      uploadServiceCall(data).unwrap()
+      uploadServiceCall(data).unwrap();
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-  }
+  };
 
   // Only allow numbers and decimal points
   const handleKeyDown = (event: any) => {
     const isValidKey =
-      /[0-9]|Backspace|Delete|ArrowLeft|ArrowRight|Tab|\./.test(event.key)
+      /[0-9]|Backspace|Delete|ArrowLeft|ArrowRight|Tab|\./.test(event.key);
 
     if (!isValidKey) {
-      event.preventDefault()
+      event.preventDefault();
     }
-  }
+  };
 
   const renderedServiceFormQuestionsNumeric =
     serviceFormFieldQuestionsNumeric.map(({ id, label }, index) => (
@@ -93,7 +93,7 @@ export default function ServiceForm() {
         error={!!errors?.[id]}
         helperText={errors?.[id]?.message}
       />
-    ))
+    ));
 
   const renderedServiceFormQuestionsBoolean =
     serviceFormFieldQuestionsBoolean.map(({ id, label }) => (
@@ -127,7 +127,7 @@ export default function ServiceForm() {
           )}
         />
       </FormControl>
-    ))
+    ));
 
   const renderedServiceFormQuestionsText = serviceFormFieldQuestionsText.map(
     ({ id, label }) => (
@@ -142,7 +142,7 @@ export default function ServiceForm() {
         helperText={errors?.[id]?.message}
       />
     )
-  )
+  );
 
   return (
     // temporary styling
@@ -180,5 +180,5 @@ export default function ServiceForm() {
         </Box>
       </Box>
     </Box>
-  )
+  );
 }
