@@ -2,18 +2,23 @@ import { serviceCallDB } from '../../prisma/db/ServiceCall';
 import { ServiceCall } from '../zodTypes';
 
 export async function uploadServiceCall(serviceCall: ServiceCall) {
-  const submitServiceCall = checkServiceCall(serviceCall);
+  if (!serviceCall.notApprovedNotes) {
+    serviceCall.notApprovedNotes = "";
+  }
+  checkTankId(serviceCall);
+  checkParameterLimits(serviceCall);
   const approvedMessage = serviceCall.isApproved ? 'approved' : 'not approved';
   try {
-    await serviceCallDB.create(submitServiceCall);
+    await serviceCallDB.create(serviceCall);
     return approvedMessage;
   } catch (e) {
     throw new Error('An error occurred during create.');
   }
 }
 
-// run checks on the service call and make sure parameters are valid
-function checkServiceCall(serviceCall: ServiceCall): ServiceCall {
+// make sure the Tank ID exists in the service call
+function checkTankId(serviceCall: ServiceCall) {
+
   if (
     serviceCall.tankId == null ||
     serviceCall.tankId === undefined ||
@@ -21,13 +26,14 @@ function checkServiceCall(serviceCall: ServiceCall): ServiceCall {
   ) {
     serviceCall.tankId = 0;
     serviceCall.isApproved = false;
-    serviceCall.notApprovedNotes =
+    serviceCall.notApprovedNotes +=
       'No tankID was recorded. Check QR code for damage.';
-    return serviceCall;
   }
+}
 
+// run checks on the service call and make sure parameters are valid
+function checkParameterLimits(serviceCall: ServiceCall) {
   const { alkalinity, calcium, nitrate, phosphate } = serviceCall;
-
   if (
     alkalinity < paramLimits.alkalinityMin ||
     alkalinity > paramLimits.alkalinityMax ||
@@ -39,11 +45,9 @@ function checkServiceCall(serviceCall: ServiceCall): ServiceCall {
     phosphate > paramLimits.phosphateMax
   ) {
     serviceCall.isApproved = false;
-    serviceCall.notApprovedNotes =
+    serviceCall.notApprovedNotes +=
       'One or more of the parameters (Alkalinity, Calcium, Nitrate, and/or Phosphate) outside of acceptable range.';
   }
-  // return the flagged/unflagged service call
-  return serviceCall;
 }
 
 const paramLimits = {
