@@ -34,17 +34,17 @@ export default function DefaultCharts() {
   }
 
   // List toggle controls
-  const [toggleShowCharts, setToggleShowCharts] = useState(false)
+  const [toggleShowCharts, setToggleShowCharts] = useState(false);
   const [openItemId, setOpenItemId] = useState<number | null>(null);
   const [listToggle, setListToggle] = useState(true);
   const { data, error, isLoading } = useGetClientsQuery<UseQuery>(true);
-  console.log(data, error, isLoading)
+  console.log(data, error, isLoading);
   // const { data, error, isLoading } = useGetTankDataQuery<UseQuery>(tankID);
 
   // Temporary hack to get users and their tanks from DB
   let myUserData: UserData[] | null = null;
   myUserData = data;
-  
+
   // List menu/submenu toggle handlers
   const handleListToggle = () => {
     setListToggle(!listToggle);
@@ -62,10 +62,10 @@ export default function DefaultCharts() {
   const handleRequestChart = (tankID: number) => {
     console.log('TankID: ' + tankID);
     setListToggle(false);
-    setToggleShowCharts(true);  
+    setToggleShowCharts(true);
   };
 
-  if (myUserData != null){
+  if (myUserData != null) {
     return (
       <div>
         <List
@@ -82,13 +82,13 @@ export default function DefaultCharts() {
           }
         >
           <Collapse in={listToggle}>
-         { myUserData?.map(({ id, firstName, lastName, OwnedTanks }) => (
+            {myUserData?.map(({ id, firstName, lastName, OwnedTanks }) => (
               <div>
                 <ListItemButton onClick={() => toggleSubMenu(id)} key={id}>
-                  <ListItemText primary={firstName + " " + lastName} />
+                  <ListItemText primary={firstName + ' ' + lastName} />
                   {id === openItemId ? <ExpandLess /> : <ExpandMore />}
                 </ListItemButton>
-  
+
                 <Collapse in={id === openItemId} timeout='auto' unmountOnExit>
                   <List component='div' disablePadding>
                     {OwnedTanks.map(({ id }) => (
@@ -97,7 +97,7 @@ export default function DefaultCharts() {
                         onClick={() => handleRequestChart(id)}
                         key={id}
                       >
-                        <ListItemText primary={"Select Tank " + id} />
+                        <ListItemText primary={'Select Tank ' + id} />
                       </ListItemButton>
                     ))}
                   </List>
@@ -107,27 +107,27 @@ export default function DefaultCharts() {
           </Collapse>
         </List>
         <h2>One Chart Demo</h2>
-        <div style={{alignContent: 'center', width:'50%', position:'relative'}}>
-          {toggleShowCharts && TankData.map((d)=> (
-            <div>
-              <h3>{d.datasets[0].label}</h3>
-              <Card variant="outlined" sx={{ maxWidth: '80%', minWidth: '50%'}}>
-                <CardContent >
-                  <LineChart data={d}/>
-                </CardContent>
-              </Card>
-            </div>
-          ))}                     
+        <div
+          style={{ alignContent: 'center', width: '50%', position: 'relative' }}
+        >
+          {toggleShowCharts &&
+            TankData.map((d) => (
+              <div>
+                <h3>{d.datasets[0].label}</h3>
+                <Card
+                  variant='outlined'
+                  sx={{ maxWidth: '80%', minWidth: '50%' }}
+                >
+                  <CardContent>
+                    <LineChart data={d} />
+                  </CardContent>
+                </Card>
+              </div>
+            ))}
         </div>
-        
       </div>
     );
-
-  }else{
-    return(
-      <div>error</div>
-    )
+  } else {
+    return <div>error</div>;
   }
- 
-  
 }

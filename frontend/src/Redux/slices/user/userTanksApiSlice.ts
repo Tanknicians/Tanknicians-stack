@@ -1,9 +1,9 @@
 import { apiSlice } from '../../api/apiSlice';
 
 export const userTankApiSlice = apiSlice.injectEndpoints({
-  endpoints: builder => ({
+  endpoints: (builder) => ({
     userWithTanks: builder.query({
-      query: includeTanks => ({
+      query: (includeTanks) => ({
         url: `api/database/user`,
         method: 'GET',
         params: {

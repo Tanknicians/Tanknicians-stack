@@ -4,5 +4,5 @@ module.exports = {
   testEnvironment: "node",
   rootDir: "./src",
   modulePaths: ["<rootDir>"],
-  setupFiles: ["./../.env"]
+  setupFiles: ["./../.env"],
 };

@@ -1,8 +1,8 @@
-import { Login, PrismaClient, Role } from "@prisma/client";
+import { Login, PrismaClient, Role } from '@prisma/client';
 const prisma = new PrismaClient();
 
 // CREATE
-export async function create(login: Omit<Login, "id">) {
+export async function create(login: Omit<Login, 'id'>) {
   console.log(login);
   await prisma.login.create({
     data: {
@@ -74,4 +74,4 @@ export async function getAll(page: number) {
   });
 }
 
-export * as loginDB from "./Login";
+export * as loginDB from './Login';

@@ -17,7 +17,7 @@ export default function CustomChart() {
     ]
   };
   return (
-    <div style={{ width: '50%', position:'relative'}}>
+    <div style={{ width: '50%', position: 'relative' }}>
       <h2>Two charts Demo</h2>
       <LineChart data={TankData} />;
     </div>

@@ -1,5 +1,5 @@
-import { PrismaClient } from "@prisma/client";
-import { ServiceCall, ServiceCallCreate } from "src/zodTypes";
+import { PrismaClient } from '@prisma/client';
+import { ServiceCall, ServiceCallCreate } from 'src/zodTypes';
 const prisma = new PrismaClient();
 
 // CREATE
@@ -34,7 +34,7 @@ export async function readLatestByTankId(tankId: number) {
       tankId: tankId,
     },
     orderBy: {
-      id: "desc",
+      id: 'desc',
     },
     take: 5, // change this for n-service calls to return, currently set >1 to get averages on data
   });
@@ -50,7 +50,11 @@ export async function readAllByTankId(tankId: number) {
 }
 
 // READ range of service calls for a single tank
-export async function readByDateTime(tankId: number, startDate: Date, endDate: Date) {
+export async function readByDateTime(
+  tankId: number,
+  startDate: Date,
+  endDate: Date,
+) {
   return await prisma.serviceCall.findMany({
     where: {
       tankId: tankId,
@@ -68,7 +72,6 @@ export async function readByDateTime(tankId: number, startDate: Date, endDate: D
     },
   });
 }
-
 
 // UPDATE
 export async function update(serviceCall: ServiceCall) {
@@ -104,7 +107,6 @@ export async function searchByString(search: String, page: number) {
   });
 }
 
-
 // ALL
 export async function getAll() {
   return await prisma.serviceCall.findMany();
@@ -112,4 +114,4 @@ export async function getAll() {
 
 // SEARCH (needs to be implemented)
 
-export * as serviceCallDB from "./ServiceCall";
+export * as serviceCallDB from './ServiceCall';

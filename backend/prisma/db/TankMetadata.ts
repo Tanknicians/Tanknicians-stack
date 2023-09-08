@@ -1,8 +1,8 @@
-import { TankMetadata, PrismaClient, TankType } from "@prisma/client";
+import { TankMetadata, PrismaClient, TankType } from '@prisma/client';
 const prisma = new PrismaClient();
 
 // CREATE
-export async function create(tank: Omit<TankMetadata, "id">) {
+export async function create(tank: Omit<TankMetadata, 'id'>) {
   const { customerId, ...tankData } = tank;
   await prisma.tankMetadata.create({
     data: {
@@ -84,4 +84,4 @@ export async function getAll() {
   return await prisma.tankMetadata.findMany();
 }
 
-export * as tankDB from "./TankMetadata";
+export * as tankDB from './TankMetadata';

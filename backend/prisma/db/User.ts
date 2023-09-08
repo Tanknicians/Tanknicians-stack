@@ -1,8 +1,8 @@
-import { User, PrismaClient } from "@prisma/client";
+import { User, PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 // CREATE
-export async function create(user: Omit<User, "id">) {
+export async function create(user: Omit<User, 'id'>) {
   await prisma.user.create({
     data: {
       ...user,
@@ -98,9 +98,9 @@ export async function getAll() {
 export async function getAllUsersAndTanks(includeTanks: boolean) {
   return await prisma.user.findMany({
     include: {
-      OwnedTanks: includeTanks
-    }
+      OwnedTanks: includeTanks,
+    },
   });
 }
 
-export * as userDB from "./User";
+export * as userDB from './User';

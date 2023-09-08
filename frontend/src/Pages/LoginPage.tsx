@@ -76,7 +76,7 @@ export default function LoginPage() {
     isLoginError: false
   });
 
-  const handleClickShowPassword = () => setShowPassword(show => !show);
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
 
   const { control, register, handleSubmit } = useForm<LoginFormData>({
     resolver: zodResolver(schema)
@@ -87,7 +87,7 @@ export default function LoginPage() {
   // const { errors } = formState;
 
   // Form submission with error checks
-  const onSubmit: SubmitHandler<LoginFormData> = async data => {
+  const onSubmit: SubmitHandler<LoginFormData> = async (data) => {
     const { remember, ...loginData } = data;
 
     try {
@@ -124,7 +124,7 @@ export default function LoginPage() {
           sx={{
             backgroundImage: `url(${randomImage})`,
             backgroundRepeat: 'no-repeat',
-            backgroundColor: t =>
+            backgroundColor: (t) =>
               t.palette.mode === 'light'
                 ? t.palette.grey[50]
                 : t.palette.grey[900],
@@ -165,7 +165,7 @@ export default function LoginPage() {
                 autoComplete='email'
                 required={loginError.isLoginError}
                 error={loginError.isLoginError}
-                onKeyDown={e => {
+                onKeyDown={(e) => {
                   if (e.key === ' ') {
                     e.preventDefault();
                   }
@@ -181,7 +181,7 @@ export default function LoginPage() {
                 fullWidth
                 autoComplete='current-password'
                 error={loginError.isLoginError}
-                onKeyDown={e => {
+                onKeyDown={(e) => {
                   if (e.key === ' ') {
                     e.preventDefault();
                   }

@@ -1,9 +1,9 @@
 import { apiSlice } from '../../api/apiSlice';
 
 export const tankDataSlice = apiSlice.injectEndpoints({
-  endpoints: builder => ({
+  endpoints: (builder) => ({
     getTankData: builder.query<any, number>({
-      query: tankID => {
+      query: (tankID) => {
         return {
           url: `/api/database/tankMetaData/TankMetadataService`,
           method: 'GET',

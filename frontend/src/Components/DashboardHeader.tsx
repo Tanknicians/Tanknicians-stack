@@ -26,34 +26,27 @@ const headerOptions = [
     id: 'Service Forms',
     children: [
       { childId: 'Flagged Forms', active: 0 },
-      { childId: 'Create Service Call Form', active: 1 },
+      { childId: 'Create Service Call Form', active: 1 }
     ]
   },
   {
     id: 'Employees',
-    children: [
-      { childId: 'Review Employees', active: 0 },
-    ]
+    children: [{ childId: 'Review Employees', active: 0 }]
   },
   {
     id: 'Clients',
-    children: [
-      { childId: 'Review Clients', active: 0 },
-      
-    ]
+    children: [{ childId: 'Review Clients', active: 0 }]
   },
   {
     id: 'Analytics',
     children: [
       { childId: 'Review Core Tank Charts', active: 0 },
-      { childId: 'Create Custom Chart', active: 1 },
+      { childId: 'Create Custom Chart', active: 1 }
     ]
   },
   {
     id: 'Data Export',
-    children: [
-      { childId: 'View and Export Data', active: 0 },
-    ]
+    children: [{ childId: 'View and Export Data', active: 0 }]
   }
 ];
 
@@ -75,7 +68,7 @@ export default function Header(props: HeaderProps) {
   const { selection } = props;
 
   // get the header settings that match the current
-  const headerSettings = headerOptions.find(item => item.id === selection);
+  const headerSettings = headerOptions.find((item) => item.id === selection);
 
   // State for tracking current active tab for STYLING
   const [activeIndex, setActiveIndex] = useState(0);
