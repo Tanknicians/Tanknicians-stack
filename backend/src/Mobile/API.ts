@@ -3,7 +3,7 @@ import { ServiceCall } from '../zodTypes';
 
 export async function uploadServiceCall(serviceCall: ServiceCall) {
   if (!serviceCall.notApprovedNotes) {
-    serviceCall.notApprovedNotes = "";
+    serviceCall.notApprovedNotes = '';
   }
   checkTankId(serviceCall);
   checkParameterLimits(serviceCall);
@@ -18,7 +18,6 @@ export async function uploadServiceCall(serviceCall: ServiceCall) {
 
 // make sure the Tank ID exists in the service call
 function checkTankId(serviceCall: ServiceCall) {
-
   if (
     serviceCall.tankId == null ||
     serviceCall.tankId === undefined ||
