@@ -1,16 +1,16 @@
-import * as React from 'react';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import useMediaQuery from '@mui/material/useMediaQuery';
-import CssBaseline from '@mui/material/CssBaseline';
-import Box from '@mui/material/Box';
-import Navigator from '../Components/DashboardNavigator';
-import Content from '../Components/DashboardContentRoutes';
-import AppBar from '@mui/material/AppBar';
-import Avatar from '@mui/material/Avatar';
-import Grid from '@mui/material/Grid';
-import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
-import Toolbar from '@mui/material/Toolbar';
+import * as React from 'react'
+import { createTheme, ThemeProvider } from '@mui/material/styles'
+import useMediaQuery from '@mui/material/useMediaQuery'
+import CssBaseline from '@mui/material/CssBaseline'
+import Box from '@mui/material/Box'
+import Navigator from '../Components/DashboardNavigator'
+import Content from '../Components/DashboardContentRoutes'
+import AppBar from '@mui/material/AppBar'
+import Avatar from '@mui/material/Avatar'
+import Grid from '@mui/material/Grid'
+import IconButton from '@mui/material/IconButton'
+import MenuIcon from '@mui/icons-material/Menu'
+import Toolbar from '@mui/material/Toolbar'
 
 let theme = createTheme({
   palette: {
@@ -42,7 +42,7 @@ let theme = createTheme({
       minHeight: 48
     }
   }
-});
+})
 
 theme = {
   ...theme,
@@ -153,17 +153,17 @@ theme = {
       }
     }
   }
-};
+}
 
-const drawerWidth = 256;
+const drawerWidth = 256
 
 export default function Paperbase() {
-  const [mobileOpen, setMobileOpen] = React.useState(false);
-  const isSmUp = useMediaQuery(theme.breakpoints.up('sm'));
+  const [mobileOpen, setMobileOpen] = React.useState(false)
+  const isSmUp = useMediaQuery(theme.breakpoints.up('sm'))
 
   const handleDrawerToggle = () => {
-    setMobileOpen(!mobileOpen);
-  };
+    setMobileOpen(!mobileOpen)
+  }
 
   return (
     <ThemeProvider theme={theme}>
@@ -224,5 +224,5 @@ export default function Paperbase() {
         </Box>
       </Box>
     </ThemeProvider>
-  );
+  )
 }

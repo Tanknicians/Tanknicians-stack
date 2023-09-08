@@ -1,5 +1,5 @@
-import { PrismaClient } from "@prisma/client";
-import { ServiceCall, ServiceCallCreate } from "src/zodTypes";
+import { PrismaClient } from '@prisma/client';
+import { ServiceCall, ServiceCallCreate } from 'src/zodTypes';
 const prisma = new PrismaClient();
 
 // CREATE
@@ -34,7 +34,7 @@ export async function readLatestByTankId(tankId: number) {
       tankId: tankId,
     },
     orderBy: {
-      id: "desc",
+      id: 'desc',
     },
     take: 5, // change this for n-service calls to return, currently set >1 to get averages on data
   });
@@ -114,4 +114,4 @@ export async function getAll() {
 
 // SEARCH (needs to be implemented)
 
-export * as serviceCallDB from "./ServiceCall";
+export * as serviceCallDB from './ServiceCall';

@@ -1,40 +1,40 @@
-import InvertColorsOutlinedIcon from '@mui/icons-material/InvertColorsOutlined';
-import LoadingProgressButton from '../Components/LoadingProgressButton';
-import { useForm, SubmitHandler, Controller } from 'react-hook-form';
-import { useLoginMutation } from '../Redux/slices/auth/authApiSlice';
-import loginRandomImages from '../Components/LoginPageRandomImage';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { setCredentials } from '../Redux/slices/auth/authSlice';
-import { Visibility, VisibilityOff } from '@mui/icons-material';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import InputAdornment from '@mui/material/InputAdornment';
-import { zodResolver } from '@hookform/resolvers/zod';
-import CssBaseline from '@mui/material/CssBaseline';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import { Avatar, Container } from '@mui/material';
-import TextField from '@mui/material/TextField';
-import { useNavigate } from 'react-router-dom';
-import Checkbox from '@mui/material/Checkbox';
-import { useDispatch } from 'react-redux';
-import Paper from '@mui/material/Paper';
-import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import { useState } from 'react';
-import * as z from 'zod';
+import InvertColorsOutlinedIcon from '@mui/icons-material/InvertColorsOutlined'
+import LoadingProgressButton from '../Components/LoadingProgressButton'
+import { useForm, SubmitHandler, Controller } from 'react-hook-form'
+import { useLoginMutation } from '../Redux/slices/auth/authApiSlice'
+import loginRandomImages from '../Components/LoginPageRandomImage'
+import { createTheme, ThemeProvider } from '@mui/material/styles'
+import { setCredentials } from '../Redux/slices/auth/authSlice'
+import { Visibility, VisibilityOff } from '@mui/icons-material'
+import FormControlLabel from '@mui/material/FormControlLabel'
+import InputAdornment from '@mui/material/InputAdornment'
+import { zodResolver } from '@hookform/resolvers/zod'
+import CssBaseline from '@mui/material/CssBaseline'
+import IconButton from '@mui/material/IconButton'
+import Typography from '@mui/material/Typography'
+import { Avatar, Container } from '@mui/material'
+import TextField from '@mui/material/TextField'
+import { useNavigate } from 'react-router-dom'
+import Checkbox from '@mui/material/Checkbox'
+import { useDispatch } from 'react-redux'
+import Paper from '@mui/material/Paper'
+import Link from '@mui/material/Link'
+import Grid from '@mui/material/Grid'
+import Box from '@mui/material/Box'
+import { useState } from 'react'
+import * as z from 'zod'
 
 interface LoginFormData {
-  email: string;
-  password: string;
-  remember: boolean;
+  email: string
+  password: string
+  remember: boolean
 }
 
 // Form validation
 const schema = z.object({
   email: z.string().nonempty(),
   password: z.string().nonempty()
-});
+})
 
 function Copyright(props: { [k: string]: unknown }) {
   return (
@@ -50,67 +50,67 @@ function Copyright(props: { [k: string]: unknown }) {
       {' © '}
       {new Date().getFullYear()}
     </Typography>
-  );
+  )
 }
 
 // Styling for LoginPage components
-const theme = createTheme();
+const theme = createTheme()
 
 // For random images to display
 const randomImagePath =
-  loginRandomImages[Math.floor(Math.random() * loginRandomImages.length)];
-const randomImage = require(`../Assets/Images/${randomImagePath}`);
+  loginRandomImages[Math.floor(Math.random() * loginRandomImages.length)]
+const randomImage = require(`../Assets/Images/${randomImagePath}`)
 
 export default function LoginPage() {
-  const [login, { isLoading }] = useLoginMutation();
-  const [showPassword, setShowPassword] = useState(false);
+  const [login, { isLoading }] = useLoginMutation()
+  const [showPassword, setShowPassword] = useState(false)
 
   // Hooks for API and Routing
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
 
   // Error message for login attempt
-  const errorColor = '#d32f2f';
+  const errorColor = '#d32f2f'
   const [loginError, setLoginError] = useState({
     errorMessage: '',
     isLoginError: false
-  });
+  })
 
-  const handleClickShowPassword = () => setShowPassword(show => !show);
+  const handleClickShowPassword = () => setShowPassword((show) => !show)
 
   const { control, register, handleSubmit } = useForm<LoginFormData>({
     resolver: zodResolver(schema)
-  });
+  })
 
   // error checks for form submission
   // add above to useForm<LoginFormData> to use
   // const { errors } = formState;
 
   // Form submission with error checks
-  const onSubmit: SubmitHandler<LoginFormData> = async data => {
-    const { remember, ...loginData } = data;
+  const onSubmit: SubmitHandler<LoginFormData> = async (data) => {
+    const { remember, ...loginData } = data
 
     try {
-      const userData = await login(loginData).unwrap();
-      dispatch(setCredentials({ ...userData, loginData }));
+      const userData = await login(loginData).unwrap()
+      dispatch(setCredentials({ ...userData, loginData }))
 
-      navigate('/dashboard/Service Forms');
+      navigate('/dashboard/Service Forms')
     } catch (err: any) {
       if (!err?.status) {
         // isLoading: true until timeout occurs
         setLoginError({
           errorMessage: 'No Server Response',
           isLoginError: true
-        });
+        })
       } else if (err?.status === 400) {
-        setLoginError({ errorMessage: err.data?.message, isLoginError: true });
+        setLoginError({ errorMessage: err.data?.message, isLoginError: true })
       } else if (err?.status === 401) {
-        setLoginError({ errorMessage: err.data?.message, isLoginError: true });
+        setLoginError({ errorMessage: err.data?.message, isLoginError: true })
       } else {
-        setLoginError({ errorMessage: err.data?.message, isLoginError: true });
+        setLoginError({ errorMessage: err.data?.message, isLoginError: true })
       }
     }
-  };
+  }
 
   return (
     <ThemeProvider theme={theme}>
@@ -124,7 +124,7 @@ export default function LoginPage() {
           sx={{
             backgroundImage: `url(${randomImage})`,
             backgroundRepeat: 'no-repeat',
-            backgroundColor: t =>
+            backgroundColor: (t) =>
               t.palette.mode === 'light'
                 ? t.palette.grey[50]
                 : t.palette.grey[900],
@@ -165,9 +165,9 @@ export default function LoginPage() {
                 autoComplete='email'
                 required={loginError.isLoginError}
                 error={loginError.isLoginError}
-                onKeyDown={e => {
+                onKeyDown={(e) => {
                   if (e.key === ' ') {
-                    e.preventDefault();
+                    e.preventDefault()
                   }
                 }}
               />
@@ -181,9 +181,9 @@ export default function LoginPage() {
                 fullWidth
                 autoComplete='current-password'
                 error={loginError.isLoginError}
-                onKeyDown={e => {
+                onKeyDown={(e) => {
                   if (e.key === ' ') {
-                    e.preventDefault();
+                    e.preventDefault()
                   }
                 }}
                 InputProps={{
@@ -251,5 +251,5 @@ export default function LoginPage() {
         </Grid>
       </Grid>
     </ThemeProvider>
-  );
+  )
 }

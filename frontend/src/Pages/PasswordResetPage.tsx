@@ -1,5 +1,5 @@
-import { Alert, Button, LinearProgress, TextField } from '@mui/material';
-import { useState } from 'react';
+import { Alert, Button, LinearProgress, TextField } from '@mui/material'
+import { useState } from 'react'
 
 export default function PasswordResetPage() {
   // // const navigate = useNavigate();
@@ -26,5 +26,5 @@ export default function PasswordResetPage() {
       <Button onClick={resetPassword}>Send email</Button>
       {useResetPassword.isLoading && <LinearProgress />} */}
     </>
-  );
+  )
 }
