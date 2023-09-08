@@ -13,7 +13,7 @@ export default function Content() {
         <Route path='/Service Forms' element={<ServiceForms />} />
         <Route path='/Employees' element={<Employees />} />
         <Route path='/Clients' element={<Clients />} />
-        <Route path='/Analytics' element={<Analytics />} />
+        <Route path='/Analytics' element={<Analytics/>} />
         <Route path='/Data Export' element={<DataExport />} />
       </Routes>
     </div>
