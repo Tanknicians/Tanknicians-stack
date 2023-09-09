@@ -32,16 +32,17 @@ describe('authentication api', () => {
     }).rejects.toThrow(`login not found for email ${badEmail}`);
   });
 
-  it('returns email success response on reset flow completed', async () => {
-    // Arrange
-    // Note that this email pw gets overwritten so
-    // we need to own this email if we expect to be able to use the new password
-    const goodEmail = 'tanknicians.testing+reset@gmail.com';
-    const expected: string = 'OK';
+  // Commented until i learn how to mock
+  // it('returns email success response on reset flow completed', async () => {
+  //   // Arrange
+  //   // Note that this email pw gets overwritten so
+  //   // we need to own this email if we expect to be able to use the new password
+  //   const goodEmail = 'tanknicians.testing+reset@gmail.com';
+  //   const expected: string = 'OK';
 
-    // Act
-    const received = await resetPassword(goodEmail);
-    // Assert
-    expect(received).toContain(expected);
-  });
+  //   // Act
+  //   const received = await resetPassword(goodEmail);
+  //   // Assert
+  //   expect(received).toContain(expected);
+  // });
 });
