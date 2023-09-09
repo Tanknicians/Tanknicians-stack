@@ -5,7 +5,7 @@ import {
   generateToken,
   verifyRefreshToken,
   generateRefreshToken,
-  verifyToken
+  verifyToken,
 } from '../Token/Generator';
 
 import { loginDB } from '../../prisma/db/Login';
@@ -41,7 +41,7 @@ export async function login(login: AuthLogin, res: Response) {
   if (!savedCredentials) {
     return res.status(401).json({
       code: 'UNAUTHORIZED',
-      message: 'Incorrect email/password combination'
+      message: 'Incorrect email/password combination',
       // message: `Login with email: ${login.email} not found.`
     });
   }
@@ -49,7 +49,7 @@ export async function login(login: AuthLogin, res: Response) {
   if (!(savedCredentials.email && savedCredentials.password)) {
     return res.status(401).json({
       code: 'UNAUTHORIZED',
-      message: 'User record incomplete'
+      message: 'User record incomplete',
     });
   }
 
@@ -57,12 +57,12 @@ export async function login(login: AuthLogin, res: Response) {
 
   const samePasswords = await bcrypt.compare(
     login.password,
-    savedCredentials.password
+    savedCredentials.password,
   );
   if (!samePasswords) {
     return res.status(401).json({
       code: 'UNAUTHORIZED',
-      message: 'Incorrect email/password combination'
+      message: 'Incorrect email/password combination',
       // message: 'passwords do not match'
     });
   }
@@ -73,7 +73,7 @@ export async function login(login: AuthLogin, res: Response) {
     res.cookie('jwt', refreshToken, {
       httpOnly: true,
       secure: true,
-      maxAge: 24 * 60 * 60 * 1000
+      maxAge: 24 * 60 * 60 * 1000,
     });
     res.status(200).json({ token, savedCredentials });
     return;
@@ -81,7 +81,7 @@ export async function login(login: AuthLogin, res: Response) {
     console.error('Error generating tokens:', error);
     return res.status(500).json({
       code: 'INTERNAL_SERVER_ERROR',
-      message: 'Failed to generate tokens'
+      message: 'Failed to generate tokens',
     });
   }
 }
@@ -91,7 +91,7 @@ export async function register(registration: AuthRegister, res: Response) {
   const registerData = {
     ...registration,
     // generate password on registration, currently set to size of 16 characters
-    password: generateRandomPassword(DEFAULT_PASSWORD_LENGTH)
+    password: generateRandomPassword(DEFAULT_PASSWORD_LENGTH),
   };
 
   try {
@@ -106,13 +106,13 @@ export async function register(registration: AuthRegister, res: Response) {
     const confirmation = await sendEmail(
       registerData.email,
       'New Registration',
-      emailText
+      emailText,
     );
     console.log(confirmation);
     // after sending, hash/encrypt and send info to database
     registerData.password = await bcrypt.hash(
       registerData.password,
-      DEFAULT_SALT_LENGTH
+      DEFAULT_SALT_LENGTH,
     );
     await loginDB.create(registerData);
     return res.status(200).json({ message: 'Registration successful' });
@@ -121,7 +121,7 @@ export async function register(registration: AuthRegister, res: Response) {
     return res.status(500).json({
       code: 'INTERNAL_SERVER_ERROR',
       message: 'An error occurred during registration',
-      cause: error
+      cause: error,
     });
   }
 }
@@ -135,23 +135,16 @@ export async function register(registration: AuthRegister, res: Response) {
 export async function resetPassword(email: string) {
   // validate email
   let login: Prisma.Login | null;
-  try {
-    login = await loginDB.read(email);
-    if (!login) {
-      throw new Error(`login not found for email ${email}`);
-    }
-  } catch (e) {
-    throw e;
+
+  login = await loginDB.read(email);
+  if (!login) {
+    throw new Error(`login not found for email ${email}`);
   }
 
   // generate new password and attempt record update
   const pw = generateRandomPassword(DEFAULT_PASSWORD_LENGTH);
-  try {
-    login.password = await bcrypt.hash(pw, DEFAULT_SALT_LENGTH);
-    await loginDB.update(login);
-  } catch (e) {
-    throw e;
-  }
+  login.password = await bcrypt.hash(pw, DEFAULT_SALT_LENGTH);
+  await loginDB.update(login);
 
   // send email with new password
   const emailText = `Your new password is: \n
@@ -163,7 +156,7 @@ export async function resetPassword(email: string) {
   const confirmation = await sendEmail(
     login.email,
     'Password Reset',
-    emailText
+    emailText,
   );
   console.log(confirmation);
   return confirmation;
@@ -173,7 +166,7 @@ export async function resetPassword(email: string) {
 export async function refresh(
   email: string,
   refreshToken: string,
-  res: Response
+  res: Response,
 ) {
   console.log('refreshing token');
   try {
@@ -182,7 +175,7 @@ export async function refresh(
     console.log('Invalid token.');
     return res.status(403).json({
       code: 'FORBIDDEN',
-      message: 'Refresh token not valid.'
+      message: 'Refresh token not valid.',
     });
   }
 
@@ -191,7 +184,7 @@ export async function refresh(
   if (!savedCredentials) {
     return res.status(404).json({
       code: 'NOT_FOUND',
-      message: 'Login does not exist.'
+      message: 'Login does not exist.',
     });
   }
 
@@ -203,7 +196,7 @@ export async function refresh(
     return res.status(500).json({
       code: 'INTERNAL_SERVER_ERROR',
       message: 'An error occurred while generating the access token.',
-      cause: error
+      cause: error,
     });
   }
 }
