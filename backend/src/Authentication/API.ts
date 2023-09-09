@@ -1,4 +1,5 @@
 import * as bcrypt from 'bcryptjs';
+import * as Prisma from '@prisma/client';
 
 import {
   generateToken,
@@ -12,6 +13,9 @@ import { Request, Response, NextFunction } from 'express';
 import { AuthLogin, AuthRegister } from '../zodTypes';
 import { randomBytes } from 'crypto';
 import { sendEmail } from '../Email/API';
+
+const DEFAULT_PASSWORD_LENGTH = 16;
+const DEFAULT_SALT_LENGTH = 10;
 
 // we can modify this for password generating
 // note: length of password is more important than randomness of password in security
@@ -87,7 +91,7 @@ export async function register(registration: AuthRegister, res: Response) {
   const registerData = {
     ...registration,
     // generate password on registration, currently set to size of 16 characters
-    password: generateRandomPassword(16),
+    password: generateRandomPassword(DEFAULT_PASSWORD_LENGTH),
   };
 
   try {
@@ -106,7 +110,10 @@ export async function register(registration: AuthRegister, res: Response) {
     );
     console.log(confirmation);
     // after sending, hash/encrypt and send info to database
-    registerData.password = await bcrypt.hash(registerData.password, 10);
+    registerData.password = await bcrypt.hash(
+      registerData.password,
+      DEFAULT_SALT_LENGTH,
+    );
     await loginDB.create(registerData);
     return res.status(200).json({ message: 'Registration successful' });
   } catch (error) {
@@ -117,6 +124,42 @@ export async function register(registration: AuthRegister, res: Response) {
       cause: error,
     });
   }
+}
+
+/**
+ * Resets the password for the given email if it is valid and
+ * sends email with the new password
+ * @param email
+ * @returns confirmation:string from smtp transaction
+ */
+export async function resetPassword(email: string) {
+  // validate email
+  let login: Prisma.Login | null;
+
+  login = await loginDB.read(email);
+  if (!login) {
+    throw new Error(`login not found for email ${email}`);
+  }
+
+  // generate new password and attempt record update
+  const pw = generateRandomPassword(DEFAULT_PASSWORD_LENGTH);
+  login.password = await bcrypt.hash(pw, DEFAULT_SALT_LENGTH);
+  await loginDB.update(login);
+
+  // send email with new password
+  const emailText = `Your new password is: \n
+  PASSWORD: ${login.password} \n
+  
+  If you lose this password, please ask your admin to generate a reset email.
+  `;
+
+  const confirmation = await sendEmail(
+    login.email,
+    'Password Reset',
+    emailText,
+  );
+  console.log(confirmation);
+  return confirmation;
 }
 
 // Generate a new access token using a refresh token
