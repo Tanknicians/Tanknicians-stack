@@ -89,7 +89,10 @@ export async function login(login: AuthLogin, res: Response) {
 export async function register(registration: AuthRegister, res: Response) {
   // Generate password of character size 16; Saved to send in email after DB Login created.
   const generatedPassword = generateRandomPassword(DEFAULT_PASSWORD_LENGTH);
-  const encryptedPassword = await bcrypt.hash(generatedPassword, DEFAULT_SALT_LENGTH);
+  const encryptedPassword = await bcrypt.hash(
+    generatedPassword,
+    DEFAULT_SALT_LENGTH,
+  );
 
   // move the data to a format with the encrypted password to be sent to the DB
   const registerData = {
