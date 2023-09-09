@@ -87,34 +87,34 @@ export async function login(login: AuthLogin, res: Response) {
 }
 
 export async function register(registration: AuthRegister, res: Response) {
-  // move the data to a format with a generated password
+  // Generate password of character size 16; Saved to send in email after DB Login created.
+  const generatedPassword = generateRandomPassword(DEFAULT_PASSWORD_LENGTH);
+  const encryptedPassword = await bcrypt.hash(
+    generatedPassword,
+    DEFAULT_SALT_LENGTH,
+  );
+
+  // move the data to a format with the encrypted password to be sent to the DB
   const registerData = {
     ...registration,
-    // generate password on registration, currently set to size of 16 characters
-    password: generateRandomPassword(DEFAULT_PASSWORD_LENGTH),
+    password: encryptedPassword,
   };
 
   try {
+    // Send password to db first
+    await loginDB.create(registerData);
     // email the Registration data
     const emailText = `Your email and password combination is: \n
     EMAIL: ${registerData.email} \n
-    PASSWORD: ${registerData.password} \n
-    
+    PASSWORD: ${generatedPassword} \n
     If you lose this password, please ask your admin to send a reset email.
     `;
-    // we should find a way to verify that the email was sent
     const confirmation = await sendEmail(
       registerData.email,
       'New Registration',
       emailText,
     );
     console.log(confirmation);
-    // after sending, hash/encrypt and send info to database
-    registerData.password = await bcrypt.hash(
-      registerData.password,
-      DEFAULT_SALT_LENGTH,
-    );
-    await loginDB.create(registerData);
     return res.status(200).json({ message: 'Registration successful' });
   } catch (error) {
     console.error(error);
