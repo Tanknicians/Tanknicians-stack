@@ -74,16 +74,16 @@ export const tankMetaDataSchema = z.object({
   description: z.string().optional(),
   volume: z.number().int().positive(),
   type: z.enum(['FRESH', 'SALT', 'BRACKISH']),
-  
+
   qrSymbol: z.number().int().positive(),
 
   tanknicianSourcedOnly: z.boolean(),
   lastDateServiced: z.date(),
 
-  customerId: z.number().int()
-})
+  customerId: z.number().int(),
+});
 
-export const createTank = tankMetaDataSchema.omit({qrSymbol: true})
+export const createTank = tankMetaDataSchema.omit({ qrSymbol: true });
 export type PrismaTankMetadata = z.infer<typeof tankMetaDataSchema>;
 export type CreateTankMetaData = z.infer<typeof createTank>;
 export type TankMetaDataRequest = ValidatedRequest<CreateTankMetaData>;

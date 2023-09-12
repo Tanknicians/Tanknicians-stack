@@ -3,15 +3,16 @@ import { tankDB } from '../../../prisma/db/TankMetadata';
 import { CreateTankMetaData, PrismaTankMetadata } from '../../zodTypes';
 
 export async function create(tank: CreateTankMetaData) {
-
   try {
     const userTanks = await tankDB.readTanksByUserId(tank.customerId);
     // map the pre-existing qrSymbols
-    const qrSymbolsArray: number[] = userTanks.map((tankMetadata) => tankMetadata.qrSymbol);
+    const qrSymbolsArray: number[] = userTanks.map(
+      (tankMetadata) => tankMetadata.qrSymbol,
+    );
     const createTank: PrismaTankMetadata = {
       ...tank,
-      qrSymbol: findNextInteger(qrSymbolsArray)
-    }
+      qrSymbol: findNextInteger(qrSymbolsArray),
+    };
     await tankDB.create(createTank);
     return { message: 'TankMetadata created successfully' };
   } catch (e) {
@@ -34,7 +35,6 @@ function findNextInteger(array: number[]): number {
   }
   return nextInteger;
 }
-
 
 export async function read(id: number) {
   try {
