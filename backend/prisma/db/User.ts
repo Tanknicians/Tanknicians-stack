@@ -1,8 +1,9 @@
 import { User, PrismaClient } from '@prisma/client';
+import { UserCreate } from '../../src/zodTypes';
 const prisma = new PrismaClient();
 
 // CREATE
-export async function create(user: Omit<User, 'id'>) {
+export async function create(user: UserCreate) {
   await prisma.user.create({
     data: {
       ...user,
