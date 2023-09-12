@@ -110,6 +110,9 @@ model TankMetadata {
   description String?
   volume      Int // gallons/liters of water
   type        TankType
+  
+  // added Sept 11 2023
+  qrSymbol    Int // integer starting from 1 to differentiate tanks for a single customer; used for qr code
 
   tanknicianSourcedOnly Boolean
   lastDateServiced      DateTime
