@@ -2,7 +2,7 @@ import express from 'express';
 import * as LoginService from './API';
 import { Login } from '@prisma/client';
 import { authenticateRoleMiddleWare } from '../../Authentication/API';
-import { createLogin, loginSchema, validateRequestBody } from 'src/zodTypes';
+import { createLogin, loginSchema, validateRequestBody } from '../../zodTypes';
 
 const loginRouter = express.Router();
 loginRouter.use(express.json());
