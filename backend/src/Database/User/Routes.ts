@@ -2,6 +2,7 @@ import express from 'express';
 import * as UserService from './API';
 import { authenticateRoleMiddleWare } from '../../Authentication/API';
 import { User } from '@prisma/client';
+import { userSchema, validateRequestBody } from '../../zodTypes';
 
 const userRouter = express.Router();
 userRouter.use(express.json());
@@ -10,6 +11,7 @@ userRouter.use(express.json());
 userRouter.post(
   '/',
   authenticateRoleMiddleWare(['ADMIN']),
+  validateRequestBody(userSchema),
   async (req, res) => {
     try {
       const input = req.body;

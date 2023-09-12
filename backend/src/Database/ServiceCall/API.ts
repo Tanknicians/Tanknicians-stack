@@ -1,5 +1,5 @@
 import { serviceCallDB } from '../../../prisma/db/ServiceCall';
-import { ServiceCall, ServiceCallCreate } from 'src/zodTypes';
+import { ServiceCall, ServiceCallCreate } from '../../zodTypes';
 
 export async function create(serviceCall: ServiceCallCreate) {
   try {

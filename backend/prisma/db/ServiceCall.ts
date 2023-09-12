@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { ServiceCall, ServiceCallCreate } from 'src/zodTypes';
+import { ServiceCall, ServiceCallCreate } from '../../src/zodTypes';
 const prisma = new PrismaClient();
 
 // CREATE
