@@ -63,7 +63,7 @@ export const tankMetaDataSchema = z.object({
   volume: z.number().int().positive(),
   type: z.enum(['FRESH', 'SALT', 'BRACKISH']),
 
-  qrSymbol: z.number().int().positive().optional(),
+  qrSymbol: z.number().int().positive(),
 
   tanknicianSourcedOnly: z.boolean(),
   lastDateServiced: z.date(),
