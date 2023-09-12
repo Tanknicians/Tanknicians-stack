@@ -1,7 +1,13 @@
 import express from 'express';
 import * as LoginService from './API';
 import { authenticateRoleMiddleWare } from '../../Authentication/API';
-import { LoginRequest, UpdateLogin, createLogin, loginSchema, validateRequestBody } from '../../zodTypes';
+import {
+  LoginRequest,
+  UpdateLogin,
+  createLogin,
+  loginSchema,
+  validateRequestBody
+} from '../../zodTypes';
 
 const loginRouter = express.Router();
 loginRouter.use(express.json());
