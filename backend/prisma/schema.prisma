@@ -60,7 +60,6 @@ model ServiceCall {
 
   isApproved Boolean  @default(false) // for admin to approve the ServiceCall
   createdOn  DateTime // Required, set by mobile app.
-  billed     Boolean @default(false)
 
   customerRequest   String?
   employeeNotes     String?

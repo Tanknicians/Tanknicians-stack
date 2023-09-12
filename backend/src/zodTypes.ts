@@ -92,7 +92,6 @@ export const serviceCallSchema = z.object({
   id: z.number().int(),
   isApproved: z.boolean().optional(),
   createdOn: z.date(),
-  billed: z.boolean(),
 
   customerRequest: z.string().optional(),
   employeeNotes: z.string().optional(),
