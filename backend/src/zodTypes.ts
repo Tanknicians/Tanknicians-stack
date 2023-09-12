@@ -30,8 +30,7 @@ export const userSchema = z.object({
 export const createUserSchema = userSchema.omit({ id: true });
 export type CreateUser = z.infer<typeof createUserSchema>;
 export type UpdateUser = z.infer<typeof userSchema>;
-export type CreateUserRequest = ValidatedRequest<CreateUser>;
-export type UpdateUserRequest = ValidatedRequest<UpdateUser>;
+export type UserRequest = ValidatedRequest<CreateUser>;
 
 // LOGIN
 
@@ -54,8 +53,7 @@ export const loginSchema = z
 export const createLogin = loginSchema.omit({ id: true });
 export type CreateLogin = z.infer<typeof createLogin>;
 export type UpdateLogin = z.infer<typeof loginSchema>;
-export type CreateLoginRequest = ValidatedRequest<CreateLogin>;
-export type UpdateLoginRequest = ValidatedRequest<UpdateLogin>;
+export type LoginRequest = ValidatedRequest<CreateLogin>;
 
 // TANKMETADATA
 
@@ -76,8 +74,7 @@ export const tankMetaDataSchema = z.object({
 export const createTank = tankMetaDataSchema.omit({ id: true });
 export type CreateTankMetaData = z.infer<typeof createTank>;
 export type UpdateTankMetaData = z.infer<typeof tankMetaDataSchema>;
-export type CreateTankMetaDataRequest = ValidatedRequest<CreateTankMetaData>;
-export type UpdateTankMetaDataRequest = ValidatedRequest<UpdateTankMetaData>;
+export type TankMetaDataRequest = ValidatedRequest<CreateTankMetaData>;
 
 // SERVICECALL
 
@@ -123,8 +120,7 @@ export const serviceCallSchema = z.object({
 export const createServiceCall = serviceCallSchema.omit({ id: true });
 export type CreateServiceCall = z.infer<typeof createServiceCall>;
 export type UpdateServiceCall = z.infer<typeof serviceCallSchema>;
-export type CreateServiceCallRequest = ValidatedRequest<CreateServiceCall>;
-export type UpdateServiceCallRequest = ValidatedRequest<UpdateServiceCall>;
+export type ServiceCallRequest = ValidatedRequest<CreateServiceCall>;
 
 // AUTH
 
