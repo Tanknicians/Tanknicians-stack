@@ -48,6 +48,8 @@ model User {
 
   // changed to optional; we can have User data without a Login
   login Login?
+  // added Sept 11, 2023: differentiate employees from customers
+  isEmployee Boolean @default(false) // don't want to accidentally create employees
 
   EmployeeServiceCalls ServiceCall[]
   OwnedTanks           TankMetadata[]
