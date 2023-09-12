@@ -1,14 +1,40 @@
 import * as Prisma from '@prisma/client';
 import { tankDB } from '../../../prisma/db/TankMetadata';
+import { CreateTankMetaData, PrismaTankMetadata } from '../../zodTypes';
 
-export async function create(tank: Omit<Prisma.TankMetadata, 'id'>) {
+export async function create(tank: CreateTankMetaData) {
+
   try {
-    await tankDB.create(tank);
+    const userTanks = await tankDB.readTanksByUserId(tank.customerId);
+    // map the pre-existing qrSymbols
+    const qrSymbolsArray: number[] = userTanks.map((tankMetadata) => tankMetadata.qrSymbol);
+    const createTank: PrismaTankMetadata = {
+      ...tank,
+      qrSymbol: findNextInteger(qrSymbolsArray)
+    }
+    await tankDB.create(createTank);
     return { message: 'TankMetadata created successfully' };
   } catch (e) {
     throw new Error('An error occurred during create.');
   }
 }
+
+function findNextInteger(array: number[]): number {
+  // Sort the array in ascending order
+  array.sort((a, b) => a - b);
+  // Start at 1
+  let nextInteger = 1;
+  // Iterate over each integer of the array
+  for (const value of array) {
+    if (value === nextInteger) {
+      nextInteger++;
+    } else if (value > nextInteger) {
+      return nextInteger;
+    }
+  }
+  return nextInteger;
+}
+
 
 export async function read(id: number) {
   try {
