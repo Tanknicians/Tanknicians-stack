@@ -17,6 +17,7 @@ export const validateRequestBody =
 // USER
 
 export const userSchema = z.object({
+  id: z.number().int(),
   firstName: z.string().optional(),
   middleName: z.string().optional(),
   lastName: z.string().optional(),
@@ -26,14 +27,17 @@ export const userSchema = z.object({
   isEmployee: z.boolean()
 });
 
-export type User = z.infer<typeof userSchema>;
-export type UserCreate = z.infer<typeof userSchema>;
-export type UserRequest = ValidatedRequest<User>;
+export const createUserSchema = userSchema.omit({ id: true });
+export type CreateUser = z.infer<typeof createUserSchema>;
+export type UpdateUser = z.infer<typeof userSchema>;
+export type CreateUserRequest = ValidatedRequest<CreateUser>;
+export type UpdateUserRequest = ValidatedRequest<UpdateUser>;
 
 // LOGIN
 
 export const loginSchema = z
   .object({
+    id: z.number().int(),
     email: z.string({ required_error: 'Email is required' }).email(),
     password: z.string({ required_error: 'Password is required' }),
     role: z.enum(['ADMIN', 'EMPLOYEE', 'CUSTOMER'], {
@@ -47,21 +51,16 @@ export const loginSchema = z
   })
   .strict();
 
-export type Login = z.infer<typeof loginSchema>;
-export type LoginRequest = ValidatedRequest<Login>;
-
-export const authLogin = loginSchema.omit({ role: true, userId: true });
-export type AuthLogin = z.infer<typeof authLogin>;
-export type AuthLoginRequest = ValidatedRequest<AuthLogin>;
-
-// this will be used to register new Logins
-export const authRegister = loginSchema.omit({ password: true });
-export type AuthRegister = z.infer<typeof authRegister>;
-export type AuthRegisterRequest = ValidatedRequest<AuthRegister>;
+export const createLogin = loginSchema.omit({ id: true });
+export type CreateLogin = z.infer<typeof createLogin>;
+export type UpdateLogin = z.infer<typeof loginSchema>;
+export type CreateLoginRequest = ValidatedRequest<CreateLogin>;
+export type UpdateLoginRequest = ValidatedRequest<UpdateLogin>;
 
 // TANKMETADATA
 
 export const tankMetaDataSchema = z.object({
+  id: z.number().int(),
   description: z.string().optional(),
   volume: z.number().int().positive(),
   type: z.enum(['FRESH', 'SALT', 'BRACKISH']),
@@ -74,10 +73,11 @@ export const tankMetaDataSchema = z.object({
   customerId: z.number().int()
 });
 
-export const createTank = tankMetaDataSchema.omit({ qrSymbol: true });
-export type PrismaTankMetadata = z.infer<typeof tankMetaDataSchema>;
+export const createTank = tankMetaDataSchema.omit({ id: true });
 export type CreateTankMetaData = z.infer<typeof createTank>;
-export type TankMetaDataRequest = ValidatedRequest<CreateTankMetaData>;
+export type UpdateTankMetaData = z.infer<typeof tankMetaDataSchema>;
+export type CreateTankMetaDataRequest = ValidatedRequest<CreateTankMetaData>;
+export type UpdateTankMetaDataRequest = ValidatedRequest<UpdateTankMetaData>;
 
 // SERVICECALL
 
@@ -120,13 +120,26 @@ export const serviceCallSchema = z.object({
   tankId: z.number().int().optional()
 });
 
-export type ServiceCall = z.infer<typeof serviceCallSchema>;
-export type ServiceCallRequest = ValidatedRequest<ServiceCall>;
+export const createServiceCall = serviceCallSchema.omit({ id: true });
+export type CreateServiceCall = z.infer<typeof createServiceCall>;
+export type UpdateServiceCall = z.infer<typeof serviceCallSchema>;
+export type CreateServiceCallRequest = ValidatedRequest<CreateServiceCall>;
+export type UpdateServiceCallRequest = ValidatedRequest<UpdateServiceCall>;
 
-export const serviceCallCreateSchema = serviceCallSchema.omit({ id: true });
+// AUTH
 
-export type ServiceCallCreate = z.infer<typeof serviceCallCreateSchema>;
-export type ServiceCallCreateRequest = ValidatedRequest<ServiceCallCreate>;
+export const authLogin = loginSchema.omit({
+  id: true,
+  role: true,
+  userId: true
+});
+export type AuthLogin = z.infer<typeof authLogin>;
+export type AuthLoginRequest = ValidatedRequest<AuthLogin>;
+
+// this will be used to register new Logins
+export const authRegister = loginSchema.omit({ id: true, password: true });
+export type AuthRegister = z.infer<typeof authRegister>;
+export type AuthRegisterRequest = ValidatedRequest<AuthRegister>;
 
 // EMAIL
 
