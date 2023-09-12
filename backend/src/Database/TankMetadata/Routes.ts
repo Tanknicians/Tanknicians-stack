@@ -2,6 +2,7 @@ import express from 'express';
 import * as TankMetadataService from './API';
 import { TankMetadata } from '@prisma/client';
 import { authenticateRoleMiddleWare } from '../../Authentication/API';
+import { tankMetaDataSchema, validateRequestBody } from '../../zodTypes';
 
 /**
  * This router is for providing modification access to individual tank
@@ -15,6 +16,7 @@ tankMetaDataRouter.use(express.json());
 tankMetaDataRouter.post(
   '/',
   authenticateRoleMiddleWare(['ADMIN']),
+  validateRequestBody(tankMetaDataSchema),
   async (req, res) => {
     try {
       const input = req.body;
