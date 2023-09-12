@@ -1,7 +1,7 @@
 import { serviceCallDB } from '../../prisma/db/ServiceCall';
-import { ServiceCall } from '../zodTypes';
+import { CreateServiceCall, UpdateServiceCall } from '../zodTypes';
 
-export async function uploadServiceCall(serviceCall: ServiceCall) {
+export async function uploadServiceCall(serviceCall: CreateServiceCall) {
   if (!serviceCall.notApprovedNotes) {
     serviceCall.notApprovedNotes = '';
   }
@@ -17,7 +17,7 @@ export async function uploadServiceCall(serviceCall: ServiceCall) {
 }
 
 // make sure the Tank ID exists in the service call
-function checkTankId(serviceCall: ServiceCall) {
+function checkTankId(serviceCall: CreateServiceCall) {
   if (
     serviceCall.tankId == null ||
     serviceCall.tankId === undefined ||
@@ -31,7 +31,7 @@ function checkTankId(serviceCall: ServiceCall) {
 }
 
 // run checks on the service call and make sure parameters are valid
-function checkParameterLimits(serviceCall: ServiceCall) {
+function checkParameterLimits(serviceCall: CreateServiceCall) {
   const { alkalinity, calcium, nitrate, phosphate } = serviceCall;
   if (
     alkalinity < paramLimits.alkalinityMin ||

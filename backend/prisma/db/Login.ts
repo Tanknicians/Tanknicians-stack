@@ -1,8 +1,9 @@
-import { Login, PrismaClient, Role } from '@prisma/client';
+import { PrismaClient, Role } from '@prisma/client';
+import { CreateLogin, UpdateLogin } from 'src/zodTypes';
 const prisma = new PrismaClient();
 
 // CREATE
-export async function create(login: Omit<Login, 'id'>) {
+export async function create(login: CreateLogin) {
   console.log(login);
   await prisma.login.create({
     data: {
@@ -32,7 +33,7 @@ export async function readUserByLoginId(id: number) {
 }
 
 // UPDATE
-export async function update(login: Login) {
+export async function update(login: UpdateLogin) {
   await prisma.login.update({
     where: {
       id: login.id,

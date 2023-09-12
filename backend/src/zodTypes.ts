@@ -14,7 +14,10 @@ export const validateRequestBody =
     }
   };
 
+// USER
+
 export const userSchema = z.object({
+  id: z.number().int(),
   firstName: z.string().optional(),
   middleName: z.string().optional(),
   lastName: z.string().optional(),
@@ -24,12 +27,16 @@ export const userSchema = z.object({
   isEmployee: z.boolean(),
 });
 
-export type User = z.infer<typeof userSchema>;
-export type UserCreate = z.infer<typeof userSchema>;
-export type UserRequest = ValidatedRequest<User>;
+export const createUserSchema = userSchema.omit({ id: true });
+export type CreateUser = z.infer<typeof createUserSchema>;
+export type UpdateUser = z.infer<typeof userSchema>;
+export type UserRequest = ValidatedRequest<CreateUser>;
+
+// LOGIN
 
 export const loginSchema = z
   .object({
+    id: z.number().int(),
     email: z.string({ required_error: 'Email is required' }).email(),
     password: z.string({ required_error: 'Password is required' }),
     role: z.enum(['ADMIN', 'EMPLOYEE', 'CUSTOMER'], {
@@ -43,34 +50,15 @@ export const loginSchema = z
   })
   .strict();
 
-export type Login = z.infer<typeof loginSchema>;
-export type LoginRequest = ValidatedRequest<Login>;
+export const createLogin = loginSchema.omit({ id: true });
+export type CreateLogin = z.infer<typeof createLogin>;
+export type UpdateLogin = z.infer<typeof loginSchema>;
+export type LoginRequest = ValidatedRequest<CreateLogin>;
 
-const tokenData = loginSchema.extend({ id: z.number(), userId: z.number() });
-
-export const tokenSchema = z.object({
-  data: tokenData,
-  isRefreshToken: z.literal(false),
-});
-
-export type Token = z.infer<typeof tokenSchema>;
-
-export const refreshTokenSchema = z.object({
-  data: tokenData,
-  isRefreshToken: z.literal(true),
-});
-export type RefreshToken = z.infer<typeof refreshTokenSchema>;
-
-export const authLogin = loginSchema.omit({ role: true, userId: true });
-export type AuthLogin = z.infer<typeof authLogin>;
-export type AuthLoginRequest = ValidatedRequest<AuthLogin>;
-
-// this will be used to register new Logins
-export const authRegister = loginSchema.omit({ password: true });
-export type AuthRegister = z.infer<typeof authRegister>;
-export type AuthRegisterRequest = ValidatedRequest<AuthRegister>;
+// TANKMETADATA
 
 export const tankMetaDataSchema = z.object({
+  id: z.number().int(),
   description: z.string().optional(),
   volume: z.number().int().positive(),
   type: z.enum(['FRESH', 'SALT', 'BRACKISH']),
@@ -83,10 +71,12 @@ export const tankMetaDataSchema = z.object({
   customerId: z.number().int(),
 });
 
-export const createTank = tankMetaDataSchema.omit({ qrSymbol: true });
-export type PrismaTankMetadata = z.infer<typeof tankMetaDataSchema>;
+export const createTank = tankMetaDataSchema.omit({ id: true });
 export type CreateTankMetaData = z.infer<typeof createTank>;
+export type UpdateTankMetaData = z.infer<typeof tankMetaDataSchema>;
 export type TankMetaDataRequest = ValidatedRequest<CreateTankMetaData>;
+
+// SERVICECALL
 
 export const serviceCallSchema = z.object({
   id: z.number().int(),
@@ -127,14 +117,45 @@ export const serviceCallSchema = z.object({
   tankId: z.number().int().optional(),
 });
 
-export type ServiceCall = z.infer<typeof serviceCallSchema>;
-export type ServiceCallRequest = ValidatedRequest<ServiceCall>;
+export const createServiceCall = serviceCallSchema.omit({ id: true });
+export type CreateServiceCall = z.infer<typeof createServiceCall>;
+export type UpdateServiceCall = z.infer<typeof serviceCallSchema>;
+export type ServiceCallRequest = ValidatedRequest<CreateServiceCall>;
 
-export const serviceCallCreateSchema = serviceCallSchema.omit({ id: true });
+// AUTH
 
-export type ServiceCallCreate = z.infer<typeof serviceCallCreateSchema>;
-export type ServiceCallCreateRequest = ValidatedRequest<ServiceCallCreate>;
+export const authLogin = loginSchema.omit({
+  id: true,
+  role: true,
+  userId: true,
+});
+export type AuthLogin = z.infer<typeof authLogin>;
+export type AuthLoginRequest = ValidatedRequest<AuthLogin>;
+
+// this will be used to register new Logins
+export const authRegister = loginSchema.omit({ id: true, password: true });
+export type AuthRegister = z.infer<typeof authRegister>;
+export type AuthRegisterRequest = ValidatedRequest<AuthRegister>;
+
+// EMAIL
 
 export const emailSchema = z.object({ email: z.string().email() });
 export type Email = z.infer<typeof emailSchema>;
 export type EmailRequest = ValidatedRequest<Email>;
+
+// TOKEN
+
+const tokenData = loginSchema.extend({ id: z.number(), userId: z.number() });
+
+export const tokenSchema = z.object({
+  data: tokenData,
+  isRefreshToken: z.literal(false),
+});
+
+export type Token = z.infer<typeof tokenSchema>;
+
+export const refreshTokenSchema = z.object({
+  data: tokenData,
+  isRefreshToken: z.literal(true),
+});
+export type RefreshToken = z.infer<typeof refreshTokenSchema>;

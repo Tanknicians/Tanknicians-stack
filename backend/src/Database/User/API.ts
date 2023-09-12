@@ -1,8 +1,8 @@
 import * as Prisma from '@prisma/client';
 import { userDB } from '../../../prisma/db/User';
-import { UserCreate } from '../../zodTypes';
+import { CreateUser, UpdateUser } from '../../zodTypes';
 
-export async function create(user: UserCreate) {
+export async function create(user: CreateUser) {
   try {
     await userDB.create(user);
     return { message: 'User created successfully' };
@@ -32,7 +32,7 @@ export async function readAll(includeTanks?: boolean) {
   }
 }
 
-export async function update(user: Prisma.User) {
+export async function update(user: UpdateUser) {
   try {
     await userDB.update(user);
     return { message: 'User updated successfully' };

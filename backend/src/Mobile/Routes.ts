@@ -2,7 +2,7 @@ import express from 'express';
 import { uploadServiceCall } from './API';
 import { authenticateRoleMiddleWare } from '../Authentication/API';
 import {
-  serviceCallCreateSchema,
+  createServiceCall,
   ServiceCallRequest,
   validateRequestBody,
 } from '../zodTypes';
@@ -14,7 +14,7 @@ mobileRouter.use(express.json());
 mobileRouter.post(
   '/uploadForm',
   authenticateRoleMiddleWare(['ADMIN', 'EMPLOYEE']),
-  validateRequestBody(serviceCallCreateSchema),
+  validateRequestBody(createServiceCall),
   async (req: ServiceCallRequest, res) => {
     try {
       const input = req.body;
