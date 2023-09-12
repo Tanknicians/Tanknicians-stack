@@ -14,6 +14,8 @@ export const validateRequestBody =
     }
   };
 
+// USER
+
 export const userSchema = z.object({
   firstName: z.string().optional(),
   middleName: z.string().optional(),
@@ -21,12 +23,14 @@ export const userSchema = z.object({
   address: z.string().optional(),
   phone: z.string().optional(),
 
-  isEmployee: z.boolean(),
+  isEmployee: z.boolean()
 });
 
 export type User = z.infer<typeof userSchema>;
 export type UserCreate = z.infer<typeof userSchema>;
 export type UserRequest = ValidatedRequest<User>;
+
+// LOGIN
 
 export const loginSchema = z
   .object({
@@ -34,32 +38,17 @@ export const loginSchema = z
     password: z.string({ required_error: 'Password is required' }),
     role: z.enum(['ADMIN', 'EMPLOYEE', 'CUSTOMER'], {
       errorMap: () => ({
-        message: 'Role must be ADMIN, EMPLOYEE, or CUSTOMER',
-      }),
+        message: 'Role must be ADMIN, EMPLOYEE, or CUSTOMER'
+      })
     }),
     userId: z
       .number({ required_error: 'Must be a positive integer.' })
-      .positive(),
+      .positive()
   })
   .strict();
 
 export type Login = z.infer<typeof loginSchema>;
 export type LoginRequest = ValidatedRequest<Login>;
-
-const tokenData = loginSchema.extend({ id: z.number(), userId: z.number() });
-
-export const tokenSchema = z.object({
-  data: tokenData,
-  isRefreshToken: z.literal(false),
-});
-
-export type Token = z.infer<typeof tokenSchema>;
-
-export const refreshTokenSchema = z.object({
-  data: tokenData,
-  isRefreshToken: z.literal(true),
-});
-export type RefreshToken = z.infer<typeof refreshTokenSchema>;
 
 export const authLogin = loginSchema.omit({ role: true, userId: true });
 export type AuthLogin = z.infer<typeof authLogin>;
@@ -69,6 +58,8 @@ export type AuthLoginRequest = ValidatedRequest<AuthLogin>;
 export const authRegister = loginSchema.omit({ password: true });
 export type AuthRegister = z.infer<typeof authRegister>;
 export type AuthRegisterRequest = ValidatedRequest<AuthRegister>;
+
+// TANKMETADATA
 
 export const tankMetaDataSchema = z.object({
   description: z.string().optional(),
@@ -80,13 +71,15 @@ export const tankMetaDataSchema = z.object({
   tanknicianSourcedOnly: z.boolean(),
   lastDateServiced: z.date(),
 
-  customerId: z.number().int(),
+  customerId: z.number().int()
 });
 
 export const createTank = tankMetaDataSchema.omit({ qrSymbol: true });
 export type PrismaTankMetadata = z.infer<typeof tankMetaDataSchema>;
 export type CreateTankMetaData = z.infer<typeof createTank>;
 export type TankMetaDataRequest = ValidatedRequest<CreateTankMetaData>;
+
+// SERVICECALL
 
 export const serviceCallSchema = z.object({
   id: z.number().int(),
@@ -124,7 +117,7 @@ export const serviceCallSchema = z.object({
   pestCPresent: z.boolean(),
   pestDPresent: z.boolean(),
   employeeId: z.number().int(),
-  tankId: z.number().int().optional(),
+  tankId: z.number().int().optional()
 });
 
 export type ServiceCall = z.infer<typeof serviceCallSchema>;
@@ -135,6 +128,25 @@ export const serviceCallCreateSchema = serviceCallSchema.omit({ id: true });
 export type ServiceCallCreate = z.infer<typeof serviceCallCreateSchema>;
 export type ServiceCallCreateRequest = ValidatedRequest<ServiceCallCreate>;
 
+// EMAIL
+
 export const emailSchema = z.object({ email: z.string().email() });
 export type Email = z.infer<typeof emailSchema>;
 export type EmailRequest = ValidatedRequest<Email>;
+
+// TOKEN
+
+const tokenData = loginSchema.extend({ id: z.number(), userId: z.number() });
+
+export const tokenSchema = z.object({
+  data: tokenData,
+  isRefreshToken: z.literal(false)
+});
+
+export type Token = z.infer<typeof tokenSchema>;
+
+export const refreshTokenSchema = z.object({
+  data: tokenData,
+  isRefreshToken: z.literal(true)
+});
+export type RefreshToken = z.infer<typeof refreshTokenSchema>;
