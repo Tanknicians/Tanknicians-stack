@@ -1,9 +1,9 @@
-import { TankMetadata, PrismaClient, TankType } from '@prisma/client';
-import { PrismaTankMetadata } from '../../src/zodTypes';
+import { PrismaClient, TankType } from '@prisma/client';
+import { CreateTankMetaData, UpdateTankMetaData } from '../../src/zodTypes';
 const prisma = new PrismaClient();
 
 // CREATE
-export async function create(tank: PrismaTankMetadata) {
+export async function create(tank: CreateTankMetaData) {
   const { customerId, ...tankData } = tank;
   await prisma.tankMetadata.create({
     data: {
@@ -35,7 +35,7 @@ export async function readTanksByUserId(customerId: number) {
 }
 
 // UPDATE
-export async function update(tank: TankMetadata) {
+export async function update(tank: UpdateTankMetaData) {
   await prisma.tankMetadata.update({
     where: {
       id: tank.id,
