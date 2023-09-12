@@ -84,7 +84,7 @@ export const tankMetaDataSchema = z.object({
 })
 
 export const createTank = tankMetaDataSchema.omit({qrSymbol: true})
-export type TankMetadata = z.infer<typeof tankMetaDataSchema>;
+export type PrismaTankMetadata = z.infer<typeof tankMetaDataSchema>;
 export type CreateTankMetaData = z.infer<typeof createTank>;
 export type TankMetaDataRequest = ValidatedRequest<CreateTankMetaData>;
 
