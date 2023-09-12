@@ -19,14 +19,14 @@ export const validateRequestBody =
     firstName: z.string().optional(),
     middleName: z.string().optional(),
     lastName: z.string().optional(),
-
     address: z.string().optional(),
     phone: z.string().optional(),
-
+    
     isEmployee: z.boolean()
-  })
+  });
 
   export type User = z.infer<typeof userSchema>;
+  export type UserCreate = z.infer<typeof userSchema>;
   export type UserRequest = ValidatedRequest<User>;
 
 export const loginSchema = z
