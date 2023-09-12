@@ -5,7 +5,7 @@ import {
   TankMetaDataRequest,
   UpdateTankMetaData,
   tankMetaDataSchema,
-  validateRequestBody
+  validateRequestBody,
 } from '../../zodTypes';
 
 /**
@@ -29,7 +29,7 @@ tankMetaDataRouter.post(
     } catch (error) {
       res.status(500).json({ error: 'Failed to create TankMetadata' });
     }
-  }
+  },
 );
 
 // Read TankMetadata
@@ -44,7 +44,7 @@ tankMetaDataRouter.get(
     } catch (error) {
       res.status(500).json({ error: 'Failed to read TankMetadata' });
     }
-  }
+  },
 );
 
 // Update TankMetadata
@@ -58,14 +58,14 @@ tankMetaDataRouter.put(
       const input = req.body;
       const tankData: UpdateTankMetaData = {
         id,
-        ...input
+        ...input,
       };
       const result = await TankMetadataService.update(tankData);
       res.json(result);
     } catch (error) {
       res.status(500).json({ error: 'Failed to update TankMetadata' });
     }
-  }
+  },
 );
 
 // Delete TankMetadata
@@ -80,7 +80,7 @@ tankMetaDataRouter.delete(
     } catch (error) {
       res.status(500).json({ error: 'Failed to delete TankMetadata' });
     }
-  }
+  },
 );
 
 // Search TankMetadata
@@ -96,7 +96,7 @@ tankMetaDataRouter.get(
     } catch (error) {
       res.status(500).json({ error: 'Failed to search TankMetadata' });
     }
-  }
+  },
 );
 
 export default tankMetaDataRouter;

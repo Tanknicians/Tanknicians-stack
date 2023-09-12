@@ -6,7 +6,7 @@ import {
   UpdateLogin,
   createLogin,
   loginSchema,
-  validateRequestBody
+  validateRequestBody,
 } from '../../zodTypes';
 
 const loginRouter = express.Router();
@@ -25,7 +25,7 @@ loginRouter.post(
     } catch (error) {
       res.status(500).json({ error: 'Failed to create Login' });
     }
-  }
+  },
 );
 
 // Read Login
@@ -40,7 +40,7 @@ loginRouter.get(
     } catch (error) {
       res.status(500).json({ error: 'Failed to read Login' });
     }
-  }
+  },
 );
 
 // Update Login
@@ -54,14 +54,14 @@ loginRouter.put(
       const input = req.body;
       const loginData: UpdateLogin = {
         id,
-        ...input
+        ...input,
       };
       const result = await LoginService.update(loginData);
       res.json(result);
     } catch (error) {
       res.status(500).json({ error: 'Failed to update Login' });
     }
-  }
+  },
 );
 
 // Delete Login
@@ -76,7 +76,7 @@ loginRouter.delete(
     } catch (error) {
       res.status(500).json({ error: 'Failed to delete Login' });
     }
-  }
+  },
 );
 
 // Search Login
@@ -92,7 +92,7 @@ loginRouter.get(
     } catch (error) {
       res.status(500).json({ error: 'Failed to search Login' });
     }
-  }
+  },
 );
 
 export default loginRouter;
