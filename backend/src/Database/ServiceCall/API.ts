@@ -1,7 +1,7 @@
 import { serviceCallDB } from '../../../prisma/db/ServiceCall';
-import { ServiceCall, ServiceCallCreate } from '../../zodTypes';
+import { CreateServiceCall, UpdateServiceCall } from '../../zodTypes';
 
-export async function create(serviceCall: ServiceCallCreate) {
+export async function create(serviceCall: CreateServiceCall) {
   try {
     await serviceCallDB.create(serviceCall);
     return { message: 'Service Call created successfully' };
@@ -69,7 +69,7 @@ export async function readAllByDate(
   }
 }
 
-export async function update(serviceCall: ServiceCall) {
+export async function update(serviceCall: UpdateServiceCall) {
   try {
     await serviceCallDB.update(serviceCall);
     return { message: 'Service Call updated successfully' };

@@ -1,6 +1,5 @@
-import * as Prisma from '@prisma/client';
 import { tankDB } from '../../../prisma/db/TankMetadata';
-import { CreateTankMetaData, PrismaTankMetadata } from '../../zodTypes';
+import { CreateTankMetaData, UpdateTankMetaData } from '../../zodTypes';
 
 export async function create(tank: CreateTankMetaData) {
   try {
@@ -9,7 +8,7 @@ export async function create(tank: CreateTankMetaData) {
     const qrSymbolsArray: number[] = userTanks.map(
       (tankMetadata) => tankMetadata.qrSymbol,
     );
-    const createTank: PrismaTankMetadata = {
+    const createTank: CreateTankMetaData = {
       ...tank,
       qrSymbol: findNextInteger(qrSymbolsArray),
     };
@@ -48,7 +47,7 @@ export async function read(id: number) {
   }
 }
 
-export async function update(tank: Prisma.TankMetadata) {
+export async function update(tank: UpdateTankMetaData) {
   try {
     await tankDB.update(tank);
     return { message: 'TankMetadata updated successfully' };
