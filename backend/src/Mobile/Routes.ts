@@ -3,7 +3,7 @@ import { uploadServiceCall } from './API';
 import { authenticateRoleMiddleWare } from '../Authentication/API';
 import {
   createServiceCall,
-  CreateServiceCallRequest,
+  ServiceCallRequest,
   validateRequestBody,
 } from '../zodTypes';
 
@@ -15,7 +15,7 @@ mobileRouter.post(
   '/uploadForm',
   authenticateRoleMiddleWare(['ADMIN', 'EMPLOYEE']),
   validateRequestBody(createServiceCall),
-  async (req: CreateServiceCallRequest, res) => {
+  async (req: ServiceCallRequest, res) => {
     try {
       const input = req.body;
       const message = await uploadServiceCall(input);

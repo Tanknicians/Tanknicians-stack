@@ -1,8 +1,7 @@
 import express from 'express';
 import * as LoginService from './API';
-import { Login } from '@prisma/client';
 import { authenticateRoleMiddleWare } from '../../Authentication/API';
-import { createLogin, loginSchema, validateRequestBody } from '../../zodTypes';
+import { LoginRequest, UpdateLogin, createLogin, loginSchema, validateRequestBody } from '../../zodTypes';
 
 const loginRouter = express.Router();
 loginRouter.use(express.json());
@@ -12,7 +11,7 @@ loginRouter.post(
   '/',
   authenticateRoleMiddleWare(['ADMIN']),
   validateRequestBody(createLogin),
-  async (req, res) => {
+  async (req: LoginRequest, res) => {
     try {
       const input = req.body;
       const result = await LoginService.create(input);
@@ -43,11 +42,11 @@ loginRouter.put(
   '/:id',
   authenticateRoleMiddleWare(['ADMIN']),
   validateRequestBody(loginSchema),
-  async (req, res) => {
+  async (req: LoginRequest, res) => {
     try {
-      const id = req.params.id;
+      const id = Number(req.params.id);
       const input = req.body;
-      const loginData: Login = {
+      const loginData: UpdateLogin = {
         id,
         ...input
       };

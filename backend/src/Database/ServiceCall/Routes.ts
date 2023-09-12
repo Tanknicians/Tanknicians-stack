@@ -2,9 +2,8 @@ import express from 'express';
 import * as ServiceCallService from './API';
 import { authenticateRoleMiddleWare } from '../../Authentication/API';
 import {
-  CreateServiceCallRequest,
+  ServiceCallRequest,
   UpdateServiceCall,
-  UpdateServiceCallRequest,
   createServiceCall,
   serviceCallSchema,
   validateRequestBody,
@@ -19,7 +18,7 @@ serviceCallRouter.post(
   '/',
   authenticateRoleMiddleWare(['EMPLOYEE']),
   validateRequestBody(createServiceCall),
-  async (req: CreateServiceCallRequest, res) => {
+  async (req: ServiceCallRequest, res) => {
     try {
       const input = req.body;
       const result = await ServiceCallService.create(input);
@@ -78,14 +77,13 @@ serviceCallRouter.put(
   '/:id',
   authenticateRoleMiddleWare(['ADMIN']),
   validateRequestBody(serviceCallSchema),
-  async (req: UpdateServiceCallRequest, res) => {
+  async (req: ServiceCallRequest, res) => {
     try {
-      const id = parseInt(req.params.id);
+      const id = Number(req.params.id);
       const input = req.body;
       const serviceCallData: UpdateServiceCall = {
-        ...input,
-        //we are just going to take the id from the url, but right now we also request it in the body. TODO: later
         id,
+        ...input,
       };
       const result = await ServiceCallService.update(serviceCallData);
       res.json(result);

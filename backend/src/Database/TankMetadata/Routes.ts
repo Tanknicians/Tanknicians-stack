@@ -1,7 +1,7 @@
 import express from 'express';
 import * as TankMetadataService from './API';
 import { authenticateRoleMiddleWare } from '../../Authentication/API';
-import { UpdateTankMetaData, tankMetaDataSchema, validateRequestBody } from '../../zodTypes';
+import { TankMetaDataRequest, UpdateTankMetaData, tankMetaDataSchema, validateRequestBody } from '../../zodTypes';
 
 /**
  * This router is for providing modification access to individual tank
@@ -16,7 +16,7 @@ tankMetaDataRouter.post(
   '/',
   authenticateRoleMiddleWare(['ADMIN']),
   validateRequestBody(tankMetaDataSchema),
-  async (req, res) => {
+  async (req: TankMetaDataRequest, res) => {
     try {
       const input = req.body;
       const result = await TankMetadataService.create(input);
@@ -47,9 +47,9 @@ tankMetaDataRouter.put(
   '/:id',
   authenticateRoleMiddleWare(['ADMIN']),
   validateRequestBody(tankMetaDataSchema),
-  async (req, res) => {
+  async (req: TankMetaDataRequest, res) => {
     try {
-      const id = req.params.id;
+      const id = Number(req.params.id);
       const input = req.body;
       const tankData: UpdateTankMetaData = {
         id,
