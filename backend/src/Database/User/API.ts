@@ -1,7 +1,8 @@
 import * as Prisma from '@prisma/client';
 import { userDB } from '../../../prisma/db/User';
+import { UserCreate } from '../../zodTypes';
 
-export async function create(user: Omit<Prisma.User, 'id'>) {
+export async function create(user: UserCreate) {
   try {
     await userDB.create(user);
     return { message: 'User created successfully' };
