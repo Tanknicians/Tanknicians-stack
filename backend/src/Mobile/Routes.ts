@@ -2,8 +2,8 @@ import express from 'express';
 import { uploadServiceCall } from './API';
 import { authenticateRoleMiddleWare } from '../Authentication/API';
 import {
-  serviceCallCreateSchema,
-  ServiceCallRequest,
+  createServiceCall,
+  CreateServiceCallRequest,
   validateRequestBody,
 } from '../zodTypes';
 
@@ -14,8 +14,8 @@ mobileRouter.use(express.json());
 mobileRouter.post(
   '/uploadForm',
   authenticateRoleMiddleWare(['ADMIN', 'EMPLOYEE']),
-  validateRequestBody(serviceCallCreateSchema),
-  async (req: ServiceCallRequest, res) => {
+  validateRequestBody(createServiceCall),
+  async (req: CreateServiceCallRequest, res) => {
     try {
       const input = req.body;
       const message = await uploadServiceCall(input);

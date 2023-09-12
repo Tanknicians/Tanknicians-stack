@@ -1,8 +1,12 @@
 import express from 'express';
 import * as UserService from './API';
 import { authenticateRoleMiddleWare } from '../../Authentication/API';
-import { User } from '@prisma/client';
-import { userSchema, validateRequestBody } from '../../zodTypes';
+import {
+  UpdateUser,
+  createUserSchema,
+  userSchema,
+  validateRequestBody
+} from '../../zodTypes';
 
 const userRouter = express.Router();
 userRouter.use(express.json());
@@ -11,7 +15,7 @@ userRouter.use(express.json());
 userRouter.post(
   '/',
   authenticateRoleMiddleWare(['ADMIN']),
-  validateRequestBody(userSchema),
+  validateRequestBody(createUserSchema),
   async (req, res) => {
     try {
       const input = req.body;
@@ -20,7 +24,7 @@ userRouter.post(
     } catch (error) {
       res.status(500).json({ error: 'Failed to create User' });
     }
-  },
+  }
 );
 
 // Read User
@@ -35,7 +39,7 @@ userRouter.get(
     } catch (error) {
       res.status(500).json({ error: 'Failed to read User' });
     }
-  },
+  }
 );
 
 // Read all Users and Tanks
@@ -50,27 +54,28 @@ userRouter.get(
     } catch (error) {
       res.status(500).json({ error: 'Failed to get Users and Tanks' });
     }
-  },
+  }
 );
 
 // Update User
 userRouter.put(
   '/:id',
   authenticateRoleMiddleWare(['ADMIN']),
+  validateRequestBody(userSchema),
   async (req, res) => {
     try {
       const id = req.params.id;
       const input = req.body;
-      const userData: User = {
+      const userData: UpdateUser = {
         id,
-        ...input,
+        ...input
       };
       const result = await UserService.update(userData);
       res.json(result);
     } catch (error) {
       res.status(500).json({ error: 'Failed to update User' });
     }
-  },
+  }
 );
 
 // Delete User
@@ -85,7 +90,7 @@ userRouter.delete(
     } catch (error) {
       res.status(500).json({ error: 'Failed to delete User' });
     }
-  },
+  }
 );
 
 // Search User
@@ -101,7 +106,7 @@ userRouter.get(
     } catch (error) {
       res.status(500).json({ error: 'Failed to search User' });
     }
-  },
+  }
 );
 
 export default userRouter;

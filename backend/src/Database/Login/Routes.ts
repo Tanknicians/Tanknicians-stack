@@ -2,6 +2,7 @@ import express from 'express';
 import * as LoginService from './API';
 import { Login } from '@prisma/client';
 import { authenticateRoleMiddleWare } from '../../Authentication/API';
+import { createLogin, loginSchema, validateRequestBody } from 'src/zodTypes';
 
 const loginRouter = express.Router();
 loginRouter.use(express.json());
@@ -10,6 +11,7 @@ loginRouter.use(express.json());
 loginRouter.post(
   '/',
   authenticateRoleMiddleWare(['ADMIN']),
+  validateRequestBody(createLogin),
   async (req, res) => {
     try {
       const input = req.body;
@@ -18,7 +20,7 @@ loginRouter.post(
     } catch (error) {
       res.status(500).json({ error: 'Failed to create Login' });
     }
-  },
+  }
 );
 
 // Read Login
@@ -33,27 +35,28 @@ loginRouter.get(
     } catch (error) {
       res.status(500).json({ error: 'Failed to read Login' });
     }
-  },
+  }
 );
 
 // Update Login
 loginRouter.put(
   '/:id',
   authenticateRoleMiddleWare(['ADMIN']),
+  validateRequestBody(loginSchema),
   async (req, res) => {
     try {
       const id = req.params.id;
       const input = req.body;
       const loginData: Login = {
         id,
-        ...input,
+        ...input
       };
       const result = await LoginService.update(loginData);
       res.json(result);
     } catch (error) {
       res.status(500).json({ error: 'Failed to update Login' });
     }
-  },
+  }
 );
 
 // Delete Login
@@ -68,7 +71,7 @@ loginRouter.delete(
     } catch (error) {
       res.status(500).json({ error: 'Failed to delete Login' });
     }
-  },
+  }
 );
 
 // Search Login
@@ -84,7 +87,7 @@ loginRouter.get(
     } catch (error) {
       res.status(500).json({ error: 'Failed to search Login' });
     }
-  },
+  }
 );
 
 export default loginRouter;
