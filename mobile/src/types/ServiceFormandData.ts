@@ -25,6 +25,7 @@ type BooleanQuestions = {
   saltCreepCleaned: boolean;
   skimmerCleanedAndOperational: boolean;
   waterChanged: boolean;
+  waterTestedRecordedDated: boolean;
   pestAPresent: boolean;
   pestBPresent: boolean;
   pestCPresent: boolean;
@@ -37,6 +38,10 @@ type TextQuestions = {
 };
 
 export const defaultServiceFormValues: Partial<ServiceFormData> = {
+  alkalinity: undefined,
+  calcium: undefined,
+  nitrate: undefined,
+  phosphate: undefined,
   ATOOperational: false,
   ATOReservoirFilled: false,
   chemFilterAdjusted: false,
@@ -50,6 +55,7 @@ export const defaultServiceFormValues: Partial<ServiceFormData> = {
   saltCreepCleaned: false,
   skimmerCleanedAndOperational: false,
   waterChanged: false,
+  waterTestedRecordedDated: false,
   pestAPresent: false,
   pestBPresent: false,
   pestCPresent: false,
@@ -112,6 +118,7 @@ type ServiceFormFieldId =
   | 'saltCreepCleaned'
   | 'skimmerCleanedAndOperational'
   | 'waterChanged'
+  | 'waterTestedRecordedDated'
   | 'pestAPresent'
   | 'pestBPresent'
   | 'pestCPresent'
@@ -137,76 +144,79 @@ export const serviceFormFieldQuestionsText: ServiceFormFieldQuestion[] = [
 
 export const serviceFormFieldQuestionsNumeric: ServiceFormFieldQuestion[] = [
   {
-    id: 'alkalinity',
-    label: 'Alkalinity'
-  },
-  {
-    id: 'calcium',
-    label: 'Calcium'
-  },
-  {
     id: 'nitrate',
     label: 'Nitrate'
   },
   {
     id: 'phosphate',
     label: 'Phosphate'
+  },
+  {
+    id: 'calcium',
+    label: 'Calcium'
+  },
+  {
+    id: 'alkalinity',
+    label: 'Alkalinity'
   }
 ];
 
 export const serviceFormFieldQuestionsBoolean: ServiceFormFieldQuestion[] = [
   {
-    id: 'ATOOperational',
-    label: 'ATO Operational'
+    id: 'waterTestedRecordedDated',
+    label: 'Water Tested, Recorded, and Dated'
+  },
+  {
+    id: 'glassCleanedInside',
+    label: 'Inside of Glass Cleaned'
+  },
+  {
+    id: 'mechFilterChanged',
+    label: 'Mechanical Filtration Changed'
+  },
+  {
+    id: 'chemFilterAdjusted',
+    label: 'Chemical Filtration Adjusted'
+  },
+  {
+    id: 'waterChanged',
+    label: 'Water Changed'
+  },
+  {
+    id: 'skimmerCleanedAndOperational',
+    label: 'Skimmer Cleaned And Operating'
   },
   {
     id: 'ATOReservoirFilled',
     label: 'ATO Reservoir Filled'
   },
   {
-    id: 'chemFilterAdjusted',
-    label: 'Chem Filter Adjusted'
+    id: 'ATOOperational',
+    label: 'ATO Operating'
+  },
+  {
+    id: 'pumpsClearedOfDebris',
+    label: 'Pumps Clear Of Debris'
   },
   {
     id: 'doserAdjustementOrManualDosing',
-    label: 'Doser Adjustement Or Manual Dosing'
+    label: 'Doser Adjusted Or Manual Dosing'
   },
   {
     id: 'dosingReservoirsFull',
     label: 'Dosing Reservoirs Full'
   },
   {
-    id: 'floorsCheckedForSpillsOrDirt',
-    label: 'Floors Checked For Spills Or Dirt'
-  },
-  {
-    id: 'glassCleanedInside',
-    label: 'Glass Cleaned Inside'
-  },
-  {
     id: 'glassCleanedOutside',
-    label: 'Glass Cleaned Outside'
-  },
-
-  {
-    id: 'mechFilterChanged',
-    label: 'Mech Filter Changed'
-  },
-  {
-    id: 'pumpsClearedOfDebris',
-    label: 'Pumps Cleared Of Debris'
+    label: 'Outside of Glass Cleaned'
   },
   {
     id: 'saltCreepCleaned',
     label: 'Salt Creep Cleaned'
   },
   {
-    id: 'skimmerCleanedAndOperational',
-    label: 'Skimmer Cleaned And Operational'
-  },
-  {
-    id: 'waterChanged',
-    label: 'Water Changed'
+    id: 'floorsCheckedForSpillsOrDirt',
+    label: 'Floors Checked For Spills Or Dirt'
   },
   {
     id: 'pestAPresent',
