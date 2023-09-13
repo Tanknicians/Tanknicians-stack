@@ -1,8 +1,8 @@
-import * as Prisma from '@prisma/client';
 import * as bcrypt from 'bcryptjs';
 import { loginDB } from '../../../prisma/db/Login';
+import { CreateLogin, UpdateLogin } from '../../zodTypes';
 
-export async function create(login: Omit<Prisma.Login, 'id'>) {
+export async function create(login: CreateLogin) {
   try {
     await loginDB.create(login);
     return { message: 'Login created successfully' };
@@ -23,7 +23,7 @@ export async function read(email: string) {
   }
 }
 
-export async function update(login: Prisma.Login) {
+export async function update(login: UpdateLogin) {
   try {
     login.password = await bcrypt.hash(login.password, 10);
     await loginDB.update(login);

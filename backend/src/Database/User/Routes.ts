@@ -1,8 +1,13 @@
 import express from 'express';
 import * as UserService from './API';
 import { authenticateRoleMiddleWare } from '../../Authentication/API';
-import { User } from '@prisma/client';
-import { userSchema, validateRequestBody } from '../../zodTypes';
+import {
+  UpdateUser,
+  UserRequest,
+  createUserSchema,
+  userSchema,
+  validateRequestBody,
+} from '../../zodTypes';
 
 const userRouter = express.Router();
 userRouter.use(express.json());
@@ -11,8 +16,8 @@ userRouter.use(express.json());
 userRouter.post(
   '/',
   authenticateRoleMiddleWare(['ADMIN']),
-  validateRequestBody(userSchema),
-  async (req, res) => {
+  validateRequestBody(createUserSchema),
+  async (req: UserRequest, res) => {
     try {
       const input = req.body;
       const result = await UserService.create(input);
@@ -57,11 +62,12 @@ userRouter.get(
 userRouter.put(
   '/:id',
   authenticateRoleMiddleWare(['ADMIN']),
-  async (req, res) => {
+  validateRequestBody(userSchema),
+  async (req: UserRequest, res) => {
     try {
-      const id = req.params.id;
+      const id = Number(req.params.id);
       const input = req.body;
-      const userData: User = {
+      const userData: UpdateUser = {
         id,
         ...input,
       };

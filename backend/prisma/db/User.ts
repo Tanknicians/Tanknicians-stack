@@ -1,9 +1,9 @@
-import { User, PrismaClient } from '@prisma/client';
-import { UserCreate } from '../../src/zodTypes';
+import { PrismaClient } from '@prisma/client';
+import { CreateUser, UpdateUser } from '../../src/zodTypes';
 const prisma = new PrismaClient();
 
 // CREATE
-export async function create(user: UserCreate) {
+export async function create(user: CreateUser) {
   await prisma.user.create({
     data: {
       ...user,
@@ -54,7 +54,7 @@ export async function readTankMetadataByUserId(id: number) {
 }
 
 // UPDATE
-export async function update(user: User) {
+export async function update(user: UpdateUser) {
   await prisma.user.update({
     where: {
       id: user.id,
