@@ -7,12 +7,13 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
-import { useLocation } from "react-router-dom";
 import Toolbar from '@mui/material/Toolbar';
 import AppBar from '@mui/material/AppBar';
+import { Link } from 'react-router-dom';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import * as React from 'react';
+import { useLocation } from "react-router-dom";
 
 
 // console.log(store)
@@ -176,10 +177,10 @@ const username = "Will Mitchell";
 
 export default function Paperbase() {
 
-  //Tab selection by URL
-  const urlArray  = useLocation().pathname.split('/');
-  const selection = urlArray[urlArray.length - 1].replace('%20', ' ')  
-
+  let urlArray  = useLocation().pathname.split('/');
+  let selection = urlArray[urlArray.length - 1].replace('%20', ' ')  
+  
+  const [activeNavItem, setActiveNavItem] = React.useState(selection);
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const isSmUp = useMediaQuery(theme.breakpoints.up('sm'));
 
@@ -197,7 +198,8 @@ export default function Paperbase() {
         >
           {isSmUp ? null : (
             <Navigator
-              selected = {selection}
+              setSelection = {setActiveNavItem}
+              selected = {activeNavItem}
               PaperProps={{ style: { width: drawerWidth } }}
               variant='temporary'
               open={mobileOpen}
@@ -206,7 +208,8 @@ export default function Paperbase() {
               
           )}
           <Navigator
-            selected = {selection}
+            setSelection = {setActiveNavItem}
+            selected = {activeNavItem}
             PaperProps={{ style: { width: drawerWidth } }}
             sx={{ display: { sm: 'block', xs: 'none' } }}
           />
@@ -227,9 +230,12 @@ export default function Paperbase() {
                 </Grid>
                 <Grid item xs />
                 <Grid item>
-                  <IconButton color='inherit' sx={{ p: 0.5 }}>
-                    <NotificationsIcon />
-                  </IconButton>
+                    <IconButton color='inherit' sx={{ p: 0.5 }}>
+                      <Link to = "Approve Forms" style={{ textDecoration: 'none', color: 'white'}} >
+                        <NotificationsIcon onClick = {()=>setActiveNavItem('Approve Forms')}/>
+                      </Link>
+                    </IconButton>
+                  
                 </Grid>
                 <Grid item>
                   <Typography color='inherit' variant='h6' component='h1'>

@@ -94,7 +94,7 @@ export default function LoginPage() {
       const userData = await login(loginData).unwrap();
       dispatch(setCredentials({ ...userData, loginData }));
 
-      navigate('/dashboard/Service Forms');
+      navigate('/dashboard/Approve Forms');
     } catch (err: any) {
       if (!err?.status) {
         // isLoading: true until timeout occurs
