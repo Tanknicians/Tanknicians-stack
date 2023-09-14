@@ -2,8 +2,10 @@ import express from 'express';
 import * as TankMetadataService from './API';
 import { authenticateRoleMiddleWare } from '../../Authentication/API';
 import {
+  CreateTankMetaData,
   TankMetaDataRequest,
   UpdateTankMetaData,
+  createTank,
   tankMetaDataSchema,
   validateRequestBody,
 } from '../../zodTypes';
@@ -20,11 +22,15 @@ tankMetaDataRouter.use(express.json());
 tankMetaDataRouter.post(
   '/',
   authenticateRoleMiddleWare(['ADMIN']),
-  validateRequestBody(tankMetaDataSchema),
+  validateRequestBody(createTank.omit({qrSymbol: true})),
   async (req: TankMetaDataRequest, res) => {
     try {
       const input = req.body;
-      const result = await TankMetadataService.create(input);
+      const newTank: CreateTankMetaData = {
+        ...input,
+        qrSymbol: 0
+      }
+      const result = await TankMetadataService.create(newTank);
       res.json(result);
     } catch (error) {
       res.status(500).json({ error: 'Failed to create TankMetadata' });
