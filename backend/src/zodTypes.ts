@@ -66,7 +66,7 @@ export const tankMetaDataSchema = z.object({
   qrSymbol: z.number().int().positive(),
 
   tanknicianSourcedOnly: z.boolean(),
-  lastDateServiced: z.date(),
+  lastDateServiced: z.coerce.date(),
 
   customerId: z.number().int(),
 });
@@ -87,7 +87,7 @@ export const serviceCallSchema = z.object({
   employeeNotes: z.string().optional(),
   // server use only for not-approved notes
   notApprovedNotes: z.string().optional(),
-  notesUpdated: z.date().optional(),
+  notesUpdated: z.coerce.date().optional(),
 
   alkalinity: z.number(),
   calcium: z.number(),
