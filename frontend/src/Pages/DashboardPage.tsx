@@ -270,7 +270,7 @@ export default function Paperbase() {
               </Grid>
             </Toolbar>
           </AppBar>
-          <Content />
+          <Content/>
         </Box>
       </Box>
     </ThemeProvider>
