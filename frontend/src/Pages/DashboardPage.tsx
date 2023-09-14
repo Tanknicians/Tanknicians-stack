@@ -127,7 +127,7 @@ theme = {
         root: {
           '&.Mui-selected': {
             color: '#4fc3f7',
-            backgroundColor:'rgb(255,255,255,0.15)',
+            backgroundColor:'rgba(79, 195, 247, .08)',
           }
         }
       }
