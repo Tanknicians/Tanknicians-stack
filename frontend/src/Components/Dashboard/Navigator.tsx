@@ -13,7 +13,7 @@ import Divider from '@mui/material/Divider';
 import { Link } from 'react-router-dom';
 import List from '@mui/material/List';
 import Box from '@mui/material/Box';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 
 const item = {
   py: '2px',
@@ -21,7 +21,8 @@ const item = {
   color:'rgba(255, 255, 255, 0.7)',
   '&:hover': {
     bgcolor:'rgba(255, 255, 255, .1)'//'rgba(255, 255, 255, 0.08)'
-  }
+  },
+  
 };
 
 const itemCategory = {
@@ -34,9 +35,7 @@ interface NavProps extends DrawerProps {
   setSelection:any;
   selected: string;
 }
-
 export default function Navigator(props: NavProps) {
-
 
   const { setSelection, selected} = props
 
@@ -97,28 +96,27 @@ export default function Navigator(props: NavProps) {
             <ListItem sx={{ py: 2, px: 3 }}>
               <ListItemText sx={{ color: '#fff' }}>{id}</ListItemText>
             </ListItem>
-            {children.map(({ id: childId, icon, onClick }, index) => (
+            {children.map(({ id: childId, icon, onClick }) => (
               
-                <ListItem disablePadding key={childId} >
-                  <Link
-                    to={childId}
-                    style={{ textDecoration: 'none', minWidth: '100%' }}
+              <ListItem disablePadding key={childId}>
+                <Link
+                  to={childId}
+                  style={{ textDecoration: 'none', minWidth: '100%' }}
+                >
+
+                  <ListItemButton
+                    selected={childId === selected}
+                    sx={item}
+                    onClick={onClick}
                   >
-                    <ListItemButton
-                      selected={childId === selected}
-                      sx={item}
-                      onClick={onClick}
-                    >
-                      <ListItemIcon>{icon}</ListItemIcon>
-                      <ListItemText>{childId}</ListItemText>
-                    </ListItemButton>
-                  </Link>
-                </ListItem> 
-                
-                
-                ))}
-              <Divider sx={{ mt: 2 }} />
-            </Box>
+                    <ListItemIcon>{icon}</ListItemIcon>
+                    <ListItemText>{childId}</ListItemText>
+                  </ListItemButton>
+                </Link>
+              </ListItem>
+              ))}
+            <Divider sx={{ mt: 2 }} />
+          </Box>
         ))}
       </List>
     </Drawer>

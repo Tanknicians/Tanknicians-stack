@@ -126,7 +126,8 @@ theme = {
       styleOverrides: {
         root: {
           '&.Mui-selected': {
-            color: '#4fc3f7'
+            color: '#4fc3f7',
+            backgroundColor:'rgb(255,255,255,0.15)',
           }
         }
       }
@@ -169,17 +170,34 @@ theme = {
     },
   }
 };
+const item = {
+  borderRadius:'20px',
+  padding:'5px',
+  fontSize: '40px!important',
+  color:'rgba(255, 255, 255, 1)',
+  '&:hover': {
+    bgcolor:'rgba(255, 255, 255, .1)'//'rgba(255, 255, 255, 0.08)'
+  },
+  '&:focus': {
+    bgcolor:'rgba(79, 195, 247, .1)'//'rgba(255, 255, 255, 0.08)'
+  }
+};
 
 
 const drawerWidth = 256;
+
 // figure out how to get User's name from store and put it here
 const username = "Will Mitchell";
 
 export default function Paperbase() {
 
+  // Get URL on render
   let urlArray  = useLocation().pathname.split('/');
   let selection = urlArray[urlArray.length - 1].replace('%20', ' ')  
   
+  // Set cleaned URL in state for tab highlight
+  // Dashboard level component (bell icon) controlls highlight, so highlight
+  // state must be accessanle here
   const [activeNavItem, setActiveNavItem] = React.useState(selection);
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const isSmUp = useMediaQuery(theme.breakpoints.up('sm'));
@@ -232,7 +250,7 @@ export default function Paperbase() {
                 <Grid item>
                     <IconButton color='inherit' sx={{ p: 0.5 }}>
                       <Link to = "Approve Forms" style={{ textDecoration: 'none', color: 'white'}} >
-                        <NotificationsIcon onClick = {()=>setActiveNavItem('Approve Forms')}/>
+                        <NotificationsIcon sx = {item} onClick = {()=>setActiveNavItem('Approve Forms')}/>
                       </Link>
                     </IconButton>
                   
