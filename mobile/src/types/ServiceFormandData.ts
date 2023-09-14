@@ -92,6 +92,7 @@ export const serviceFormSchema = z.object({
   saltCreepCleaned: z.boolean(),
   skimmerCleanedAndOperational: z.boolean(),
   waterChanged: z.boolean(),
+  waterTestedRecordedDated: z.boolean(),
   pestAPresent: z.boolean(),
   pestBPresent: z.boolean(),
   pestCPresent: z.boolean(),

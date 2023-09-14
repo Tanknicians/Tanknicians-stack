@@ -75,29 +75,32 @@ const ServiceCallForm = ({ navigation }: Props) => {
   // Scroll to top if there are errors
   if (errors && Object.keys(errors).length > 0) scrollToTop();
 
-  console.log('Errors: ', errors);
+  console.log('Validation Errors: ', errors);
+
   const onSubmit: SubmitHandler<ServiceFormData> = async (data: any) => {
+    // Add employeeId, tankId, and date service call was created to data object
     const dataWithEmployeeandTankId = {
       ...data,
       employeeId: employeeId?.userId,
-      tankId: clientTankId
+      tankId: clientTankId,
+      createdOn: new Date().toISOString()
     };
 
     try {
       const response = await uploadServiceCall(
         dataWithEmployeeandTankId
       ).unwrap();
-      console.log('response; ', response);
+      console.log('Service Call Form Response: ', response);
       dispatch(clearTankId());
       navigation.replace(QRSCANNERSCREEN);
     } catch (err: any) {
       if (!err?.status) {
-        // isLoading: true until timeout occurs
         console.log('No Server Response');
       } else {
+        const errorData = JSON.parse(err.data);
         console.log(
           `Service Call Screen error ${err.status}: `,
-          err.data?.error.issues[0].message
+          errorData.error.issues
         );
       }
     }
