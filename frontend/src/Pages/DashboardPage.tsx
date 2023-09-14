@@ -1,26 +1,24 @@
-import * as React from 'react';
+import NotificationsIcon from '@mui/icons-material/Notifications';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import Content from '../Components/Dashboard/ContentRoutes';
+import Navigator from '../Components/Dashboard/Navigator';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import CssBaseline from '@mui/material/CssBaseline';
-import Box from '@mui/material/Box';
-import Navigator from '../Components/Dashboard/Navigator';
-import Content from '../Components/Dashboard/ContentRoutes';
-import AppBar from '@mui/material/AppBar';
-import Avatar from '@mui/material/Avatar';
-import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
-import Toolbar from '@mui/material/Toolbar';
-import Header from '../Components/Dashboard/Header';
 import { useLocation } from "react-router-dom";
-import Typography from '@mui/material/Typography';
-import NotificationsIcon from '@mui/icons-material/Notifications';
+import Toolbar from '@mui/material/Toolbar';
+import AppBar from '@mui/material/AppBar';
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
+import * as React from 'react';
 
 let theme = createTheme({
   palette: {
     primary: {
       light: '#63ccff',
-      //main: '#009be5',
+      //main: '#009be5', // color change for header
       main: '#081627',
       dark: '#006db3'
     }
@@ -156,7 +154,15 @@ theme = {
           height: 32
         }
       }
-    }
+    },
+    MuiAppBar: {
+      styleOverrides: {
+        root: {
+          height: '57px', // Adjust the height to your desired value
+          //color: '#081627'
+        },
+      },
+    },
   }
 };
 
@@ -200,7 +206,7 @@ export default function Paperbase() {
             sx={{ display: { sm: 'block', xs: 'none' } }}
           />
         </Box>
-        <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+        <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', height: '1000px'}}>
           <AppBar color='primary' position='sticky' elevation={0}>
             <Toolbar>
               <Grid container spacing={1} alignItems='center'>
@@ -224,6 +230,11 @@ export default function Paperbase() {
                   <IconButton color='inherit' sx={{ p: 0.5 }}>
                     <NotificationsIcon />
                   </IconButton>
+                </Grid>
+                <Grid item>
+                  <Typography color='inherit' variant='h6' component='h1'>
+                    Will Mitchell
+                  </Typography>
                 </Grid>
               </Grid>
             </Toolbar>
