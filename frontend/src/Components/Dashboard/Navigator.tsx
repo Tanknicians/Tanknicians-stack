@@ -13,7 +13,6 @@ import Divider from '@mui/material/Divider';
 import { Link } from 'react-router-dom';
 import List from '@mui/material/List';
 import Box from '@mui/material/Box';
-import { useState, useRef } from 'react';
 
 const item = {
   py: '2px',
@@ -32,12 +31,13 @@ const itemCategory = {
 };
 
 interface NavProps extends DrawerProps {
+  onClose:any | null;
   setSelection:any;
   selected: string;
 }
 export default function Navigator(props: NavProps) {
 
-  const { setSelection, selected} = props
+  const { onClose, setSelection, selected} = props
 
   const dashboardFeatures = [
     {
@@ -107,7 +107,10 @@ export default function Navigator(props: NavProps) {
                   <ListItemButton
                     selected={childId === selected}
                     sx={item}
-                    onClick={onClick}
+                    onClick={()=> {
+                      onClick();
+                      onClose();
+                    }}
                   >
                     <ListItemIcon>{icon}</ListItemIcon>
                     <ListItemText>{childId}</ListItemText>
