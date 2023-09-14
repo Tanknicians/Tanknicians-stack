@@ -4,8 +4,8 @@ import { CreateLogin, UpdateLogin } from '../../zodTypes';
 
 export async function create(login: CreateLogin) {
   try {
-    const id = await loginDB.create(login);
-    return { message: 'Login created successfully', id: id };
+    await loginDB.create(login);
+    return { message: 'Login created successfully' };
   } catch (e) {
     throw new Error('An error occurred during create.');
   }
