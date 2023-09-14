@@ -1,6 +1,10 @@
 import { tankDB } from '../../prisma/db/TankMetadata';
 import { serviceCallDB } from '../../prisma/db/ServiceCall';
-import { CreateServiceCall, UpdateTankMetaData, tankMetaDataSchema } from '../zodTypes';
+import {
+  CreateServiceCall,
+  UpdateTankMetaData,
+  tankMetaDataSchema,
+} from '../zodTypes';
 
 export async function uploadServiceCall(serviceCall: CreateServiceCall) {
   if (!serviceCall.notApprovedNotes) {
@@ -11,9 +15,9 @@ export async function uploadServiceCall(serviceCall: CreateServiceCall) {
   const approvedMessage = serviceCall.isApproved ? 'approved' : 'not approved';
   // Update Tank's "lastDateServiced" to serviceCall's "createdOn" and upload ServiceCall
   try {
-    const readTank = await tankDB.read(serviceCall.tankId)
+    const readTank = await tankDB.read(serviceCall.tankId);
     if (!readTank) {
-      throw new Error(`No tankId of ${serviceCall.tankId} found.`)
+      throw new Error(`No tankId of ${serviceCall.tankId} found.`);
     }
     const updateTank: UpdateTankMetaData = tankMetaDataSchema.parse(readTank);
     updateTank.lastDateServiced = serviceCall.createdOn;

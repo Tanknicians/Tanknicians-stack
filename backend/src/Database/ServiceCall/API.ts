@@ -1,13 +1,18 @@
 import { serviceCallDB } from '../../../prisma/db/ServiceCall';
-import { tankDB } from '../../../prisma/db/TankMetadata'
-import { CreateServiceCall, UpdateServiceCall, UpdateTankMetaData, tankMetaDataSchema } from '../../zodTypes';
+import { tankDB } from '../../../prisma/db/TankMetadata';
+import {
+  CreateServiceCall,
+  UpdateServiceCall,
+  UpdateTankMetaData,
+  tankMetaDataSchema,
+} from '../../zodTypes';
 
 export async function create(serviceCall: CreateServiceCall) {
   // Update Tank's "lastDateServiced" to serviceCall's "createdOn" and upload ServiceCall
   try {
-    const readTank = await tankDB.read(serviceCall.tankId)
+    const readTank = await tankDB.read(serviceCall.tankId);
     if (!readTank) {
-      throw new Error(`No tankId of ${serviceCall.tankId} found.`)
+      throw new Error(`No tankId of ${serviceCall.tankId} found.`);
     }
     const updateTank: UpdateTankMetaData = tankMetaDataSchema.parse(readTank);
     updateTank.lastDateServiced = serviceCall.createdOn;
