@@ -1,18 +1,18 @@
-import Divider from '@mui/material/Divider';
-import Drawer, { DrawerProps } from '@mui/material/Drawer';
-import List from '@mui/material/List';
-import Box from '@mui/material/Box';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import { Link } from 'react-router-dom';
-import PeopleIcon from '@mui/icons-material/People';
-import ShowChartIcon from '@mui/icons-material/ShowChart';
-import { useState } from 'react';
 import BorderColorIcon from '@mui/icons-material/BorderColor';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import Drawer, { DrawerProps } from '@mui/material/Drawer';
+import ListItemButton from '@mui/material/ListItemButton';
+import ShowChartIcon from '@mui/icons-material/ShowChart';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import PeopleIcon from '@mui/icons-material/People';
 import BadgeIcon from '@mui/icons-material/Badge';
+import { useLocation } from 'react-router-dom';
+import ListItem from '@mui/material/ListItem';
+import Divider from '@mui/material/Divider';
+import { Link } from 'react-router-dom';
+import List from '@mui/material/List';
+import Box from '@mui/material/Box';
 
 const item = {
   py: '2px',
@@ -29,50 +29,51 @@ const itemCategory = {
   px: 3
 };
 
-export default function Navigator(props: DrawerProps) {
-  // Admin features represents a list of panels that contain content.
-  // Our list has one panel, "Admin".
-  // Admin has three children, each with a text label, icon, and highlight state: active or not active.
-  const [activeIndex, setActiveIndex] = useState(0);
+interface NavProps extends DrawerProps {
+  onClose: any | null;
+  setSelection: any;
+  selected: string;
+}
+export default function Navigator(props: NavProps) {
+  const { onClose, setSelection, selected } = props;
 
   const dashboardFeatures = [
     {
-      // In the future, other listitems->children-> onclick functions should have arguments starting at 3 then 4 etc.
-      id: 'Admin',
+      id: '',
       children: [
         {
-          id: 'Service Forms',
+          id: 'Approve Forms',
           icon: <BorderColorIcon />,
           onClick: () => {
-            setActiveIndex(0);
-          }
-        },
-        {
-          id: 'Employees',
-          icon: <BadgeIcon />,
-          onClick: () => {
-            setActiveIndex(1);
+            setSelection('Approve Forms');
           }
         },
         {
           id: 'Clients',
           icon: <PeopleIcon />,
           onClick: () => {
-            setActiveIndex(2);
+            setSelection('Clients');
           }
         },
         {
-          id: 'Analytics',
+          id: 'Tanks',
           icon: <ShowChartIcon />,
           onClick: () => {
-            setActiveIndex(3);
+            setSelection('Tanks');
+          }
+        },
+        {
+          id: 'Employees',
+          icon: <BadgeIcon />,
+          onClick: () => {
+            setSelection('Employees');
           }
         },
         {
           id: 'Data Export',
           icon: <ContentCopyIcon />,
           onClick: () => {
-            setActiveIndex(4);
+            setSelection('Data Export');
           }
         }
       ]
@@ -92,18 +93,19 @@ export default function Navigator(props: DrawerProps) {
             <ListItem sx={{ py: 2, px: 3 }}>
               <ListItemText sx={{ color: '#fff' }}>{id}</ListItemText>
             </ListItem>
-            {children.map(({ id: childId, icon, onClick }, index) => (
+            {children.map(({ id: childId, icon, onClick }) => (
               <ListItem disablePadding key={childId}>
                 <Link
                   to={childId}
                   style={{ textDecoration: 'none', minWidth: '100%' }}
                 >
-                  {/* onclick, set state "activeIndex" to whichever Feature is currently selected*/}
-                  {/* If curr map index is equal to the state "activeIndex", set selected to true, else set to false */}
                   <ListItemButton
-                    selected={index === activeIndex}
+                    selected={childId === selected}
                     sx={item}
-                    onClick={onClick}
+                    onClick={() => {
+                      onClick();
+                      onClose();
+                    }}
                   >
                     <ListItemIcon>{icon}</ListItemIcon>
                     <ListItemText>{childId}</ListItemText>
