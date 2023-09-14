@@ -1,8 +1,7 @@
 
 export default function DataExport() {
   return (
-    <div>
-      <h1>Hello DataExport</h1>
-    </div>
-  );
+    <h1>Data Export</h1>
+  )
+    
 }
