@@ -3,14 +3,16 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
-import Navigator from '../Components/DashboardNavigator';
-import Content from '../Components/DashboardContentRoutes';
+import Navigator from '../Components/Dashboard/Navigator';
+import Content from '../Components/Dashboard/ContentRoutes';
 import AppBar from '@mui/material/AppBar';
 import Avatar from '@mui/material/Avatar';
 import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
+import Header from '../Components/Dashboard/Header';
+import { useLocation } from "react-router-dom";
 
 let theme = createTheme({
   palette: {
@@ -155,9 +157,17 @@ theme = {
   }
 };
 
+
 const drawerWidth = 256;
 
 export default function Paperbase() {
+
+  //Selection By Url
+  let urlArray  = useLocation().pathname.split('/');
+  let dirtySelection = urlArray[urlArray.length - 1]
+  let selection = dirtySelection.replace('%20', ' ')
+  console.log(selection)
+
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const isSmUp = useMediaQuery(theme.breakpoints.up('sm'));
 
@@ -175,17 +185,24 @@ export default function Paperbase() {
         >
           {isSmUp ? null : (
             <Navigator
+              selected = {selection}
               PaperProps={{ style: { width: drawerWidth } }}
               variant='temporary'
               open={mobileOpen}
               onClose={handleDrawerToggle}
-            />
+              />
+              
           )}
           <Navigator
+            selected = {selection}
             PaperProps={{ style: { width: drawerWidth } }}
             sx={{ display: { sm: 'block', xs: 'none' } }}
           />
         </Box>
+        <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+          <Header selection = {selection}/>
+        </Box>
+      
         <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
           <AppBar color='primary' position='sticky' elevation={0}>
             <Toolbar>
@@ -202,15 +219,6 @@ export default function Paperbase() {
                 </Grid>
 
                 <Grid item xs />
-
-                {/* Remove bell for now */}
-                {/* <Grid item>
-                  <Tooltip title="Alerts • No alerts">
-                      <IconButton color="inherit">
-                      <NotificationsIcon />
-                      </IconButton>
-                  </Tooltip>
-                  </Grid> */}
 
                 <Grid item>
                   <IconButton color='inherit' sx={{ p: 0.5 }}>
