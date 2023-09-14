@@ -163,7 +163,7 @@ theme = {
     MuiAppBar: {
       styleOverrides: {
         root: {
-          height: '57px', // Adjust the height to your desired value
+          height: '57px', // manual height adjustment for Appbar
           //color: '#081627'
         },
       },
