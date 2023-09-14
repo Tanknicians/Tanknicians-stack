@@ -3,8 +3,8 @@ import { CreateServiceCall, UpdateServiceCall } from '../../zodTypes';
 
 export async function create(serviceCall: CreateServiceCall) {
   try {
-    const id = await serviceCallDB.create(serviceCall);
-    return { message: 'Service Call created successfully', id: id };
+    await serviceCallDB.create(serviceCall);
+    return { message: 'Service Call created successfully' };
   } catch (e) {
     throw new Error('An error occurred during create.');
   }

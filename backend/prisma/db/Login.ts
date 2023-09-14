@@ -5,12 +5,11 @@ const prisma = new PrismaClient();
 // CREATE
 export async function create(login: CreateLogin) {
   console.log(login);
-  const createdLogin = await prisma.login.create({
+  await prisma.login.create({
     data: {
       ...login,
     },
   });
-  return createdLogin.id;
 }
 
 // READ
