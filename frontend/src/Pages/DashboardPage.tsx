@@ -14,6 +14,9 @@ import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import * as React from 'react';
 
+
+// console.log(store)
+
 let theme = createTheme({
   palette: {
     primary: {
@@ -168,6 +171,8 @@ theme = {
 
 
 const drawerWidth = 256;
+// figure out how to get User's name from store and put it here
+const username = "Will Mitchell";
 
 export default function Paperbase() {
 
@@ -220,11 +225,6 @@ export default function Paperbase() {
                     <MenuIcon />
                   </IconButton>
                 </Grid>
-                <Grid item xs>
-                  <Typography color='inherit' variant='h5' component='h1'>
-                    {selection}
-                  </Typography>
-                </Grid>
                 <Grid item xs />
                 <Grid item>
                   <IconButton color='inherit' sx={{ p: 0.5 }}>
@@ -233,7 +233,7 @@ export default function Paperbase() {
                 </Grid>
                 <Grid item>
                   <Typography color='inherit' variant='h6' component='h1'>
-                    Will Mitchell
+                    {username}
                   </Typography>
                 </Grid>
               </Grid>
