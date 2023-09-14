@@ -81,7 +81,7 @@ export type TankMetaDataRequest = ValidatedRequest<CreateTankMetaData>;
 export const serviceCallSchema = z.object({
   id: z.number().int(),
   isApproved: z.boolean().optional(),
-  createdOn: z.date(),
+  createdOn: z.coerce.date(),
 
   customerRequest: z.string().optional(),
   employeeNotes: z.string().optional(),
