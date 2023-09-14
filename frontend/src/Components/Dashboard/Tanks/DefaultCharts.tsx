@@ -14,7 +14,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import { useGetClientsQuery } from '../../../Redux/slices/users/userManagementSlice';
 import { useGetTankDataQuery } from '../../../Redux/slices/tanks/tankDataSlice';
 import LineChart from '../../ChartJS/LineChart';
-import { TankData } from './DUMMYDATA'
+import { TankData } from './DUMMYDATA';
 
 export default function DefaultCharts() {
   // interfaces to appease sadistict TS kink enjoyers

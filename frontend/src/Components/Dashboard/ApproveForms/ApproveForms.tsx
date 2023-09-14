@@ -1,5 +1,3 @@
 export default function ApproveForms() {
-  return (
-    <h1>Approve Forms</h1>
-  );
+  return <h1>Approve Forms</h1>;
 }

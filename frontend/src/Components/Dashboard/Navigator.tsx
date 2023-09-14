@@ -7,7 +7,7 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import PeopleIcon from '@mui/icons-material/People';
 import BadgeIcon from '@mui/icons-material/Badge';
-import { useLocation } from "react-router-dom";
+import { useLocation } from 'react-router-dom';
 import ListItem from '@mui/material/ListItem';
 import Divider from '@mui/material/Divider';
 import { Link } from 'react-router-dom';
@@ -17,11 +17,10 @@ import Box from '@mui/material/Box';
 const item = {
   py: '2px',
   px: 3,
-  color:'rgba(255, 255, 255, 0.7)',
+  color: 'rgba(255, 255, 255, 0.7)',
   '&:hover': {
-    bgcolor:'rgba(255, 255, 255, 0.08)'
-  },
-  
+    bgcolor: 'rgba(255, 255, 255, 0.08)'
+  }
 };
 
 const itemCategory = {
@@ -31,13 +30,12 @@ const itemCategory = {
 };
 
 interface NavProps extends DrawerProps {
-  onClose:any | null;
-  setSelection:any;
+  onClose: any | null;
+  setSelection: any;
   selected: string;
 }
 export default function Navigator(props: NavProps) {
-
-  const { onClose, setSelection, selected} = props
+  const { onClose, setSelection, selected } = props;
 
   const dashboardFeatures = [
     {
@@ -48,7 +46,6 @@ export default function Navigator(props: NavProps) {
           icon: <BorderColorIcon />,
           onClick: () => {
             setSelection('Approve Forms');
-            
           }
         },
         {
@@ -70,7 +67,6 @@ export default function Navigator(props: NavProps) {
           icon: <BadgeIcon />,
           onClick: () => {
             setSelection('Employees');
-            
           }
         },
         {
@@ -87,27 +83,26 @@ export default function Navigator(props: NavProps) {
   return (
     <Drawer variant='permanent' {...props}>
       <List disablePadding>
-        <ListItem sx={{ ...item, ...itemCategory, fontSize: 22, color: '#fff' }}>
+        <ListItem
+          sx={{ ...item, ...itemCategory, fontSize: 22, color: '#fff' }}
+        >
           Tanknicians
         </ListItem>
         {dashboardFeatures.map(({ id, children }) => (
-          
           <Box key={id} sx={{ bgcolor: '#101F33' }}>
             <ListItem sx={{ py: 2, px: 3 }}>
               <ListItemText sx={{ color: '#fff' }}>{id}</ListItemText>
             </ListItem>
             {children.map(({ id: childId, icon, onClick }) => (
-              
               <ListItem disablePadding key={childId}>
                 <Link
                   to={childId}
                   style={{ textDecoration: 'none', minWidth: '100%' }}
                 >
-
                   <ListItemButton
                     selected={childId === selected}
                     sx={item}
-                    onClick={()=> {
+                    onClick={() => {
                       onClick();
                       onClose();
                     }}
@@ -117,7 +112,7 @@ export default function Navigator(props: NavProps) {
                   </ListItemButton>
                 </Link>
               </ListItem>
-              ))}
+            ))}
             <Divider sx={{ mt: 2 }} />
           </Box>
         ))}
