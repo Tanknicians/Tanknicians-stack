@@ -1,5 +1,5 @@
 export default function ApproveForms() {
   return (
-    <div>Hello world</div>
+    <h1>Approve Forms</h1>
   );
 }

@@ -36,22 +36,17 @@ interface NavProps extends DrawerProps {
 export default function Navigator(props: NavProps) {
   
   const { selected, ...other } = props
-  console.log("Navigator says ", selected)
-
   const [activeNavItem, setActiveNavItem] = useState(selected);
-
-  // Admin features represents a list of panels that contain content.
-  // Our list has one panel, "Admin".
 
   const dashboardFeatures = [
     {
       id: 'Admin',
       children: [
         {
-          id: 'Approved Forms',
+          id: 'Approve Forms',
           icon: <BorderColorIcon />,
           onClick: () => {
-            setActiveNavItem('Approved Forms');
+            setActiveNavItem('Approve Forms');
           }
         },
         {

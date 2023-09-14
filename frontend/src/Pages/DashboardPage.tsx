@@ -13,6 +13,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
 import Header from '../Components/Dashboard/Header';
 import { useLocation } from "react-router-dom";
+import Typography from '@mui/material/Typography';
 
 let theme = createTheme({
   palette: {
@@ -162,11 +163,9 @@ const drawerWidth = 256;
 
 export default function Paperbase() {
 
-  //Selection By Url
-  let urlArray  = useLocation().pathname.split('/');
-  let dirtySelection = urlArray[urlArray.length - 1]
-  let selection = dirtySelection.replace('%20', ' ')
-  console.log(selection)
+  //Tab selection by URL
+  const urlArray  = useLocation().pathname.split('/');
+  const selection = urlArray[urlArray.length - 1].replace('%20', ' ')  
 
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const isSmUp = useMediaQuery(theme.breakpoints.up('sm'));
@@ -200,10 +199,6 @@ export default function Paperbase() {
           />
         </Box>
         <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-          <Header selection = {selection}/>
-        </Box>
-      
-        <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
           <AppBar color='primary' position='sticky' elevation={0}>
             <Toolbar>
               <Grid container spacing={1} alignItems='center'>
@@ -217,9 +212,12 @@ export default function Paperbase() {
                     <MenuIcon />
                   </IconButton>
                 </Grid>
-
+                <Grid item xs>
+                  <Typography color='inherit' variant='h5' component='h1'>
+                    {selection}
+                  </Typography>
+                </Grid>
                 <Grid item xs />
-
                 <Grid item>
                   <IconButton color='inherit' sx={{ p: 0.5 }}>
                     <Avatar src='/static/images/avatar/1.jpg' alt='My Avatar' />

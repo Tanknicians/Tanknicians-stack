@@ -2,18 +2,14 @@ import Typography from '@mui/material/Typography';
 import Toolbar from '@mui/material/Toolbar';
 import AppBar from '@mui/material/AppBar';
 import Grid from '@mui/material/Grid';
-import { useState } from 'react';
 import * as React from 'react';
-import { Box } from '@mui/material';
-import { useLocation } from "react-router-dom";
 
 interface HeaderProps {
   selection:string;
 }
 
 export default function Header(props:HeaderProps) {
-  const {selection} = props
-  console.log("Header says ", selection)
+  const { selection } = props
 
   return (
     <React.Fragment>
