@@ -14,6 +14,7 @@ import Toolbar from '@mui/material/Toolbar';
 import Header from '../Components/Dashboard/Header';
 import { useLocation } from "react-router-dom";
 import Typography from '@mui/material/Typography';
+import NotificationsIcon from '@mui/icons-material/Notifications';
 
 let theme = createTheme({
   palette: {
@@ -221,7 +222,7 @@ export default function Paperbase() {
                 <Grid item xs />
                 <Grid item>
                   <IconButton color='inherit' sx={{ p: 0.5 }}>
-                    <Avatar src='/static/images/avatar/1.jpg' alt='My Avatar' />
+                    <NotificationsIcon />
                   </IconButton>
                 </Grid>
               </Grid>
