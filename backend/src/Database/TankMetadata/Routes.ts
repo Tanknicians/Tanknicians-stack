@@ -22,14 +22,14 @@ tankMetaDataRouter.use(express.json());
 tankMetaDataRouter.post(
   '/',
   authenticateRoleMiddleWare(['ADMIN']),
-  validateRequestBody(createTank.omit({qrSymbol: true})),
+  validateRequestBody(createTank.omit({ qrSymbol: true })),
   async (req: TankMetaDataRequest, res) => {
     try {
       const input = req.body;
       const newTank: CreateTankMetaData = {
         ...input,
-        qrSymbol: 0
-      }
+        qrSymbol: 0,
+      };
       const result = await TankMetadataService.create(newTank);
       res.json(result);
     } catch (error) {
