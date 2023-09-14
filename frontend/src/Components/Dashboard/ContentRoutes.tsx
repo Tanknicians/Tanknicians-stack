@@ -1,9 +1,9 @@
-import ApproveForms from './ApproveForms/ApproveForms';
-import DataExport from './DataExport/DataExport';
+import ApproveForms from './ApproveForms';
+import DataExport from './DataExport';
 import { Route, Routes } from 'react-router-dom';
-import Employees from './Employees/Employees';
-import Clients from './Clients/Clients';
-import Tanks from './Tanks/Tanks';
+import Employees from './Employees';
+import Clients from './Clients';
+import Tanks from './Tanks';
 
 export default function Content() {
   return (

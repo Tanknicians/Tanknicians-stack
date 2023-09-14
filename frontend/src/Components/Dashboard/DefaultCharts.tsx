@@ -11,9 +11,9 @@ import CardContent from '@mui/material/CardContent';
 import { useState } from 'react';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
-import { useGetClientsQuery } from '../../../Redux/slices/users/userManagementSlice';
-import { useGetTankDataQuery } from '../../../Redux/slices/tanks/tankDataSlice';
-import LineChart from '../../ChartJS/LineChart';
+import { useGetClientsQuery } from '../../Redux/slices/users/userManagementSlice';
+import { useGetTankDataQuery } from '../../Redux/slices/tanks/tankDataSlice';
+import LineChart from '../ChartJS/LineChart';
 import { TankData } from './DUMMYDATA';
 
 export default function DefaultCharts() {
