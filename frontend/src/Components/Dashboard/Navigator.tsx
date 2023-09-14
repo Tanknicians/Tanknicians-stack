@@ -41,21 +41,13 @@ export default function Navigator(props: NavProps) {
 
   const dashboardFeatures = [
     {
-      id: 'Admin',
+      id: '',
       children: [
         {
           id: 'Approve Forms',
           icon: <BorderColorIcon />,
           onClick: () => {
             setSelection('Approve Forms');
-            
-          }
-        },
-        {
-          id: 'Employees',
-          icon: <BadgeIcon />,
-          onClick: () => {
-            setSelection('Employees');
             
           }
         },
@@ -71,6 +63,14 @@ export default function Navigator(props: NavProps) {
           icon: <ShowChartIcon />,
           onClick: () => {
             setSelection('Tanks');
+          }
+        },
+        {
+          id: 'Employees',
+          icon: <BadgeIcon />,
+          onClick: () => {
+            setSelection('Employees');
+            
           }
         },
         {
