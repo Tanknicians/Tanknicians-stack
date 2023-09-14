@@ -19,7 +19,7 @@ userRouter.post(
   validateRequestBody(createUserSchema),
   async (req: UserRequest, res) => {
     try {
-      const input = req.body;
+      const input = createUserSchema.parse(req.body);
       const result = await UserService.create(input);
       res.json(result);
     } catch (error) {
