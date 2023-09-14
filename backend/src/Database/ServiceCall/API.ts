@@ -22,6 +22,18 @@ export async function read(id: number) {
   }
 }
 
+export async function readAll(isApproved: boolean) {
+  try {
+    const serviceCalls = await serviceCallDB.getAll(isApproved);
+    if (!serviceCalls) {
+      throw new Error(`No service calls of isApproved = ${isApproved} found.`);
+    }
+    return serviceCalls;
+  } catch (e) {
+    throw new Error('An error occured during readAll.');
+  }
+}
+
 export async function readAllByDate(
   tankId: number,
   startDate: Date,
