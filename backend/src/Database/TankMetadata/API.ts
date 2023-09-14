@@ -12,8 +12,8 @@ export async function create(tank: CreateTankMetaData) {
       ...tank,
       qrSymbol: findNextInteger(qrSymbolsArray),
     };
-    await tankDB.create(createTank);
-    return { message: 'TankMetadata created successfully' };
+    const id = await tankDB.create(createTank);
+    return { message: 'TankMetadata created successfully', id: id };
   } catch (e) {
     throw new Error('An error occurred during create.');
   }

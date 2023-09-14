@@ -5,7 +5,7 @@ const prisma = new PrismaClient();
 // CREATE
 export async function create(tank: CreateTankMetaData) {
   const { customerId, ...tankData } = tank;
-  await prisma.tankMetadata.create({
+  const createdTankMetadata = await prisma.tankMetadata.create({
     data: {
       ...tankData,
       Customer: {
@@ -15,6 +15,7 @@ export async function create(tank: CreateTankMetaData) {
       },
     },
   });
+  return createdTankMetadata.id;
 }
 
 // READ

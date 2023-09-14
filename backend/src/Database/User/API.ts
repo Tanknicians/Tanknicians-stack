@@ -1,11 +1,10 @@
-import * as Prisma from '@prisma/client';
 import { userDB } from '../../../prisma/db/User';
 import { CreateUser, UpdateUser } from '../../zodTypes';
 
 export async function create(user: CreateUser) {
   try {
-    await userDB.create(user);
-    return { message: 'User created successfully' };
+    const id = await userDB.create(user);
+    return { message: 'User created successfully', id: id };
   } catch (e) {
     throw new Error('An error occurred during create.');
   }
