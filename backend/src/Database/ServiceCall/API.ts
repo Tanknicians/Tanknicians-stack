@@ -26,11 +26,11 @@ export async function readAll(isApproved: boolean) {
   try {
     const serviceCalls = await serviceCallDB.getAll(isApproved);
     if (!serviceCalls) {
-      throw new Error(`No service calls of isApproved = ${isApproved} found.`)
+      throw new Error(`No service calls of isApproved = ${isApproved} found.`);
     }
     return serviceCalls;
   } catch (e) {
-    throw new Error('An error occured during readAll.')
+    throw new Error('An error occured during readAll.');
   }
 }
 
