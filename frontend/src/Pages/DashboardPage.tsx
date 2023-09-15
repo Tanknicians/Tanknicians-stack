@@ -224,7 +224,7 @@ export default function Paperbase() {
             selected={activeNavItem}
             PaperProps={{ style: { width: drawerWidth } }}
             sx={{ display: { sm: 'block', xs: 'none' } }}
-            onClose={null}
+            onClose={() => {}}
           />
         </Box>
         <Box
