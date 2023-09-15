@@ -6,13 +6,6 @@ on:
 
 jobs:
   build:
-    env:
-          DATABASE_URL: mysql://prisma:prisma@localhost:3306/prisma
-          JWT_SECRET: ${{ secrets.JWT_SECRET }}
-          JWT_REFRESH_SECRET: ${{ secrets.JWT_REFRESH_SECRET }}
-          EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
-          EMAIL_USERNAME: ${{ secrets.EMAIL_USERNAME }}
-          TEST_EMAIL: ${{ secrets.TEST_EMAIL }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
