@@ -68,7 +68,7 @@ function getLabel(input: string) {
   if (!input) return '';
   let result = input.charAt(0).toUpperCase() + input.slice(1);
   result = result.replace(/(?<!^)([A-Z])/g, ' $1');
-  result = result.replace(/\b(For|Or|And)\b/g, match => match.toLowerCase());
+  result = result.replace(/\b(For|Or|And)\b/g, (match) => match.toLowerCase());
 
   return result;
 }
@@ -186,15 +186,15 @@ export default function CreateServiceCallModal({
       createServiceCallFields
     ) as (keyof typeof createServiceCallFields)[]
   )
-    .map(key => ({ name: key, ...createServiceCallFields[key] }))
-    .filter(field => field.name !== 'isApproved');
+    .map((key) => ({ name: key, ...createServiceCallFields[key] }))
+    .filter((field) => field.name !== 'isApproved');
 
   return (
     <Dialog open={open} onClose={handleClose} maxWidth='lg'>
       <DialogTitle>Create User</DialogTitle>
       <DialogContent>
         <Grid container spacing={2} paddingTop={1}>
-          {fields.map(field => (
+          {fields.map((field) => (
             <CreateForm key={field.name} control={control} {...field} />
           ))}
         </Grid>
