@@ -8,6 +8,7 @@ import {
   userSchema,
   validateRequestBody,
 } from '../../zodTypes';
+import { z } from 'zod';
 
 const userRouter = express.Router();
 userRouter.use(express.json());
@@ -99,12 +100,22 @@ userRouter.get(
   '/search/:searchString',
   authenticateRoleMiddleWare(['ADMIN', 'EMPLOYEE']),
   async (req, res) => {
+    const searchString = req.params.searchString;
+    const pageNumberParse = z.coerce
+      .number()
+      .positive()
+      .default(1)
+      .safeParse(req.query.page);
+    if (!pageNumberParse.success) {
+      return res.status(400).json({ error: pageNumberParse.error.errors });
+    }
+    const pageNumber = pageNumberParse.data;
+
     try {
-      const searchString = req.params.searchString;
-      const pageNumber = req.body.page;
       const result = await UserService.search(searchString, pageNumber);
       res.json(result);
     } catch (error) {
+      console.error(error);
       res.status(500).json({ error: 'Failed to search User' });
     }
   },
