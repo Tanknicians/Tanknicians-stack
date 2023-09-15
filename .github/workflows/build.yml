@@ -1,0 +1,37 @@
+name: Node.js CI
+
+on:
+  push:
+    branches: [ 'dev' ]
+
+jobs:
+  build:
+    env:
+          DATABASE_URL: mysql://prisma:prisma@localhost:3306/prisma
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          JWT_REFRESH_SECRET: ${{ secrets.JWT_REFRESH_SECRET }}
+          EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
+          EMAIL_USERNAME: ${{ secrets.EMAIL_USERNAME }}
+          TEST_EMAIL: ${{ secrets.TEST_EMAIL }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.x]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+      - name: Install dependencies
+        working-directory: frontend
+        run: npm ci
+      - name: Build application
+        working-directory: frontend
+        run: npm run build --if-present
+      - name: upload prod build files
+        uses: actions/upload-artifact@v2
+        with:
+          name: build
+          path: ./build
