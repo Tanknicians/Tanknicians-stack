@@ -108,8 +108,12 @@ export async function searchByString(search: String, page: number) {
 }
 
 // ALL
-export async function getAll() {
-  return await prisma.serviceCall.findMany();
+export async function getAll(isApproved: boolean) {
+  return await prisma.serviceCall.findMany({
+    where: {
+      isApproved: isApproved,
+    },
+  });
 }
 
 // SEARCH (needs to be implemented)

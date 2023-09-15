@@ -29,6 +29,31 @@ serviceCallRouter.post(
   },
 );
 
+// Read All
+serviceCallRouter.get(
+  '/',
+  authenticateRoleMiddleWare(['ADMIN']),
+  async (req, res) => {
+    const result = z
+      .object({
+        isApproved: z.coerce.boolean(),
+      })
+      .safeParse({ ...req.query });
+    if (!result.success) {
+      return res.status(400).json({ error: result.error.errors });
+    }
+    const { isApproved = false } = result.data;
+    try {
+      const result = await ServiceCallService.readAll(isApproved);
+      res.json(result);
+    } catch (error) {
+      res.status(500).json({
+        error: 'Failed to read all Service Calls by isApproved boolean.',
+      });
+    }
+  },
+);
+
 // Read ServiceCall
 serviceCallRouter.get(
   '/:id',

@@ -19,7 +19,7 @@ loginRouter.post(
   validateRequestBody(createLogin),
   async (req: LoginRequest, res) => {
     try {
-      const input = req.body;
+      const input = createLogin.parse(req.body);
       const result = await LoginService.create(input);
       res.json(result);
     } catch (error) {

@@ -1,9 +1,23 @@
 import { serviceCallDB } from '../../../prisma/db/ServiceCall';
-import { CreateServiceCall, UpdateServiceCall } from '../../zodTypes';
+import { tankDB } from '../../../prisma/db/TankMetadata';
+import {
+  CreateServiceCall,
+  UpdateServiceCall,
+  UpdateTankMetaData,
+  tankMetaDataSchema,
+} from '../../zodTypes';
 
 export async function create(serviceCall: CreateServiceCall) {
+  // Update Tank's "lastDateServiced" to serviceCall's "createdOn" and upload ServiceCall
   try {
+    const readTank = await tankDB.read(serviceCall.tankId);
+    if (!readTank) {
+      throw new Error(`No tankId of ${serviceCall.tankId} found.`);
+    }
+    const updateTank: UpdateTankMetaData = tankMetaDataSchema.parse(readTank);
+    updateTank.lastDateServiced = serviceCall.createdOn;
     await serviceCallDB.create(serviceCall);
+    await tankDB.update(updateTank);
     return { message: 'Service Call created successfully' };
   } catch (e) {
     throw new Error('An error occurred during create.');
@@ -19,6 +33,18 @@ export async function read(id: number) {
     return serviceCall;
   } catch (e) {
     throw new Error('An error occurred during read.');
+  }
+}
+
+export async function readAll(isApproved: boolean) {
+  try {
+    const serviceCalls = await serviceCallDB.getAll(isApproved);
+    if (!serviceCalls) {
+      throw new Error(`No service calls of isApproved = ${isApproved} found.`);
+    }
+    return serviceCalls;
+  } catch (e) {
+    throw new Error('An error occured during readAll.');
   }
 }
 
