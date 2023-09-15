@@ -19,7 +19,7 @@ export type UserOption = {
   lastName: string;
   address: string;
   phone: string;
-};
+} | null;
 
 const styles = {
   groupLabelContainer: {
