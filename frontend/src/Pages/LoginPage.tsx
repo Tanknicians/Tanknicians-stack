@@ -95,7 +95,12 @@ export default function LoginPage() {
       dispatch(setCredentials({ ...userData, loginData }));
 
       navigate('/dashboard/Approve Forms');
-    } catch (err: any) {
+    } catch (unparsdError) {
+      const errorSchema = z.object({
+        status: z.number().optional(),
+        data: z.object({ message: z.string().default('') })
+      });
+      const err = errorSchema.parse(unparsdError);
       if (!err?.status) {
         // isLoading: true until timeout occurs
         setLoginError({

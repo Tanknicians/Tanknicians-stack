@@ -78,8 +78,12 @@ function CreateTankForm({ userId, open, setOpen }: CreateTankFormProps) {
       const response = await addTankToUser(data).unwrap();
       console.log('Response: ', response);
       handleClose();
-    } catch (err: any) {
-      console.log(err);
+    } catch (unparsedError) {
+      const errorSchema = z.object({
+        status: z.coerce.number().optional(),
+        data: z.object({ error: z.object({ issues: z.any() }) })
+      });
+      const err = errorSchema.parse(unparsedError);
       if (!err?.status) {
         console.log('No Server Response');
       } else {

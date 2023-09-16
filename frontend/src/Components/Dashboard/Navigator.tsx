@@ -28,9 +28,9 @@ const itemCategory = {
   px: 3
 };
 
-interface NavProps extends DrawerProps {
-  onClose: any | null;
-  setSelection: any;
+interface NavProps extends Omit<DrawerProps, 'onClose'> {
+  onClose?: (event: {}, reason: 'backdropClick' | 'escapeKeyDown') => void;
+  setSelection: Function;
   selected: string;
 }
 export default function Navigator(props: NavProps) {
@@ -103,7 +103,9 @@ export default function Navigator(props: NavProps) {
                     sx={item}
                     onClick={() => {
                       onClick();
-                      onClose();
+                      if (onClose) {
+                        onClose({}, 'backdropClick');
+                      }
                     }}
                   >
                     <ListItemIcon>{icon}</ListItemIcon>
