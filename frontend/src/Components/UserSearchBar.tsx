@@ -1,3 +1,4 @@
+import { UserOption } from '../Redux/slices/users/userManagementSlice';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 import parse from 'autosuggest-highlight/parse';
@@ -10,15 +11,6 @@ type OptionsList = {
     _event: React.SyntheticEvent,
     value: UserOption | null
   ) => void;
-};
-
-export type UserOption = {
-  id: number;
-  firstName: string;
-  middleName: string;
-  lastName: string;
-  address: string;
-  phone: string;
 };
 
 const styles = {

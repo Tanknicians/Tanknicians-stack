@@ -1,19 +1,23 @@
-import { Button } from '@mui/material';
+import {
+  UserOption,
+  useGetClientsQuery
+} from '../../Redux/slices/users/userManagementSlice';
 import CreateTankForm from '../CreateTankForm';
+import UserSearchBar from '../UserSearchBar';
+import { Button } from '@mui/material';
 import { useState } from 'react';
-import { useSelector } from 'react-redux';
-import { selectCurrentUser } from '../../Redux/slices/auth/authSlice';
-import UserSearchBar, { UserOption } from '../UserSearchBar';
-import { useGetClientsQuery } from '../../Redux/slices/users/userManagementSlice';
 
 export default function Clients() {
-  // const userId = useSelector(selectCurrentUser);
   const userId = 1;
   const { data: optionsList, isLoading, error } = useGetClientsQuery(true);
+  console.log('OptionsList: ', optionsList);
   console.log('OptionsList error: ', error);
   const [currentCustomer, selectCurrentUser] = useState<UserOption | null>(
     null
   );
+  const [open, setOpen] = useState(false);
+
+  if (!optionsList) return <div>Loading...</div>;
 
   // if (error) return <div>{error.message}</div>;
   // if (isLoading) return <div>Loading...</div>;
@@ -28,7 +32,6 @@ export default function Clients() {
     console.log('customer: ', customer);
   };
 
-  const [open, setOpen] = useState(false);
   return (
     <>
       <Button variant='contained' onClick={() => setOpen(true)}>
