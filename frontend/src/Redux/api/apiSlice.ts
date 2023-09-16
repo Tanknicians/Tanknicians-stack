@@ -1,25 +1,25 @@
 import {
   createApi,
   fetchBaseQuery,
-  BaseQueryFn
-} from '@reduxjs/toolkit/query/react';
-import { setCredentials, logout } from '../slices/auth/authSlice';
-import { RootState } from '../store';
+  BaseQueryFn,
+} from "@reduxjs/toolkit/query/react";
+import { setCredentials, logout } from "../slices/auth/authSlice";
+import { RootState } from "../store";
 
 // CHANGE THIS FOR PRODUCTION
-const BASE_URL = 'http://localhost:5000';
+const BASE_URL = "https://tanknicians-web-q4jam.ondigitalocean.app/";
 
 const baseQuery = fetchBaseQuery({
   baseUrl: BASE_URL,
-  credentials: 'include',
+  credentials: "include",
   prepareHeaders: (headers, { getState }) => {
     const token = (getState() as RootState).auth.token;
 
     if (token) {
-      headers.set('Authorization', `Bearer ${token}`);
+      headers.set("Authorization", `Bearer ${token}`);
     }
     return headers;
-  }
+  },
 });
 
 const baseQueryWithReauth: BaseQueryFn = async (args, api, extraOptions) => {
@@ -28,9 +28,9 @@ const baseQueryWithReauth: BaseQueryFn = async (args, api, extraOptions) => {
   if (result?.error?.status === 403) {
     // send refresh token to get new access token
     const refreshResult = await baseQuery(
-      '/api/auth/refresh',
+      "/api/auth/refresh",
       api,
-      extraOptions
+      extraOptions,
     );
     console.log(refreshResult);
     if (refreshResult?.data) {
@@ -49,5 +49,5 @@ const baseQueryWithReauth: BaseQueryFn = async (args, api, extraOptions) => {
 
 export const apiSlice = createApi({
   baseQuery: baseQueryWithReauth,
-  endpoints: (builder) => ({})
+  endpoints: (builder) => ({}),
 });
