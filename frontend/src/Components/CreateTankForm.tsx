@@ -133,7 +133,7 @@ function CreateTankForm({ userId, open, setOpen }: CreateTankFormProps) {
                       {...field}
                       value={field.value ?? ''}
                     >
-                      <MenuItem value=''></MenuItem>
+                      <MenuItem value='' />
                       <MenuItem value='FRESH'>Fresh</MenuItem>
                       <MenuItem value='SALT'>Salt</MenuItem>
                       <MenuItem value='BRACKISH'>Brackish</MenuItem>
