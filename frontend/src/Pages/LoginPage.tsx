@@ -97,7 +97,7 @@ export default function LoginPage() {
       navigate('/dashboard/Approve Forms');
     } catch (unparsdError) {
       const errorSchema = z.object({
-        status: z.number().optional(),
+        status: z.coerce.number().optional(),
         data: z.object({ message: z.string().default('') })
       });
       const err = errorSchema.parse(unparsdError);
