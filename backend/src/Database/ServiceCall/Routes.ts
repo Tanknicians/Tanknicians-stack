@@ -6,7 +6,7 @@ import {
   UpdateServiceCall,
   createServiceCall,
   serviceCallSchema,
-  validateRequestBody
+  validateRequestBody,
 } from '../../zodTypes';
 import { z } from 'zod';
 
@@ -26,7 +26,7 @@ serviceCallRouter.post(
     } catch (error) {
       res.status(500).json({ error: 'Failed to create Service Call' });
     }
-  }
+  },
 );
 
 // Read All
@@ -36,7 +36,7 @@ serviceCallRouter.get(
   async (req, res) => {
     const result = z
       .object({
-        isApproved: z.coerce.boolean()
+        isApproved: z.coerce.boolean(),
       })
       .safeParse({ ...req.query });
     if (!result.success) {
@@ -48,10 +48,10 @@ serviceCallRouter.get(
       res.json(result);
     } catch (error) {
       res.status(500).json({
-        error: 'Failed to read all Service Calls by isApproved boolean.'
+        error: 'Failed to read all Service Calls by isApproved boolean.',
       });
     }
-  }
+  },
 );
 
 // Read ServiceCall
@@ -66,7 +66,7 @@ serviceCallRouter.get(
     } catch (error) {
       res.status(500).json({ error: 'Failed to read Service Call' });
     }
-  }
+  },
 );
 
 // get all Service Calls from a tank ID and a start and end date
@@ -78,7 +78,7 @@ serviceCallRouter.get(
       .object({
         tankId: z.coerce.number(),
         start: z.coerce.date(),
-        end: z.coerce.date()
+        end: z.coerce.date(),
       })
       .safeParse({ ...req.query, ...req.params });
     if (!result.success) {
@@ -91,10 +91,10 @@ serviceCallRouter.get(
       res.json(result);
     } catch (error) {
       res.status(500).json({
-        error: 'Failed to read Service Calls by tankID and given date range.'
+        error: 'Failed to read Service Calls by tankID and given date range.',
       });
     }
-  }
+  },
 );
 
 // get all Service Calls from a tank ID and isApproved boolean
@@ -105,7 +105,7 @@ serviceCallRouter.get(
     const result = z
       .object({
         tankId: z.coerce.number(),
-        isApproved: z.coerce.boolean()
+        isApproved: z.coerce.boolean(),
       })
       .safeParse({ ...req.query, ...req.params });
     if (!result.success) {
@@ -115,15 +115,15 @@ serviceCallRouter.get(
     try {
       const result = await ServiceCallService.readAllByTankId(
         tankId,
-        isApproved
+        isApproved,
       );
       res.json(result);
     } catch (error) {
       res.status(500).json({
-        error: 'Failed to read Service Calls by tankID and given date range.'
+        error: 'Failed to read Service Calls by tankID and given date range.',
       });
     }
-  }
+  },
 );
 
 // Update ServiceCall
@@ -137,14 +137,14 @@ serviceCallRouter.put(
       const input = req.body;
       const serviceCallData: UpdateServiceCall = {
         id,
-        ...input
+        ...input,
       };
       const result = await ServiceCallService.update(serviceCallData);
       res.json(result);
     } catch (error) {
       res.status(500).json({ error: 'Failed to update Service Call' });
     }
-  }
+  },
 );
 
 // Delete ServiceCall
@@ -159,7 +159,7 @@ serviceCallRouter.delete(
     } catch (error) {
       res.status(500).json({ error: 'Failed to delete Service Call' });
     }
-  }
+  },
 );
 
 // Search ServiceCall
@@ -175,7 +175,7 @@ serviceCallRouter.get(
     } catch (error) {
       res.status(500).json({ error: 'Failed to search Service Call' });
     }
-  }
+  },
 );
 
 export default serviceCallRouter;
