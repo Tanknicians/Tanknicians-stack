@@ -7,13 +7,13 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: deploy
-        uses: appleboy/ssh-action@v0.1.2
-        with:
-          host: 104.131.166.179
-          key: ${{secrets.SSH_KEY}}
-          username: root
-
-          script: |
-            git clone git@github.com:Tanknicians/Tanknicians-stack.git
-            echo 'deployment success'
+      - name: Checkout the repo
+      - uses: actions/checkout@v2
+        with: 
+          path: repo
+        env:
+           SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+      - run: |
+          ssh-agent -a $SSH_AUTH_SOCK > /dev/null
+          ssh-add - <<< "${{ secrets.SSH_KEY }}"
+          scp -o StrictHostKeyChecking=no -r -P 22 repo root@104.131.166.179
