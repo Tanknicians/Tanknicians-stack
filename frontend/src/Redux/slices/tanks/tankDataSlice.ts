@@ -5,7 +5,7 @@ export const tankDataSlice = apiSlice.injectEndpoints({
     getTankData: builder.query<any, number>({
       query: (tankID) => {
         return {
-          url: `/api/database/tankMetaData/TankMetadataService`,
+          url: '/api/database/tankMetaData/TankMetadataService',
           method: 'GET',
           params: { tankID: tankID }
         };
