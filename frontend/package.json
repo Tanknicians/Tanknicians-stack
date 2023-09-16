@@ -55,7 +55,6 @@
     ]
   },
   "devDependencies": {
-    "@types/autosuggest-highlight": "^3.2.0",
     "@types/nodemailer": "^6.4.7",
     "@types/react-router-dom": "^5.3.3"
   }
