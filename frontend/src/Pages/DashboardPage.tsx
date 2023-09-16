@@ -187,8 +187,8 @@ const username = 'Will Mitchell';
 
 export default function Paperbase() {
   // Get URL on render
-  let urlArray = useLocation().pathname.split('/');
-  let selection = urlArray[urlArray.length - 1].replace('%20', ' ');
+  const urlArray = useLocation().pathname.split('/');
+  const selection = urlArray[urlArray.length - 1].replace('%20', ' ');
 
   // Set cleaned URL in state for tab highlight
   // Dashboard level component (bell icon) controlls highlight, so highlight
@@ -224,7 +224,6 @@ export default function Paperbase() {
             selected={activeNavItem}
             PaperProps={{ style: { width: drawerWidth } }}
             sx={{ display: { sm: 'block', xs: 'none' } }}
-            onClose={null}
           />
         </Box>
         <Box

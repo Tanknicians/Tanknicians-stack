@@ -7,7 +7,6 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import PeopleIcon from '@mui/icons-material/People';
 import BadgeIcon from '@mui/icons-material/Badge';
-import { useLocation } from 'react-router-dom';
 import ListItem from '@mui/material/ListItem';
 import Divider from '@mui/material/Divider';
 import { Link } from 'react-router-dom';
@@ -29,13 +28,13 @@ const itemCategory = {
   px: 3
 };
 
-interface NavProps extends DrawerProps {
-  onClose: any | null;
-  setSelection: any;
+interface NavProps extends Omit<DrawerProps, 'onClose'> {
+  onClose?: (event: {}, reason: 'backdropClick' | 'escapeKeyDown') => void;
+  setSelection: Function;
   selected: string;
 }
 export default function Navigator(props: NavProps) {
-  const { onClose, setSelection, selected } = props;
+  const { onClose, setSelection, selected, ...drawerProps } = props;
 
   const dashboardFeatures = [
     {
@@ -81,7 +80,7 @@ export default function Navigator(props: NavProps) {
   ];
 
   return (
-    <Drawer variant='permanent' {...props}>
+    <Drawer variant='permanent' {...drawerProps} onClose={onClose}>
       <List disablePadding>
         <ListItem
           sx={{ ...item, ...itemCategory, fontSize: 22, color: '#fff' }}
@@ -104,7 +103,9 @@ export default function Navigator(props: NavProps) {
                     sx={item}
                     onClick={() => {
                       onClick();
-                      onClose();
+                      if (onClose) {
+                        onClose({}, 'backdropClick');
+                      }
                     }}
                   >
                     <ListItemIcon>{icon}</ListItemIcon>
