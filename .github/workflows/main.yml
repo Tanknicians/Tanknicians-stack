@@ -27,3 +27,9 @@ jobs:
           cd frontend
           npm ci
           npm run build --if-present
+      - name: DigitalOcean App Platform deployment
+        uses: digitalocean/app_action@v1.1.5
+        with:
+          app_name: tanknicians-web
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+            
