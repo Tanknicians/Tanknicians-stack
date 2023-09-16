@@ -51,7 +51,7 @@ type CreateTankFormData = z.infer<typeof createTank>;
 function CreateTankForm({ userId, open, setOpen }: CreateTankFormProps) {
   //API call to create tank
   const [addTankToUser, { isLoading }] = useAddTankToUserMutation();
- 
+
   const {
     control,
     reset,
@@ -72,7 +72,7 @@ function CreateTankForm({ userId, open, setOpen }: CreateTankFormProps) {
     setOpen(false);
   };
 
-  const onSubmit: SubmitHandler<CreateTankFormData> = async data => {
+  const onSubmit: SubmitHandler<CreateTankFormData> = async (data) => {
     console.log(data);
     try {
       const response = await addTankToUser(data).unwrap();
