@@ -11,7 +11,8 @@ import { RootState } from '../store';
 // const BASE_URL = 'http://10.0.2.2:5000';
 // This URL works for physical device when "npm start" is executed
 // ! The url will be given by ngrok after running the command ngrok http 5000
-const BASE_URL = 'https://0519-132-170-212-79.ngrok.io';
+const BASE_URL =
+  'https://1ad7-2603-9001-2e00-1465-a9b1-3715-e80e-5b46.ngrok.io';
 
 const baseQuery = fetchBaseQuery({
   baseUrl: BASE_URL,
@@ -28,7 +29,6 @@ const baseQuery = fetchBaseQuery({
 
 const baseQueryWithReauth: BaseQueryFn = async (args, api, extraOptions) => {
   let result = await baseQuery(args, api, extraOptions);
-
   if (result?.error?.status === 403) {
     // send refresh token to get new access token
     const refreshResult = await baseQuery(

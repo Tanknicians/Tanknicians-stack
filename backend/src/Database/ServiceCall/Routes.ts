@@ -97,6 +97,35 @@ serviceCallRouter.get(
   },
 );
 
+// get all Service Calls from a tank ID and isApproved boolean
+serviceCallRouter.get(
+  '/fromTank/:tankId',
+  authenticateRoleMiddleWare(['ADMIN']),
+  async (req, res) => {
+    const result = z
+      .object({
+        tankId: z.coerce.number(),
+        isApproved: z.coerce.boolean(),
+      })
+      .safeParse({ ...req.query, ...req.params });
+    if (!result.success) {
+      return res.status(400).json({ error: result.error.errors });
+    }
+    const { tankId, isApproved } = result.data;
+    try {
+      const result = await ServiceCallService.readAllByTankId(
+        tankId,
+        isApproved,
+      );
+      res.json(result);
+    } catch (error) {
+      res.status(500).json({
+        error: 'Failed to read Service Calls by tankID and given date range.',
+      });
+    }
+  },
+);
+
 // Update ServiceCall
 serviceCallRouter.put(
   '/:id',

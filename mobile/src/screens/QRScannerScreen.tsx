@@ -4,7 +4,7 @@ import {
   PermissionStatus
 } from 'expo-barcode-scanner';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { Alert, View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { setTankId } from '../redux/slices/forms/servicecallTankSlice';
 import { Routes, SERVICECALLFORMSCREEN } from '../types/Routes';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -31,6 +31,7 @@ const QRScannerScreen = ({ navigation }: Props) => {
   const [type, setType] = useState<any>(BarCodeScanner.Constants.Type.back);
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
   const [scanned, setScanned] = useState<boolean>(false);
+  const [invalidQR, setInvalidQR] = useState(false);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -76,12 +77,31 @@ const QRScannerScreen = ({ navigation }: Props) => {
         x <= viewMinX + finderWidth / 2 &&
         y <= viewMinY + finderHeight / 2
       ) {
-        setScanned(true);
-        dispatch(setTankId({ tankId: data }));
-        navigation.replace(SERVICECALLFORMSCREEN);
+        const regex = /^Tanknicians Tank ID: (\d+)$/;
+        const match = data.match(regex);
+
+        if (match) {
+          setScanned(true);
+          dispatch(setTankId({ tankId: match[1] }));
+          navigation.replace(SERVICECALLFORMSCREEN);
+        } else if (!invalidQR) {
+          setInvalidQR(true);
+          Alert.alert(
+            'Invalid QR Code',
+            'Please scan a valid Tanknicians QR code',
+            [
+              {
+                text: 'OK',
+                onPress: () => {
+                  setScanned(false);
+                  setInvalidQR(false);
+                }
+              }
+            ]
+          );
+        }
       }
     }
-    setScanned(false);
   };
 
   // Toggle between front and back camera
