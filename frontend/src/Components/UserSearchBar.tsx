@@ -1,3 +1,4 @@
+import { UserOption } from '../Redux/slices/users/userManagementSlice';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 import parse from 'autosuggest-highlight/parse';
@@ -10,15 +11,6 @@ type OptionsList = {
     _event: React.SyntheticEvent,
     value: UserOption | null
   ) => void;
-};
-
-export type UserOption = {
-  id: number;
-  firstName: string;
-  middleName: string;
-  lastName: string;
-  address: string;
-  phone: string;
 };
 
 const styles = {
@@ -48,6 +40,7 @@ export default function UserSearchBar({
   optionsList,
   handleUserSelected
 }: OptionsList) {
+  if (!optionsList) return <div>Loading...</div>;
   return (
     <Autocomplete
       id='grouped-users-tanks'
@@ -86,7 +79,7 @@ export default function UserSearchBar({
             >
               {parts.map((part, index) => (
                 <span
-                  key={index}
+                  key={`e-${index}`}
                   style={{
                     fontWeight: part.highlight ? 700 : 400
                   }}
@@ -94,7 +87,7 @@ export default function UserSearchBar({
                   {part.text}
                 </span>
               ))}
-              <span>{' ' + option.middleName + ' ' + option.lastName}</span>
+              <span>{` ${option.middleName} ${option.lastName}`}</span>
             </span>
             <span id='customer-address'>{option.address}</span>
           </li>

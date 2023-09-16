@@ -1,11 +1,4 @@
-import { Button, ButtonProps, CircularProgress, styled } from '@mui/material';
-
-const CustomButton = styled(Button)<ButtonProps>(({ theme }) => ({
-  '&.Mui-disabled': {
-    pointerEvents: 'none',
-    backgroundColor: 'initial'
-  }
-}));
+import { Button, ButtonProps, CircularProgress } from '@mui/material';
 
 type MyCustomButtonProps = ButtonProps & {
   isLoading: boolean;
@@ -17,9 +10,9 @@ const LoadingProgressButton: React.FC<MyCustomButtonProps> = ({
   ...props
 }) => {
   return (
-    <CustomButton disabled={isLoading} {...props}>
+    <Button disabled={isLoading} {...props}>
       {isLoading ? <CircularProgress size={24} /> : children}
-    </CustomButton>
+    </Button>
   );
 };
 

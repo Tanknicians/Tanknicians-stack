@@ -25,9 +25,9 @@ jobs:
       - name: rome format backend
         working-directory: backend
         run: npx rome format src prisma --write
-      # - name: rome check frontend
-      #   working-directory: frontend
-      #   run: npx rome check src --apply
+      - name: rome check frontend
+        working-directory: frontend
+        run: npx rome check src --apply
       - name: rome format frontend
         working-directory: frontend
         run: npx rome format src --write
