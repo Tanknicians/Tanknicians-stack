@@ -6,8 +6,11 @@ import {
 import { setCredentials, logout } from "../slices/auth/authSlice";
 import { RootState } from "../store";
 
-// CHANGE THIS FOR PRODUCTION
-const BASE_URL = "https://tanknicians-web-q4jam.ondigitalocean.app/";
+let BASE_URL;
+if (process.env.NODE_ENV === "production") {
+  BASE_URL = "http://104.131.166.179:5000/";
+}
+BASE_URL = "ngrok equivalent";
 
 const baseQuery = fetchBaseQuery({
   baseUrl: BASE_URL,
