@@ -34,7 +34,7 @@ interface NavProps extends Omit<DrawerProps, 'onClose'> {
   selected: string;
 }
 export default function Navigator(props: NavProps) {
-  const { onClose, setSelection, selected } = props;
+  const { onClose, setSelection, selected, ...drawerProps } = props;
 
   const dashboardFeatures = [
     {
@@ -80,7 +80,7 @@ export default function Navigator(props: NavProps) {
   ];
 
   return (
-    <Drawer variant='permanent' {...props}>
+    <Drawer variant='permanent' {...drawerProps} onClose={onClose}>
       <List disablePadding>
         <ListItem
           sx={{ ...item, ...itemCategory, fontSize: 22, color: '#fff' }}
