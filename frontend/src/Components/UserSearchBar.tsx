@@ -48,6 +48,7 @@ export default function UserSearchBar({
   optionsList,
   handleUserSelected
 }: OptionsList) {
+  if (!optionsList) return <div>Loading...</div>;
   return (
     <Autocomplete
       id='grouped-users-tanks'
@@ -55,15 +56,15 @@ export default function UserSearchBar({
       options={optionsList
         .slice()
         .sort((a, b) => a.firstName.localeCompare(b.firstName))}
-      groupBy={(option) => option.firstName.charAt(0).toUpperCase()}
-      getOptionLabel={(option) =>
+      groupBy={option => option.firstName.charAt(0).toUpperCase()}
+      getOptionLabel={option =>
         `${option.firstName} ${option.middleName} ${option.lastName} ${option.address}`
       }
       sx={{ width: '50%' }}
-      renderInput={(params) => (
+      renderInput={params => (
         <TextField autoFocus {...params} label='Search User' />
       )}
-      renderGroup={(params) => (
+      renderGroup={params => (
         <div {...params} style={styles.groupLabelContainer}>
           <div style={styles.groupLabel}>
             <span style={styles.customerNameandGroupLabel}>{params.group}</span>
