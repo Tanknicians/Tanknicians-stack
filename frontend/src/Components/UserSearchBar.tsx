@@ -87,7 +87,7 @@ export default function UserSearchBar({
             >
               {parts.map((part, index) => (
                 <span
-                  key={index}
+                  key={`e-${index}`}
                   style={{
                     fontWeight: part.highlight ? 700 : 400
                   }}
@@ -95,7 +95,7 @@ export default function UserSearchBar({
                   {part.text}
                 </span>
               ))}
-              <span>{' ' + option.middleName + ' ' + option.lastName}</span>
+              <span>{` ${option.middleName} ${option.lastName}`}</span>
             </span>
             <span id='customer-address'>{option.address}</span>
           </li>

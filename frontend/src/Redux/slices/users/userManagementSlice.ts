@@ -1,11 +1,12 @@
 import { apiSlice } from '../../api/apiSlice';
+import { UserData } from '../../../Components/Dashboard/DefaultCharts';
 
 export const userManagementSlice = apiSlice.injectEndpoints({
   endpoints: builder => ({
-    getClients: builder.query<any, boolean>({
+    getClients: builder.query<UserData, boolean>({
       query: includeTanks => {
         return {
-          url: `/api/database/user`,
+          url: '/api/database/user/',
           method: 'GET',
           params: { includeTanks: includeTanks }
         };
