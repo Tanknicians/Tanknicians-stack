@@ -95,6 +95,32 @@ export async function readAllByDate(
   }
 }
 
+export async function readAllByTankId(tankId: number, isApproved: boolean) {
+  try {
+    const serviceCalls = await serviceCallDB.readAllByTankId(
+      tankId,
+      isApproved,
+    );
+    if (!serviceCalls) {
+      throw new Error(
+        `Service Calls for id: ${tankId} and isApproved: ${isApproved} not found.`,
+      );
+    }
+
+    // sort by datetime (I hate typescript/javascript sorting)
+    serviceCalls.sort((a, b) => {
+      const dateA = new Date(a.createdOn);
+      const dateB = new Date(b.createdOn);
+      return dateA.getTime() - dateB.getTime();
+    });
+
+    return serviceCalls;
+  } catch (e) {
+    console.log(e);
+    throw new Error('An error occured during readAllByTankId');
+  }
+}
+
 export async function update(serviceCall: UpdateServiceCall) {
   try {
     await serviceCallDB.update(serviceCall);
