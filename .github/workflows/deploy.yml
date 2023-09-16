@@ -1,0 +1,19 @@
+name: Build & deploy
+on:
+  push:
+    branches: [master, dev]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: deploy
+        uses: appleboy/ssh-action@v0.1.2
+        with:
+          host: 104.131.166.179
+          key: ${{secrets.SSH_KEY}}
+          username: root
+
+          script: |
+            git clone git@github.com:Tanknicians/Tanknicians-stack.git
+            echo 'deployment success'
