@@ -4,7 +4,7 @@ import {
   CreateServiceCall,
   UpdateServiceCall,
   UpdateTankMetaData,
-  tankMetaDataSchema,
+  tankMetaDataSchema
 } from '../../zodTypes';
 
 export async function create(serviceCall: CreateServiceCall) {
@@ -51,7 +51,7 @@ export async function readAll(isApproved: boolean) {
 export async function readAllByDate(
   tankId: number,
   startDate: Date,
-  endDate: Date,
+  endDate: Date
 ) {
   interface ReturnDataSchema {
     tankId: number;
@@ -65,7 +65,7 @@ export async function readAllByDate(
     const serviceCalls = await serviceCallDB.readByDateTime(
       tankId,
       startDate,
-      endDate,
+      endDate
     );
     if (serviceCalls === null) {
       throw new Error(`Service Calls for id: ${tankId} not found.`);
@@ -76,13 +76,13 @@ export async function readAllByDate(
       alkalinity: [],
       calcium: [],
       nitrate: [],
-      phosphate: [],
+      phosphate: []
     };
 
-    serviceCalls.forEach((serviceCall) => {
+    serviceCalls.forEach(serviceCall => {
       returnData.alkalinity.push([
         serviceCall.alkalinity,
-        serviceCall.createdOn,
+        serviceCall.createdOn
       ]);
       returnData.calcium.push([serviceCall.calcium, serviceCall.createdOn]);
       returnData.nitrate.push([serviceCall.nitrate, serviceCall.createdOn]);
@@ -92,6 +92,32 @@ export async function readAllByDate(
     return returnData;
   } catch (e) {
     throw new Error('An error occurred during read of range.');
+  }
+}
+
+export async function readAllByTankId(tankId: number, isApproved: boolean) {
+  try {
+    const serviceCalls = await serviceCallDB.readAllByTankId(
+      tankId,
+      isApproved
+    );
+    if (!serviceCalls) {
+      throw new Error(
+        `Service Calls for id: ${tankId} and isApproved: ${isApproved} not found.`
+      );
+    }
+
+    // sort by datetime (I hate typescript/javascript sorting)
+    serviceCalls.sort((a, b) => {
+      const dateA = new Date(a.createdOn);
+      const dateB = new Date(b.createdOn);
+      return dateA.getTime() - dateB.getTime();
+    });
+
+    return serviceCalls;
+  } catch (e) {
+    console.log(e);
+    throw new Error('An error occured during readAllByTankId');
   }
 }
 
