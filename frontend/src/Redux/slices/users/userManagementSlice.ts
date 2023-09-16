@@ -22,9 +22,9 @@ export type UserOption = {
 };
 
 export const userManagementSlice = apiSlice.injectEndpoints({
-  endpoints: builder => ({
+  endpoints: (builder) => ({
     getClients: builder.query<UserOption[], boolean>({
-      query: includeTanks => {
+      query: (includeTanks) => {
         return {
           url: '/api/database/user/',
           method: 'GET',
@@ -34,7 +34,7 @@ export const userManagementSlice = apiSlice.injectEndpoints({
     }),
     // Mutation adds a tank to a user
     addTankToUser: builder.mutation({
-      query: tankData => ({
+      query: (tankData) => ({
         url: '/api/database/tank',
         method: 'POST',
         body: { ...tankData }
