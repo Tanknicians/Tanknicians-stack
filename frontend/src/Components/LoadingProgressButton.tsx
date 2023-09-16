@@ -1,4 +1,4 @@
-import { Button, ButtonProps, CircularProgress, styled } from '@mui/material';
+import { Button, ButtonProps, CircularProgress } from '@mui/material';
 
 type MyCustomButtonProps = ButtonProps & {
   isLoading: boolean;
