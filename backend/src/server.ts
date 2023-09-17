@@ -13,10 +13,12 @@ import { logger, httpLogger } from "./Logging/pino";
 const app = express();
 
 const production = "https://tanknicians-web-q4jam.ondigitalocean.app";
+const development = "http://localhost:3000";
+const config = process.env.NODE_ENV === "production" ? production : development;
 
 // Set up cors options
 const corsOptions = {
-  origin: true,
+  origin: config,
   credentials: true,
 };
 
