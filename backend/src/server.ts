@@ -16,7 +16,7 @@ const production = "https://tanknicians-web-q4jam.ondigitalocean.app";
 
 // Set up cors options
 const corsOptions = {
-  origin: production,
+  origin: true,
   credentials: true,
 };
 
