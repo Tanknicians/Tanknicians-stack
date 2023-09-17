@@ -8,7 +8,7 @@ import { RootState } from "../store";
 
 let BASE_URL = "http://localhost:5000/";
 if (process.env.NODE_ENV === "production") {
-  BASE_URL = "http://104.131.166.179:5000/";
+  BASE_URL = "https://104.131.166.179:5000/";
 }
 
 const baseQuery = fetchBaseQuery({
