@@ -7,7 +7,9 @@ export async function create(login: CreateLogin) {
     await loginDB.create(login);
     return { message: 'Login created successfully' };
   } catch (e) {
-    throw new Error('An error occurred during create.');
+    const errorMessage = e instanceof Error ? e.message : 'Unknown error.';
+    console.error(errorMessage);
+    throw new Error(`An error occurred during create: ${errorMessage}`);
   }
 }
 
@@ -19,7 +21,9 @@ export async function read(email: string) {
     }
     return login;
   } catch (e) {
-    throw new Error('An error occurred during read.');
+    const errorMessage = e instanceof Error ? e.message : 'Unknown error.';
+    console.error(errorMessage);
+    throw new Error(`An error occurred during read: ${errorMessage}`);
   }
 }
 
@@ -29,7 +33,9 @@ export async function update(login: UpdateLogin) {
     await loginDB.update(login);
     return { message: 'Login updated successfully' };
   } catch (e) {
-    throw new Error('An error occurred during update.');
+    const errorMessage = e instanceof Error ? e.message : 'Unknown error.';
+    console.error(errorMessage);
+    throw new Error(`An error occurred during update: ${errorMessage}`);
   }
 }
 
@@ -38,7 +44,9 @@ export async function deleteOne(id: number) {
     await loginDB.deleteLogin(id);
     return { message: 'Login deleted successfully' };
   } catch (e) {
-    throw new Error('An error occurred during delete.');
+    const errorMessage = e instanceof Error ? e.message : 'Unknown error.';
+    console.error(errorMessage);
+    throw new Error(`An error occurred during delete: ${errorMessage}`);
   }
 }
 
@@ -50,6 +58,8 @@ export async function search(search: string, page: number) {
     }
     return searchData;
   } catch (e) {
-    throw new Error('An error occurred during search.');
+    const errorMessage = e instanceof Error ? e.message : 'Unknown error.';
+    console.error(errorMessage);
+    throw new Error(`An error occurred during search: ${errorMessage}`);
   }
 }
