@@ -44,7 +44,11 @@ function Copyright(props: { [k: string]: unknown }) {
       align='center'
       {...props}
     >
-      <Link color='inherit' href='https://tanknicians.com/' target='_blank'>
+      <Link
+        color='inherit'
+        href='https://tanknicians-web-q4jam.ondigitalocean.app/'
+        target='_blank'
+      >
         Tanknicians
       </Link>{' '}
       {' © '}
