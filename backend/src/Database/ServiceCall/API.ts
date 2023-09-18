@@ -17,10 +17,12 @@ export async function create(serviceCall: CreateServiceCall) {
     const updateTank: UpdateTankMetaData = tankMetaDataSchema.parse(readTank);
     updateTank.lastDateServiced = serviceCall.createdOn;
     await serviceCallDB.create(serviceCall);
-    await tankDB.update(updateTank);
-    return { message: 'Service Call created successfully' };
+    const createdId = await tankDB.update(updateTank);
+    return { message: 'Service Call created successfully', id: createdId };
   } catch (e) {
-    throw new Error('An error occurred during create.');
+    const errorMessage = e instanceof Error ? e.message : 'Unknown error.';
+    console.error(errorMessage);
+    throw new Error(`An error occurred during create: ${errorMessage}`);
   }
 }
 
@@ -32,7 +34,9 @@ export async function read(id: number) {
     }
     return serviceCall;
   } catch (e) {
-    throw new Error('An error occurred during read.');
+    const errorMessage = e instanceof Error ? e.message : 'Unknown error.';
+    console.error(errorMessage);
+    throw new Error(`An error occurred during read: ${errorMessage}`);
   }
 }
 
@@ -44,7 +48,9 @@ export async function readAll(isApproved: boolean) {
     }
     return serviceCalls;
   } catch (e) {
-    throw new Error('An error occured during readAll.');
+    const errorMessage = e instanceof Error ? e.message : 'Unknown error.';
+    console.error(errorMessage);
+    throw new Error(`An error occurred during readAll: ${errorMessage}`);
   }
 }
 
@@ -91,7 +97,9 @@ export async function readAllByDate(
 
     return returnData;
   } catch (e) {
-    throw new Error('An error occurred during read of range.');
+    const errorMessage = e instanceof Error ? e.message : 'Unknown error.';
+    console.error(errorMessage);
+    throw new Error(`An error occurred during readAllByDate: ${errorMessage}`);
   }
 }
 
@@ -116,8 +124,9 @@ export async function readAllByTankId(tankId: number, isApproved: boolean) {
 
     return serviceCalls;
   } catch (e) {
-    console.log(e);
-    throw new Error('An error occured during readAllByTankId');
+    const errorMessage = e instanceof Error ? e.message : 'Unknown error.';
+    console.error(errorMessage);
+    throw new Error(`An error occurred during readAllByTankId: ${errorMessage}`);
   }
 }
 
@@ -126,7 +135,9 @@ export async function update(serviceCall: UpdateServiceCall) {
     await serviceCallDB.update(serviceCall);
     return { message: 'Service Call updated successfully' };
   } catch (e) {
-    throw new Error('An error occurred during update.');
+    const errorMessage = e instanceof Error ? e.message : 'Unknown error.';
+    console.error(errorMessage);
+    throw new Error(`An error occurred during update: ${errorMessage}`);
   }
 }
 
@@ -135,7 +146,9 @@ export async function deleteOne(id: number) {
     await serviceCallDB.deleteServiceCall(id);
     return { message: 'Service Call deleted successfully' };
   } catch (e) {
-    throw new Error('An error occurred during delete.');
+    const errorMessage = e instanceof Error ? e.message : 'Unknown error.';
+    console.error(errorMessage);
+    throw new Error(`An error occurred during deleteOne: ${errorMessage}`);
   }
 }
 
@@ -147,6 +160,8 @@ export async function search(search: string, page: number) {
     }
     return searchData;
   } catch (e) {
-    throw new Error('An error occurred during search.');
+    const errorMessage = e instanceof Error ? e.message : 'Unknown error.';
+    console.error(errorMessage);
+    throw new Error(`An error occurred during search: ${errorMessage}`);
   }
 }
