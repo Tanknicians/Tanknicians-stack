@@ -15,7 +15,7 @@ export default function DataExport() {
     <div style = {{marginLeft: 'auto', marginRight: 'auto',maxWidth: '1000px'}}>
       {/* This box has a grid with the page title in one cell, a section to put a search bar in the middle cell, and a container for a button in the far right cell */}
       <Box sx={{ flexGrow: 1, display: 'flex', padding: '20px', }}>
-        <Grid container spacing={2} >
+        <Grid container spacing={1} >
           <Grid item xs={12} sm={3} sx={{...headerGridStyle, backgroundColor: 'inherit'}}>
             <Typography color='inherit' variant='h4' component='h1' sx={{float: 'left', minWidth:'fit-content'}}>
               Data Export
@@ -29,6 +29,7 @@ export default function DataExport() {
           </Grid>
         </Grid>
       </Box>
+      
     </div>
     )
 };
