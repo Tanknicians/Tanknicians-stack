@@ -1,5 +1,5 @@
-import { CreateUser } from '../../../components/CreateUser';
-import { apiSlice } from '../../api/apiSlice';
+import { CreateUser } from "../../../components/CreateUser";
+import { apiSlice } from "../../api/apiSlice";
 
 export type OwnedTanks = {
   customerId: number;
@@ -26,35 +26,43 @@ export const userManagementSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     // Query returns a list of all users
     getClients: builder.query<UserOption[], boolean>({
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.map(({ id }) => ({ type: "USERLIST" as const, id })),
+              { type: "USERLIST", id: "LIST" },
+            ]
+          : [{ type: "USERLIST", id: "LIST" }],
       query: (includeTanks) => {
         return {
-          url: '/api/database/user',
-          method: 'GET',
-          params: { includeTanks: includeTanks }
+          url: "/api/database/user",
+          method: "GET",
+          params: { includeTanks: includeTanks },
         };
-      }
+      },
     }),
     // Mutation adds a user to the database
     addUser: builder.mutation<void, CreateUser>({
+      invalidatesTags: () => [{ type: "USERLIST", id: "LIST" }],
       query: (userData) => ({
-        url: '/api/database/user',
-        method: 'POST',
-        body: { ...userData }
-      })
+        url: "/api/database/user",
+        method: "POST",
+        body: { ...userData },
+      }),
     }),
     // Mutation adds a tank to a user
     addTankToUser: builder.mutation({
       query: (tankData) => ({
-        url: '/api/database/tank',
-        method: 'POST',
-        body: { ...tankData }
-      })
-    })
-  })
+        url: "/api/database/tank",
+        method: "POST",
+        body: { ...tankData },
+      }),
+    }),
+  }),
 });
 
 export const {
   useGetClientsQuery,
   useAddUserMutation,
-  useAddTankToUserMutation
+  useAddTankToUserMutation,
 } = userManagementSlice;

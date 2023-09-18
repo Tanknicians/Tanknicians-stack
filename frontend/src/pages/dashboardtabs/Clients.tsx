@@ -92,8 +92,10 @@ export default function Clients() {
             sx={{ ...headerGridStyle, backgroundColor: "inherit" }}
           >
             <Button variant="contained" onClick={handleOpenUserModal}>
+              <AddIcon />
               Add User
             </Button>
+            <CreateUserModal open={userModalOpen} setOpen={setUserModalOpen} />
           </Grid>
         </Grid>
       </Box>
