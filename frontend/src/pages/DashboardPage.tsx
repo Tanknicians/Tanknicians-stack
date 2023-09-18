@@ -186,13 +186,12 @@ const StyledBadge = styled(Badge)<BadgeProps>(({ theme }) => ({
   '& .MuiBadge-badge': {
     right: 8,
     // left: -5,
-    top: 13,
-    
+    top: 13
+
     // border: `2px solid ${theme.palette.background.paper}`,
     //padding: '0 4px',
-  },
+  }
 }));
-
 
 const drawerWidth = 256;
 
@@ -268,7 +267,7 @@ export default function Paperbase() {
                       to='Approve Forms'
                       style={{ textDecoration: 'none', color: 'white' }}
                     >
-                      <StyledBadge badgeContent={3} color="secondary">
+                      <StyledBadge badgeContent={3} color='secondary'>
                         <NotificationsIcon
                           sx={item}
                           onClick={() => setActiveNavItem('Approve Forms')}
@@ -285,7 +284,7 @@ export default function Paperbase() {
               </Grid>
             </Toolbar>
           </AppBar>
-          <Content/>
+          <Content />
         </Box>
       </Box>
     </ThemeProvider>

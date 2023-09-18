@@ -7,7 +7,10 @@ import Tanks from '../../pages/dashboardtabs/Tanks';
 
 export default function Content() {
   return (
-    <div className='content-wrapper' style={{backgroundColor: '#BDBDBD', height: '100vh', }}>
+    <div
+      className='content-wrapper'
+      style={{ backgroundColor: '#BDBDBD', height: '100vh' }}
+    >
       <Routes>
         <Route path='/Approve Forms' element={<ApproveForms />} />
         <Route path='/Employees' element={<Employees />} />
