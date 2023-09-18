@@ -1,14 +1,14 @@
+import { UserOption } from '../../redux/slices/users/userManagementSlice';
+import UserSearchBar from '../../components/UserSearchBar';
+import Typography from '@mui/material/Typography';
+import UserCard from '../../components/UserCard';
+import Container from '@mui/material/Container';
+import Collapse from '@mui/material/Collapse';
+import AddIcon from '@mui/icons-material/Add';
+import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import UserSearchBar from '../../components/UserSearchBar';
-import { UserOption } from '../../redux/slices/users/userManagementSlice';
-import Button from '@mui/material/Button';
-import AddIcon from '@mui/icons-material/Add';
-import Container from '@mui/material/Container';
 import { useState } from 'react';
-import Collapse from '@mui/material/Collapse';
-import UserCard from '../../components/UserCard';
 
 const headerGridStyle = {
   flex: 1,
