@@ -1,5 +1,5 @@
 import { UserOption } from '../../redux/slices/users/userManagementSlice';
-import UserSearchBar from '../../Components/UserSearchBar';
+import UserSearchBar from '../../components/UserSearchBar';
 import Typography from '@mui/material/Typography';
 import UserCard from '../../components/UserCard';
 import Container from '@mui/material/Container';

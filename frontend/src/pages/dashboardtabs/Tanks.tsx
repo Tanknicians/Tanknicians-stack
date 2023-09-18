@@ -1,9 +1,8 @@
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import UserSearchBar, { UserOption} from '../../Components/UserSearchBar';
-import Button from '@mui/material/Button';
-import AddIcon from '@mui/icons-material/Add';
+import UserSearchBar from '../../components/UserSearchBar';
+import { UserOption } from '../../redux/slices/users/userManagementSlice';
 import Container from '@mui/material/Container';
 
 const headerGridStyle = {
@@ -18,6 +17,7 @@ const client:UserOption[] = [{
   lastName: 'ClientMan',
   address: '1234 Woodpecher Drive, Springfliend, Illinois, 32567',
   phone: '555-555-1234',
+  isEmployee: false,
 }]
 
 const searchBarInput = () => {

@@ -1,13 +1,14 @@
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import UserSearchBar, { UserOption} from '../../Components/UserSearchBar';
+import UserSearchBar from '../../components/UserSearchBar';
+import { UserOption } from '../../redux/slices/users/userManagementSlice';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
 import Container from '@mui/material/Container';
 import { useState } from 'react';
 import Collapse from '@mui/material/Collapse';
-import UserCard from '../../Components/UserCard';
+import UserCard from '../../components/UserCard';
 
 const headerGridStyle = {
   flex: 1,
@@ -21,6 +22,7 @@ const client:UserOption[] = [{
   lastName: 'EmployeeMan',
   address: '1234 Woodpecher Drive, Springfliend, Illinois, 32567',
   phone: '555-555-1234',
+  isEmployee: true,
 }]
 
 
