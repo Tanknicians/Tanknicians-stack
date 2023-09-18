@@ -1,17 +1,19 @@
-import { zodResolver } from '@hookform/resolvers/zod';
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Button,
   Checkbox,
+  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
   FormControlLabel,
   Grid,
-  TextField
-} from '@mui/material';
-import { Control, Controller, useForm } from 'react-hook-form';
-import { z } from 'zod';
+  TextField,
+} from "@mui/material";
+import { Control, Controller, useForm } from "react-hook-form";
+import { z } from "zod";
+import { useUploadServiceCallMutation } from "../../redux/slices/forms/servicecallApiSlice";
 
 export const serviceCallSchema = z.object({
   id: z.coerce.number().int(),
@@ -49,7 +51,7 @@ export const serviceCallSchema = z.object({
   pestCPresent: z.boolean().default(false),
   pestDPresent: z.boolean().default(false),
   employeeId: z.coerce.number().int(),
-  tankId: z.coerce.number().int()
+  tankId: z.coerce.number().int(),
 });
 
 export const createServiceCall = serviceCallSchema.omit({ id: true });
@@ -57,7 +59,7 @@ export type CreateServiceCall = z.infer<typeof createServiceCall>;
 
 type CreateFormProps = {
   name: keyof CreateServiceCall;
-  type: 'string' | 'number' | 'boolean' | 'date' | 'full';
+  type: "string" | "number" | "boolean" | "date" | "full";
   control: Control<CreateServiceCall>;
   size?: number;
   multiline?: boolean;
@@ -65,9 +67,9 @@ type CreateFormProps = {
 };
 
 function getLabel(input: string) {
-  if (!input) return '';
+  if (!input) return "";
   let result = input.charAt(0).toUpperCase() + input.slice(1);
-  result = result.replace(/(?<!^)([A-Z])/g, ' $1');
+  result = result.replace(/(?<!^)([A-Z])/g, " $1");
   result = result.replace(/\b(For|Or|And)\b/g, (match) => match.toLowerCase());
 
   return result;
@@ -79,11 +81,11 @@ export function CreateForm({
   control,
   size,
   multiline,
-  required
+  required,
 }: CreateFormProps) {
   const label = getLabel(name);
 
-  if (type === 'boolean') {
+  if (type === "boolean") {
     return (
       <Grid item xs={size ?? 4}>
         <Controller
@@ -108,11 +110,11 @@ export function CreateForm({
               required={!!required}
               fullWidth
               multiline={!!multiline}
-              type={type === 'full' ? 'string' : type}
+              type={type === "full" ? "string" : type}
               label={label}
-              InputLabelProps={{ shrink: type === 'date' ? true : undefined }}
+              InputLabelProps={{ shrink: type === "date" ? true : undefined }}
               {...field}
-              value={field.value ?? ''}
+              value={field.value ?? ""}
             />
           );
         }}
@@ -123,52 +125,52 @@ export function CreateForm({
 
 const createServiceCallFields: Record<
   keyof CreateServiceCall,
-  Omit<CreateFormProps, 'name' | 'control'>
+  Omit<CreateFormProps, "name" | "control">
 > = {
-  employeeId: { type: 'number', required: true, size: 4 },
-  tankId: { type: 'number', required: true, size: 4 },
-  createdOn: { type: 'date', required: true, size: 4 },
-  customerRequest: { type: 'string', size: 12 },
-  employeeNotes: { type: 'string', size: 12 },
+  employeeId: { type: "number", required: true, size: 4 },
+  tankId: { type: "number", required: true, size: 4 },
+  createdOn: { type: "date", required: true, size: 4 },
+  customerRequest: { type: "string", size: 12 },
+  employeeNotes: { type: "string", size: 12 },
 
-  notApprovedNotes: { type: 'string', multiline: true, size: 8 },
-  notesUpdated: { type: 'date', size: 4 },
-  alkalinity: { type: 'number', required: true },
-  calcium: { type: 'number', required: true },
-  nitrate: { type: 'number', required: true },
-  phosphate: { type: 'number', required: true },
+  notApprovedNotes: { type: "string", multiline: true, size: 8 },
+  notesUpdated: { type: "date", size: 4 },
+  alkalinity: { type: "number", required: true },
+  calcium: { type: "number", required: true },
+  nitrate: { type: "number", required: true },
+  phosphate: { type: "number", required: true },
 
-  ATOOperational: { type: 'boolean' },
-  ATOReservoirFilled: { type: 'boolean' },
-  chemFilterAdjusted: { type: 'boolean' },
-  doserAdjustementOrManualDosing: { type: 'boolean' },
-  dosingReservoirsFull: { type: 'boolean' },
-  floorsCheckedForSpillsOrDirt: { type: 'boolean' },
-  glassCleanedInside: { type: 'boolean' },
-  glassCleanedOutside: { type: 'boolean' },
-  mechFilterChanged: { type: 'boolean' },
-  pumpsClearedOfDebris: { type: 'boolean' },
-  saltCreepCleaned: { type: 'boolean' },
-  skimmerCleanedAndOperational: { type: 'boolean' },
-  waterChanged: { type: 'boolean' },
-  waterTestedRecordedDated: { type: 'boolean' },
+  ATOOperational: { type: "boolean" },
+  ATOReservoirFilled: { type: "boolean" },
+  chemFilterAdjusted: { type: "boolean" },
+  doserAdjustementOrManualDosing: { type: "boolean" },
+  dosingReservoirsFull: { type: "boolean" },
+  floorsCheckedForSpillsOrDirt: { type: "boolean" },
+  glassCleanedInside: { type: "boolean" },
+  glassCleanedOutside: { type: "boolean" },
+  mechFilterChanged: { type: "boolean" },
+  pumpsClearedOfDebris: { type: "boolean" },
+  saltCreepCleaned: { type: "boolean" },
+  skimmerCleanedAndOperational: { type: "boolean" },
+  waterChanged: { type: "boolean" },
+  waterTestedRecordedDated: { type: "boolean" },
 
-  pestAPresent: { type: 'boolean' },
-  pestBPresent: { type: 'boolean' },
-  pestCPresent: { type: 'boolean' },
-  pestDPresent: { type: 'boolean' },
-  isApproved: { type: 'boolean' }
+  pestAPresent: { type: "boolean" },
+  pestBPresent: { type: "boolean" },
+  pestCPresent: { type: "boolean" },
+  pestDPresent: { type: "boolean" },
+  isApproved: { type: "boolean" },
 };
 
 export default function CreateServiceCallModal({
   open,
-  setOpen
+  setOpen,
 }: {
   open: boolean;
   setOpen: (open: boolean) => void;
 }) {
   const { handleSubmit, control, reset } = useForm<CreateServiceCall>({
-    resolver: zodResolver(createServiceCall)
+    resolver: zodResolver(createServiceCall),
   });
 
   function handleClose() {
@@ -176,21 +178,28 @@ export default function CreateServiceCallModal({
     reset();
   }
 
-  function onValid(data: CreateServiceCall) {
-    console.log('valid form');
-    console.log(data);
+  const [uploadServiceCall, { isLoading }] = useUploadServiceCallMutation();
+
+  async function onValid(data: CreateServiceCall) {
+    try {
+      const response = await uploadServiceCall(data);
+      console.log({ response });
+      handleClose();
+    } catch (e) {
+      console.error(e);
+    }
   }
 
   const fields = (
     Object.keys(
-      createServiceCallFields
+      createServiceCallFields,
     ) as (keyof typeof createServiceCallFields)[]
   )
     .map((key) => ({ name: key, ...createServiceCallFields[key] }))
-    .filter((field) => field.name !== 'isApproved');
+    .filter((field) => field.name !== "isApproved");
 
   return (
-    <Dialog open={open} onClose={handleClose} maxWidth='lg'>
+    <Dialog open={open} onClose={handleClose} maxWidth="lg">
       <DialogTitle>Create User</DialogTitle>
       <DialogContent>
         <Grid container spacing={2} paddingTop={1}>
@@ -201,7 +210,12 @@ export default function CreateServiceCallModal({
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose}>Cancel</Button>
-        <Button type='button' onClick={handleSubmit(onValid)}>
+        <Button
+          type="button"
+          onClick={handleSubmit(onValid)}
+          startIcon={isLoading ? <CircularProgress /> : null}
+          disabled={isLoading}
+        >
           Submit
         </Button>
       </DialogActions>
