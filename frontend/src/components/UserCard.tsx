@@ -28,7 +28,7 @@ export default function UserCard(props: UserCardProps) {
         <Box sx={{ margin: '2%' }}>
           <Box sx={{ float: 'left', marginTop: 'auto', marginAuto: 'auto' }}>
             <Typography variant='subtitle1' component='h2'>
-              {user?.firstName + ' ' + user?.lastName}
+              {`${user?.firstName} ${user?.lastName}`}
             </Typography>
             <Typography variant='subtitle1' component='h2'>
               {user?.address}
