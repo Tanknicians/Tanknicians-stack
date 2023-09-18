@@ -6,11 +6,22 @@ import Box from '@mui/material/Box';
 import { UserOption } from './UserSearchBar';
 
 export interface UserCardProps {
-    show:boolean;
     user:UserOption
 }
 
-export default function UserCard (){
+const defaultUser:UserOption = {
+    id: -1,
+    firstName: '',
+    middleName: '',
+    lastName: '',
+    address: '',
+    phone: '',
+  
+  }
+
+export default function UserCard (props:UserCardProps){
+    const { user } = props
+    
     return(
         <Box
             sx={{
@@ -29,13 +40,13 @@ export default function UserCard (){
                     <Box sx={{float:'left', marginTop:'auto', marginAuto:'auto'}}>
 
                     <Typography variant="subtitle1" component="h2">
-                        Name
+                        {user?.firstName + " " + user?.lastName}
                     </Typography>
                     <Typography variant="subtitle1" component="h2">
-                        Address
+                        {user?.address}
                     </Typography>
                     <Typography variant="subtitle1" component="h2">
-                        phone
+                        {user?.phone}
                     </Typography>
                     
                     </Box>

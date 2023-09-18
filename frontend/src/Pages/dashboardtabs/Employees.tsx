@@ -1,7 +1,7 @@
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import UserSearchBar, { UserOption} from '../UserSearchBar';
+import UserSearchBar, { UserOption} from '../../Components/UserSearchBar';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
 import Container from '@mui/material/Container';

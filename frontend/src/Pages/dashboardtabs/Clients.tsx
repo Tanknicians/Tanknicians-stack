@@ -1,17 +1,21 @@
+import UserSearchBar, { UserOption} from '../../Components/UserSearchBar';
+import UserCard from '../../Components/UserCard';
+import Typography from '@mui/material/Typography';
+import Container from '@mui/material/Container';
+import AddIcon from '@mui/icons-material/Add';
+import Button from '@mui/material/Button';
+import Fade from '@mui/material/Fade';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import UserSearchBar, { UserOption} from '../UserSearchBar';
-import Button from '@mui/material/Button';
-import AddIcon from '@mui/icons-material/Add';
-import Container from '@mui/material/Container';
+import { useState } from 'react';
+import Collapse from '@mui/material/Collapse';
 
 const headerGridStyle = {
   flex: 1,
   alignContent: 'center'
 }
 
-const client:UserOption[] = [{
+const clients:UserOption[] = [{
   id: 1234,
   firstName: 'John',
   middleName: 'C',
@@ -20,15 +24,20 @@ const client:UserOption[] = [{
   phone: '555-555-1234',
 }]
 
-const searchBarInput = () => {
-  console.log('clicked')
-}
+export default function Clients() {
+  const [collapse, setCollapse] = useState(false);
+  const [selectedUser, selectCurrentUser ] = useState<UserOption | null>(null)
 
-function ClientDetails(Client:UserOption){
+  const handleUserSelected = (
+    _event: React.SyntheticEvent,
+    customer: UserOption | null
+  ) => {
+    setCollapse(!collapse)
+    selectCurrentUser(customer);
+    console.log('customer: ', customer);
+  };
 
-}
 
-export default function Tanks() {
   return (
     <div style = {{marginLeft: 'auto', marginRight: 'auto',maxWidth: '1000px'}}>
       {/* This box has a grid with the page title in one cell, a section to put a search bar in the middle cell, and a container for a button in the far right cell */}
@@ -36,19 +45,20 @@ export default function Tanks() {
         <Grid container spacing={2} >
           <Grid item xs={12} sm={2} sx={{...headerGridStyle, backgroundColor: 'inherit'}}>
             <Typography color='inherit' variant='h4' component='h1' sx={{float: 'left', minWidth:'fit-content'}}>
-              Tanks
+              Clients
             </Typography>
           </Grid>
           <Grid item xs={6} sm={8} sx={{...headerGridStyle, backgroundColor: 'inherit'}}>
           <Container maxWidth="sm">
-              <UserSearchBar optionsList={client} handleUserSelected = {searchBarInput}/>
+              <UserSearchBar optionsList={clients} handleUserSelected = {handleUserSelected}/>
           </Container>
           </Grid>
           <Grid item xs={6} sm={2} sx={{...headerGridStyle, backgroundColor: 'inherit'}}>
+            <Button variant="contained" sx={{float: 'right'}}><AddIcon/>Add Client</Button>
           </Grid>
         </Grid>
       </Box>
-      {/* {selected & <ClientDetails/>} */}
+      <Collapse in={collapse}><UserCard user = {selectedUser}/></Collapse>
     </div>
   );
 }
