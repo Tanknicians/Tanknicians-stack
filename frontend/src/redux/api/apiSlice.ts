@@ -6,8 +6,10 @@ import {
 import { setCredentials, logout } from '../slices/auth/authSlice';
 import { RootState } from '../store';
 
-// CHANGE THIS FOR PRODUCTION
-const BASE_URL = 'http://localhost:5000';
+let BASE_URL = 'http://localhost:5000/';
+if (process.env.NODE_ENV === 'production') {
+  BASE_URL = 'https://tanknicians.xyz/';
+}
 
 const baseQuery = fetchBaseQuery({
   baseUrl: BASE_URL,

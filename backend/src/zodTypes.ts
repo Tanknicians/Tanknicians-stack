@@ -114,7 +114,7 @@ export const serviceCallSchema = z.object({
   pestCPresent: z.boolean(),
   pestDPresent: z.boolean(),
   employeeId: z.number().int(),
-  tankId: z.number().int().optional(),
+  tankId: z.number().int(),
 });
 
 export const createServiceCall = serviceCallSchema.omit({ id: true });

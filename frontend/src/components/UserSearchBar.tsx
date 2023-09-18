@@ -1,3 +1,4 @@
+import { UserOption } from '../redux/slices/users/userManagementSlice';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 import parse from 'autosuggest-highlight/parse';
@@ -11,15 +12,6 @@ type OptionsList = {
     value: UserOption | null
   ) => void;
 };
-
-export type UserOption = {
-  id: number;
-  firstName: string;
-  middleName: string;
-  lastName: string;
-  address: string;
-  phone: string;
-} | null;
 
 const styles = {
   groupLabelContainer: {
@@ -48,6 +40,7 @@ export default function UserSearchBar({
   optionsList,
   handleUserSelected
 }: OptionsList) {
+  if (!optionsList) return <div>Loading...</div>;
   return (
     <Autocomplete
       id='grouped-users-tanks'
@@ -59,7 +52,7 @@ export default function UserSearchBar({
       getOptionLabel={(option) =>
         `${option.firstName} ${option.middleName} ${option.lastName} ${option.address}`
       }
-      sx={{ width: '100%', backgroundColor: 'white', borderRadius: '8px'}}
+      sx={{ width: '50%' }}
       renderInput={(params) => (
         <TextField autoFocus {...params} label='Search User' />
       )}
@@ -86,7 +79,7 @@ export default function UserSearchBar({
             >
               {parts.map((part, index) => (
                 <span
-                  key={index}
+                  key={`e-${index}`}
                   style={{
                     fontWeight: part.highlight ? 700 : 400
                   }}
@@ -94,7 +87,7 @@ export default function UserSearchBar({
                   {part.text}
                 </span>
               ))}
-              <span>{' ' + option.middleName + ' ' + option.lastName}</span>
+              <span>{` ${option.middleName} ${option.lastName}`}</span>
             </span>
             <span id='customer-address'>{option.address}</span>
           </li>

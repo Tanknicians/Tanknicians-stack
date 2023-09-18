@@ -24,8 +24,8 @@ import {
 } from '../types/ServiceFormandData';
 import {
   Text,
-  TextInput,
   SegmentedButtons,
+  TextInput,
   HelperText
 } from 'react-native-paper';
 import React, { useRef } from 'react';
@@ -41,6 +41,7 @@ import {
   Platform,
   StyleSheet,
   TouchableOpacity,
+  TextInput as RNTextInput,
   View
 } from 'react-native';
 
@@ -63,39 +64,43 @@ const ServiceCallForm = ({ navigation }: Props) => {
 
   console.log('clientTankId: ', clientTankId);
 
-  const { control, handleSubmit, formState } = useForm<ServiceFormData>({
-    defaultValues: defaultServiceFormValues,
-    resolver: zodResolver(serviceFormSchema)
-  });
+  const { control, handleSubmit, formState, register } =
+    useForm<ServiceFormData>({
+      defaultValues: defaultServiceFormValues,
+      resolver: zodResolver(serviceFormSchema)
+    });
 
   const { errors } = formState;
 
   // Scroll to top if there are errors
   if (errors && Object.keys(errors).length > 0) scrollToTop();
 
-  console.log('Errors: ', errors);
+  console.log('Validation Errors: ', errors);
+
   const onSubmit: SubmitHandler<ServiceFormData> = async (data: any) => {
+    // Add employeeId, tankId, and date service call was created to data object
     const dataWithEmployeeandTankId = {
       ...data,
       employeeId: employeeId?.userId,
-      tankId: clientTankId
+      tankId: clientTankId,
+      createdOn: new Date().toISOString()
     };
 
     try {
       const response = await uploadServiceCall(
         dataWithEmployeeandTankId
       ).unwrap();
-      console.log('response; ', response);
+      console.log('Service Call Form Response: ', response);
       dispatch(clearTankId());
       navigation.replace(QRSCANNERSCREEN);
     } catch (err: any) {
       if (!err?.status) {
-        // isLoading: true until timeout occurs
         console.log('No Server Response');
       } else {
+        const errorData = JSON.parse(err.data);
         console.log(
-          `Login error ${err.status}: `,
-          err.data?.error.issues[0].message
+          `Service Call Screen error ${err.status}: `,
+          errorData.error.issues
         );
       }
     }
@@ -112,17 +117,14 @@ const ServiceCallForm = ({ navigation }: Props) => {
           render={({ field: { onChange, onBlur, value } }) => (
             <>
               <Text style={styles.label}>{label}</Text>
-              <MaskedTextInput
-                type='number'
+              <RNTextInput
                 keyboardType='numeric'
-                mask='9.999'
                 autoFocus={index === 0 ? true : false}
-                placeholder='0.00'
+                placeholder='0'
                 onBlur={onBlur}
-                value={value?.toString() ?? ''} // Convert value to a string explicitly or set it as an empty string if undefined
-                onChangeText={value => onChange(parseFloat(value))}
+                value={value ? value.toString() : undefined}
+                onChangeText={nextValue => onChange(parseFloat(nextValue))}
                 style={[styles.input, errors?.[id] && styles.errorInput]}
-                defaultValue=''
               />
               <HelperText type='error' visible={!!errors[id]}>
                 {errors[id]?.message}

@@ -1,0 +1,21 @@
+name: deploy
+
+on:
+  push:
+    branches:
+      - TANK-208-deploy-source
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the repo
+      - uses: actions/checkout@v2
+        with: 
+          path: repo
+        env:
+           SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+      - run: |
+          ssh-agent -a $SSH_AUTH_SOCK > /dev/null
+          ssh-add - <<< "${{ secrets.SSH_KEY }}"
+          scp -o StrictHostKeyChecking=no -r -P 22 repo root@104.131.166.179

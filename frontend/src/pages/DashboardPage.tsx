@@ -1,7 +1,7 @@
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import Content from '../Components/Dashboard/ContentRoutes';
-import Navigator from '../Components/Dashboard/Navigator';
+import Content from '../components/dashboard/ContentRoutes';
+import Navigator from '../components/dashboard/Navigator';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import CssBaseline from '@mui/material/CssBaseline';
 import Typography from '@mui/material/Typography';
@@ -187,8 +187,8 @@ const username = 'Will Mitchell';
 
 export default function Paperbase() {
   // Get URL on render
-  let urlArray = useLocation().pathname.split('/');
-  let selection = urlArray[urlArray.length - 1].replace('%20', ' ');
+  const urlArray = useLocation().pathname.split('/');
+  const selection = urlArray[urlArray.length - 1].replace('%20', ' ');
 
   // Set cleaned URL in state for tab highlight
   // Dashboard level component (bell icon) controlls highlight, so highlight
@@ -224,7 +224,6 @@ export default function Paperbase() {
             selected={activeNavItem}
             PaperProps={{ style: { width: drawerWidth } }}
             sx={{ display: { sm: 'block', xs: 'none' } }}
-            onClose={null}
           />
         </Box>
         <Box

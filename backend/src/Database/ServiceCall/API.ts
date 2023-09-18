@@ -1,9 +1,23 @@
 import { serviceCallDB } from '../../../prisma/db/ServiceCall';
-import { CreateServiceCall, UpdateServiceCall } from '../../zodTypes';
+import { tankDB } from '../../../prisma/db/TankMetadata';
+import {
+  CreateServiceCall,
+  UpdateServiceCall,
+  UpdateTankMetaData,
+  tankMetaDataSchema,
+} from '../../zodTypes';
 
 export async function create(serviceCall: CreateServiceCall) {
+  // Update Tank's "lastDateServiced" to serviceCall's "createdOn" and upload ServiceCall
   try {
+    const readTank = await tankDB.read(serviceCall.tankId);
+    if (!readTank) {
+      throw new Error(`No tankId of ${serviceCall.tankId} found.`);
+    }
+    const updateTank: UpdateTankMetaData = tankMetaDataSchema.parse(readTank);
+    updateTank.lastDateServiced = serviceCall.createdOn;
     await serviceCallDB.create(serviceCall);
+    await tankDB.update(updateTank);
     return { message: 'Service Call created successfully' };
   } catch (e) {
     throw new Error('An error occurred during create.');
@@ -78,6 +92,32 @@ export async function readAllByDate(
     return returnData;
   } catch (e) {
     throw new Error('An error occurred during read of range.');
+  }
+}
+
+export async function readAllByTankId(tankId: number, isApproved: boolean) {
+  try {
+    const serviceCalls = await serviceCallDB.readAllByTankId(
+      tankId,
+      isApproved,
+    );
+    if (!serviceCalls) {
+      throw new Error(
+        `Service Calls for id: ${tankId} and isApproved: ${isApproved} not found.`,
+      );
+    }
+
+    // sort by datetime (I hate typescript/javascript sorting)
+    serviceCalls.sort((a, b) => {
+      const dateA = new Date(a.createdOn);
+      const dateB = new Date(b.createdOn);
+      return dateA.getTime() - dateB.getTime();
+    });
+
+    return serviceCalls;
+  } catch (e) {
+    console.log(e);
+    throw new Error('An error occured during readAllByTankId');
   }
 }
 
