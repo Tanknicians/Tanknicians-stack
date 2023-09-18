@@ -10,8 +10,9 @@ import {
   Grid,
   TextField
 } from '@mui/material';
-import { Controller, useForm } from 'react-hook-form';
+import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { z } from 'zod';
+import { useAddUserMutation } from '../redux/slices/users/userManagementSlice';
 
 export const userSchema = z.object({
   id: z.number().int(),
@@ -34,6 +35,7 @@ export default function CreateUserModal({
   open: boolean;
   setOpen: (open: boolean) => void;
 }) {
+  const [addUser, { isLoading }] = useAddUserMutation();
   const { handleSubmit, control, reset, formState } = useForm<CreateUser>({
     resolver: zodResolver(createUserSchema)
   });
@@ -44,9 +46,17 @@ export default function CreateUserModal({
     reset();
   }
 
-  function onValid(data: CreateUser) {
+  const onSubmit: SubmitHandler<CreateUser> = async (data) => {
     console.log(data);
-  }
+
+    try {
+      const response = await addUser({ ...data });
+      console.log(response);
+      handleClose();
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <Dialog open={open} onClose={handleClose} maxWidth='lg'>
@@ -115,7 +125,7 @@ export default function CreateUserModal({
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose}>Cancel</Button>
-        <Button type='button' onClick={handleSubmit(onValid)}>
+        <Button type='button' onClick={handleSubmit(onSubmit)}>
           Submit
         </Button>
       </DialogActions>

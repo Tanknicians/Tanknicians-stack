@@ -13,6 +13,7 @@ import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import { useState } from 'react';
+import CreateUserModal from '../../components/CreateUser';
 
 const headerGridStyle = {
   flex: 1,
@@ -24,6 +25,8 @@ export default function Clients() {
   const { data: optionsList, error } = useGetClientsQuery(true);
   console.log('OptionsList: ', optionsList);
   console.log('OptionsList error: ', error);
+  const [tankModalOpen, setTankModalOpen] = useState(false);
+  const [userModalOpen, setUserModalOpen] = useState(false);
   const [collapse, setCollapse] = useState(false);
   const [selectedUser, selectCurrentUser] = useState<UserOption | null>(null);
   const [open, setOpen] = useState(false);
@@ -35,6 +38,14 @@ export default function Clients() {
     setCollapse(true);
     selectCurrentUser(customer);
     console.log('customer: ', customer);
+  };
+
+  const handleOpenUserModal = () => {
+    setUserModalOpen((prevState) => !prevState);
+  };
+
+  const handleOpenTankModal = () => {
+    setTankModalOpen((prevState) => !prevState);
   };
 
   if (!optionsList) return <div>Loading...</div>;
@@ -80,10 +91,11 @@ export default function Clients() {
             sm={2}
             sx={{ ...headerGridStyle, backgroundColor: 'inherit' }}
           >
-            <Button variant='contained' sx={{ float: 'right' }}>
+            <Button variant='contained' onClick={handleOpenUserModal}>
               <AddIcon />
-              Add Client
+              Add User
             </Button>
+            <CreateUserModal open={userModalOpen} setOpen={setUserModalOpen} />
           </Grid>
         </Grid>
       </Box>

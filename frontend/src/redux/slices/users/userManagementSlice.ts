@@ -1,3 +1,4 @@
+import { CreateUser } from '../../../components/CreateUser';
 import { apiSlice } from '../../api/apiSlice';
 
 export type OwnedTanks = {
@@ -23,14 +24,31 @@ export type UserOption = {
 
 export const userManagementSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
+    // Query returns a list of all users
     getClients: builder.query<UserOption[], boolean>({
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.map(({ id }) => ({ type: 'USERLIST' as const, id })),
+              { type: 'USERLIST', id: 'LIST' }
+            ]
+          : [{ type: 'USERLIST', id: 'LIST' }],
       query: (includeTanks) => {
         return {
-          url: '/api/database/user/',
+          url: '/api/database/user',
           method: 'GET',
           params: { includeTanks: includeTanks }
         };
       }
+    }),
+    // Mutation adds a user to the database
+    addUser: builder.mutation<void, CreateUser>({
+      invalidatesTags: () => [{ type: 'USERLIST', id: 'LIST' }],
+      query: (userData) => ({
+        url: '/api/database/user',
+        method: 'POST',
+        body: { ...userData }
+      })
     }),
     // Mutation adds a tank to a user
     addTankToUser: builder.mutation({
@@ -43,5 +61,8 @@ export const userManagementSlice = apiSlice.injectEndpoints({
   })
 });
 
-export const { useGetClientsQuery, useAddTankToUserMutation } =
-  userManagementSlice;
+export const {
+  useGetClientsQuery,
+  useAddUserMutation,
+  useAddTankToUserMutation
+} = userManagementSlice;
