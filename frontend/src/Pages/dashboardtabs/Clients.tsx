@@ -44,17 +44,17 @@ export default function Clients() {
       {/* This box has a grid with the page title in one cell, a section to put a search bar in the middle cell, and a container for a button in the far right cell */}
       <Box sx={{ flexGrow: 1, display: 'flex', padding: '20px', }}>
         <Grid container spacing={2} >
-          <Grid item xs={12} sm={2} sx={{...headerGridStyle, backgroundColor: 'inherit'}}>
+          <Grid item xs={6} sm={4} sx={{...headerGridStyle, backgroundColor: 'inherit'}}>
             <Typography color='inherit' variant='h4' component='h1' sx={{float: 'left', minWidth:'fit-content'}}>
               Clients
             </Typography>
           </Grid>
-          <Grid item xs={6} sm={8} sx={{...headerGridStyle, backgroundColor: 'inherit'}}>
+          <Grid item xs={6} sm={5} sx={{...headerGridStyle, backgroundColor: 'inherit'}}>
           <Container maxWidth="sm">
               <UserSearchBar optionsList={clients} handleUserSelected = {handleUserSelected}/>
           </Container>
           </Grid>
-          <Grid item xs={6} sm={2} sx={{...headerGridStyle, backgroundColor: 'inherit'}}>
+          <Grid item xs={6} sm={3} sx={{...headerGridStyle, backgroundColor: 'inherit'}}>
             <Button variant="contained" sx={{float: 'right'}}><AddIcon/>Add Client</Button>
           </Grid>
         </Grid>
