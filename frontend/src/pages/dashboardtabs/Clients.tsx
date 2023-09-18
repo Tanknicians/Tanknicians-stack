@@ -1,4 +1,8 @@
-import { UserOption } from '../../redux/slices/users/userManagementSlice';
+import {
+  UserOption,
+  useGetClientsQuery
+} from '../../redux/slices/users/userManagementSlice';
+import CreateTankForm from '../../components/CreateTankForm';
 import UserSearchBar from '../../components/UserSearchBar';
 import Typography from '@mui/material/Typography';
 import UserCard from '../../components/UserCard';
@@ -15,28 +19,25 @@ const headerGridStyle = {
   alignContent: 'center'
 }
 
-const clients:UserOption[] = [{
-  id: 1234,
-  firstName: 'John',
-  middleName: 'C',
-  lastName: 'ClientMan',
-  address: '1234 Woodpecher Drive, Springfliend, Illinois, 32567',
-  phone: '555-555-1234',
-  isEmployee: false,
-}]
-
 export default function Clients() {
+  const userId = 1;
+  const { data: optionsList, error } = useGetClientsQuery(true);
+  console.log('OptionsList: ', optionsList);
+  console.log('OptionsList error: ', error);
   const [collapse, setCollapse] = useState(false);
   const [selectedUser, selectCurrentUser ] = useState<UserOption | null>(null)
+  const [open, setOpen] = useState(false);
 
   const handleUserSelected = (
     _event: React.SyntheticEvent,
     customer: UserOption | null
   ) => {
-    setCollapse(!collapse)
+    setCollapse(true)
     selectCurrentUser(customer);
     console.log('customer: ', customer);
   };
+
+  if (!optionsList) return <div>Loading...</div>;
 
 
   return (
@@ -51,15 +52,19 @@ export default function Clients() {
           </Grid>
           <Grid item xs={6} sm={8} sx={{...headerGridStyle, backgroundColor: 'inherit'}}>
           <Container maxWidth="sm">
-              <UserSearchBar optionsList={clients} handleUserSelected = {handleUserSelected}/>
+              <UserSearchBar optionsList={optionsList} handleUserSelected = {handleUserSelected}/>
           </Container>
           </Grid>
           <Grid item xs={6} sm={2} sx={{...headerGridStyle, backgroundColor: 'inherit'}}>
-            <Button variant="contained" sx={{float: 'right'}}><AddIcon/>Add Client</Button>
+            <Button variant="contained" sx={{float: 'right'}} ><AddIcon/>Add Client</Button>
+            
           </Grid>
         </Grid>
       </Box>
-      <Collapse in={collapse}><UserCard user = {selectedUser}/></Collapse>
+      <Collapse in={collapse}><UserCard user = {selectedUser}/>
+        <Button variant="contained" sx={{float: 'right'}} onClick={() => setOpen(true)}><AddIcon/>Add Tank</Button>
+        <CreateTankForm userId={userId} open={open} setOpen={setOpen} />
+      </Collapse>
     </div>
   );
 }
