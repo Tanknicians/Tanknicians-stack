@@ -24,7 +24,7 @@ export default function UserCard (props:UserCardProps){
                 },
             }}
             >
-            <Paper elevation={32} sx={{backgroundColor:'white'}}>
+            <Paper elevation={2} sx={{backgroundColor:'white'}}>
                 <Box sx={{margin:'2%'}}>
 
                     <Box sx={{float:'left', marginTop:'auto', marginAuto:'auto'}}>
