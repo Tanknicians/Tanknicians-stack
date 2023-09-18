@@ -24,7 +24,11 @@ userRouter.post(
       const result = await UserService.create(input);
       res.json(result);
     } catch (error) {
-      res.status(500).json({ error: 'Failed to create User' });
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : 'Unknown Error: Failed to create User';
+      res.status(500).json({ error: errorMessage });
     }
   },
 );
@@ -39,7 +43,11 @@ userRouter.get(
       const result = await UserService.read(id);
       res.json(result);
     } catch (error) {
-      res.status(500).json({ error: 'Failed to read User' });
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : 'Unknown Error: Failed to read User';
+      res.status(500).json({ error: errorMessage });
     }
   },
 );
@@ -54,7 +62,11 @@ userRouter.get(
       const result = await UserService.readAll(includeTanks);
       res.json(result);
     } catch (error) {
-      res.status(500).json({ error: 'Failed to get Users and Tanks' });
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : 'Unknown Error: Failed to read all Users and Tanks';
+      res.status(500).json({ error: errorMessage });
     }
   },
 );
@@ -75,7 +87,11 @@ userRouter.put(
       const result = await UserService.update(userData);
       res.json(result);
     } catch (error) {
-      res.status(500).json({ error: 'Failed to update User' });
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : 'Unknown Error: Failed to update User';
+      res.status(500).json({ error: errorMessage });
     }
   },
 );
@@ -90,7 +106,11 @@ userRouter.delete(
       const result = await UserService.deleteOne(id);
       res.json(result);
     } catch (error) {
-      res.status(500).json({ error: 'Failed to delete User' });
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : 'Unknown Error: Failed to delete User';
+      res.status(500).json({ error: errorMessage });
     }
   },
 );
@@ -116,7 +136,11 @@ userRouter.get(
       res.json(result);
     } catch (error) {
       console.error(error);
-      res.status(500).json({ error: 'Failed to search User' });
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : 'Unknown Error: Failed to search User';
+      res.status(500).json({ error: errorMessage });
     }
   },
 );

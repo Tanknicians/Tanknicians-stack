@@ -39,7 +39,11 @@ tankMetaDataRouter.post(
       const result = await TankMetadataService.create(newTank);
       res.json(result);
     } catch (error) {
-      res.status(500).json({ error: 'Failed to create TankMetadata' });
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : 'Unknown Error: Failed to create Tank Metadata';
+      res.status(500).json({ error: errorMessage });
     }
   },
 );
@@ -54,7 +58,11 @@ tankMetaDataRouter.get(
       const result = await TankMetadataService.read(id);
       res.json(result);
     } catch (error) {
-      res.status(500).json({ error: 'Failed to read TankMetadata' });
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : 'Unknown Error: Failed to read Tank Metadata';
+      res.status(500).json({ error: errorMessage });
     }
   },
 );
@@ -75,7 +83,11 @@ tankMetaDataRouter.put(
       const result = await TankMetadataService.update(tankData);
       res.json(result);
     } catch (error) {
-      res.status(500).json({ error: 'Failed to update TankMetadata' });
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : 'Unknown Error: Failed to update Tank Metadata';
+      res.status(500).json({ error: errorMessage });
     }
   },
 );
@@ -90,7 +102,11 @@ tankMetaDataRouter.delete(
       const result = await TankMetadataService.deleteOne(id);
       res.json(result);
     } catch (error) {
-      res.status(500).json({ error: 'Failed to delete TankMetadata' });
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : 'Unknown Error: Failed to delete Tank Metadata';
+      res.status(500).json({ error: errorMessage });
     }
   },
 );
@@ -106,7 +122,11 @@ tankMetaDataRouter.get(
       const result = await TankMetadataService.search(searchString, pageNumber);
       res.json(result);
     } catch (error) {
-      res.status(500).json({ error: 'Failed to search TankMetadata' });
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : 'Unknown Error: Failed to search Tank Metadata';
+      res.status(500).json({ error: errorMessage });
     }
   },
 );

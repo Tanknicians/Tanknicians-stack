@@ -4,11 +4,12 @@ const prisma = new PrismaClient();
 
 // CREATE
 export async function create(user: CreateUser) {
-  await prisma.user.create({
+  const createdUser = await prisma.user.create({
     data: {
       ...user,
     },
   });
+  return createdUser.id;
 }
 
 // READ

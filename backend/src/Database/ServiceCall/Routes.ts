@@ -24,7 +24,11 @@ serviceCallRouter.post(
       const result = await ServiceCallService.create(input);
       res.json(result);
     } catch (error) {
-      res.status(500).json({ error: 'Failed to create Service Call' });
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : 'Unknown Error: Failed to create Service Call';
+      res.status(500).json({ error: errorMessage });
     }
   },
 );
@@ -47,9 +51,11 @@ serviceCallRouter.get(
       const result = await ServiceCallService.readAll(isApproved);
       res.json(result);
     } catch (error) {
-      res.status(500).json({
-        error: 'Failed to read all Service Calls by isApproved boolean.',
-      });
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : 'Unknown Error: Failed to read all Service Calls';
+      res.status(500).json({ error: errorMessage });
     }
   },
 );
@@ -64,7 +70,11 @@ serviceCallRouter.get(
       const result = await ServiceCallService.read(id);
       res.json(result);
     } catch (error) {
-      res.status(500).json({ error: 'Failed to read Service Call' });
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : 'Unknown Error: Failed to read Service Call';
+      res.status(500).json({ error: errorMessage });
     }
   },
 );
@@ -90,9 +100,11 @@ serviceCallRouter.get(
       const result = await ServiceCallService.readAllByDate(tankId, start, end);
       res.json(result);
     } catch (error) {
-      res.status(500).json({
-        error: 'Failed to read Service Calls by tankID and given date range.',
-      });
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : 'Unknown Error: Failed to read Service Call(s) from tankId and date range.';
+      res.status(500).json({ error: errorMessage });
     }
   },
 );
@@ -119,9 +131,11 @@ serviceCallRouter.get(
       );
       res.json(result);
     } catch (error) {
-      res.status(500).json({
-        error: 'Failed to read Service Calls by tankID and given date range.',
-      });
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : 'Unknown Error: Failed to read Service Calls by tankID and given date range.';
+      res.status(500).json({ error: errorMessage });
     }
   },
 );
@@ -142,7 +156,11 @@ serviceCallRouter.put(
       const result = await ServiceCallService.update(serviceCallData);
       res.json(result);
     } catch (error) {
-      res.status(500).json({ error: 'Failed to update Service Call' });
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : 'Unknown Error: Failed to update Service Call';
+      res.status(500).json({ error: errorMessage });
     }
   },
 );
@@ -157,7 +175,11 @@ serviceCallRouter.delete(
       const result = await ServiceCallService.deleteOne(id);
       res.json(result);
     } catch (error) {
-      res.status(500).json({ error: 'Failed to delete Service Call' });
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : 'Unknown Error: Failed to delete Service Call';
+      res.status(500).json({ error: errorMessage });
     }
   },
 );
@@ -173,7 +195,11 @@ serviceCallRouter.get(
       const result = await ServiceCallService.search(searchString, pageNumber);
       res.json(result);
     } catch (error) {
-      res.status(500).json({ error: 'Failed to search Service Call' });
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : 'Unknown Error: Failed to search Service Call';
+      res.status(500).json({ error: errorMessage });
     }
   },
 );

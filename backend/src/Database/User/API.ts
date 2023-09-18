@@ -1,13 +1,14 @@
-import * as Prisma from '@prisma/client';
 import { userDB } from '../../../prisma/db/User';
 import { CreateUser, UpdateUser } from '../../zodTypes';
 
 export async function create(user: CreateUser) {
   try {
-    await userDB.create(user);
-    return { message: 'User created successfully' };
+    const createdId = await userDB.create(user);
+    return { message: 'User created successfully', id: createdId };
   } catch (e) {
-    throw new Error('An error occurred during create.');
+    const errorMessage = e instanceof Error ? e.message : 'Unknown error.';
+    console.error(errorMessage);
+    throw new Error(`An error occurred during create: ${errorMessage}`);
   }
 }
 
@@ -19,7 +20,9 @@ export async function read(id: number) {
     }
     return user;
   } catch (e) {
-    throw new Error('An error occurred during read.');
+    const errorMessage = e instanceof Error ? e.message : 'Unknown error.';
+    console.error(errorMessage);
+    throw new Error(`An error occurred during read: ${errorMessage}`);
   }
 }
 
@@ -28,7 +31,9 @@ export async function readAll(includeTanks?: boolean) {
     const users = await userDB.getAllUsersAndTanks(!!includeTanks);
     return users;
   } catch (e) {
-    throw new Error('An error occurred during readAll.');
+    const errorMessage = e instanceof Error ? e.message : 'Unknown error.';
+    console.error(errorMessage);
+    throw new Error(`An error occurred during readAll: ${errorMessage}`);
   }
 }
 
@@ -37,7 +42,9 @@ export async function update(user: UpdateUser) {
     await userDB.update(user);
     return { message: 'User updated successfully' };
   } catch (e) {
-    throw new Error('An error occurred during update.');
+    const errorMessage = e instanceof Error ? e.message : 'Unknown error.';
+    console.error(errorMessage);
+    throw new Error(`An error occurred during update: ${errorMessage}`);
   }
 }
 
@@ -46,7 +53,9 @@ export async function deleteOne(id: number) {
     await userDB.deleteUser(id);
     return { message: 'User deleted successfully' };
   } catch (e) {
-    throw new Error('An error occurred during delete.');
+    const errorMessage = e instanceof Error ? e.message : 'Unknown error.';
+    console.error(errorMessage);
+    throw new Error(`An error occurred during delete: ${errorMessage}`);
   }
 }
 
@@ -60,6 +69,8 @@ export async function search(search: string, page: number) {
     }
     return searchData;
   } catch (e) {
-    throw new Error('An error occurred during search.');
+    const errorMessage = e instanceof Error ? e.message : 'Unknown error.';
+    console.error(errorMessage);
+    throw new Error(`An error occurred during search: ${errorMessage}`);
   }
 }

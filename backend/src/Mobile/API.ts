@@ -6,6 +6,23 @@ import {
   tankMetaDataSchema,
 } from '../zodTypes';
 
+const paramLimits = {
+  /*
+    a.    Calcium at or below 400 and at or above 500 
+    b.    Alkalinity at or below 6.5 and at or above 11
+    c.    Nitrate at or below 1 and at or above 20
+    d.    Phosphate at or below .03 and at or above .24
+  */
+  calciumMin: 400,
+  calciumMax: 500,
+  alkalinityMin: 6.5,
+  alkalinityMax: 11,
+  nitrateMin: 1,
+  nitrateMax: 20,
+  phosphateMin: 0.03,
+  phosphateMax: 0.24,
+};
+
 export async function uploadServiceCall(serviceCall: CreateServiceCall) {
   if (!serviceCall.notApprovedNotes) {
     serviceCall.notApprovedNotes = '';
@@ -25,7 +42,9 @@ export async function uploadServiceCall(serviceCall: CreateServiceCall) {
     await tankDB.update(updateTank);
     return approvedMessage;
   } catch (e) {
-    throw new Error('An error occurred during create.');
+    const errorMessage = e instanceof Error ? e.message : 'Unknown error.';
+    console.error(errorMessage);
+    throw new Error(`An error occurred during create: ${errorMessage}`);
   }
 }
 
@@ -61,22 +80,5 @@ function checkParameterLimits(serviceCall: CreateServiceCall) {
       'One or more of the parameters (Alkalinity, Calcium, Nitrate, and/or Phosphate) outside of acceptable range.';
   }
 }
-
-const paramLimits = {
-  /*
-    a.    Calcium at or below 400 and at or above 500 
-    b.    Alkalinity at or below 6.5 and at or above 11
-    c.    Nitrate at or below 1 and at or above 20
-    d.    Phosphate at or below .03 and at or above .24
-  */
-  calciumMin: 400,
-  calciumMax: 500,
-  alkalinityMin: 6.5,
-  alkalinityMax: 11,
-  nitrateMin: 1,
-  nitrateMax: 20,
-  phosphateMin: 0.03,
-  phosphateMax: 0.24,
-};
 
 // removed unused code
