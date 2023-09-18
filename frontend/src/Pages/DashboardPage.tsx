@@ -1,7 +1,7 @@
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import Content from '../components/Dashboard/ContentRoutes';
-import Navigator from '../components/Dashboard/Navigator';
+import Content from '../components/dashboard/ContentRoutes';
+import Navigator from '../components/dashboard/Navigator';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import CssBaseline from '@mui/material/CssBaseline';
 import Typography from '@mui/material/Typography';
