@@ -1,13 +1,15 @@
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import Content from '../Components/Dashboard/ContentRoutes';
-import Navigator from '../Components/Dashboard/Navigator';
+import Content from '../components/dashboard/ContentRoutes';
+import Navigator from '../components/dashboard/Navigator';
+import Badge, { BadgeProps } from '@mui/material/Badge';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import CssBaseline from '@mui/material/CssBaseline';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useLocation } from 'react-router-dom';
+import { styled } from '@mui/material/styles';
 import Toolbar from '@mui/material/Toolbar';
 import AppBar from '@mui/material/AppBar';
 import { Link } from 'react-router-dom';
@@ -19,7 +21,6 @@ let theme = createTheme({
   palette: {
     primary: {
       light: '#63ccff',
-      //main: '#009be5', // color change for header
       main: '#081627',
       dark: '#006db3'
     }
@@ -167,10 +168,11 @@ theme = {
     }
   }
 };
+
 const item = {
   borderRadius: '20px',
   padding: '5px',
-  fontSize: '40px!important',
+  fontSize: '40px',
   color: 'rgba(255, 255, 255, 1)',
   '&:hover': {
     bgcolor: 'rgba(255, 255, 255, .1)' //'rgba(255, 255, 255, 0.08)'
@@ -179,6 +181,17 @@ const item = {
     bgcolor: 'rgba(79, 195, 247, .1)' //'rgba(255, 255, 255, 0.08)'
   }
 };
+
+const StyledBadge = styled(Badge)<BadgeProps>(({ theme }) => ({
+  '& .MuiBadge-badge': {
+    right: 8,
+    // left: -5,
+    top: 13
+
+    // border: `2px solid ${theme.palette.background.paper}`,
+    //padding: '0 4px',
+  }
+}));
 
 const drawerWidth = 256;
 
@@ -254,10 +267,12 @@ export default function Paperbase() {
                       to='Approve Forms'
                       style={{ textDecoration: 'none', color: 'white' }}
                     >
-                      <NotificationsIcon
-                        sx={item}
-                        onClick={() => setActiveNavItem('Approve Forms')}
-                      />
+                      <StyledBadge badgeContent={3} color='secondary'>
+                        <NotificationsIcon
+                          sx={item}
+                          onClick={() => setActiveNavItem('Approve Forms')}
+                        />
+                      </StyledBadge>
                     </Link>
                   </IconButton>
                 </Grid>

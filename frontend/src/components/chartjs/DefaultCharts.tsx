@@ -10,9 +10,9 @@ import CardContent from '@mui/material/CardContent';
 import { useState } from 'react';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
-import { useGetClientsQuery } from '../../Redux/slices/users/userManagementSlice';
-import { useGetTankDataQuery } from '../../Redux/slices/tanks/tankDataSlice';
-import LineChart from '../ChartJS/LineChart';
+import { useGetClientsQuery } from '../../redux/slices/users/userManagementSlice';
+import { useGetTankDataQuery } from '../../redux/slices/tanks/tankDataSlice';
+import LineChart from '../chartjs/LineChart';
 import { TankData } from './DUMMYDATA';
 
 interface OwnedTanks {
