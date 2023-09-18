@@ -27,7 +27,7 @@ serviceCallRouter.post(
       const errorMessage =
         error instanceof Error
           ? error.message
-          : "Unknown Error: Failed to create Service Call";
+          : 'Unknown Error: Failed to create Service Call';
       res.status(500).json({ error: errorMessage });
     }
   },
@@ -54,7 +54,7 @@ serviceCallRouter.get(
       const errorMessage =
         error instanceof Error
           ? error.message
-          : "Unknown Error: Failed to read all Service Calls";
+          : 'Unknown Error: Failed to read all Service Calls';
       res.status(500).json({ error: errorMessage });
     }
   },
@@ -73,7 +73,7 @@ serviceCallRouter.get(
       const errorMessage =
         error instanceof Error
           ? error.message
-          : "Unknown Error: Failed to read Service Call";
+          : 'Unknown Error: Failed to read Service Call';
       res.status(500).json({ error: errorMessage });
     }
   },
@@ -103,7 +103,7 @@ serviceCallRouter.get(
       const errorMessage =
         error instanceof Error
           ? error.message
-          : "Unknown Error: Failed to read Service Call(s) from tankId and date range.";
+          : 'Unknown Error: Failed to read Service Call(s) from tankId and date range.';
       res.status(500).json({ error: errorMessage });
     }
   },
@@ -134,7 +134,7 @@ serviceCallRouter.get(
       const errorMessage =
         error instanceof Error
           ? error.message
-          : "Unknown Error: Failed to read Service Calls by tankID and given date range.";
+          : 'Unknown Error: Failed to read Service Calls by tankID and given date range.';
       res.status(500).json({ error: errorMessage });
     }
   },
@@ -159,7 +159,7 @@ serviceCallRouter.put(
       const errorMessage =
         error instanceof Error
           ? error.message
-          : "Unknown Error: Failed to update Service Call";
+          : 'Unknown Error: Failed to update Service Call';
       res.status(500).json({ error: errorMessage });
     }
   },
@@ -178,7 +178,7 @@ serviceCallRouter.delete(
       const errorMessage =
         error instanceof Error
           ? error.message
-          : "Unknown Error: Failed to delete Service Call";
+          : 'Unknown Error: Failed to delete Service Call';
       res.status(500).json({ error: errorMessage });
     }
   },
@@ -198,7 +198,7 @@ serviceCallRouter.get(
       const errorMessage =
         error instanceof Error
           ? error.message
-          : "Unknown Error: Failed to search Service Call";
+          : 'Unknown Error: Failed to search Service Call';
       res.status(500).json({ error: errorMessage });
     }
   },

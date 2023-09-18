@@ -27,7 +27,7 @@ userRouter.post(
       const errorMessage =
         error instanceof Error
           ? error.message
-          : "Unknown Error: Failed to create User";
+          : 'Unknown Error: Failed to create User';
       res.status(500).json({ error: errorMessage });
     }
   },
@@ -46,7 +46,7 @@ userRouter.get(
       const errorMessage =
         error instanceof Error
           ? error.message
-          : "Unknown Error: Failed to read User";
+          : 'Unknown Error: Failed to read User';
       res.status(500).json({ error: errorMessage });
     }
   },
@@ -65,7 +65,7 @@ userRouter.get(
       const errorMessage =
         error instanceof Error
           ? error.message
-          : "Unknown Error: Failed to read all Users and Tanks";
+          : 'Unknown Error: Failed to read all Users and Tanks';
       res.status(500).json({ error: errorMessage });
     }
   },
@@ -90,7 +90,7 @@ userRouter.put(
       const errorMessage =
         error instanceof Error
           ? error.message
-          : "Unknown Error: Failed to update User";
+          : 'Unknown Error: Failed to update User';
       res.status(500).json({ error: errorMessage });
     }
   },
@@ -109,7 +109,7 @@ userRouter.delete(
       const errorMessage =
         error instanceof Error
           ? error.message
-          : "Unknown Error: Failed to delete User";
+          : 'Unknown Error: Failed to delete User';
       res.status(500).json({ error: errorMessage });
     }
   },
@@ -139,7 +139,7 @@ userRouter.get(
       const errorMessage =
         error instanceof Error
           ? error.message
-          : "Unknown Error: Failed to search User";
+          : 'Unknown Error: Failed to search User';
       res.status(500).json({ error: errorMessage });
     }
   },

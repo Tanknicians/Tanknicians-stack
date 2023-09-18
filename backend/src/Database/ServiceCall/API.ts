@@ -126,7 +126,9 @@ export async function readAllByTankId(tankId: number, isApproved: boolean) {
   } catch (e) {
     const errorMessage = e instanceof Error ? e.message : 'Unknown error.';
     console.error(errorMessage);
-    throw new Error(`An error occurred during readAllByTankId: ${errorMessage}`);
+    throw new Error(
+      `An error occurred during readAllByTankId: ${errorMessage}`,
+    );
   }
 }
 

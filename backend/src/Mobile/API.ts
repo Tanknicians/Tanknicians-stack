@@ -81,6 +81,4 @@ function checkParameterLimits(serviceCall: CreateServiceCall) {
   }
 }
 
-
-
 // removed unused code

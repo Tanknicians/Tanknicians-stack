@@ -1,21 +1,21 @@
-import express from "express";
-import * as LoginService from "./API";
-import { authenticateRoleMiddleWare } from "../../Authentication/API";
+import express from 'express';
+import * as LoginService from './API';
+import { authenticateRoleMiddleWare } from '../../Authentication/API';
 import {
   LoginRequest,
   UpdateLogin,
   createLogin,
   loginSchema,
   validateRequestBody,
-} from "../../zodTypes";
+} from '../../zodTypes';
 
 const loginRouter = express.Router();
 loginRouter.use(express.json());
 
 // Create Login
 loginRouter.post(
-  "/",
-  authenticateRoleMiddleWare(["ADMIN"]),
+  '/',
+  authenticateRoleMiddleWare(['ADMIN']),
   validateRequestBody(createLogin),
   async (req: LoginRequest, res) => {
     try {
@@ -26,16 +26,16 @@ loginRouter.post(
       const errorMessage =
         error instanceof Error
           ? error.message
-          : "Unknown Error: Failed to create Login";
+          : 'Unknown Error: Failed to create Login';
       res.status(500).json({ error: errorMessage });
     }
-  }
+  },
 );
 
 // Read Login
 loginRouter.get(
-  "/:email",
-  authenticateRoleMiddleWare(["ADMIN"]),
+  '/:email',
+  authenticateRoleMiddleWare(['ADMIN']),
   async (req, res) => {
     try {
       const email = req.params.email;
@@ -45,16 +45,16 @@ loginRouter.get(
       const errorMessage =
         error instanceof Error
           ? error.message
-          : "Unknown Error: Failed to get Login";
+          : 'Unknown Error: Failed to get Login';
       res.status(500).json({ error: errorMessage });
     }
-  }
+  },
 );
 
 // Update Login
 loginRouter.put(
-  "/:id",
-  authenticateRoleMiddleWare(["ADMIN"]),
+  '/:id',
+  authenticateRoleMiddleWare(['ADMIN']),
   validateRequestBody(loginSchema),
   async (req: LoginRequest, res) => {
     try {
@@ -70,16 +70,16 @@ loginRouter.put(
       const errorMessage =
         error instanceof Error
           ? error.message
-          : "Unknown Error: Failed to update Login";
+          : 'Unknown Error: Failed to update Login';
       res.status(500).json({ error: errorMessage });
     }
-  }
+  },
 );
 
 // Delete Login
 loginRouter.delete(
-  "/:id",
-  authenticateRoleMiddleWare(["ADMIN"]),
+  '/:id',
+  authenticateRoleMiddleWare(['ADMIN']),
   async (req, res) => {
     try {
       const id = Number(req.params.id);
@@ -89,16 +89,16 @@ loginRouter.delete(
       const errorMessage =
         error instanceof Error
           ? error.message
-          : "Unknown Error: Failed to delete Login";
+          : 'Unknown Error: Failed to delete Login';
       res.status(500).json({ error: errorMessage });
     }
-  }
+  },
 );
 
 // Search Login
 loginRouter.get(
-  "/search/:searchString",
-  authenticateRoleMiddleWare(["ADMIN"]),
+  '/search/:searchString',
+  authenticateRoleMiddleWare(['ADMIN']),
   async (req, res) => {
     try {
       const searchString = req.params.searchString;
@@ -109,10 +109,10 @@ loginRouter.get(
       const errorMessage =
         error instanceof Error
           ? error.message
-          : "Unknown Error: Failed to search Login";
+          : 'Unknown Error: Failed to search Login';
       res.status(500).json({ error: errorMessage });
     }
-  }
+  },
 );
 
 export default loginRouter;

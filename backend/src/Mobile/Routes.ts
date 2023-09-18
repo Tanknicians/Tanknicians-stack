@@ -24,7 +24,7 @@ mobileRouter.post(
       const errorMessage =
         error instanceof Error
           ? error.message
-          : "Unknown Error: Failed to upload Service Call from mobile.";
+          : 'Unknown Error: Failed to upload Service Call from mobile.';
       res.status(500).json({ error: errorMessage });
     }
   },

@@ -42,7 +42,7 @@ tankMetaDataRouter.post(
       const errorMessage =
         error instanceof Error
           ? error.message
-          : "Unknown Error: Failed to create Tank Metadata";
+          : 'Unknown Error: Failed to create Tank Metadata';
       res.status(500).json({ error: errorMessage });
     }
   },
@@ -61,7 +61,7 @@ tankMetaDataRouter.get(
       const errorMessage =
         error instanceof Error
           ? error.message
-          : "Unknown Error: Failed to read Tank Metadata";
+          : 'Unknown Error: Failed to read Tank Metadata';
       res.status(500).json({ error: errorMessage });
     }
   },
@@ -86,7 +86,7 @@ tankMetaDataRouter.put(
       const errorMessage =
         error instanceof Error
           ? error.message
-          : "Unknown Error: Failed to update Tank Metadata";
+          : 'Unknown Error: Failed to update Tank Metadata';
       res.status(500).json({ error: errorMessage });
     }
   },
@@ -105,7 +105,7 @@ tankMetaDataRouter.delete(
       const errorMessage =
         error instanceof Error
           ? error.message
-          : "Unknown Error: Failed to delete Tank Metadata";
+          : 'Unknown Error: Failed to delete Tank Metadata';
       res.status(500).json({ error: errorMessage });
     }
   },
@@ -125,7 +125,7 @@ tankMetaDataRouter.get(
       const errorMessage =
         error instanceof Error
           ? error.message
-          : "Unknown Error: Failed to search Tank Metadata";
+          : 'Unknown Error: Failed to search Tank Metadata';
       res.status(500).json({ error: errorMessage });
     }
   },

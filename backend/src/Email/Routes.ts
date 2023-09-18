@@ -16,7 +16,7 @@ emailRouter.post(
       const errorMessage =
         error instanceof Error
           ? error.message
-          : "Unknown Error: Failed to reset password";
+          : 'Unknown Error: Failed to reset password';
       res.status(500).json({ error: errorMessage });
     }
   },
