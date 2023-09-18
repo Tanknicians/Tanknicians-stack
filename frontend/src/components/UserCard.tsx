@@ -3,21 +3,11 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button'; 
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
-import { UserOption } from './UserSearchBar';
+import { UserOption } from '../redux/slices/users/userManagementSlice';
 
 export interface UserCardProps {
-    user:UserOption
+    user:UserOption |null 
 }
-
-const defaultUser:UserOption = {
-    id: -1,
-    firstName: '',
-    middleName: '',
-    lastName: '',
-    address: '',
-    phone: '',
-  
-  }
 
 export default function UserCard (props:UserCardProps){
     const { user } = props
