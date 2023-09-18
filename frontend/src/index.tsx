@@ -1,6 +1,6 @@
 import { disableReactDevTools } from '@fvilers/disable-react-devtools';
 import { PersistGate } from 'redux-persist/integration/react';
-import { store, persistor } from './Redux/store';
+import { store, persistor } from './redux/store';
 import ReactDOM from 'react-dom/client';
 import { Provider } from 'react-redux';
 import React from 'react';

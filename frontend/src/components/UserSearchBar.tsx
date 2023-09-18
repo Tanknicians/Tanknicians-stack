@@ -1,4 +1,4 @@
-import { UserOption } from '../Redux/slices/users/userManagementSlice';
+import { UserOption } from '../redux/slices/users/userManagementSlice';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 import parse from 'autosuggest-highlight/parse';

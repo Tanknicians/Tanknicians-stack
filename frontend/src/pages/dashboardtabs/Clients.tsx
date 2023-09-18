@@ -1,9 +1,9 @@
 import {
   UserOption,
   useGetClientsQuery
-} from '../../Redux/slices/users/userManagementSlice';
-import CreateTankForm from '../CreateTankForm';
-import UserSearchBar from '../UserSearchBar';
+} from '../../redux/slices/users/userManagementSlice';
+import CreateTankForm from '../../components/CreateTankForm';
+import UserSearchBar from '../../components/UserSearchBar';
 import { Button } from '@mui/material';
 import { useState } from 'react';
 

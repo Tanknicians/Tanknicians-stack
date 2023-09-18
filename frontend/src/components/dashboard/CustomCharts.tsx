@@ -1,4 +1,4 @@
-import LineChart from '../ChartJS/LineChart';
+import LineChart from '../chartjs/LineChart';
 
 export default function CustomChart() {
   const TankData = {
