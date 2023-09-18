@@ -49,13 +49,13 @@ export default function Employees() {
               Employees
             </Typography>
           </Grid>
-          <Grid item xs={6} sm={8} sx={{...headerGridStyle, backgroundColor: 'inherit'}}>
+          <Grid item xs={6} sm={7} sx={{...headerGridStyle, backgroundColor: 'inherit', alignContent: 'center',}}>
           <Container maxWidth="sm">
               <UserSearchBar optionsList={client} handleUserSelected = {handleUserSelected}/>
           </Container>
           </Grid>
-          <Grid item xs={6} sm={2} sx={{...headerGridStyle, backgroundColor: 'inherit'}}>
-            <Button variant="contained" sx={{float: 'right'}}><AddIcon/>Add Client</Button>
+          <Grid item xs={6} sm={3} sx={{...headerGridStyle, backgroundColor: 'inherit'}}>
+            <Button variant="contained" sx={{float: 'right'}}><AddIcon/>Add Employee</Button>
           </Grid>
         </Grid>
       </Box>

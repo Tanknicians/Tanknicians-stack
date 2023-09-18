@@ -52,7 +52,7 @@ export default function UserSearchBar({
       getOptionLabel={(option) =>
         `${option.firstName} ${option.middleName} ${option.lastName} ${option.address}`
       }
-      sx={{ width: '50%' }}
+      sx={{ width: '100%', backgroundColor: 'white', borderRadius: '10px',}}
       renderInput={(params) => (
         <TextField autoFocus {...params} label='Search User' />
       )}
