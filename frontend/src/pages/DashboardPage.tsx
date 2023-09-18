@@ -14,12 +14,13 @@ import { Link } from 'react-router-dom';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import * as React from 'react';
+import Badge, { BadgeProps } from '@mui/material/Badge';
+import { styled } from '@mui/material/styles';
 
 let theme = createTheme({
   palette: {
     primary: {
       light: '#63ccff',
-      //main: '#009be5', // color change for header
       main: '#081627',
       dark: '#006db3'
     }
@@ -167,10 +168,11 @@ theme = {
     }
   }
 };
+
 const item = {
   borderRadius: '20px',
   padding: '5px',
-  fontSize: '40px!important',
+  fontSize: '40px',
   color: 'rgba(255, 255, 255, 1)',
   '&:hover': {
     bgcolor: 'rgba(255, 255, 255, .1)' //'rgba(255, 255, 255, 0.08)'
@@ -179,6 +181,18 @@ const item = {
     bgcolor: 'rgba(79, 195, 247, .1)' //'rgba(255, 255, 255, 0.08)'
   }
 };
+
+const StyledBadge = styled(Badge)<BadgeProps>(({ theme }) => ({
+  '& .MuiBadge-badge': {
+    right: 8,
+    // left: -5,
+    top: 13,
+    
+    // border: `2px solid ${theme.palette.background.paper}`,
+    //padding: '0 4px',
+  },
+}));
+
 
 const drawerWidth = 256;
 
@@ -254,10 +268,12 @@ export default function Paperbase() {
                       to='Approve Forms'
                       style={{ textDecoration: 'none', color: 'white' }}
                     >
-                      <NotificationsIcon
-                        sx={item}
-                        onClick={() => setActiveNavItem('Approve Forms')}
-                      />
+                      <StyledBadge badgeContent={3} color="secondary">
+                        <NotificationsIcon
+                          sx={item}
+                          onClick={() => setActiveNavItem('Approve Forms')}
+                        />
+                      </StyledBadge>
                     </Link>
                   </IconButton>
                 </Grid>
