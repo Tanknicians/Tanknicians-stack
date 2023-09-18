@@ -5,6 +5,9 @@ import UserSearchBar, { UserOption} from '../../Components/UserSearchBar';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
 import Container from '@mui/material/Container';
+import { useState } from 'react';
+import Collapse from '@mui/material/Collapse';
+import UserCard from '../../Components/UserCard';
 
 const headerGridStyle = {
   flex: 1,
@@ -20,15 +23,20 @@ const client:UserOption[] = [{
   phone: '555-555-1234',
 }]
 
-const searchBarInput = () => {
-  console.log('clicked')
-}
 
-function ClientDetails(Client:UserOption){
-
-}
 
 export default function Employees() {
+  const [collapse, setCollapse] = useState(false);
+  const [selectedUser, selectCurrentUser ] = useState<UserOption | null>(null)
+
+  const handleUserSelected = (
+    _event: React.SyntheticEvent,
+    customer: UserOption | null
+  ) => {
+    setCollapse(!collapse)
+    selectCurrentUser(customer);
+    console.log('customer: ', customer);
+  };
   return (
     <div style = {{marginLeft: 'auto', marginRight: 'auto',maxWidth: '1000px'}}>
       {/* This box has a grid with the page title in one cell, a section to put a search bar in the middle cell, and a container for a button in the far right cell */}
@@ -41,7 +49,7 @@ export default function Employees() {
           </Grid>
           <Grid item xs={6} sm={8} sx={{...headerGridStyle, backgroundColor: 'inherit'}}>
           <Container maxWidth="sm">
-              <UserSearchBar optionsList={client} handleUserSelected = {searchBarInput}/>
+              <UserSearchBar optionsList={client} handleUserSelected = {handleUserSelected}/>
           </Container>
           </Grid>
           <Grid item xs={6} sm={2} sx={{...headerGridStyle, backgroundColor: 'inherit'}}>
@@ -49,7 +57,7 @@ export default function Employees() {
           </Grid>
         </Grid>
       </Box>
-      {/* {selected & <ClientDetails/>} */}
+      <Collapse in={collapse}><UserCard user = {selectedUser}/></Collapse>
     </div>
   );
 }
