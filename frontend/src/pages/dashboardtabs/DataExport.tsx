@@ -37,14 +37,14 @@ export default function DataExport() {
             sm={7}
             sx={{ ...headerGridStyle, backgroundColor: 'inherit' }}
           >
-            <Container maxWidth='sm'></Container>
+            <Container maxWidth='sm' />
           </Grid>
           <Grid
             item
             xs={6}
             sm={2}
             sx={{ ...headerGridStyle, backgroundColor: 'inherit' }}
-          ></Grid>
+          />
         </Grid>
       </Box>
     </div>

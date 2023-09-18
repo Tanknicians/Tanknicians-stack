@@ -79,7 +79,7 @@ export default function Tanks() {
             xs={6}
             sm={2}
             sx={{ ...headerGridStyle, backgroundColor: 'inherit' }}
-          ></Grid>
+          />
         </Grid>
       </Box>
       <Collapse in={collapse}>
