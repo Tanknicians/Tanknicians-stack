@@ -1,45 +1,64 @@
-import {
-  UserOption,
-  useGetClientsQuery
-} from '../../redux/slices/users/userManagementSlice';
-import CreateTankForm from '../../components/CreateTankForm';
-import UserSearchBar from '../../components/UserSearchBar';
-import { Button } from '@mui/material';
+import UserSearchBar, { UserOption} from '../../Components/UserSearchBar';
+import UserCard from '../../Components/UserCard';
+import Typography from '@mui/material/Typography';
+import Container from '@mui/material/Container';
+import AddIcon from '@mui/icons-material/Add';
+import Button from '@mui/material/Button';
+import Fade from '@mui/material/Fade';
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
 import { useState } from 'react';
+import Collapse from '@mui/material/Collapse';
+
+const headerGridStyle = {
+  flex: 1,
+  alignContent: 'center'
+}
+
+const clients:UserOption[] = [{
+  id: 1234,
+  firstName: 'John',
+  middleName: 'C',
+  lastName: 'ClientMan',
+  address: '1234 Woodpecher Drive, Springfliend, Illinois, 32567',
+  phone: '555-555-1234',
+}]
 
 export default function Clients() {
-  const userId = 1;
-  const { data: optionsList, error } = useGetClientsQuery(true);
-  console.log('OptionsList: ', optionsList);
-  console.log('OptionsList error: ', error);
-  const [, selectCurrentUser] = useState<UserOption | null>(null);
-  const [open, setOpen] = useState(false);
-
-  if (!optionsList) return <div>Loading...</div>;
-
-  // if (error) return <div>{error.message}</div>;
-  // if (isLoading) return <div>Loading...</div>;
-
-  console.log('optionsList: ', optionsList);
+  const [collapse, setCollapse] = useState(false);
+  const [selectedUser, selectCurrentUser ] = useState<UserOption | null>(null)
 
   const handleUserSelected = (
     _event: React.SyntheticEvent,
     customer: UserOption | null
   ) => {
+    setCollapse(!collapse)
     selectCurrentUser(customer);
     console.log('customer: ', customer);
   };
 
+
   return (
-    <>
-      <Button variant='contained' onClick={() => setOpen(true)}>
-        Add Tank
-      </Button>
-      <CreateTankForm userId={userId} open={open} setOpen={setOpen} />
-      <UserSearchBar
-        optionsList={optionsList}
-        handleUserSelected={handleUserSelected}
-      />
-    </>
+    <div style = {{marginLeft: 'auto', marginRight: 'auto',maxWidth: '1000px'}}>
+      {/* This box has a grid with the page title in one cell, a section to put a search bar in the middle cell, and a container for a button in the far right cell */}
+      <Box sx={{ flexGrow: 1, display: 'flex', padding: '20px', }}>
+        <Grid container spacing={2} >
+          <Grid item xs={12} sm={2} sx={{...headerGridStyle, backgroundColor: 'inherit'}}>
+            <Typography color='inherit' variant='h4' component='h1' sx={{float: 'left', minWidth:'fit-content'}}>
+              Clients
+            </Typography>
+          </Grid>
+          <Grid item xs={6} sm={8} sx={{...headerGridStyle, backgroundColor: 'inherit'}}>
+          <Container maxWidth="sm">
+              <UserSearchBar optionsList={clients} handleUserSelected = {handleUserSelected}/>
+          </Container>
+          </Grid>
+          <Grid item xs={6} sm={2} sx={{...headerGridStyle, backgroundColor: 'inherit'}}>
+            <Button variant="contained" sx={{float: 'right'}}><AddIcon/>Add Client</Button>
+          </Grid>
+        </Grid>
+      </Box>
+      <Collapse in={collapse}><UserCard user = {selectedUser}/></Collapse>
+    </div>
   );
 }
