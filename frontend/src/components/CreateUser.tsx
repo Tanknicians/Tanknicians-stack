@@ -37,8 +37,6 @@ export default function CreateUserModal({
   setOpen: (open: boolean) => void;
   isEmployee: boolean;
 }) {
-
-
   const [addUser, { isLoading }] = useAddUserMutation();
   const { handleSubmit, control, reset, formState } = useForm<CreateUser>({
     resolver: zodResolver(createUserSchema)
@@ -64,7 +62,7 @@ export default function CreateUserModal({
 
   return (
     <Dialog open={open} onClose={handleClose} maxWidth='lg'>
-      <DialogTitle>Add {isEmployee? 'Employee' : 'Client'}</DialogTitle>
+      <DialogTitle>Add {isEmployee ? 'Employee' : 'Client'}</DialogTitle>
       <DialogContent>
         <Grid container spacing={2} paddingTop={1}>
           <Grid item xs={4}>
