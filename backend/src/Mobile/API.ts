@@ -2,6 +2,7 @@ import { tankDB } from '../../prisma/db/TankMetadata';
 import { serviceCallDB } from '../../prisma/db/ServiceCall';
 import {
   CreateServiceCall,
+  MobileServiceCall,
   UpdateTankMetaData,
   tankMetaDataSchema,
 } from '../zodTypes';
@@ -23,22 +24,26 @@ const paramLimits = {
   phosphateMax: 0.24,
 };
 
-export async function uploadServiceCall(serviceCall: CreateServiceCall) {
-  if (!serviceCall.notApprovedNotes) {
-    serviceCall.notApprovedNotes = '';
+export async function uploadServiceCall(serviceCall: MobileServiceCall) {
+
+  const createServiceCall: CreateServiceCall = {
+    ...serviceCall,
+    notApprovedNotes: '',
+    isApproved: true,
   }
-  checkTankId(serviceCall);
-  checkParameterLimits(serviceCall);
-  const approvedMessage = serviceCall.isApproved ? 'approved' : 'not approved';
+
+  checkTankId(createServiceCall);
+  checkParameterLimits(createServiceCall);
+  const approvedMessage = createServiceCall.isApproved ? 'approved' : 'not approved';
   // Update Tank's "lastDateServiced" to serviceCall's "createdOn" and upload ServiceCall
   try {
-    const readTank = await tankDB.read(serviceCall.tankId);
+    const readTank = await tankDB.read(createServiceCall.tankId);
     if (!readTank) {
-      throw new Error(`No tankId of ${serviceCall.tankId} found.`);
+      throw new Error(`No tankId of ${createServiceCall.tankId} found.`);
     }
     const updateTank: UpdateTankMetaData = tankMetaDataSchema.parse(readTank);
-    updateTank.lastDateServiced = serviceCall.createdOn;
-    await serviceCallDB.create(serviceCall);
+    updateTank.lastDateServiced = createServiceCall.createdOn;
+    await serviceCallDB.create(createServiceCall);
     await tankDB.update(updateTank);
     return approvedMessage;
   } catch (e) {

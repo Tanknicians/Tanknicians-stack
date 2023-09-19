@@ -1,6 +1,6 @@
-import { Schema, z } from 'zod';
-import { NextFunction, Response, Request } from 'express';
-import { ParamsDictionary } from 'express-serve-static-core';
+import { Schema, z } from "zod";
+import { NextFunction, Response, Request } from "express";
+import { ParamsDictionary } from "express-serve-static-core";
 
 export type ValidatedRequest<T> = Request<ParamsDictionary, unknown, T>;
 
@@ -38,15 +38,15 @@ export type UserRequest = ValidatedRequest<CreateUser>;
 export const loginSchema = z
   .object({
     id: z.number().int(),
-    email: z.string({ required_error: 'Email is required' }).email(),
-    password: z.string({ required_error: 'Password is required' }),
-    role: z.enum(['ADMIN', 'EMPLOYEE', 'CUSTOMER'], {
+    email: z.string({ required_error: "Email is required" }).email(),
+    password: z.string({ required_error: "Password is required" }),
+    role: z.enum(["ADMIN", "EMPLOYEE", "CUSTOMER"], {
       errorMap: () => ({
-        message: 'Role must be ADMIN, EMPLOYEE, or CUSTOMER',
+        message: "Role must be ADMIN, EMPLOYEE, or CUSTOMER",
       }),
     }),
     userId: z
-      .number({ required_error: 'Must be a positive integer.' })
+      .number({ required_error: "Must be a positive integer." })
       .positive(),
   })
   .strict();
@@ -63,7 +63,7 @@ export const tankMetaDataSchema = z.object({
   id: z.number().int(),
   description: z.string().optional(),
   volume: z.number().int().positive(),
-  type: z.enum(['FRESH', 'SALT', 'BRACKISH']),
+  type: z.enum(["FRESH", "SALT", "BRACKISH"]),
 
   qrSymbol: z.number().int().positive(),
 
@@ -122,8 +122,14 @@ export const serviceCallSchema = z.object({
 
 export const createServiceCall = serviceCallSchema.omit({ id: true });
 export const updateServiceCall = serviceCallSchema.omit({ id: true });
+export const mobileServiceCall = serviceCallSchema.omit({
+  id: true,
+  isApproved: true,
+  notApprovedNotes: true,
+});
 export type CreateServiceCall = z.infer<typeof createServiceCall>;
 export type UpdateServiceCall = z.infer<typeof serviceCallSchema>;
+export type MobileServiceCall = z.infer<typeof mobileServiceCall>;
 export type ServiceCallRequest = ValidatedRequest<CreateServiceCall>;
 
 // AUTH
