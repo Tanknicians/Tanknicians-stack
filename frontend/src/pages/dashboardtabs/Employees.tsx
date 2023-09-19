@@ -1,4 +1,8 @@
-import { UserOption } from '../../redux/slices/users/userManagementSlice';
+import {
+  UserOption,
+  useGetClientsQuery
+} from '../../redux/slices/users/userManagementSlice';
+import CreateTankForm from '../../components/CreateTankForm';
 import UserSearchBar from '../../components/UserSearchBar';
 import Typography from '@mui/material/Typography';
 import UserCard from '../../components/UserCard';
@@ -9,36 +13,42 @@ import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import { useState } from 'react';
+import CreateUserModal from '../../components/CreateUser';
+import { truncate, truncateSync } from 'fs';
 
 const headerGridStyle = {
   flex: 1,
   alignContent: 'center'
 };
 
-const client: UserOption[] = [
-  {
-    id: 1234,
-    firstName: 'John',
-    middleName: 'C',
-    lastName: 'EmployeeMan',
-    address: '1234 Woodpecher Drive, Springfliend, Illinois, 32567',
-    phone: '555-555-1234',
-    isEmployee: true
-  }
-];
-
 export default function Employees() {
+  const userId = 1;
+  const { data: optionsList, error } = useGetClientsQuery(true);
+  
+  const [tankModalOpen, setTankModalOpen] = useState(false);
+  const [userModalOpen, setUserModalOpen] = useState(false);
   const [collapse, setCollapse] = useState(false);
   const [selectedUser, selectCurrentUser] = useState<UserOption | null>(null);
+  const [open, setOpen] = useState(false);
 
   const handleUserSelected = (
     _event: React.SyntheticEvent,
     customer: UserOption | null
   ) => {
-    setCollapse(!collapse);
+    setCollapse(true);
     selectCurrentUser(customer);
-    console.log('customer: ', customer);
+    console.log('Employee: ', customer);
   };
+
+  const handleOpenUserModal = () => {
+    setUserModalOpen((prevState) => !prevState);
+  };
+
+  const handleOpenTankModal = () => {
+    setTankModalOpen((prevState) => !prevState);
+  };
+
+  if (!optionsList) return <div>Loading...</div>;
   return (
     <div
       style={{ marginLeft: 'auto', marginRight: 'auto', maxWidth: '1000px' }}
@@ -73,7 +83,7 @@ export default function Employees() {
           >
             <Container maxWidth='sm'>
               <UserSearchBar
-                optionsList={client}
+                optionsList={optionsList}
                 handleUserSelected={handleUserSelected}
               />
             </Container>
@@ -84,10 +94,15 @@ export default function Employees() {
             sm={2}
             sx={{ ...headerGridStyle, backgroundColor: 'inherit' }}
           >
-            <Button variant='contained' sx={{ float: 'right' }}>
+            <Button variant='contained' sx={{ float: 'right' }} onClick={handleOpenUserModal}>
               <AddIcon />
               Add Employee
             </Button>
+            <CreateUserModal
+              open={userModalOpen}
+              setOpen={setUserModalOpen}
+              isEmployee={true}
+            />
           </Grid>
         </Grid>
       </Box>
