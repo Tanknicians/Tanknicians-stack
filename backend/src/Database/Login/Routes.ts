@@ -5,7 +5,7 @@ import {
   LoginRequest,
   UpdateLogin,
   createLogin,
-  loginSchema,
+  updateLogin,
   validateRequestBody,
 } from '../../zodTypes';
 
@@ -55,7 +55,7 @@ loginRouter.get(
 loginRouter.put(
   '/:id',
   authenticateRoleMiddleWare(['ADMIN']),
-  validateRequestBody(loginSchema),
+  validateRequestBody(updateLogin),
   async (req: LoginRequest, res) => {
     try {
       const id = Number(req.params.id);

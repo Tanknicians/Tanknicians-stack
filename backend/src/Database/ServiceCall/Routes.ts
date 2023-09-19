@@ -5,7 +5,7 @@ import {
   ServiceCallRequest,
   UpdateServiceCall,
   createServiceCall,
-  serviceCallSchema,
+  updateServiceCall,
   validateRequestBody,
 } from '../../zodTypes';
 import { z } from 'zod';
@@ -144,7 +144,7 @@ serviceCallRouter.get(
 serviceCallRouter.put(
   '/:id',
   authenticateRoleMiddleWare(['ADMIN']),
-  validateRequestBody(serviceCallSchema),
+  validateRequestBody(updateServiceCall),
   async (req: ServiceCallRequest, res) => {
     try {
       const id = Number(req.params.id);
