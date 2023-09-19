@@ -6,7 +6,7 @@ import {
   TankMetaDataRequest,
   UpdateTankMetaData,
   createTank,
-  tankMetaDataSchema,
+  updateTank,
   validateRequestBody,
 } from '../../zodTypes';
 
@@ -71,7 +71,7 @@ tankMetaDataRouter.get(
 tankMetaDataRouter.put(
   '/:id',
   authenticateRoleMiddleWare(['ADMIN']),
-  validateRequestBody(tankMetaDataSchema),
+  validateRequestBody(updateTank),
   async (req: TankMetaDataRequest, res) => {
     try {
       const id = Number(req.params.id);
