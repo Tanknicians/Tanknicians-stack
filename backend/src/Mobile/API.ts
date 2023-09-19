@@ -25,16 +25,17 @@ const paramLimits = {
 };
 
 export async function uploadServiceCall(serviceCall: MobileServiceCall) {
-
   const createServiceCall: CreateServiceCall = {
     ...serviceCall,
     notApprovedNotes: '',
     isApproved: true,
-  }
+  };
 
   checkTankId(createServiceCall);
   checkParameterLimits(createServiceCall);
-  const approvedMessage = createServiceCall.isApproved ? 'approved' : 'not approved';
+  const approvedMessage = createServiceCall.isApproved
+    ? 'approved'
+    : 'not approved';
   // Update Tank's "lastDateServiced" to serviceCall's "createdOn" and upload ServiceCall
   try {
     const readTank = await tankDB.read(createServiceCall.tankId);
