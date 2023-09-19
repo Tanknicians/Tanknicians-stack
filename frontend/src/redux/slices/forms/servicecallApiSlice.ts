@@ -1,15 +1,27 @@
-import { apiSlice } from '../../api/apiSlice';
+import { ServiceCall } from "../../../components/forms/CreateServiceCall";
+import { apiSlice } from "../../api/apiSlice";
 
 export const servicecallApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     uploadServiceCall: builder.mutation({
       query: (serviceCall) => ({
-        url: '/api/mobile/uploadForm',
-        method: 'POST',
-        body: { ...serviceCall }
-      })
-    })
-  })
+        url: "/api/mobile/uploadForm",
+        method: "POST",
+        body: { ...serviceCall },
+      }),
+    }),
+    getServiceCallByTankId: builder.query<
+      ServiceCall[],
+      { tankId: number; onlyApprovedForms?: boolean }
+    >({
+      query: ({ tankId, onlyApprovedForms }) => ({
+        url: `/api/database/servicecall/fromTank/${tankId}?`,
+        method: "GET",
+        params: { isApproved: !!onlyApprovedForms },
+      }),
+    }),
+  }),
 });
 
-export const { useUploadServiceCallMutation } = servicecallApiSlice;
+export const { useGetServiceCallByTankIdQuery, useUploadServiceCallMutation } =
+  servicecallApiSlice;
