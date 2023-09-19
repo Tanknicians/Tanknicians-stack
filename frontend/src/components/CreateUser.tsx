@@ -39,7 +39,10 @@ export default function CreateUserModal({
 }) {
   const [addUser, { isLoading }] = useAddUserMutation();
   const { handleSubmit, control, reset, formState } = useForm<CreateUser>({
-    resolver: zodResolver(createUserSchema)
+    resolver: zodResolver(createUserSchema),
+    defaultValues: {
+      isEmployee: isEmployee,
+    },
   });
   console.log({ formState });
 
