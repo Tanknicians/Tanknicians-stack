@@ -91,14 +91,12 @@ export async function searchByString(search: String, page: number) {
   });
 }
 
-// ALL
-export async function getAll() {
-  return await prisma.user.findMany();
-}
-
 // ALL + OwnedTanks
-export async function getAllUsersAndTanks(includeTanks: boolean) {
+export async function getAll(includeTanks: boolean, isEmployee: boolean) {
   return await prisma.user.findMany({
+    where: {
+      isEmployee: isEmployee
+    },
     include: {
       OwnedTanks: includeTanks,
     },
