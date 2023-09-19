@@ -52,7 +52,7 @@ export const loginSchema = z
   .strict();
 
 export const createLogin = loginSchema.omit({ id: true });
-export const updateLogin = loginSchema.omit({id : true});
+export const updateLogin = loginSchema.omit({ id: true });
 export type CreateLogin = z.infer<typeof createLogin>;
 export type UpdateLogin = z.infer<typeof loginSchema>;
 export type LoginRequest = ValidatedRequest<CreateLogin>;
