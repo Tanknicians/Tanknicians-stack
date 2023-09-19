@@ -73,7 +73,6 @@ userRouter.get(
   },
 );
 
-
 // Update User
 userRouter.put(
   '/:id',
