@@ -95,7 +95,7 @@ export async function searchByString(search: String, page: number) {
 export async function getAll(includeTanks: boolean, isEmployee: boolean) {
   return await prisma.user.findMany({
     where: {
-      isEmployee: isEmployee
+      isEmployee: isEmployee,
     },
     include: {
       OwnedTanks: includeTanks,
