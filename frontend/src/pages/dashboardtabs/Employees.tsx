@@ -24,7 +24,7 @@ const headerGridStyle = {
 export default function Employees() {
   const userId = 1;
   const { data: optionsList, error } = useGetClientsQuery(true);
-  
+
   const [tankModalOpen, setTankModalOpen] = useState(false);
   const [userModalOpen, setUserModalOpen] = useState(false);
   const [collapse, setCollapse] = useState(false);
@@ -94,7 +94,11 @@ export default function Employees() {
             sm={2}
             sx={{ ...headerGridStyle, backgroundColor: 'inherit' }}
           >
-            <Button variant='contained' sx={{ float: 'right' }} onClick={handleOpenUserModal}>
+            <Button
+              variant='contained'
+              sx={{ float: 'right' }}
+              onClick={handleOpenUserModal}
+            >
               <AddIcon />
               Add Employee
             </Button>
