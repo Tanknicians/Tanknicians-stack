@@ -62,7 +62,7 @@ export default function CreateUserModal({
 
   return (
     <Dialog open={open} onClose={handleClose} maxWidth='lg'>
-      <DialogTitle>Add {!isEmployee ? 'Employee' : 'Client'}</DialogTitle>
+      <DialogTitle>Add {isEmployee ? 'Employee' : 'Client'}</DialogTitle>
       <DialogContent>
         <Grid container spacing={2} paddingTop={1}>
           <Grid item xs={4}>
