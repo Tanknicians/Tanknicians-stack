@@ -95,7 +95,11 @@ export default function Clients() {
               <AddIcon />
               Add Client
             </Button>
-            <CreateUserModal open={userModalOpen} setOpen={setUserModalOpen} isEmployee = {false}/>
+            <CreateUserModal
+              open={userModalOpen}
+              setOpen={setUserModalOpen}
+              isEmployee={false}
+            />
           </Grid>
         </Grid>
       </Box>

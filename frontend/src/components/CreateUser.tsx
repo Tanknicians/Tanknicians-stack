@@ -31,11 +31,11 @@ export type CreateUser = z.infer<typeof createUserSchema>;
 export default function CreateUserModal({
   open,
   setOpen,
-  isEmployee,
+  isEmployee
 }: {
   open: boolean;
   setOpen: (open: boolean) => void;
-  isEmployee: boolean
+  isEmployee: boolean;
 }) {
   const [addUser, { isLoading }] = useAddUserMutation();
   const { handleSubmit, control, reset, formState } = useForm<CreateUser>({
@@ -62,7 +62,7 @@ export default function CreateUserModal({
 
   return (
     <Dialog open={open} onClose={handleClose} maxWidth='lg'>
-      <DialogTitle>Add {!isEmployee? 'Employee':'Client'}</DialogTitle>
+      <DialogTitle>Add {!isEmployee ? 'Employee' : 'Client'}</DialogTitle>
       <DialogContent>
         <Grid container spacing={2} paddingTop={1}>
           <Grid item xs={4}>
