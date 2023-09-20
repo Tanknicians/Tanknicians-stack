@@ -14,9 +14,9 @@ import {
   TextField
 } from '@mui/material';
 import React from 'react';
-import { useAddTankToUserMutation } from '../redux/slices/users/userManagementSlice';
+import { useAddTankToUserMutation } from '../../redux/slices/users/userManagementSlice';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
-import LoadingProgressButton from './LoadingProgressButton';
+import LoadingProgressButton from '../LoadingProgressButton';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 
@@ -72,26 +72,14 @@ function CreateTankForm({ userId, open, setOpen }: CreateTankFormProps) {
     setOpen(false);
   };
 
-  const onSubmit: SubmitHandler<CreateTankFormData> = async (data) => {
+  const onValid: SubmitHandler<CreateTankFormData> = async (data) => {
     console.log(data);
     try {
       const response = await addTankToUser(data).unwrap();
       console.log('Response: ', response);
       handleClose();
-    } catch (unparsedError) {
-      const errorSchema = z.object({
-        status: z.coerce.number().optional(),
-        data: z.object({ error: z.object({ issues: z.any() }) })
-      });
-      const err = errorSchema.parse(unparsedError);
-      if (!err?.status) {
-        console.log('No Server Response');
-      } else {
-        console.log(
-          `Submitting create tank form error ${err.status}: `,
-          err.data?.error.issues
-        );
-      }
+    } catch (err) {
+        console.log('Submitting create tank form error: ', err);
     }
   };
 
@@ -183,7 +171,7 @@ function CreateTankForm({ userId, open, setOpen }: CreateTankFormProps) {
             type='button'
             variant='contained'
             isLoading={isLoading}
-            onClick={handleSubmit(onSubmit)}
+            onClick={handleSubmit(onValid)}
           >
             Submit
           </LoadingProgressButton>

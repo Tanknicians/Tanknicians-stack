@@ -12,8 +12,7 @@ import {
 } from '@mui/material';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { useEditUserMutation } from '../redux/slices/users/userManagementSlice';
-import { UserOption } from '../redux/slices/users/userManagementSlice';
+import { useAddUserMutation } from '../../redux/slices/users/userManagementSlice';
 
 export const userSchema = z.object({
   id: z.number().int(),
@@ -29,31 +28,20 @@ export const userSchema = z.object({
 export const createUserSchema = userSchema.omit({ id: true });
 export type CreateUser = z.infer<typeof createUserSchema>;
 
-export default function EditUserModal({
+export default function CreateUserModal({
   open,
   setOpen,
-  userData,
+  isEmployee
 }: {
   open: boolean;
   setOpen: (open: boolean) => void;
-  userData: UserOption | null;
+  isEmployee: boolean;
 }) {
-  
-  if(!userData){
-    return null;
-  }
-    
-  const [editUser, { isLoading }] = useEditUserMutation();
-  const { handleSubmit, control, reset, formState } = useForm<UserOption>({
+  const [addUser, { isLoading }] = useAddUserMutation();
+  const { handleSubmit, control, reset, formState } = useForm<CreateUser>({
     resolver: zodResolver(createUserSchema),
     defaultValues: {
-        id: userData?.id,
-        firstName: userData?.firstName,
-        middleName: userData?.middleName,
-        lastName: userData?.lastName,
-        address: userData?.address,
-        phone: userData?.phone,
-        isEmployee: userData?.isEmployee
+      isEmployee: isEmployee
     }
   });
   console.log({ formState });
@@ -63,13 +51,12 @@ export default function EditUserModal({
     reset();
   }
 
-  const onSubmit: SubmitHandler<UserOption> = async (data: UserOption) => {
-    console.log("on submit: ", data);
-    const editData = {...data, id: userData.id}
-    console.log("Edit data: ", editData);
+  const onValid: SubmitHandler<CreateUser> = async (data) => {
+    console.log(data);
+
     try {
-      const response = await editUser(editData);
-      console.log("response" , response);
+      const response = await addUser({ ...data });
+      console.log(response);
       handleClose();
     } catch (err) {
       console.log(err);
@@ -78,7 +65,7 @@ export default function EditUserModal({
 
   return (
     <Dialog open={open} onClose={handleClose} maxWidth='lg'>
-      <DialogTitle>Edit {userData?.isEmployee ? 'Employee' : 'Client'}'s Information</DialogTitle>
+      <DialogTitle>Add {isEmployee ? 'Employee' : 'Client'}</DialogTitle>
       <DialogContent>
         <Grid container spacing={2} paddingTop={1}>
           <Grid item xs={4}>
@@ -131,7 +118,7 @@ export default function EditUserModal({
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose}>Cancel</Button>
-        <Button type='button' onClick={handleSubmit(onSubmit)}>
+        <Button type='button' onClick={handleSubmit(onValid)}>
           Submit
         </Button>
       </DialogActions>

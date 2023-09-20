@@ -5,7 +5,7 @@ import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import { UserOption } from '../redux/slices/users/userManagementSlice';
 import { useState } from 'react';
-import EditUserModal from './EditUser';
+import EditUserModal from './forms/EditUser';
 
 export interface UserCardProps {
   user: UserOption | null;

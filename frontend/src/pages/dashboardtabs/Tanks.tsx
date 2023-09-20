@@ -2,7 +2,7 @@ import {
   UserOption,
   useGetClientsQuery
 } from '../../redux/slices/users/userManagementSlice';
-import CreateTankForm from '../../components/CreateTankForm';
+import CreateTankForm from '../../components/forms/CreateTank';
 import UserSearchBar from '../../components/UserSearchBar';
 import Typography from '@mui/material/Typography';
 import UserCard from '../../components/UserCard';

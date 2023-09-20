@@ -1,16 +1,17 @@
-import { CreateUser } from '../../../components/CreateUser';
+import { CreateUser } from '../../../components/forms/CreateUser';
 import { apiSlice } from '../../api/apiSlice';
 
 export type OwnedTanks = {
   customerId: number;
-  description: string;
+  description?: string;
   id: number;
   lastDateServiced: Date;
   qrSymbol: number;
-  tanknicianSourcedOnly: true;
+  tanknicianSourcedOnly: boolean;
   type: string;
   volume: number;
 };
+export type CreateTank = Omit<OwnedTanks, 'id' | 'qrSymbol' | 'lastDateServiced'>;
 export type UserOption = {
   OwnedTanks?: OwnedTanks[];
   id: number;
@@ -59,7 +60,7 @@ export const userManagementSlice = apiSlice.injectEndpoints({
       })
     }),
     // Mutation adds a tank to a user
-    addTankToUser: builder.mutation({
+    addTankToUser: builder.mutation<number, CreateTank>({
       query: (tankData) => ({
         url: '/api/database/tank',
         method: 'POST',
@@ -67,14 +68,11 @@ export const userManagementSlice = apiSlice.injectEndpoints({
       })
     }),
     // Mutation edits user in database
-    // rome-ignore lint/suspicious/noExplicitAny: <explanation>
-    editUser: builder.mutation<any, UserOption>({
+    editUser: builder.mutation<void, UserOption>({
       query: ({id, ...userData}) => ({
         url: `/api/database/user/${id}`,
-        // url: "/api/database/user/",
         method: 'PUT',
         body: {...userData},
-        // params:{id},
       })
     })
   })

@@ -2,7 +2,7 @@ import {
   UserOption,
   useGetClientsQuery
 } from '../../redux/slices/users/userManagementSlice';
-import CreateTankForm from '../../components/CreateTankForm';
+import CreateTankForm from '../../components/forms/CreateTank';
 import UserSearchBar from '../../components/UserSearchBar';
 import Typography from '@mui/material/Typography';
 import UserCard from '../../components/UserCard';
@@ -13,7 +13,7 @@ import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import { useState } from 'react';
-import CreateUserModal from '../../components/CreateUser';
+import CreateUserModal from '../../components/forms/CreateUser';
 import { truncate, truncateSync } from 'fs';
 import { UserQuearyArgs } from '../../redux/slices/users/userManagementSlice';
 
