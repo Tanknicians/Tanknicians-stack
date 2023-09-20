@@ -60,7 +60,8 @@ userRouter.get(
   async (req, res) => {
     try {
       const includeTanks = req.query.includeTanks === 'true';
-      const result = await UserService.readAll(includeTanks);
+      const isEmployee = req.query.isEmployee === 'true';
+      const result = await UserService.readAll(includeTanks, isEmployee);
       res.json(result);
     } catch (error) {
       const errorMessage =
