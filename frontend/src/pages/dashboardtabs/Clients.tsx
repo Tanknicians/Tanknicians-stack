@@ -106,13 +106,13 @@ export default function Clients() {
               <CreateTankForm userId={userId} open={open} setOpen={setOpen} />
           </Collapse>
         </Grid>
-        <Grid xs={1} sm={1} item/>
+        <Grid xs={1} sm={1} item />
       </Grid>
       <CreateUserModal
-              open={userModalOpen}
-              setOpen={setUserModalOpen}
-              isEmployee={false}
-            />
+        open={userModalOpen}
+        setOpen={setUserModalOpen}
+        isEmployee={false}
+      />
     </>
   );
 }
