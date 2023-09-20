@@ -216,7 +216,7 @@ export default function Paperbase() {
 
   return (
     <ThemeProvider theme={theme}>
-      <Box sx={{ display: 'flex',  }}>
+      <Box sx={{ display: 'flex' }}>
         <CssBaseline />
         <Box
           component='nav'
@@ -243,7 +243,7 @@ export default function Paperbase() {
           sx={{
             flex: 1,
             display: 'flex',
-            flexDirection: 'column',
+            flexDirection: 'column'
             // height: '1000px'
           }}
         >
@@ -262,18 +262,20 @@ export default function Paperbase() {
                 </Grid>
                 <Grid item xs />
                 <Grid item>
-                    <Link
-                      to='Approve Forms'
-                      style={{ textDecoration: 'none', color: 'white' }}
+                  <Link
+                    to='Approve Forms'
+                    style={{ textDecoration: 'none', color: 'white' }}
+                  >
+                    <IconButton
+                      color='inherit'
+                      sx={{ p: 0.5 }}
+                      onClick={() => setActiveNavItem('Approve Forms')}
                     >
-                    <IconButton color='inherit' sx={{ p: 0.5 }}  onClick={() => setActiveNavItem('Approve Forms')}>
                       <StyledBadge badgeContent={3} color='secondary'>
-                        <NotificationsIcon
-                          sx={item}
-                        />
+                        <NotificationsIcon sx={item} />
                       </StyledBadge>
-                  </IconButton>
-                    </Link>
+                    </IconButton>
+                  </Link>
                 </Grid>
                 <Grid item>
                   <Typography color='inherit' variant='h6' component='h1'>
