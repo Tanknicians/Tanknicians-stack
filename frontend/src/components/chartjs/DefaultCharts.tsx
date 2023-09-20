@@ -132,3 +132,11 @@
 //     return <div>error</div>;
 //   }
 // }
+
+export default function DefaultCharts() {
+  return(
+    <h1>
+      Why are you here?
+    </h1>
+  )
+}
