@@ -134,9 +134,5 @@
 // }
 
 export default function DefaultCharts() {
-  return(
-    <h1>
-      Why are you here?
-    </h1>
-  )
+  return <h1>Why are you here?</h1>;
 }

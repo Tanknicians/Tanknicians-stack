@@ -12,14 +12,13 @@ export interface UserCardProps {
 }
 
 export default function UserCard(props: UserCardProps) {
-  const { user} = props;
+  const { user } = props;
   const [userModalOpen, setUserModalOpen] = useState(false);
 
   const handleOpenUserModal = () => {
-    console.log(user)
+    console.log(user);
     setUserModalOpen((prevState) => !prevState);
   };
-
 
   return (
     <Box
@@ -36,30 +35,33 @@ export default function UserCard(props: UserCardProps) {
       <Paper elevation={2} sx={{ backgroundColor: 'white' }}>
         <Box sx={{ margin: '2%' }}>
           <Box sx={{ float: 'left', marginTop: 'auto', marginAuto: 'auto' }}>
-            {(user == null)? <></>:
-            <>
-            <Typography variant='subtitle1' component='h2'>
-              {`${user?.firstName} ${user?.lastName}`}
-            </Typography>
-            <Typography variant='subtitle1' component='h2'>
-              {user?.address}
-            </Typography>
-            <Typography variant='subtitle1' component='h2'>
-              {user?.phone}
-            </Typography>
-            </>}
+            {user == null ? (
+              <></>
+            ) : (
+              <>
+                <Typography variant='subtitle1' component='h2'>
+                  {`${user?.firstName} ${user?.lastName}`}
+                </Typography>
+                <Typography variant='subtitle1' component='h2'>
+                  {user?.address}
+                </Typography>
+                <Typography variant='subtitle1' component='h2'>
+                  {user?.phone}
+                </Typography>
+              </>
+            )}
           </Box>
           <Box sx={{ float: 'right' }}>
-            <Button variant='contained' onClick = {handleOpenUserModal}>
+            <Button variant='contained' onClick={handleOpenUserModal}>
               <ModeEditOutlineOutlinedIcon />
             </Button>
           </Box>
         </Box>
       </Paper>
       <EditUserModal
-              open={userModalOpen}
-              setOpen={setUserModalOpen}
-              userData={user}
+        open={userModalOpen}
+        setOpen={setUserModalOpen}
+        userData={user}
       />
     </Box>
   );

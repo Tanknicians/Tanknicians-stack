@@ -11,7 +11,10 @@ export type OwnedTanks = {
   type: string;
   volume: number;
 };
-export type CreateTank = Omit<OwnedTanks, 'id' | 'qrSymbol' | 'lastDateServiced'>;
+export type CreateTank = Omit<
+  OwnedTanks,
+  'id' | 'qrSymbol' | 'lastDateServiced'
+>;
 export type UserOption = {
   OwnedTanks?: OwnedTanks[];
   id: number;
@@ -24,9 +27,9 @@ export type UserOption = {
 };
 
 export type UserQuearyArgs = {
-  includeTanks:boolean;
-  isEmployee:boolean;
-}
+  includeTanks: boolean;
+  isEmployee: boolean;
+};
 
 export const userManagementSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -43,9 +46,9 @@ export const userManagementSlice = apiSlice.injectEndpoints({
         return {
           url: '/api/database/user',
           method: 'GET',
-          params: { 
+          params: {
             includeTanks: params.includeTanks,
-            isEmployee: params.isEmployee,
+            isEmployee: params.isEmployee
           }
         };
       }
@@ -69,10 +72,10 @@ export const userManagementSlice = apiSlice.injectEndpoints({
     }),
     // Mutation edits user in database
     editUser: builder.mutation<void, UserOption>({
-      query: ({id, ...userData}) => ({
+      query: ({ id, ...userData }) => ({
         url: `/api/database/user/${id}`,
         method: 'PUT',
-        body: {...userData},
+        body: { ...userData }
       })
     })
   })
@@ -82,5 +85,5 @@ export const {
   useGetClientsQuery,
   useAddUserMutation,
   useAddTankToUserMutation,
-  useEditUserMutation,
+  useEditUserMutation
 } = userManagementSlice;

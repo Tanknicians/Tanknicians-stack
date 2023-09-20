@@ -32,28 +32,27 @@ export type CreateUser = z.infer<typeof createUserSchema>;
 export default function EditUserModal({
   open,
   setOpen,
-  userData,
+  userData
 }: {
   open: boolean;
   setOpen: (open: boolean) => void;
   userData: UserOption | null;
 }) {
-  
-  if(!userData){
+  if (!userData) {
     return null;
   }
-    
+
   const [editUser, { isLoading }] = useEditUserMutation();
   const { handleSubmit, control, reset, formState } = useForm<UserOption>({
     resolver: zodResolver(createUserSchema),
     defaultValues: {
-        id: userData?.id,
-        firstName: userData?.firstName,
-        middleName: userData?.middleName,
-        lastName: userData?.lastName,
-        address: userData?.address,
-        phone: userData?.phone,
-        isEmployee: userData?.isEmployee
+      id: userData?.id,
+      firstName: userData?.firstName,
+      middleName: userData?.middleName,
+      lastName: userData?.lastName,
+      address: userData?.address,
+      phone: userData?.phone,
+      isEmployee: userData?.isEmployee
     }
   });
   console.log({ formState });
@@ -64,12 +63,12 @@ export default function EditUserModal({
   }
 
   const onValid: SubmitHandler<UserOption> = async (data: UserOption) => {
-    console.log("on submit: ", data);
-    const editData = {...data, id: userData.id}
-    console.log("Edit data: ", editData);
+    console.log('on submit: ', data);
+    const editData = { ...data, id: userData.id };
+    console.log('Edit data: ', editData);
     try {
-      const response = await editUser({...editData});
-      console.log("response" , response);
+      const response = await editUser({ ...editData });
+      console.log('response', response);
       handleClose();
     } catch (err) {
       console.log(err);
@@ -78,7 +77,9 @@ export default function EditUserModal({
 
   return (
     <Dialog open={open} onClose={handleClose} maxWidth='lg'>
-      <DialogTitle>Edit {userData?.isEmployee ? 'Employee' : 'Client'}'s Information</DialogTitle>
+      <DialogTitle>
+        Edit {userData?.isEmployee ? 'Employee' : 'Client'}'s Information
+      </DialogTitle>
       <DialogContent>
         <Grid container spacing={2} paddingTop={1}>
           <Grid item xs={4}>

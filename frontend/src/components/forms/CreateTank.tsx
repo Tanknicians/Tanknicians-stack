@@ -78,7 +78,7 @@ function CreateTankForm({ userId, open, setOpen }: CreateTankFormProps) {
       console.log('Response: ', response);
       handleClose();
     } catch (err) {
-        console.log('Submitting create tank form error: ', err);
+      console.log('Submitting create tank form error: ', err);
     }
   };
 

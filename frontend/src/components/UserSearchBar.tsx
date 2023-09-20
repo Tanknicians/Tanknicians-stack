@@ -45,7 +45,9 @@ export default function UserSearchBar({
     <Autocomplete
       id='grouped-users-tanks'
       onChange={handleUserSelected}
-      options={optionsList.slice().sort((a, b) => a.firstName.localeCompare(b.firstName))}
+      options={optionsList
+        .slice()
+        .sort((a, b) => a.firstName.localeCompare(b.firstName))}
       groupBy={(option) => option.firstName.charAt(0).toUpperCase()}
       getOptionLabel={(option) =>
         `${option.firstName} ${option.middleName} ${option.lastName} ${option.address}`

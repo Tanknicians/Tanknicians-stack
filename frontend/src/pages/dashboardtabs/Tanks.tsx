@@ -21,10 +21,10 @@ const headerGridStyle = {
 };
 
 export default function Tanks() {
-  const userQuearyArgs:UserQuearyArgs = {
+  const userQuearyArgs: UserQuearyArgs = {
     includeTanks: true,
-    isEmployee:false,
-  }
+    isEmployee: false
+  };
   const userId = 1;
   const { data: optionsList, error } = useGetClientsQuery(userQuearyArgs);
   console.log('OptionsList: ', optionsList);

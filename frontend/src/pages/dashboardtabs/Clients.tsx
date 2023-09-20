@@ -23,10 +23,10 @@ const headerGridStyle = {
 
 export default function Clients() {
   const userId = 1;
-  const userQuearyArgs:UserQuearyArgs = {
+  const userQuearyArgs: UserQuearyArgs = {
     includeTanks: true,
-    isEmployee: false,
-  }
+    isEmployee: false
+  };
   const { data: optionsList, error } = useGetClientsQuery(userQuearyArgs);
   console.log('OptionsList: ', optionsList);
   console.log('OptionsList error: ', error);
@@ -39,7 +39,6 @@ export default function Clients() {
     _event: React.SyntheticEvent,
     customer: UserOption | null
   ) => {
-    
     selectCurrentUser(customer);
     console.log('customer: ', customer);
   };
@@ -108,7 +107,7 @@ export default function Clients() {
         </Grid>
       </Box>
       <Collapse in={!!selectedUser}>
-        <UserCard user={selectedUser}/>
+        <UserCard user={selectedUser} />
         <Button
           variant='contained'
           sx={{ float: 'right' }}

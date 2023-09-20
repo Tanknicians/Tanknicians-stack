@@ -24,10 +24,10 @@ const headerGridStyle = {
 
 export default function Employees() {
   const userId = 1;
-  const userQuearyArgs:UserQuearyArgs = {
+  const userQuearyArgs: UserQuearyArgs = {
     includeTanks: false,
-    isEmployee: true,
-  }
+    isEmployee: true
+  };
   const { data: optionsList, error } = useGetClientsQuery(userQuearyArgs);
 
   const [tankModalOpen, setTankModalOpen] = useState(false);
