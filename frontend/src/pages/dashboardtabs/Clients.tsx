@@ -35,7 +35,6 @@ export default function Clients() {
   const [collapse, setCollapse] = useState(false);
   const [selectedUser, selectCurrentUser] = useState<UserOption | null>(null);
   const [open, setOpen] = useState(false);
-  
 
   const handleUserSelected = (
     _event: React.SyntheticEvent,
@@ -110,7 +109,7 @@ export default function Clients() {
         </Grid>
       </Box>
       <Collapse in={collapse}>
-        <UserCard user={selectedUser} />
+        <UserCard user={selectedUser}/>
         <Button
           variant='contained'
           sx={{ float: 'right' }}

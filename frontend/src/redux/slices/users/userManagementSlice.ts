@@ -65,6 +65,17 @@ export const userManagementSlice = apiSlice.injectEndpoints({
         method: 'POST',
         body: { ...tankData }
       })
+    }),
+    // Mutation edits user in database
+    // rome-ignore lint/suspicious/noExplicitAny: <explanation>
+    editUser: builder.mutation<any, UserOption>({
+      query: ({id, ...userData}) => ({
+        url: `/api/database/user/${id}`,
+        // url: "/api/database/user/",
+        method: 'PUT',
+        body: {...userData},
+        // params:{id},
+      })
     })
   })
 });
@@ -72,5 +83,6 @@ export const userManagementSlice = apiSlice.injectEndpoints({
 export const {
   useGetClientsQuery,
   useAddUserMutation,
-  useAddTankToUserMutation
+  useAddTankToUserMutation,
+  useEditUserMutation,
 } = userManagementSlice;

@@ -80,7 +80,9 @@ userRouter.put(
   validateRequestBody(updateUser),
   async (req: UserRequest, res) => {
     try {
+      console.log("User request: ", req);
       const id = Number(req.params.id);
+      console.log("id: ", id)
       const input = req.body;
       const userData: UpdateUser = {
         id,

@@ -4,13 +4,22 @@ import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import { UserOption } from '../redux/slices/users/userManagementSlice';
+import { useState } from 'react';
+import EditUserModal from './EditUser';
 
 export interface UserCardProps {
   user: UserOption | null;
 }
 
 export default function UserCard(props: UserCardProps) {
-  const { user } = props;
+  const { user} = props;
+  const [userModalOpen, setUserModalOpen] = useState(false);
+
+  const handleOpenUserModal = () => {
+    console.log(user)
+    setUserModalOpen((prevState) => !prevState);
+  };
+
 
   return (
     <Box
@@ -27,6 +36,8 @@ export default function UserCard(props: UserCardProps) {
       <Paper elevation={2} sx={{ backgroundColor: 'white' }}>
         <Box sx={{ margin: '2%' }}>
           <Box sx={{ float: 'left', marginTop: 'auto', marginAuto: 'auto' }}>
+            {(user == null)? <></>:
+            <>
             <Typography variant='subtitle1' component='h2'>
               {`${user?.firstName} ${user?.lastName}`}
             </Typography>
@@ -36,14 +47,20 @@ export default function UserCard(props: UserCardProps) {
             <Typography variant='subtitle1' component='h2'>
               {user?.phone}
             </Typography>
+            </>}
           </Box>
           <Box sx={{ float: 'right' }}>
-            <Button variant='contained'>
+            <Button variant='contained' onClick = {handleOpenUserModal}>
               <ModeEditOutlineOutlinedIcon />
             </Button>
           </Box>
         </Box>
       </Paper>
+      <EditUserModal
+              open={userModalOpen}
+              setOpen={setUserModalOpen}
+              userData={user}
+      />
     </Box>
   );
 }
