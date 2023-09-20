@@ -13,6 +13,7 @@ import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import { useState } from 'react';
+import { UserQuearyArgs } from '../../redux/slices/users/userManagementSlice';
 
 const headerGridStyle = {
   flex: 1,
@@ -20,8 +21,12 @@ const headerGridStyle = {
 };
 
 export default function Tanks() {
+  const userQuearyArgs:UserQuearyArgs = {
+    includeTanks: true,
+    isEmployee:false,
+  }
   const userId = 1;
-  const { data: optionsList, error } = useGetClientsQuery(true);
+  const { data: optionsList, error } = useGetClientsQuery(userQuearyArgs);
   console.log('OptionsList: ', optionsList);
   console.log('OptionsList error: ', error);
   const [collapse, setCollapse] = useState(false);

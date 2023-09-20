@@ -22,10 +22,15 @@ export type UserOption = {
   isEmployee: boolean;
 };
 
+export type UserQuearyArgs = {
+  includeTanks:boolean;
+  isEmployee:boolean;
+}
+
 export const userManagementSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     // Query returns a list of all users
-    getClients: builder.query<UserOption[], boolean>({
+    getClients: builder.query<UserOption[], UserQuearyArgs>({
       providesTags: (result) =>
         result
           ? [
@@ -33,11 +38,14 @@ export const userManagementSlice = apiSlice.injectEndpoints({
               { type: 'USERLIST', id: 'LIST' }
             ]
           : [{ type: 'USERLIST', id: 'LIST' }],
-      query: (includeTanks) => {
+      query: (params) => {
         return {
           url: '/api/database/user',
           method: 'GET',
-          params: { includeTanks: includeTanks }
+          params: { 
+            includeTanks: params.includeTanks,
+            isEmployee: params.isEmployee,
+          }
         };
       }
     }),

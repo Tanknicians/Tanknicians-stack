@@ -15,6 +15,7 @@ import Box from '@mui/material/Box';
 import { useState } from 'react';
 import CreateUserModal from '../../components/CreateUser';
 import { truncate, truncateSync } from 'fs';
+import { UserQuearyArgs } from '../../redux/slices/users/userManagementSlice';
 
 const headerGridStyle = {
   flex: 1,
@@ -23,7 +24,11 @@ const headerGridStyle = {
 
 export default function Employees() {
   const userId = 1;
-  const { data: optionsList, error } = useGetClientsQuery(true);
+  const userQuearyArgs:UserQuearyArgs = {
+    includeTanks: false,
+    isEmployee: true,
+  }
+  const { data: optionsList, error } = useGetClientsQuery(userQuearyArgs);
 
   const [tankModalOpen, setTankModalOpen] = useState(false);
   const [userModalOpen, setUserModalOpen] = useState(false);

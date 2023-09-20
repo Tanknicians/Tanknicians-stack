@@ -14,6 +14,7 @@ import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import { useState } from 'react';
 import CreateUserModal from '../../components/CreateUser';
+import { UserQuearyArgs } from '../../redux/slices/users/userManagementSlice';
 
 const headerGridStyle = {
   flex: 1,
@@ -22,7 +23,11 @@ const headerGridStyle = {
 
 export default function Clients() {
   const userId = 1;
-  const { data: optionsList, error } = useGetClientsQuery(true);
+  const userQuearyArgs:UserQuearyArgs = {
+    includeTanks: true,
+    isEmployee: false,
+  }
+  const { data: optionsList, error } = useGetClientsQuery(userQuearyArgs);
   console.log('OptionsList: ', optionsList);
   console.log('OptionsList error: ', error);
   const [tankModalOpen, setTankModalOpen] = useState(false);
@@ -30,6 +35,7 @@ export default function Clients() {
   const [collapse, setCollapse] = useState(false);
   const [selectedUser, selectCurrentUser] = useState<UserOption | null>(null);
   const [open, setOpen] = useState(false);
+  
 
   const handleUserSelected = (
     _event: React.SyntheticEvent,
