@@ -17,8 +17,7 @@ import CreateUserModal from '../../components/forms/CreateUser';
 import { UserQuearyArgs } from '../../redux/slices/users/userManagementSlice';
 
 const headerGridStyle = {
-  flex: 1,
-  alignContent: 'center'
+  
 };
 
 export default function Clients() {
@@ -54,70 +53,72 @@ export default function Clients() {
   if (!optionsList) return <div>Loading...</div>;
 
   return (
-    <div
-      style={{ marginLeft: 'auto', marginRight: 'auto', maxWidth: '1000px' }}
-    >
+    <>
       {/* This box has a grid with the page title in one cell, a section to put a search bar in the middle cell, and a container for a button in the far right cell */}
-      <Box sx={{ flexGrow: 1, display: 'flex', padding: '20px' }}>
-        <Grid container spacing={1}>
+    
+        <Grid container spacing={1} sx ={{padding: '20px', margin:'auto', maxWidth:'1200px'}} justifyContent='center' alignItems='center'>
           <Grid
             item
-            xs={6}
-            sm={3}
-            sx={{ ...headerGridStyle, backgroundColor: 'inherit' }}
+            xs={2}
+            sm={2}
           >
             <Typography
               color='inherit'
               variant='h4'
               component='h1'
-              sx={{ float: 'left', minWidth: 'fit-content' }}
+              align='center'
             >
               Clients
             </Typography>
           </Grid>
+          <Grid xs={1} sm={1} item/>
           <Grid
             item
             xs={6}
-            sm={7}
-            sx={{ ...headerGridStyle, backgroundColor: 'inherit' }}
-          >
-            <Container maxWidth='sm'>
-              <UserSearchBar
-                optionsList={optionsList}
-                handleUserSelected={handleUserSelected}
-              />
-            </Container>
+            sm={6}
+          >       
+            <UserSearchBar
+              optionsList={optionsList}
+              handleUserSelected={handleUserSelected}
+            />        
           </Grid>
+          <Grid xs={1} sm={1} item/>
           <Grid
             item
-            xs={6}
+            xs={2}
             sm={2}
-            sx={{ ...headerGridStyle, backgroundColor: 'inherit' }}
           >
-            <Button variant='contained' onClick={handleOpenUserModal}>
-              <AddIcon />
-              Add Client
-            </Button>
-            <CreateUserModal
+            <Box sx ={{display:'flex',justifyContent:'center', alignItems:'center'}}>
+              <Button variant='contained' onClick={handleOpenUserModal}>
+                <AddIcon />
+                Add Client
+              </Button>
+            </Box>
+            
+          </Grid>
+          <Grid xs={1} sm={1} item/>
+          <Grid xs={12} sm={12} item>
+
+            <Collapse in={!!selectedUser}>
+              <UserCard user={selectedUser} />
+              <Button
+                variant='contained'
+                sx={{ float: 'right' }}
+                onClick={() => setOpen(true)}
+              >
+                <AddIcon />
+                Add Tank
+              </Button>
+              <CreateTankForm userId={userId} open={open} setOpen={setOpen} />
+          </Collapse>
+        </Grid>
+        <Grid xs={1} sm={1} item/>
+      </Grid>
+      <CreateUserModal
               open={userModalOpen}
               setOpen={setUserModalOpen}
               isEmployee={false}
             />
-          </Grid>
-        </Grid>
-      </Box>
-      <Collapse in={!!selectedUser}>
-        <UserCard user={selectedUser} />
-        <Button
-          variant='contained'
-          sx={{ float: 'right' }}
-          onClick={() => setOpen(true)}
-        >
-          <AddIcon />
-          Add Tank
-        </Button>
-        <CreateTankForm userId={userId} open={open} setOpen={setOpen} />
-      </Collapse>
-    </div>
+    </>
   );
 }

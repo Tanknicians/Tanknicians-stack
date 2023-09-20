@@ -9,7 +9,7 @@ export default function Content() {
   return (
     <div
       className='content-wrapper'
-      style={{ backgroundColor: '#BDBDBD', height: '100vh' }}
+      style={{ backgroundColor: '#BDBDBD', }}
     >
       <Routes>
         <Route path='/Approve Forms' element={<ApproveForms />} />

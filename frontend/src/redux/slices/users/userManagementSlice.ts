@@ -64,6 +64,7 @@ export const userManagementSlice = apiSlice.injectEndpoints({
     }),
     // Mutation adds a tank to a user
     addTankToUser: builder.mutation<number, CreateTank>({
+      invalidatesTags: () => [{ type: 'USERLIST', id: 'LIST' }],
       query: (tankData) => ({
         url: '/api/database/tank',
         method: 'POST',
@@ -72,6 +73,7 @@ export const userManagementSlice = apiSlice.injectEndpoints({
     }),
     // Mutation edits user in database
     editUser: builder.mutation<void, UserOption>({
+      invalidatesTags: () => [{ type: 'USERLIST', id: 'LIST' }],
       query: ({ id, ...userData }) => ({
         url: `/api/database/user/${id}`,
         method: 'PUT',

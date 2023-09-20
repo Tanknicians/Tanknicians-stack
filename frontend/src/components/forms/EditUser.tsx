@@ -44,7 +44,7 @@ export default function EditUserModal({
 
   const [editUser, { isLoading }] = useEditUserMutation();
   const { handleSubmit, control, reset, formState } = useForm<UserOption>({
-    resolver: zodResolver(createUserSchema),
+    resolver: zodResolver(userSchema),
     defaultValues: {
       id: userData?.id,
       firstName: userData?.firstName,
@@ -63,11 +63,8 @@ export default function EditUserModal({
   }
 
   const onValid: SubmitHandler<UserOption> = async (data: UserOption) => {
-    console.log('on submit: ', data);
-    const editData = { ...data, id: userData.id };
-    console.log('Edit data: ', editData);
     try {
-      const response = await editUser({ ...editData });
+      const response = await editUser({ ...data });
       console.log('response', response);
       handleClose();
     } catch (err) {
