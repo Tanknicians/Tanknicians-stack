@@ -6,7 +6,6 @@ import CreateTankForm from '../../components/forms/CreateTank';
 import UserSearchBar from '../../components/UserSearchBar';
 import Typography from '@mui/material/Typography';
 import UserCard from '../../components/UserCard';
-import Container from '@mui/material/Container';
 import Collapse from '@mui/material/Collapse';
 import AddIcon from '@mui/icons-material/Add';
 import Button from '@mui/material/Button';
@@ -15,10 +14,6 @@ import Box from '@mui/material/Box';
 import { useState } from 'react';
 import CreateUserModal from '../../components/forms/CreateUser';
 import { UserQuearyArgs } from '../../redux/slices/users/userManagementSlice';
-
-const headerGridStyle = {
-  
-};
 
 export default function Clients() {
   const userId = 1;
@@ -103,7 +98,6 @@ export default function Clients() {
               <UserCard user={selectedUser} />
               <Button
                 variant='contained'
-                sx={{ float: 'right' }}
                 onClick={() => setOpen(true)}
               >
                 <AddIcon />
