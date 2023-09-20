@@ -32,7 +32,6 @@ export default function Employees() {
 
   const [tankModalOpen, setTankModalOpen] = useState(false);
   const [userModalOpen, setUserModalOpen] = useState(false);
-  const [collapse, setCollapse] = useState(false);
   const [selectedUser, selectCurrentUser] = useState<UserOption | null>(null);
   const [open, setOpen] = useState(false);
 
@@ -40,7 +39,6 @@ export default function Employees() {
     _event: React.SyntheticEvent,
     customer: UserOption | null
   ) => {
-    setCollapse(true);
     selectCurrentUser(customer);
     console.log('Employee: ', customer);
   };
@@ -115,7 +113,7 @@ export default function Employees() {
           </Grid>
         </Grid>
       </Box>
-      <Collapse in={collapse}>
+      <Collapse in={!!selectedUser}>
         <UserCard user={selectedUser} />
       </Collapse>
     </div>

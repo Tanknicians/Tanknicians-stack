@@ -32,7 +32,6 @@ export default function Clients() {
   console.log('OptionsList error: ', error);
   const [tankModalOpen, setTankModalOpen] = useState(false);
   const [userModalOpen, setUserModalOpen] = useState(false);
-  const [collapse, setCollapse] = useState(false);
   const [selectedUser, selectCurrentUser] = useState<UserOption | null>(null);
   const [open, setOpen] = useState(false);
 
@@ -40,7 +39,7 @@ export default function Clients() {
     _event: React.SyntheticEvent,
     customer: UserOption | null
   ) => {
-    setCollapse(true);
+    
     selectCurrentUser(customer);
     console.log('customer: ', customer);
   };
@@ -108,7 +107,7 @@ export default function Clients() {
           </Grid>
         </Grid>
       </Box>
-      <Collapse in={collapse}>
+      <Collapse in={!!selectedUser}>
         <UserCard user={selectedUser}/>
         <Button
           variant='contained'

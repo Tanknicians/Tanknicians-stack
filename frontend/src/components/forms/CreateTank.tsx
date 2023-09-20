@@ -13,7 +13,6 @@ import {
   Select,
   TextField
 } from '@mui/material';
-import React from 'react';
 import { useAddTankToUserMutation } from '../../redux/slices/users/userManagementSlice';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import LoadingProgressButton from '../LoadingProgressButton';
