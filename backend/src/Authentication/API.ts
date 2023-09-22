@@ -68,7 +68,7 @@ export async function login(login: AuthLogin, res: Response) {
   }
 
   try {
-    const {password, ...savedCredentials} = foundCredentials;
+    const { password, ...savedCredentials } = foundCredentials;
     const token = generateToken(foundCredentials);
     const refreshToken = generateRefreshToken(foundCredentials);
     res.cookie('jwt', refreshToken, {
@@ -189,8 +189,8 @@ export async function refresh(
     });
   }
 
-  // Remove sending hashed password since it's not necessary for frontend. 
-  const {password, ...savedCredentials} = foundCredentials;
+  // Remove sending hashed password since it's not necessary for frontend.
+  const { password, ...savedCredentials } = foundCredentials;
 
   try {
     const token = generateToken(foundCredentials);
