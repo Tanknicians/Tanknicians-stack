@@ -5,7 +5,7 @@ import {
   LoginRequest,
   UpdateLogin,
   createLogin,
-  loginSchema,
+  updateLogin,
   validateRequestBody,
 } from '../../zodTypes';
 
@@ -23,7 +23,11 @@ loginRouter.post(
       const result = await LoginService.create(input);
       res.json(result);
     } catch (error) {
-      res.status(500).json({ error: 'Failed to create Login' });
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : 'Unknown Error: Failed to create Login';
+      res.status(500).json({ error: errorMessage });
     }
   },
 );
@@ -38,7 +42,11 @@ loginRouter.get(
       const result = await LoginService.read(email);
       res.json(result);
     } catch (error) {
-      res.status(500).json({ error: 'Failed to read Login' });
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : 'Unknown Error: Failed to get Login';
+      res.status(500).json({ error: errorMessage });
     }
   },
 );
@@ -47,7 +55,7 @@ loginRouter.get(
 loginRouter.put(
   '/:id',
   authenticateRoleMiddleWare(['ADMIN']),
-  validateRequestBody(loginSchema),
+  validateRequestBody(updateLogin),
   async (req: LoginRequest, res) => {
     try {
       const id = Number(req.params.id);
@@ -59,7 +67,11 @@ loginRouter.put(
       const result = await LoginService.update(loginData);
       res.json(result);
     } catch (error) {
-      res.status(500).json({ error: 'Failed to update Login' });
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : 'Unknown Error: Failed to update Login';
+      res.status(500).json({ error: errorMessage });
     }
   },
 );
@@ -74,7 +86,11 @@ loginRouter.delete(
       const result = await LoginService.deleteOne(id);
       res.json(result);
     } catch (error) {
-      res.status(500).json({ error: 'Failed to delete Login' });
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : 'Unknown Error: Failed to delete Login';
+      res.status(500).json({ error: errorMessage });
     }
   },
 );
@@ -90,7 +106,11 @@ loginRouter.get(
       const result = await LoginService.search(searchString, pageNumber);
       res.json(result);
     } catch (error) {
-      res.status(500).json({ error: 'Failed to search Login' });
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : 'Unknown Error: Failed to search Login';
+      res.status(500).json({ error: errorMessage });
     }
   },
 );

@@ -13,9 +13,11 @@ emailRouter.post(
       const result = await resetPassword(email);
       res.json(result);
     } catch (error) {
-      res
-        .status(500)
-        .json({ error: 'An error occurred during resetPassword.' });
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : 'Unknown Error: Failed to reset password';
+      res.status(500).json({ error: errorMessage });
     }
   },
 );

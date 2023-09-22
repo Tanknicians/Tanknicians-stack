@@ -1,10 +1,10 @@
 import InvertColorsOutlinedIcon from '@mui/icons-material/InvertColorsOutlined';
-import LoadingProgressButton from '../Components/LoadingProgressButton';
+import LoadingProgressButton from '../components/LoadingProgressButton';
 import { useForm, SubmitHandler, Controller } from 'react-hook-form';
-import { useLoginMutation } from '../Redux/slices/auth/authApiSlice';
-import loginRandomImages from '../Components/LoginPageRandomImage';
+import { useLoginMutation } from '../redux/slices/auth/authApiSlice';
+import loginRandomImages from '../components/LoginPageRandomImage';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { setCredentials } from '../Redux/slices/auth/authSlice';
+import { setCredentials } from '../redux/slices/auth/authSlice';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import InputAdornment from '@mui/material/InputAdornment';
@@ -63,7 +63,7 @@ const theme = createTheme();
 // For random images to display
 const randomImagePath =
   loginRandomImages[Math.floor(Math.random() * loginRandomImages.length)];
-const randomImage = require(`../Assets/Images/${randomImagePath}`);
+const randomImage = require(`../assets/images/${randomImagePath}`);
 
 export default function LoginPage() {
   const [login, { isLoading }] = useLoginMutation();

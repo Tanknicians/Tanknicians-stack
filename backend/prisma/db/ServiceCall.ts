@@ -5,7 +5,7 @@ const prisma = new PrismaClient();
 // CREATE
 export async function create(form: CreateServiceCall) {
   const { employeeId, tankId, ...formData } = form;
-  await prisma.serviceCall.create({
+  const createdServiceCall = await prisma.serviceCall.create({
     data: {
       ...formData,
       Employee: {
@@ -16,6 +16,7 @@ export async function create(form: CreateServiceCall) {
       },
     },
   });
+  return createdServiceCall.id;
 }
 
 // READ

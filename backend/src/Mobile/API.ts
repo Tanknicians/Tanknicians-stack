@@ -2,30 +2,55 @@ import { tankDB } from '../../prisma/db/TankMetadata';
 import { serviceCallDB } from '../../prisma/db/ServiceCall';
 import {
   CreateServiceCall,
+  MobileServiceCall,
   UpdateTankMetaData,
   tankMetaDataSchema,
 } from '../zodTypes';
 
-export async function uploadServiceCall(serviceCall: CreateServiceCall) {
-  if (!serviceCall.notApprovedNotes) {
-    serviceCall.notApprovedNotes = '';
-  }
-  checkTankId(serviceCall);
-  checkParameterLimits(serviceCall);
-  const approvedMessage = serviceCall.isApproved ? 'approved' : 'not approved';
+const paramLimits = {
+  /*
+    a.    Calcium at or below 400 and at or above 500 
+    b.    Alkalinity at or below 6.5 and at or above 11
+    c.    Nitrate at or below 1 and at or above 20
+    d.    Phosphate at or below .03 and at or above .24
+  */
+  calciumMin: 400,
+  calciumMax: 500,
+  alkalinityMin: 6.5,
+  alkalinityMax: 11,
+  nitrateMin: 1,
+  nitrateMax: 20,
+  phosphateMin: 0.03,
+  phosphateMax: 0.24,
+};
+
+export async function uploadServiceCall(serviceCall: MobileServiceCall) {
+  const createServiceCall: CreateServiceCall = {
+    ...serviceCall,
+    notApprovedNotes: '',
+    isApproved: true,
+  };
+
+  checkTankId(createServiceCall);
+  checkParameterLimits(createServiceCall);
+  const approvedMessage = createServiceCall.isApproved
+    ? 'approved'
+    : 'not approved';
   // Update Tank's "lastDateServiced" to serviceCall's "createdOn" and upload ServiceCall
   try {
-    const readTank = await tankDB.read(serviceCall.tankId);
+    const readTank = await tankDB.read(createServiceCall.tankId);
     if (!readTank) {
-      throw new Error(`No tankId of ${serviceCall.tankId} found.`);
+      throw new Error(`No tankId of ${createServiceCall.tankId} found.`);
     }
     const updateTank: UpdateTankMetaData = tankMetaDataSchema.parse(readTank);
-    updateTank.lastDateServiced = serviceCall.createdOn;
-    await serviceCallDB.create(serviceCall);
+    updateTank.lastDateServiced = createServiceCall.createdOn;
+    await serviceCallDB.create(createServiceCall);
     await tankDB.update(updateTank);
     return approvedMessage;
   } catch (e) {
-    throw new Error('An error occurred during create.');
+    const errorMessage = e instanceof Error ? e.message : 'Unknown error.';
+    console.error(errorMessage);
+    throw new Error(`An error occurred during create: ${errorMessage}`);
   }
 }
 
@@ -61,22 +86,5 @@ function checkParameterLimits(serviceCall: CreateServiceCall) {
       'One or more of the parameters (Alkalinity, Calcium, Nitrate, and/or Phosphate) outside of acceptable range.';
   }
 }
-
-const paramLimits = {
-  /*
-    a.    Calcium at or below 400 and at or above 500 
-    b.    Alkalinity at or below 6.5 and at or above 11
-    c.    Nitrate at or below 1 and at or above 20
-    d.    Phosphate at or below .03 and at or above .24
-  */
-  calciumMin: 400,
-  calciumMax: 500,
-  alkalinityMin: 6.5,
-  alkalinityMax: 11,
-  nitrateMin: 1,
-  nitrateMax: 20,
-  phosphateMin: 0.03,
-  phosphateMax: 0.24,
-};
 
 // removed unused code

@@ -10,8 +10,9 @@ import {
   Grid,
   TextField
 } from '@mui/material';
-import { Controller, useForm } from 'react-hook-form';
+import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { z } from 'zod';
+import { useAddUserMutation } from '../redux/slices/users/userManagementSlice';
 
 export const userSchema = z.object({
   id: z.number().int(),
@@ -29,11 +30,14 @@ export type CreateUser = z.infer<typeof createUserSchema>;
 
 export default function CreateUserModal({
   open,
-  setOpen
+  setOpen,
+  isEmployee
 }: {
   open: boolean;
   setOpen: (open: boolean) => void;
+  isEmployee: boolean;
 }) {
+  const [addUser, { isLoading }] = useAddUserMutation();
   const { handleSubmit, control, reset, formState } = useForm<CreateUser>({
     resolver: zodResolver(createUserSchema)
   });
@@ -44,13 +48,21 @@ export default function CreateUserModal({
     reset();
   }
 
-  function onValid(data: CreateUser) {
+  const onSubmit: SubmitHandler<CreateUser> = async (data) => {
     console.log(data);
-  }
+
+    try {
+      const response = await addUser({ ...data });
+      console.log(response);
+      handleClose();
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <Dialog open={open} onClose={handleClose} maxWidth='lg'>
-      <DialogTitle>Create User</DialogTitle>
+      <DialogTitle>Add {isEmployee ? 'Employee' : 'Client'}</DialogTitle>
       <DialogContent>
         <Grid container spacing={2} paddingTop={1}>
           <Grid item xs={4}>
@@ -99,23 +111,11 @@ export default function CreateUserModal({
               )}
             />
           </Grid>
-          <Grid item xs={4}>
-            <Controller
-              name='isEmployee'
-              control={control}
-              render={({ field }) => (
-                <FormControlLabel
-                  control={<Checkbox {...field} />}
-                  label='Is Employee'
-                />
-              )}
-            />
-          </Grid>
         </Grid>
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose}>Cancel</Button>
-        <Button type='button' onClick={handleSubmit(onValid)}>
+        <Button type='button' onClick={handleSubmit(onSubmit)}>
           Submit
         </Button>
       </DialogActions>

@@ -1,4 +1,4 @@
-import { UserOption } from '../Redux/slices/users/userManagementSlice';
+import { UserOption } from '../redux/slices/users/userManagementSlice';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 import parse from 'autosuggest-highlight/parse';
@@ -52,7 +52,7 @@ export default function UserSearchBar({
       getOptionLabel={(option) =>
         `${option.firstName} ${option.middleName} ${option.lastName} ${option.address}`
       }
-      sx={{ width: '50%' }}
+      sx={{ width: '100%', backgroundColor: 'white', borderRadius: '10px' }}
       renderInput={(params) => (
         <TextField autoFocus {...params} label='Search User' />
       )}
