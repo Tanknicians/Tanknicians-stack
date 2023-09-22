@@ -188,9 +188,12 @@ export async function refresh(
     });
   }
 
+  // Remove sending hashed password since it's not necessary for frontend. 
+  const {password, ...returnCredentials} = savedCredentials;
+
   try {
     const token = generateToken(savedCredentials);
-    return res.json({ token, savedCredentials });
+    return res.json({ token, returnCredentials });
   } catch (error) {
     console.error(error);
     return res.status(500).json({
