@@ -93,9 +93,13 @@ export default function Clients() {
           >
             <Button variant='contained' onClick={handleOpenUserModal}>
               <AddIcon />
-              Add User
+              Add Client
             </Button>
-            <CreateUserModal open={userModalOpen} setOpen={setUserModalOpen} />
+            <CreateUserModal
+              open={userModalOpen}
+              setOpen={setUserModalOpen}
+              isEmployee={false}
+            />
           </Grid>
         </Grid>
       </Box>

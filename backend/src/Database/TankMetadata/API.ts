@@ -11,10 +11,12 @@ export async function create(tank: CreateTankMetaData) {
       ...tank,
       qrSymbol: numberOfUserTanks + 1,
     };
-    await tankDB.create(createTank);
-    return { message: 'TankMetadata created successfully' };
+    const createdId = await tankDB.create(createTank);
+    return { message: 'TankMetadata created successfully', id: createdId };
   } catch (e) {
-    throw new Error('An error occurred during create.');
+    const errorMessage = e instanceof Error ? e.message : 'Unknown error.';
+    console.error(errorMessage);
+    throw new Error(`An error occurred during create: ${errorMessage}`);
   }
 }
 
@@ -26,7 +28,9 @@ export async function read(id: number) {
     }
     return tank;
   } catch (e) {
-    throw new Error('An error occurred during read.');
+    const errorMessage = e instanceof Error ? e.message : 'Unknown error.';
+    console.error(errorMessage);
+    throw new Error(`An error occurred during read: ${errorMessage}`);
   }
 }
 
@@ -35,7 +39,9 @@ export async function update(tank: UpdateTankMetaData) {
     await tankDB.update(tank);
     return { message: 'TankMetadata updated successfully' };
   } catch (e) {
-    throw new Error('An error occurred during update.');
+    const errorMessage = e instanceof Error ? e.message : 'Unknown error.';
+    console.error(errorMessage);
+    throw new Error(`An error occurred during update: ${errorMessage}`);
   }
 }
 
@@ -44,7 +50,9 @@ export async function deleteOne(id: number) {
     await tankDB.deleteTankMetadata(id);
     return { message: 'TankMetadata deleted successfully' };
   } catch (e) {
-    throw new Error('An error occurred during delete.');
+    const errorMessage = e instanceof Error ? e.message : 'Unknown error.';
+    console.error(errorMessage);
+    throw new Error(`An error occurred during delete: ${errorMessage}`);
   }
 }
 
@@ -56,6 +64,8 @@ export async function search(search: string, page: number) {
     }
     return searchData;
   } catch (e) {
-    throw new Error('An error occurred during search.');
+    const errorMessage = e instanceof Error ? e.message : 'Unknown error.';
+    console.error(errorMessage);
+    throw new Error(`An error occurred during search: ${errorMessage}`);
   }
 }
