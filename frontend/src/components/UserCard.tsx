@@ -35,18 +35,16 @@ export default function UserCard(props: UserCardProps) {
       <Paper elevation={2} sx={{ backgroundColor: 'white' }}>
         <Box sx={{ margin: '2%' }}>
           <Box sx={{ float: 'left', marginTop: 'auto', marginAuto: 'auto' }}>
-            {user == null ? (
-              <></>
-            ) : (
+            {user && (
               <>
                 <Typography variant='subtitle1' component='h2'>
-                  {`${user?.firstName} ${user?.lastName}`}
+                  {`${user.firstName} ${user?.lastName}`}
                 </Typography>
                 <Typography variant='subtitle1' component='h2'>
-                  {user?.address}
+                  {user.address}
                 </Typography>
                 <Typography variant='subtitle1' component='h2'>
-                  {user?.phone}
+                  {user.phone}
                 </Typography>
               </>
             )}
