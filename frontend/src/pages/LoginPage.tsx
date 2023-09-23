@@ -1,6 +1,6 @@
 import InvertColorsOutlinedIcon from '@mui/icons-material/InvertColorsOutlined';
 import LoadingProgressButton from '../components/LoadingProgressButton';
-import { useForm, SubmitHandler, Controller, set } from 'react-hook-form';
+import { useForm, SubmitHandler, Controller } from 'react-hook-form';
 import { useLoginMutation } from '../redux/slices/auth/authApiSlice';
 import loginRandomImages from '../components/LoginPageRandomImage';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
