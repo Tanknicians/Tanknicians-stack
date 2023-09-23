@@ -11,14 +11,14 @@ import {
   InputLabel,
   MenuItem,
   Select,
-  TextField,
-} from "@mui/material";
-import React from "react";
-import { useAddTankToUserMutation } from "../redux/slices/users/userManagementSlice";
-import { Controller, SubmitHandler, useForm } from "react-hook-form";
-import LoadingProgressButton from "./LoadingProgressButton";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
+  TextField
+} from '@mui/material';
+import React from 'react';
+import { useAddTankToUserMutation } from '../redux/slices/users/userManagementSlice';
+import { Controller, SubmitHandler, useForm } from 'react-hook-form';
+import LoadingProgressButton from './LoadingProgressButton';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
 
 type CreateTankFormProps = {
   userId: number;
@@ -30,20 +30,20 @@ export const tankMetaDataSchema = z.object({
   id: z.number().int(),
   description: z.string().optional(),
   volume: z.coerce.number().int().positive(),
-  type: z.enum(["FRESH", "SALT", "BRACKISH"]),
+  type: z.enum(['FRESH', 'SALT', 'BRACKISH']),
 
   qrSymbol: z.number().int().positive(),
 
   tanknicianSourcedOnly: z.boolean(),
   lastDateServiced: z.date(),
 
-  customerId: z.number().int(),
+  customerId: z.number().int()
 });
 
 export const createTank = tankMetaDataSchema.omit({
   id: true,
   qrSymbol: true,
-  lastDateServiced: true,
+  lastDateServiced: true
 });
 
 type CreateTankFormData = z.infer<typeof createTank>;
@@ -56,16 +56,16 @@ function CreateTankForm({ userId, open, setOpen }: CreateTankFormProps) {
     control,
     reset,
     handleSubmit,
-    formState: { errors },
+    formState: { errors }
   } = useForm<CreateTankFormData>({
     resolver: zodResolver(createTank),
     defaultValues: {
       tanknicianSourcedOnly: false,
-      customerId: userId,
-    },
+      customerId: userId
+    }
   });
 
-  console.log("Create Tank Form RHF Errors: ", errors);
+  console.log('Create Tank Form RHF Errors: ', errors);
 
   const handleClose = () => {
     reset();
@@ -80,15 +80,15 @@ function CreateTankForm({ userId, open, setOpen }: CreateTankFormProps) {
     } catch (unparsedError) {
       const errorSchema = z.object({
         status: z.coerce.number().optional(),
-        data: z.object({ error: z.object({ issues: z.any() }) }),
+        data: z.object({ error: z.object({ issues: z.any() }) })
       });
       const err = errorSchema.parse(unparsedError);
       if (!err?.status) {
-        console.log("No Server Response");
+        console.log('No Server Response');
       } else {
         console.log(
           `Submitting create tank form error ${err.status}: `,
-          err.data?.error.issues,
+          err.data?.error.issues
         );
       }
     }
@@ -96,27 +96,27 @@ function CreateTankForm({ userId, open, setOpen }: CreateTankFormProps) {
 
   return (
     <>
-      <Dialog open={open} onClose={handleClose} maxWidth="lg">
+      <Dialog open={open} onClose={handleClose} maxWidth='lg'>
         <DialogTitle>Add Tank</DialogTitle>
         <DialogContent>
           <Grid
             container
             spacing={2}
             sx={{
-              pt: 1,
+              pt: 1
             }}
           >
             <Grid item xs={4}>
               <Controller
-                name="volume"
+                name='volume'
                 control={control}
                 rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
                   <TextField
                     error={!!errors.volume}
                     fullWidth
-                    label="Volume"
-                    value={value ?? ""}
+                    label='Volume'
+                    value={value ?? ''}
                     onChange={onChange}
                   />
                 )}
@@ -124,7 +124,7 @@ function CreateTankForm({ userId, open, setOpen }: CreateTankFormProps) {
             </Grid>
             <Grid item xs={4}>
               <Controller
-                name="type"
+                name='type'
                 control={control}
                 rules={{ required: true }}
                 render={({ field }) => (
@@ -132,14 +132,14 @@ function CreateTankForm({ userId, open, setOpen }: CreateTankFormProps) {
                     <InputLabel error={!!errors.type}>Tank Type</InputLabel>
                     <Select
                       error={!!errors.type}
-                      label="Tank Type"
+                      label='Tank Type'
                       {...field}
-                      value={field.value ?? ""}
+                      value={field.value ?? ''}
                     >
-                      <MenuItem value="" />
-                      <MenuItem value="FRESH">Fresh</MenuItem>
-                      <MenuItem value="SALT">Salt</MenuItem>
-                      <MenuItem value="BRACKISH">Brackish</MenuItem>
+                      <MenuItem value='' />
+                      <MenuItem value='FRESH'>Fresh</MenuItem>
+                      <MenuItem value='SALT'>Salt</MenuItem>
+                      <MenuItem value='BRACKISH'>Brackish</MenuItem>
                     </Select>
                   </FormControl>
                 )}
@@ -147,28 +147,28 @@ function CreateTankForm({ userId, open, setOpen }: CreateTankFormProps) {
             </Grid>
             <Grid item xs={4}>
               <Controller
-                name="tanknicianSourcedOnly"
+                name='tanknicianSourcedOnly'
                 control={control}
                 rules={{ required: true }}
                 render={({ field }) => (
                   <FormControlLabel
                     control={<Checkbox {...field} />}
-                    label="Tanknician Sourced"
-                    labelPlacement="start"
+                    label='Tanknician Sourced'
+                    labelPlacement='start'
                   />
                 )}
               />
             </Grid>
             <Grid item xs={12}>
               <Controller
-                name="description"
+                name='description'
                 control={control}
                 rules={{ required: true }}
                 render={({ field }) => (
                   <TextField
                     fullWidth
                     multiline
-                    label="Description (Optional)"
+                    label='Description (Optional)'
                     {...field}
                   />
                 )}
@@ -179,8 +179,8 @@ function CreateTankForm({ userId, open, setOpen }: CreateTankFormProps) {
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
           <LoadingProgressButton
-            type="button"
-            variant="contained"
+            type='button'
+            variant='contained'
             isLoading={isLoading}
             onClick={handleSubmit(onSubmit)}
           >
