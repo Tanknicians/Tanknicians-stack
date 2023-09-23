@@ -2,6 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Button,
   Checkbox,
+  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
@@ -10,8 +11,9 @@ import {
   Grid,
   TextField
 } from '@mui/material';
-import { Control, Controller, useForm } from 'react-hook-form';
+import { Control, Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { z } from 'zod';
+import { useUploadServiceCallMutation } from '../../redux/slices/forms/servicecallApiSlice';
 
 export const serviceCallSchema = z.object({
   id: z.coerce.number().int(),
@@ -176,10 +178,19 @@ export default function CreateServiceCallModal({
     reset();
   }
 
-  function onValid(data: CreateServiceCall) {
-    console.log('valid form');
-    console.log(data);
-  }
+  const [uploadServiceCall, { isLoading }] = useUploadServiceCallMutation();
+
+  const onValid: SubmitHandler<CreateServiceCall> = async (
+    data: CreateServiceCall
+  ) => {
+    try {
+      const response = await uploadServiceCall(data);
+      console.log({ response });
+      handleClose();
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   const fields = (
     Object.keys(
@@ -201,7 +212,12 @@ export default function CreateServiceCallModal({
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose}>Cancel</Button>
-        <Button type='button' onClick={handleSubmit(onValid)}>
+        <Button
+          type='button'
+          onClick={handleSubmit(onValid)}
+          startIcon={isLoading ? <CircularProgress /> : null}
+          disabled={isLoading}
+        >
           Submit
         </Button>
       </DialogActions>
