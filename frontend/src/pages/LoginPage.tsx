@@ -23,6 +23,7 @@ import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import { useState } from 'react';
 import * as z from 'zod';
+import { authLogin } from '../../../backend/src/zodTypes';
 
 interface LoginFormData {
   email: string;
@@ -31,11 +32,7 @@ interface LoginFormData {
 }
 
 // Form validation
-const schema = z.object({
-  email: z.string().nonempty(),
-  password: z.string().nonempty()
-});
-
+const schema = authLogin;
 function Copyright(props: { [k: string]: unknown }) {
   return (
     <Typography
