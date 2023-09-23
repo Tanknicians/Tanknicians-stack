@@ -38,7 +38,7 @@ export default function UserCard(props: UserCardProps) {
             {user && (
               <>
                 <Typography variant='subtitle1' component='h2'>
-                  {`${user.firstName} ${user?.lastName}`}
+                  {`${user.firstName} ${user.lastName}`}
                 </Typography>
                 <Typography variant='subtitle1' component='h2'>
                   {user.address}
