@@ -8,7 +8,6 @@ type LoginCredentials = {
 type savedCredentials = {
   id: number;
   email: string;
-  password: string;
   userId: number;
   role: string;
 };

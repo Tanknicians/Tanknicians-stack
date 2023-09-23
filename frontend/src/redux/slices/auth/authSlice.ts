@@ -5,7 +5,6 @@ const initialState = {
   user: {
     id: null,
     email: '',
-    password: '',
     role: '',
     userId: null
   },
