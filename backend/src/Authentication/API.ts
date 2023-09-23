@@ -68,7 +68,7 @@ export async function login(login: AuthLogin, res: Response) {
   }
 
   try {
-    const { password, ...savedCredentials } = foundCredentials;
+    const { password: _, ...savedCredentials } = foundCredentials;
     const token = generateToken(foundCredentials);
     const refreshToken = generateRefreshToken(foundCredentials);
     res.cookie('jwt', refreshToken, {
