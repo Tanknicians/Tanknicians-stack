@@ -35,10 +35,10 @@ export function generateRandomPassword(length: number): string {
 }
 
 export async function login(login: AuthLogin, res: Response) {
-  const savedCredentials = await loginDB.read(login.email);
+  const foundCredentials = await loginDB.read(login.email);
 
   // Confirm login credentials existed in full in DB
-  if (!savedCredentials) {
+  if (!foundCredentials) {
     return res.status(401).json({
       code: 'UNAUTHORIZED',
       message: 'Incorrect email/password combination',
@@ -46,7 +46,7 @@ export async function login(login: AuthLogin, res: Response) {
     });
   }
 
-  if (!(savedCredentials.email && savedCredentials.password)) {
+  if (!(foundCredentials.email && foundCredentials.password)) {
     return res.status(401).json({
       code: 'UNAUTHORIZED',
       message: 'User record incomplete',
@@ -57,7 +57,7 @@ export async function login(login: AuthLogin, res: Response) {
 
   const samePasswords = await bcrypt.compare(
     login.password,
-    savedCredentials.password,
+    foundCredentials.password,
   );
   if (!samePasswords) {
     return res.status(401).json({
@@ -68,8 +68,9 @@ export async function login(login: AuthLogin, res: Response) {
   }
 
   try {
-    const token = generateToken(savedCredentials);
-    const refreshToken = generateRefreshToken(savedCredentials);
+    const { password: _, ...savedCredentials } = foundCredentials;
+    const token = generateToken(foundCredentials);
+    const refreshToken = generateRefreshToken(foundCredentials);
     res.cookie('jwt', refreshToken, {
       httpOnly: true,
       secure: true,
@@ -179,17 +180,20 @@ export async function refresh(
     });
   }
 
-  const savedCredentials = await loginDB.read(email);
+  const foundCredentials = await loginDB.read(email);
 
-  if (!savedCredentials) {
+  if (!foundCredentials) {
     return res.status(404).json({
       code: 'NOT_FOUND',
       message: 'Login does not exist.',
     });
   }
 
+  // Remove sending hashed password since it's not necessary for frontend.
+  const { password: _, ...savedCredentials } = foundCredentials;
+
   try {
-    const token = generateToken(savedCredentials);
+    const token = generateToken(foundCredentials);
     return res.json({ token, savedCredentials });
   } catch (error) {
     console.error(error);
