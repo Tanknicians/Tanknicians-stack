@@ -1,24 +1,24 @@
 import {
   UserOption,
-  useGetClientsQuery,
-} from "../../redux/slices/users/userManagementSlice";
-import CreateTankForm from "../../components/CreateTankForm";
-import UserSearchBar from "../../components/UserSearchBar";
-import CreateUserModal from "../../components/CreateUser";
-import Typography from "@mui/material/Typography";
-import UserCard from "../../components/UserCard";
-import Container from "@mui/material/Container";
-import Collapse from "@mui/material/Collapse";
-import AddIcon from "@mui/icons-material/Add";
-import Button from "@mui/material/Button";
-import { useSelector } from "react-redux";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
-import { useState } from "react";
+  useGetClientsQuery
+} from '../../redux/slices/users/userManagementSlice';
+import CreateTankForm from '../../components/CreateTankForm';
+import UserSearchBar from '../../components/UserSearchBar';
+import CreateUserModal from '../../components/CreateUser';
+import Typography from '@mui/material/Typography';
+import UserCard from '../../components/UserCard';
+import Container from '@mui/material/Container';
+import Collapse from '@mui/material/Collapse';
+import AddIcon from '@mui/icons-material/Add';
+import Button from '@mui/material/Button';
+import { useSelector } from 'react-redux';
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
+import { useState } from 'react';
 
 const headerGridStyle = {
   flex: 1,
-  alignContent: "center",
+  alignContent: 'center'
 };
 
 export default function Clients() {
@@ -27,16 +27,16 @@ export default function Clients() {
   const [userModalOpen, setUserModalOpen] = useState(false);
   const [collapse, setCollapse] = useState(false);
   const [selectedCustomer, setSelectedCustomer] = useState<UserOption | null>(
-    null,
+    null
   );
 
   const handleUserSelected = (
     _event: React.SyntheticEvent,
-    customer: UserOption | null,
+    customer: UserOption | null
   ) => {
     setCollapse(true);
     setSelectedCustomer(customer);
-    console.log("customer: ", customer);
+    console.log('customer: ', customer);
   };
 
   const handleOpenUserModal = () => {
@@ -51,22 +51,22 @@ export default function Clients() {
 
   return (
     <div
-      style={{ marginLeft: "auto", marginRight: "auto", maxWidth: "1000px" }}
+      style={{ marginLeft: 'auto', marginRight: 'auto', maxWidth: '1000px' }}
     >
       {/* This box has a grid with the page title in one cell, a section to put a search bar in the middle cell, and a container for a button in the far right cell */}
-      <Box sx={{ flexGrow: 1, display: "flex", padding: "20px" }}>
+      <Box sx={{ flexGrow: 1, display: 'flex', padding: '20px' }}>
         <Grid container spacing={1}>
           <Grid
             item
             xs={6}
             sm={3}
-            sx={{ ...headerGridStyle, backgroundColor: "inherit" }}
+            sx={{ ...headerGridStyle, backgroundColor: 'inherit' }}
           >
             <Typography
-              color="inherit"
-              variant="h4"
-              component="h1"
-              sx={{ float: "left", minWidth: "fit-content" }}
+              color='inherit'
+              variant='h4'
+              component='h1'
+              sx={{ float: 'left', minWidth: 'fit-content' }}
             >
               Clients
             </Typography>
@@ -75,9 +75,9 @@ export default function Clients() {
             item
             xs={6}
             sm={7}
-            sx={{ ...headerGridStyle, backgroundColor: "inherit" }}
+            sx={{ ...headerGridStyle, backgroundColor: 'inherit' }}
           >
-            <Container maxWidth="sm">
+            <Container maxWidth='sm'>
               <UserSearchBar
                 optionsList={optionsList}
                 handleUserSelected={handleUserSelected}
@@ -88,9 +88,9 @@ export default function Clients() {
             item
             xs={6}
             sm={2}
-            sx={{ ...headerGridStyle, backgroundColor: "inherit" }}
+            sx={{ ...headerGridStyle, backgroundColor: 'inherit' }}
           >
-            <Button variant="contained" onClick={handleOpenUserModal}>
+            <Button variant='contained' onClick={handleOpenUserModal}>
               <AddIcon />
               Add Client
             </Button>
@@ -105,8 +105,8 @@ export default function Clients() {
       <Collapse in={collapse}>
         <UserCard user={selectedCustomer} />
         <Button
-          variant="contained"
-          sx={{ float: "right" }}
+          variant='contained'
+          sx={{ float: 'right' }}
           onClick={handleOpenTankModal}
         >
           <AddIcon />
