@@ -11,10 +11,7 @@ import {
   TextField
 } from '@mui/material';
 import { Control, Controller, useForm } from 'react-hook-form';
-import {
-  createServiceCall,
-  CreateServiceCall
-} from '../../../../backend/src/zodTypes';
+import { createServiceCall, CreateServiceCall } from '../../zodTypes';
 
 type CreateFormProps = {
   name: keyof CreateServiceCall;
@@ -140,14 +137,18 @@ const defaultValues: CreateServiceCall = Object.fromEntries(
 
 export default function CreateServiceCallModal({
   open,
-  setOpen
+  setOpen,
+  employeeId,
+  tankId
 }: {
   open: boolean;
   setOpen: (open: boolean) => void;
+  employeeId: number;
+  tankId: number;
 }) {
   const { handleSubmit, control, reset } = useForm<CreateServiceCall>({
     resolver: zodResolver(createServiceCall),
-    defaultValues
+    defaultValues: { ...defaultValues, tankId, employeeId }
   });
 
   function handleClose() {

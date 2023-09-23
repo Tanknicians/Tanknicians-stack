@@ -24,7 +24,7 @@ export const userSchema = z.object({
   address: z.string().optional(),
   phone: z.string().optional(),
 
-  isEmployee: z.boolean(),
+  isEmployee: z.boolean()
 });
 
 export const createUserSchema = userSchema.omit({ id: true });
@@ -41,12 +41,12 @@ export const loginSchema = z
     password: z.string({ required_error: 'Password is required' }),
     role: z.enum(['ADMIN', 'EMPLOYEE', 'CUSTOMER'], {
       errorMap: () => ({
-        message: 'Role must be ADMIN, EMPLOYEE, or CUSTOMER',
-      }),
+        message: 'Role must be ADMIN, EMPLOYEE, or CUSTOMER'
+      })
     }),
     userId: z
       .number({ required_error: 'Must be a positive integer.' })
-      .positive(),
+      .positive()
   })
   .strict();
 
@@ -68,7 +68,7 @@ export const tankMetaDataSchema = z.object({
   tanknicianSourcedOnly: z.boolean(),
   lastDateServiced: z.coerce.date(),
 
-  customerId: z.number().int(),
+  customerId: z.number().int()
 });
 
 export const createTank = tankMetaDataSchema.omit({ id: true });
@@ -114,7 +114,7 @@ export const serviceCallSchema = z.object({
   pestCPresent: z.boolean(),
   pestDPresent: z.boolean(),
   employeeId: z.number().int(),
-  tankId: z.number().int(),
+  tankId: z.number().int()
 });
 
 export type ServiceCall = z.infer<typeof serviceCallSchema>;
@@ -128,7 +128,7 @@ export type ServiceCallRequest = ValidatedRequest<CreateServiceCall>;
 export const authLogin = loginSchema.omit({
   id: true,
   role: true,
-  userId: true,
+  userId: true
 });
 export type AuthLogin = z.infer<typeof authLogin>;
 export type AuthLoginRequest = ValidatedRequest<AuthLogin>;
@@ -150,13 +150,13 @@ const tokenData = loginSchema.extend({ id: z.number(), userId: z.number() });
 
 export const tokenSchema = z.object({
   data: tokenData,
-  isRefreshToken: z.literal(false),
+  isRefreshToken: z.literal(false)
 });
 
 export type Token = z.infer<typeof tokenSchema>;
 
 export const refreshTokenSchema = z.object({
   data: tokenData,
-  isRefreshToken: z.literal(true),
+  isRefreshToken: z.literal(true)
 });
 export type RefreshToken = z.infer<typeof refreshTokenSchema>;
