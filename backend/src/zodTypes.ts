@@ -27,8 +27,9 @@ export const userSchema = z.object({
   isEmployee: z.boolean(),
 });
 
-export const createUserSchema = userSchema.omit({ id: true });
-export type CreateUser = z.infer<typeof createUserSchema>;
+export const createUser = userSchema.omit({ id: true });
+export const updateUser = userSchema.omit({ id: true });
+export type CreateUser = z.infer<typeof createUser>;
 export type UpdateUser = z.infer<typeof userSchema>;
 export type UserRequest = ValidatedRequest<CreateUser>;
 
@@ -51,6 +52,7 @@ export const loginSchema = z
   .strict();
 
 export const createLogin = loginSchema.omit({ id: true });
+export const updateLogin = loginSchema.omit({ id: true });
 export type CreateLogin = z.infer<typeof createLogin>;
 export type UpdateLogin = z.infer<typeof loginSchema>;
 export type LoginRequest = ValidatedRequest<CreateLogin>;
@@ -72,6 +74,7 @@ export const tankMetaDataSchema = z.object({
 });
 
 export const createTank = tankMetaDataSchema.omit({ id: true });
+export const updateTank = tankMetaDataSchema.omit({ id: true });
 export type CreateTankMetaData = z.infer<typeof createTank>;
 export type UpdateTankMetaData = z.infer<typeof tankMetaDataSchema>;
 export type TankMetaDataRequest = ValidatedRequest<CreateTankMetaData>;
@@ -119,8 +122,15 @@ export const serviceCallSchema = z.object({
 
 export type ServiceCall = z.infer<typeof serviceCallSchema>;
 export const createServiceCall = serviceCallSchema.omit({ id: true });
+export const updateServiceCall = serviceCallSchema.omit({ id: true });
+export const mobileServiceCall = serviceCallSchema.omit({
+  id: true,
+  isApproved: true,
+  notApprovedNotes: true,
+});
 export type CreateServiceCall = z.infer<typeof createServiceCall>;
 export type UpdateServiceCall = z.infer<typeof serviceCallSchema>;
+export type MobileServiceCall = z.infer<typeof mobileServiceCall>;
 export type ServiceCallRequest = ValidatedRequest<CreateServiceCall>;
 
 // AUTH

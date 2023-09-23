@@ -4,7 +4,8 @@ import { authenticateRoleMiddleWare } from '../../Authentication/API';
 import {
   UpdateUser,
   UserRequest,
-  createUserSchema,
+  createUser,
+  updateUser,
   userSchema,
   validateRequestBody,
 } from '../../zodTypes';
@@ -17,10 +18,10 @@ userRouter.use(express.json());
 userRouter.post(
   '/',
   authenticateRoleMiddleWare(['ADMIN']),
-  validateRequestBody(createUserSchema),
+  validateRequestBody(createUser),
   async (req: UserRequest, res) => {
     try {
-      const input = createUserSchema.parse(req.body);
+      const input = createUser.parse(req.body);
       const result = await UserService.create(input);
       res.json(result);
     } catch (error) {
@@ -59,7 +60,8 @@ userRouter.get(
   async (req, res) => {
     try {
       const includeTanks = req.query.includeTanks === 'true';
-      const result = await UserService.readAll(includeTanks);
+      const isEmployee = req.query.isEmployee === 'true';
+      const result = await UserService.readAll(includeTanks, isEmployee);
       res.json(result);
     } catch (error) {
       const errorMessage =
@@ -75,7 +77,7 @@ userRouter.get(
 userRouter.put(
   '/:id',
   authenticateRoleMiddleWare(['ADMIN']),
-  validateRequestBody(userSchema),
+  validateRequestBody(updateUser),
   async (req: UserRequest, res) => {
     try {
       const id = Number(req.params.id);
