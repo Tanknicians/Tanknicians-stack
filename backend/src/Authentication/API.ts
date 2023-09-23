@@ -190,7 +190,7 @@ export async function refresh(
   }
 
   // Remove sending hashed password since it's not necessary for frontend.
-  const { password, ...savedCredentials } = foundCredentials;
+  const { password: _, ...savedCredentials } = foundCredentials;
 
   try {
     const token = generateToken(foundCredentials);
