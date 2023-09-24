@@ -89,10 +89,10 @@ export const serviceCallSchema = z.object({
   notApprovedNotes: z.string().optional(),
   notesUpdated: z.coerce.date().optional(),
 
-  alkalinity: z.number(),
-  calcium: z.number(),
-  nitrate: z.number(),
-  phosphate: z.number(),
+  alkalinity: z.coerce.number(),
+  calcium: z.coerce.number(),
+  nitrate: z.coerce.number(),
+  phosphate: z.coerce.number(),
 
   ATOOperational: z.boolean(),
   ATOReservoirFilled: z.boolean(),
@@ -120,6 +120,7 @@ export const serviceCallSchema = z.object({
 export type ServiceCall = z.infer<typeof serviceCallSchema>;
 export const createServiceCall = serviceCallSchema.omit({ id: true });
 export type CreateServiceCall = z.infer<typeof createServiceCall>;
+export const updateServiceCall = serviceCallSchema;
 export type UpdateServiceCall = z.infer<typeof serviceCallSchema>;
 export type ServiceCallRequest = ValidatedRequest<CreateServiceCall>;
 

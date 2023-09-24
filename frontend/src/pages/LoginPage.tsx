@@ -78,12 +78,7 @@ export default function LoginPage() {
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
-  const { control, register, handleSubmit, formState } = useForm<LoginFormData>(
-    {
-      resolver: zodResolver(schema)
-    }
-  );
-  console.log(formState);
+  const { control, register, handleSubmit, formState } = useForm<LoginFormData>({resolver: zodResolver(schema)});
 
   // error checks for form submission
   // add above to useForm<LoginFormData> to use

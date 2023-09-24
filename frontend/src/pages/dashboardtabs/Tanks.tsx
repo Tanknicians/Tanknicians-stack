@@ -31,9 +31,16 @@ import { useGetServiceCallByTankIdQuery } from '../../redux/slices/forms/service
 import { Edit as EditIcon } from '@mui/icons-material';
 import CreateServiceCallModal from '../../components/forms/UpsertServiceCall';
 
-function ServiceCallTable({ tank }: { tank: OwnedTanks }) {
+function ServiceCallTable({
+  tank,
+  employeeId
+}: { tank: OwnedTanks; employeeId: number }) {
+  const [editServiceCallId, setEditServiceCallId] = useState<
+    number | undefined
+  >();
   const { data, isLoading } = useGetServiceCallByTankIdQuery({
-    tankId: tank.id
+    tankId: tank.id,
+    onlyApprovedForms: true
   });
 
   if (isLoading) {
@@ -58,13 +65,20 @@ function ServiceCallTable({ tank }: { tank: OwnedTanks }) {
       </TableHead>
       <TableBody>
         {data.map((form) => (
-          <TableRow>
+          <TableRow key={form.id}>
             <TableCell>
               {new Date(form.createdOn).toLocaleDateString()}
             </TableCell>
             <TableCell>{form.employeeId}</TableCell>
             <TableCell>
-              <IconButton>
+              <CreateServiceCallModal
+                setOpen={(_) => setEditServiceCallId(undefined)}
+                open={editServiceCallId === form.id}
+                tankId={tank.id}
+                employeeId={employeeId}
+                previousServiceCall={form}
+              />
+              <IconButton onClick={() => setEditServiceCallId(form.id)}>
                 <EditIcon />
               </IconButton>
             </TableCell>
@@ -83,6 +97,7 @@ export function TankTabs({
   return (
     <>
       <CreateServiceCallModal
+        key={selectedTank.id}
         open={createServiceCallOpen}
         setOpen={setCreateServiceCallOpen}
         tankId={selectedTank.id}
@@ -101,7 +116,11 @@ export function TankTabs({
           }}
         >
           {tanks.map((tank) => (
-            <Tab label={`Tank: ${tank.qrSymbol}`} value={tank.id} />
+            <Tab
+              label={`Tank: ${tank.qrSymbol}`}
+              value={tank.id}
+              key={tank.id}
+            />
           ))}
         </Tabs>
         <Button
@@ -111,7 +130,7 @@ export function TankTabs({
           Add Service Call
         </Button>
       </Stack>
-      <ServiceCallTable tank={selectedTank} />
+      <ServiceCallTable tank={selectedTank} employeeId={employeeId} />
     </>
   );
 }
