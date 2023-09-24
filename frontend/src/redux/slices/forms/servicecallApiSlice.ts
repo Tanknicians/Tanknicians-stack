@@ -1,4 +1,4 @@
-import type { ServiceCall } from '../../../../../backend/src/zodTypes';
+import { ServiceCall } from '../../../zodTypes';
 import { apiSlice } from '../../api/apiSlice';
 
 export const servicecallApiSlice = apiSlice.injectEndpoints({
