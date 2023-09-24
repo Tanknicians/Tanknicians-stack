@@ -96,7 +96,7 @@ export async function deleteServiceCall(id: number) {
 }
 
 // SEARCH
-export async function searchByString(search: String, page: number) {
+export async function searchByString(search: string, page: number) {
   return await prisma.serviceCall.findMany({
     skip: (page - 1) * 25,
     take: 25,

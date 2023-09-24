@@ -1,6 +1,7 @@
 import {
   UserOption,
-  useGetClientsQuery
+  useGetClientsQuery,
+  OwnedTanks
 } from '../../redux/slices/users/userManagementSlice';
 import CreateTankForm from '../../components/CreateTankForm';
 import UserSearchBar from '../../components/UserSearchBar';
@@ -11,62 +12,158 @@ import Collapse from '@mui/material/Collapse';
 import AddIcon from '@mui/icons-material/Add';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
 import { useState } from 'react';
+import {
+  Box,
+  Divider,
+  IconButton,
+  LinearProgress,
+  Stack,
+  Tab,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+  Tabs
+} from '@mui/material';
+import { useGetServiceCallByTankIdQuery } from '../../redux/slices/forms/servicecallApiSlice';
+import { Edit as EditIcon } from '@mui/icons-material';
+import CreateServiceCallModal from '../../components/forms/UpsertServiceCall';
 
-const headerGridStyle = {
-  flex: 1,
-  alignContent: 'center'
-};
+function ServiceCallTable({
+  tank,
+  employeeId
+}: { tank: OwnedTanks; employeeId: number }) {
+  const [editServiceCallId, setEditServiceCallId] = useState<
+    number | undefined
+  >();
+  const { data, isLoading } = useGetServiceCallByTankIdQuery({
+    tankId: tank.id,
+    onlyApprovedForms: true
+  });
+
+  if (isLoading) {
+    return (
+      <Box pt={1}>
+        <LinearProgress color='primary' />
+      </Box>
+    );
+  }
+  if (!data) {
+    return <div>"An error occured."</div>;
+  }
+
+  return (
+    <Table>
+      <TableHead>
+        <TableRow>
+          <TableCell>Date</TableCell>
+          <TableCell>Technician Id</TableCell>
+          <TableCell>Edit</TableCell>
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        {data.map((form) => (
+          <TableRow key={form.id}>
+            <TableCell>
+              {new Date(form.createdOn).toLocaleDateString()}
+            </TableCell>
+            <TableCell>{form.employeeId}</TableCell>
+            <TableCell>
+              <CreateServiceCallModal
+                setOpen={(_) => setEditServiceCallId(undefined)}
+                open={editServiceCallId === form.id}
+                tankId={tank.id}
+                employeeId={employeeId}
+                previousServiceCall={form}
+              />
+              <IconButton onClick={() => setEditServiceCallId(form.id)}>
+                <EditIcon />
+              </IconButton>
+            </TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
+  );
+}
+export function TankTabs({
+  tanks,
+  employeeId
+}: { tanks: OwnedTanks[]; employeeId: number }) {
+  const [selectedTank, setSelectedTank] = useState<OwnedTanks>(tanks[0]);
+  const [createServiceCallOpen, setCreateServiceCallOpen] = useState(false);
+  return (
+    <>
+      <CreateServiceCallModal
+        key={selectedTank.id}
+        open={createServiceCallOpen}
+        setOpen={setCreateServiceCallOpen}
+        tankId={selectedTank.id}
+        employeeId={employeeId}
+      />
+      <Stack direction='row' justifyContent='space-between'>
+        <Tabs
+          value={selectedTank?.id}
+          onChange={(_, newTankId) => {
+            const newTank = tanks.find(({ id }) => id === newTankId);
+            if (newTank) {
+              setSelectedTank(newTank);
+            } else {
+              console.error("Selected tank id that isn't in tank list");
+            }
+          }}
+        >
+          {tanks.map((tank) => (
+            <Tab
+              label={`Tank: ${tank.qrSymbol}`}
+              value={tank.id}
+              key={tank.id}
+            />
+          ))}
+        </Tabs>
+        <Button
+          variant='outlined'
+          onClick={() => setCreateServiceCallOpen(true)}
+        >
+          Add Service Call
+        </Button>
+      </Stack>
+      <ServiceCallTable tank={selectedTank} employeeId={employeeId} />
+    </>
+  );
+}
 
 export default function Tanks() {
-  const userId = 1;
-  const { data: optionsList, error } = useGetClientsQuery(true);
-  console.log('OptionsList: ', optionsList);
-  console.log('OptionsList error: ', error);
-  const [collapse, setCollapse] = useState(false);
+  const { data: optionsList } = useGetClientsQuery(true);
   const [selectedUser, selectCurrentUser] = useState<UserOption | null>(null);
+  const userId = selectedUser?.id;
+  const collapse = !!selectedUser;
   const [open, setOpen] = useState(false);
 
   const handleUserSelected = (
     _event: React.SyntheticEvent,
     customer: UserOption | null
   ) => {
-    setCollapse(true);
     selectCurrentUser(customer);
-    console.log('customer: ', customer);
   };
 
   if (!optionsList) return <div>Loading...</div>;
 
   return (
-    <div
-      style={{ marginLeft: 'auto', marginRight: 'auto', maxWidth: '1000px' }}
-    >
-      {/* This box has a grid with the page title in one cell, a section to put a search bar in the middle cell, and a container for a button in the far right cell */}
-      <Box sx={{ flexGrow: 1, display: 'flex', padding: '20px' }}>
-        <Grid container spacing={1}>
-          <Grid
-            item
-            xs={12}
-            sm={3}
-            sx={{ ...headerGridStyle, backgroundColor: 'inherit' }}
-          >
-            <Typography
-              color='inherit'
-              variant='h4'
-              component='h1'
-              sx={{ float: 'left', minWidth: 'fit-content' }}
-            >
+    <>
+      {userId && (
+        <CreateTankForm userId={userId} open={open} setOpen={setOpen} />
+      )}
+      <Container sx={{ p: 2 }}>
+        <Grid container>
+          <Grid item xs={12} sm={3}>
+            <Typography color='inherit' variant='h4' component='h1'>
               Tanks
             </Typography>
           </Grid>
-          <Grid
-            item
-            xs={6}
-            sm={7}
-            sx={{ ...headerGridStyle, backgroundColor: 'inherit' }}
-          >
+          <Grid item xs={6} sm={7}>
             <Container maxWidth='sm'>
               <UserSearchBar
                 optionsList={optionsList}
@@ -74,26 +171,26 @@ export default function Tanks() {
               />
             </Container>
           </Grid>
-          <Grid
-            item
-            xs={6}
-            sm={2}
-            sx={{ ...headerGridStyle, backgroundColor: 'inherit' }}
-          />
         </Grid>
-      </Box>
-      <Collapse in={collapse}>
-        <UserCard user={selectedUser} />
-        <Button
-          variant='contained'
-          sx={{ float: 'right' }}
-          onClick={() => setOpen(true)}
-        >
-          <AddIcon />
-          Add Tank
-        </Button>
-        <CreateTankForm userId={userId} open={open} setOpen={setOpen} />
-      </Collapse>
-    </div>
+        <Collapse in={collapse}>
+          <UserCard user={selectedUser} />
+          <Divider />
+          <Stack direction='row' justifyContent='space-between' sx={{ py: 1 }}>
+            <Typography variant='h4'>Service Calls</Typography>
+            <Button variant='contained' onClick={() => setOpen(true)}>
+              <AddIcon />
+              Add Tank
+            </Button>
+          </Stack>
+          {!!selectedUser?.OwnedTanks?.length && (
+            <TankTabs
+              key={selectedUser.id}
+              tanks={selectedUser.OwnedTanks}
+              employeeId={selectedUser.id}
+            />
+          )}
+        </Collapse>
+      </Container>
+    </>
   );
 }

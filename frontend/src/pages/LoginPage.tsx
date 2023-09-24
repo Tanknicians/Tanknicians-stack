@@ -23,19 +23,15 @@ import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import { useState } from 'react';
 import * as z from 'zod';
+import { authLogin } from '../zodTypes';
 
 interface LoginFormData {
   email: string;
   password: string;
-  remember: boolean;
 }
 
 // Form validation
-const schema = z.object({
-  email: z.string().nonempty(),
-  password: z.string().nonempty()
-});
-
+const schema = authLogin;
 function Copyright(props: { [k: string]: unknown }) {
   return (
     <Typography
@@ -82,9 +78,9 @@ export default function LoginPage() {
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
-  const { control, register, handleSubmit } = useForm<LoginFormData>({
-    resolver: zodResolver(schema)
-  });
+  const { control, register, handleSubmit, formState } = useForm<LoginFormData>(
+    { resolver: zodResolver(schema) }
+  );
 
   // error checks for form submission
   // add above to useForm<LoginFormData> to use
@@ -92,7 +88,7 @@ export default function LoginPage() {
 
   // Form submission with error checks
   const onSubmit: SubmitHandler<LoginFormData> = async (data) => {
-    const { remember, ...loginData } = data;
+    const loginData = data;
 
     try {
       const userData = await login(loginData).unwrap();
@@ -210,18 +206,18 @@ export default function LoginPage() {
                   )
                 }}
               />
-              <Controller
-                name='remember'
-                control={control}
-                render={({ field }) => (
-                  <FormControlLabel
-                    control={
-                      <Checkbox {...field} value='remember' color='primary' />
-                    }
-                    label='Remember me'
-                  />
-                )}
-              />
+              {/* <Controller */}
+              {/*   name='remember' */}
+              {/*   control={control} */}
+              {/*   render={({ field }) => ( */}
+              {/*     <FormControlLabel */}
+              {/*       control={ */}
+              {/*         <Checkbox {...field} value='remember' color='primary' /> */}
+              {/*       } */}
+              {/*       label='Remember me' */}
+              {/*     /> */}
+              {/*   )} */}
+              {/* /> */}
               <Typography
                 align='center'
                 style={{ marginTop: 4, color: errorColor }}
