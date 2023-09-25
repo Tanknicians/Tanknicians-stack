@@ -59,7 +59,7 @@ const theme = createTheme();
 // For random images to display
 const randomImagePath =
   loginRandomImages[Math.floor(Math.random() * loginRandomImages.length)];
-const randomImage = require(`../assets/images/${randomImagePath}`);
+const randomImage = `/assets/images/${randomImagePath}`;
 
 export default function LoginPage() {
   const [login, { isLoading }] = useLoginMutation();
