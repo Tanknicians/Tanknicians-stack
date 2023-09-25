@@ -91,9 +91,8 @@ export default function LoginPage() {
     const loginData = data;
 
     try {
-      const userData = await login(loginData).unwrap();
-      dispatch(setCredentials({ ...userData, loginData }));
-
+      const { token, savedCredentials: user } = await login(loginData).unwrap();
+      dispatch(setCredentials({ token, user }));
       navigate('/dashboard/Approve Forms');
     } catch (unparsdError) {
       const errorSchema = z.object({

@@ -1,16 +1,20 @@
-import { CreateUser } from '../../../components/CreateUser';
+import { CreateUser } from '../../../components/forms/CreateUser';
 import { apiSlice } from '../../api/apiSlice';
 
 export type OwnedTanks = {
   customerId: number;
-  description: string;
+  description?: string;
   id: number;
   lastDateServiced: Date;
   qrSymbol: number;
-  tanknicianSourcedOnly: true;
+  tanknicianSourcedOnly: boolean;
   type: string;
   volume: number;
 };
+export type CreateTank = Omit<
+  OwnedTanks,
+  'id' | 'qrSymbol' | 'lastDateServiced'
+>;
 export type UserOption = {
   OwnedTanks?: OwnedTanks[];
   id: number;
@@ -22,10 +26,15 @@ export type UserOption = {
   isEmployee: boolean;
 };
 
+export type UserQuearyArgs = {
+  includeTanks: boolean;
+  isEmployee: boolean;
+};
+
 export const userManagementSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     // Query returns a list of all users
-    getClients: builder.query<UserOption[], boolean>({
+    getClients: builder.query<UserOption[], UserQuearyArgs>({
       providesTags: (result) =>
         result
           ? [
@@ -33,11 +42,14 @@ export const userManagementSlice = apiSlice.injectEndpoints({
               { type: 'USERLIST', id: 'LIST' }
             ]
           : [{ type: 'USERLIST', id: 'LIST' }],
-      query: (includeTanks) => {
+      query: (params) => {
         return {
           url: '/api/database/user',
           method: 'GET',
-          params: { includeTanks: includeTanks }
+          params: {
+            includeTanks: params.includeTanks,
+            isEmployee: params.isEmployee
+          }
         };
       }
     }),
@@ -51,11 +63,21 @@ export const userManagementSlice = apiSlice.injectEndpoints({
       })
     }),
     // Mutation adds a tank to a user
-    addTankToUser: builder.mutation({
+    addTankToUser: builder.mutation<number, CreateTank>({
+      invalidatesTags: () => [{ type: 'USERLIST', id: 'LIST' }],
       query: (tankData) => ({
         url: '/api/database/tank',
         method: 'POST',
         body: { ...tankData }
+      })
+    }),
+    // Mutation edits user in database
+    editUser: builder.mutation<void, UserOption>({
+      invalidatesTags: () => [{ type: 'USERLIST', id: 'LIST' }],
+      query: ({ id, ...userData }) => ({
+        url: `/api/database/user/${id}`,
+        method: 'PUT',
+        body: { ...userData }
       })
     })
   })
@@ -64,5 +86,6 @@ export const userManagementSlice = apiSlice.injectEndpoints({
 export const {
   useGetClientsQuery,
   useAddUserMutation,
-  useAddTankToUserMutation
+  useAddTankToUserMutation,
+  useEditUserMutation
 } = userManagementSlice;
