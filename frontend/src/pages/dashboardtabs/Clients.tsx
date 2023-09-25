@@ -16,29 +16,24 @@ import CreateUserModal from '../../components/forms/CreateUser';
 import { UserQuearyArgs } from '../../redux/slices/users/userManagementSlice';
 
 export default function Clients() {
-  const userId = 1;
   const userQuearyArgs: UserQuearyArgs = {
     includeTanks: true,
     isEmployee: false
   };
   const { data: optionsList, error } = useGetClientsQuery(userQuearyArgs);
-  console.log('OptionsList: ', optionsList);
-  console.log('OptionsList error: ', error);
   const [tankModalOpen, setTankModalOpen] = useState(false);
-  const [userModalOpen, setUserModalOpen] = useState(false);
-  const [selectedUser, selectCurrentUser] = useState<UserOption | null>(null);
-  const [open, setOpen] = useState(false);
+  const [clientModalOpen, setClientModalOpen] = useState(false);
+  const [selectedClient, setSelectedClient] = useState<UserOption | null>(null);
 
   const handleUserSelected = (
     _event: React.SyntheticEvent,
-    customer: UserOption | null
+    client: UserOption | null
   ) => {
-    selectCurrentUser(customer);
-    console.log('customer: ', customer);
+    setSelectedClient(client);
   };
 
   const handleOpenUserModal = () => {
-    setUserModalOpen((prevState) => !prevState);
+    setClientModalOpen((prevState) => !prevState);
   };
 
   const handleOpenTankModal = () => {
@@ -92,20 +87,26 @@ export default function Clients() {
         </Grid>
         <Grid xs={1} sm={1} item />
         <Grid xs={12} sm={12} item>
-          <Collapse in={!!selectedUser}>
-            <UserCard user={selectedUser} />
-            <Button variant='contained' onClick={() => setOpen(true)}>
+          <Collapse in={!!selectedClient}>
+            <UserCard user={selectedClient} />
+            <Button variant='contained' onClick={handleOpenTankModal}>
               <AddIcon />
               Add Tank
             </Button>
-            <CreateTankForm userId={userId} open={open} setOpen={setOpen} />
+            {selectedClient && (
+              <CreateTankForm
+                userId={selectedClient.id}
+                open={tankModalOpen}
+                setOpen={handleOpenTankModal}
+              />
+            )}
           </Collapse>
         </Grid>
         <Grid xs={1} sm={1} item />
       </Grid>
       <CreateUserModal
-        open={userModalOpen}
-        setOpen={setUserModalOpen}
+        open={clientModalOpen}
+        setOpen={setClientModalOpen}
         isEmployee={false}
       />
     </>
