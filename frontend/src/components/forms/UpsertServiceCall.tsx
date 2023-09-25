@@ -71,15 +71,14 @@ export function CreateForm({
         control={control}
         render={({ field, fieldState }) => {
           if (type === 'date') {
-            if (typeof field.value === 'object') {
-              field.value = format(field.value, 'yyyy-MM-dd');
-            } else if (field.value) {
-              field.value = format(
-                new Date(field.value.toString()),
-                'yyyy-MM-dd'
-              );
-            } else {
-              field.value = format(new Date(), 'yyyy-MM-dd');
+            if (!field.value) {
+              field.value = new Date();
+            } else if (typeof field.value !== 'object') {
+              try {
+                field.value = new Date(field.value.toString());
+              } catch (e) {
+                field.value = new Date();
+              }
             }
           }
           return (
@@ -214,7 +213,7 @@ export default function CreateServiceCallModal({
   const onValid: SubmitHandler<CreateServiceCall> = async (
     data: CreateServiceCall
   ) => {
-    const allData = id ? { ...data, id } : { data };
+    const allData = id ? { ...data, id } : data;
     try {
       const response = await uploadServiceCall(allData);
       console.log({ response });
