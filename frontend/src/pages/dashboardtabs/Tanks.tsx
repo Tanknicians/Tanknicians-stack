@@ -9,7 +9,6 @@ import Typography from '@mui/material/Typography';
 import UserCard from '../../components/UserCard';
 import Container from '@mui/material/Container';
 import Collapse from '@mui/material/Collapse';
-import AddIcon from '@mui/icons-material/Add';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import { useState } from 'react';
@@ -30,11 +29,13 @@ import {
 import { useGetServiceCallByTankIdQuery } from '../../redux/slices/forms/servicecallApiSlice';
 import { Edit as EditIcon } from '@mui/icons-material';
 import CreateServiceCallModal from '../../components/forms/UpsertServiceCall';
+import Add from '@mui/icons-material/Add';
 
 function ServiceCallTable({
   tank,
   employeeId
 }: { tank: OwnedTanks; employeeId: number }) {
+  const [createServiceCallOpen, setCreateServiceCallOpen] = useState(false);
   const [editServiceCallId, setEditServiceCallId] = useState<
     number | undefined
   >();
@@ -50,42 +51,62 @@ function ServiceCallTable({
       </Box>
     );
   }
+
   if (!data) {
     return <div>"An error occured."</div>;
   }
-
   return (
-    <Table>
-      <TableHead>
-        <TableRow>
-          <TableCell>Date</TableCell>
-          <TableCell>Technician Id</TableCell>
-          <TableCell>Edit</TableCell>
-        </TableRow>
-      </TableHead>
-      <TableBody>
-        {data.map((form) => (
-          <TableRow key={form.id}>
+    <>
+      <CreateServiceCallModal
+        key={tank.id}
+        open={createServiceCallOpen}
+        setOpen={setCreateServiceCallOpen}
+        tankId={tank.id}
+        employeeId={employeeId}
+      />
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell>Date</TableCell>
+            <TableCell>Technician Id</TableCell>
             <TableCell>
-              {new Date(form.createdOn).toLocaleDateString()}
-            </TableCell>
-            <TableCell>{form.employeeId}</TableCell>
-            <TableCell>
-              <CreateServiceCallModal
-                setOpen={(_) => setEditServiceCallId(undefined)}
-                open={editServiceCallId === form.id}
-                tankId={tank.id}
-                employeeId={employeeId}
-                previousServiceCall={form}
-              />
-              <IconButton onClick={() => setEditServiceCallId(form.id)}>
-                <EditIcon />
-              </IconButton>
+              <Button
+                size='small'
+                endIcon={<Add fontSize='inherit' />}
+                onClick={() => setCreateServiceCallOpen(true)}
+              >
+                Add Service Form
+              </Button>
             </TableCell>
           </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+        </TableHead>
+        <TableBody>
+          {data.map((form) => (
+            <TableRow key={form.id}>
+              <TableCell>
+                {new Date(form.createdOn).toLocaleDateString()}
+              </TableCell>
+              <TableCell>{form.employeeId}</TableCell>
+              <TableCell>
+                <CreateServiceCallModal
+                  setOpen={(_) => setEditServiceCallId(undefined)}
+                  open={editServiceCallId === form.id}
+                  tankId={tank.id}
+                  employeeId={employeeId}
+                  previousServiceCall={form}
+                />
+                <IconButton
+                  onClick={() => setEditServiceCallId(form.id)}
+                  size='small'
+                >
+                  <EditIcon fontSize='inherit' />
+                </IconButton>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </>
   );
 }
 export function TankTabs({
@@ -93,25 +114,27 @@ export function TankTabs({
   employeeId
 }: { tanks: OwnedTanks[]; employeeId: number }) {
   const [selectedTank, setSelectedTank] = useState<OwnedTanks>(tanks[0]);
-  const [createServiceCallOpen, setCreateServiceCallOpen] = useState(false);
+  const [createTankOpen, setCreateTankOpen] = useState(false);
   return (
     <>
-      <CreateServiceCallModal
-        key={selectedTank.id}
-        open={createServiceCallOpen}
-        setOpen={setCreateServiceCallOpen}
-        tankId={selectedTank.id}
-        employeeId={employeeId}
+      <CreateTankForm
+        userId={employeeId}
+        open={createTankOpen}
+        setOpen={setCreateTankOpen}
       />
       <Stack direction='row' justifyContent='space-between'>
         <Tabs
           value={selectedTank?.id}
-          onChange={(_, newTankId) => {
-            const newTank = tanks.find(({ id }) => id === newTankId);
-            if (newTank) {
-              setSelectedTank(newTank);
+          onChange={(_, newTankId: number | 'create') => {
+            if (typeof newTankId === 'number') {
+              const newTank = tanks.find(({ id }) => id === newTankId);
+              if (newTank) {
+                setSelectedTank(newTank);
+              } else {
+                console.error("Selected tank id that isn't in tank list");
+              }
             } else {
-              console.error("Selected tank id that isn't in tank list");
+              setCreateTankOpen(true);
             }
           }}
         >
@@ -122,13 +145,8 @@ export function TankTabs({
               key={tank.id}
             />
           ))}
+          <Tab label='+' value='create' />
         </Tabs>
-        <Button
-          variant='outlined'
-          onClick={() => setCreateServiceCallOpen(true)}
-        >
-          Add Service Call
-        </Button>
       </Stack>
       <ServiceCallTable tank={selectedTank} employeeId={employeeId} />
     </>
@@ -138,9 +156,7 @@ export function TankTabs({
 export default function Tanks() {
   const { data: optionsList } = useGetClientsQuery(true);
   const [selectedUser, selectCurrentUser] = useState<UserOption | null>(null);
-  const userId = selectedUser?.id;
   const collapse = !!selectedUser;
-  const [open, setOpen] = useState(false);
 
   const handleUserSelected = (
     _event: React.SyntheticEvent,
@@ -153,9 +169,6 @@ export default function Tanks() {
 
   return (
     <>
-      {userId && (
-        <CreateTankForm userId={userId} open={open} setOpen={setOpen} />
-      )}
       <Container sx={{ p: 2 }}>
         <Grid container>
           <Grid item xs={12} sm={3}>
@@ -175,13 +188,9 @@ export default function Tanks() {
         <Collapse in={collapse}>
           <UserCard user={selectedUser} />
           <Divider />
-          <Stack direction='row' justifyContent='space-between' sx={{ py: 1 }}>
-            <Typography variant='h4'>Service Calls</Typography>
-            <Button variant='contained' onClick={() => setOpen(true)}>
-              <AddIcon />
-              Add Tank
-            </Button>
-          </Stack>
+          <Typography variant='h4' gutterBottom>
+            Service Calls
+          </Typography>
           {!!selectedUser?.OwnedTanks?.length && (
             <TankTabs
               key={selectedUser.id}
