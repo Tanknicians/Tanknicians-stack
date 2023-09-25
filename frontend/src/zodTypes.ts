@@ -24,12 +24,11 @@ export const userSchema = z.object({
   address: z.string().optional(),
   phone: z.string().optional(),
 
-  isEmployee: z.boolean(),
+  isEmployee: z.boolean()
 });
 
-export const createUser = userSchema.omit({ id: true });
-export const updateUser = userSchema.omit({ id: true });
-export type CreateUser = z.infer<typeof createUser>;
+export const createUserSchema = userSchema.omit({ id: true });
+export type CreateUser = z.infer<typeof createUserSchema>;
 export type UpdateUser = z.infer<typeof userSchema>;
 export type UserRequest = ValidatedRequest<CreateUser>;
 
@@ -42,17 +41,16 @@ export const loginSchema = z
     password: z.string({ required_error: 'Password is required' }),
     role: z.enum(['ADMIN', 'EMPLOYEE', 'CUSTOMER'], {
       errorMap: () => ({
-        message: 'Role must be ADMIN, EMPLOYEE, or CUSTOMER',
-      }),
+        message: 'Role must be ADMIN, EMPLOYEE, or CUSTOMER'
+      })
     }),
     userId: z
       .number({ required_error: 'Must be a positive integer.' })
-      .positive(),
+      .positive()
   })
   .strict();
 
 export const createLogin = loginSchema.omit({ id: true });
-export const updateLogin = loginSchema.omit({ id: true });
 export type CreateLogin = z.infer<typeof createLogin>;
 export type UpdateLogin = z.infer<typeof loginSchema>;
 export type LoginRequest = ValidatedRequest<CreateLogin>;
@@ -70,11 +68,10 @@ export const tankMetaDataSchema = z.object({
   tanknicianSourcedOnly: z.boolean(),
   lastDateServiced: z.coerce.date(),
 
-  customerId: z.number().int(),
+  customerId: z.number().int()
 });
 
 export const createTank = tankMetaDataSchema.omit({ id: true });
-export const updateTank = tankMetaDataSchema.omit({ id: true });
 export type CreateTankMetaData = z.infer<typeof createTank>;
 export type UpdateTankMetaData = z.infer<typeof tankMetaDataSchema>;
 export type TankMetaDataRequest = ValidatedRequest<CreateTankMetaData>;
@@ -92,10 +89,10 @@ export const serviceCallSchema = z.object({
   notApprovedNotes: z.string().optional(),
   notesUpdated: z.coerce.date().optional(),
 
-  alkalinity: z.number(),
-  calcium: z.number(),
-  nitrate: z.number(),
-  phosphate: z.number(),
+  alkalinity: z.coerce.number(),
+  calcium: z.coerce.number(),
+  nitrate: z.coerce.number(),
+  phosphate: z.coerce.number(),
 
   ATOOperational: z.boolean(),
   ATOReservoirFilled: z.boolean(),
@@ -117,20 +114,14 @@ export const serviceCallSchema = z.object({
   pestCPresent: z.boolean(),
   pestDPresent: z.boolean(),
   employeeId: z.number().int(),
-  tankId: z.number().int(),
+  tankId: z.number().int()
 });
 
 export type ServiceCall = z.infer<typeof serviceCallSchema>;
 export const createServiceCall = serviceCallSchema.omit({ id: true });
-export const updateServiceCall = serviceCallSchema.omit({ id: true });
-export const mobileServiceCall = serviceCallSchema.omit({
-  id: true,
-  isApproved: true,
-  notApprovedNotes: true,
-});
 export type CreateServiceCall = z.infer<typeof createServiceCall>;
+export const updateServiceCall = serviceCallSchema;
 export type UpdateServiceCall = z.infer<typeof serviceCallSchema>;
-export type MobileServiceCall = z.infer<typeof mobileServiceCall>;
 export type ServiceCallRequest = ValidatedRequest<CreateServiceCall>;
 
 // AUTH
@@ -138,7 +129,7 @@ export type ServiceCallRequest = ValidatedRequest<CreateServiceCall>;
 export const authLogin = loginSchema.omit({
   id: true,
   role: true,
-  userId: true,
+  userId: true
 });
 export type AuthLogin = z.infer<typeof authLogin>;
 export type AuthLoginRequest = ValidatedRequest<AuthLogin>;
@@ -160,13 +151,13 @@ const tokenData = loginSchema.extend({ id: z.number(), userId: z.number() });
 
 export const tokenSchema = z.object({
   data: tokenData,
-  isRefreshToken: z.literal(false),
+  isRefreshToken: z.literal(false)
 });
 
 export type Token = z.infer<typeof tokenSchema>;
 
 export const refreshTokenSchema = z.object({
   data: tokenData,
-  isRefreshToken: z.literal(true),
+  isRefreshToken: z.literal(true)
 });
 export type RefreshToken = z.infer<typeof refreshTokenSchema>;

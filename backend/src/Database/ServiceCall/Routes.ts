@@ -16,7 +16,7 @@ serviceCallRouter.use(express.json());
 // Create ServiceCall
 serviceCallRouter.post(
   '/',
-  authenticateRoleMiddleWare(['EMPLOYEE']),
+  authenticateRoleMiddleWare(['EMPLOYEE', 'ADMIN']),
   validateRequestBody(createServiceCall),
   async (req: ServiceCallRequest, res) => {
     try {

@@ -1,3 +1,4 @@
+import { format } from 'date-fns';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Button,
@@ -12,52 +13,17 @@ import {
   TextField
 } from '@mui/material';
 import { Control, Controller, SubmitHandler, useForm } from 'react-hook-form';
-import { z } from 'zod';
-import { useUploadServiceCallMutation } from '../../redux/slices/forms/servicecallApiSlice';
+import {
+  useCreateServiceCallMutation,
+  useUpdateServiceCallMutation
+} from '../../redux/slices/forms/servicecallApiSlice';
+import {
+  createServiceCall as createServiceCallSchema,
+  CreateServiceCall,
+  ServiceCall
+} from '../../zodTypes';
 
-export const serviceCallSchema = z.object({
-  id: z.coerce.number().int(),
-  isApproved: z.boolean().default(false).optional(),
-  createdOn: z.string(), // date but the picker is always a date
-
-  customerRequest: z.string().optional(),
-  employeeNotes: z.string().optional(),
-
-  notApprovedNotes: z.string().optional(),
-  notesUpdated: z.string(), // date but the picker is always a date
-
-  alkalinity: z.coerce.number(),
-  calcium: z.coerce.number(),
-  nitrate: z.coerce.number(),
-  phosphate: z.coerce.number(),
-
-  ATOOperational: z.boolean().default(false),
-  ATOReservoirFilled: z.boolean().default(false),
-  chemFilterAdjusted: z.boolean().default(false),
-  doserAdjustementOrManualDosing: z.boolean().default(false),
-  dosingReservoirsFull: z.boolean().default(false),
-  floorsCheckedForSpillsOrDirt: z.boolean().default(false),
-  glassCleanedInside: z.boolean().default(false),
-  glassCleanedOutside: z.boolean().default(false),
-  mechFilterChanged: z.boolean().default(false),
-  pumpsClearedOfDebris: z.boolean().default(false),
-  saltCreepCleaned: z.boolean().default(false),
-  skimmerCleanedAndOperational: z.boolean().default(false),
-  waterChanged: z.boolean().default(false),
-  waterTestedRecordedDated: z.boolean().default(false),
-
-  pestAPresent: z.boolean().default(false),
-  pestBPresent: z.boolean().default(false),
-  pestCPresent: z.boolean().default(false),
-  pestDPresent: z.boolean().default(false),
-  employeeId: z.coerce.number().int(),
-  tankId: z.coerce.number().int()
-});
-
-export const createServiceCall = serviceCallSchema.omit({ id: true });
-export type CreateServiceCall = z.infer<typeof createServiceCall>;
-
-type CreateFormProps = {
+type FormProps = {
   name: keyof CreateServiceCall;
   type: 'string' | 'number' | 'boolean' | 'date' | 'full';
   control: Control<CreateServiceCall>;
@@ -82,8 +48,8 @@ export function CreateForm({
   size,
   multiline,
   required
-}: CreateFormProps) {
-  const label = getLabel(name);
+}: FormProps) {
+  const label = getLabel(name.toString());
 
   if (type === 'boolean') {
     return (
@@ -104,6 +70,18 @@ export function CreateForm({
         name={name}
         control={control}
         render={({ field, fieldState }) => {
+          if (type === 'date') {
+            if (typeof field.value === 'object') {
+              field.value = format(field.value, 'yyyy-MM-dd');
+            } else if (field.value) {
+              field.value = format(
+                new Date(field.value.toString()),
+                'yyyy-MM-dd'
+              );
+            } else {
+              field.value = format(new Date(), 'yyyy-MM-dd');
+            }
+          }
           return (
             <TextField
               error={!!fieldState.error}
@@ -114,7 +92,11 @@ export function CreateForm({
               label={label}
               InputLabelProps={{ shrink: type === 'date' ? true : undefined }}
               {...field}
-              value={field.value ?? ''}
+              value={
+                type === 'date' && typeof field.value === 'object'
+                  ? format(field.value, 'yyyy-MM-dd')
+                  : field.value
+              }
             />
           );
         }}
@@ -125,7 +107,7 @@ export function CreateForm({
 
 const createServiceCallFields: Record<
   keyof CreateServiceCall,
-  Omit<CreateFormProps, 'name' | 'control'>
+  Omit<FormProps, 'name' | 'control'>
 > = {
   employeeId: { type: 'number', required: true, size: 4 },
   tankId: { type: 'number', required: true, size: 4 },
@@ -162,15 +144,56 @@ const createServiceCallFields: Record<
   isApproved: { type: 'boolean' }
 };
 
+const defaultValues: CreateServiceCall = Object.fromEntries(
+  Object.entries(createServiceCallFields).map(([key, { type }]) => {
+    switch (type) {
+      case 'boolean':
+        return [key, false];
+      case 'date':
+        return [key, new Date()];
+      case 'string':
+        return [key, ''];
+      case 'number':
+        return [key, 0];
+      case 'full':
+        return [key, ''];
+    }
+  })
+);
+defaultValues.isApproved = true;
+
 export default function CreateServiceCallModal({
   open,
-  setOpen
+  setOpen,
+  tankId,
+  employeeId,
+  previousServiceCall
 }: {
   open: boolean;
   setOpen: (open: boolean) => void;
+  employeeId: number;
+  tankId: number;
+  previousServiceCall?: ServiceCall;
 }) {
+  let id: undefined | number;
+  let previousValues: undefined | CreateServiceCall;
+
+  if (previousServiceCall) {
+    const { id: _id, ..._previousValues } = previousServiceCall;
+    id = _id;
+    previousValues = _previousValues;
+  }
+
+  const isEdit = !!previousServiceCall && !!id && !!previousValues;
+
   const { handleSubmit, control, reset } = useForm<CreateServiceCall>({
-    resolver: zodResolver(createServiceCall)
+    resolver: zodResolver(createServiceCallSchema),
+    defaultValues: {
+      ...defaultValues,
+      ...previousValues,
+      tankId,
+      employeeId
+    }
   });
 
   function handleClose() {
@@ -178,13 +201,22 @@ export default function CreateServiceCallModal({
     reset();
   }
 
-  const [uploadServiceCall, { isLoading }] = useUploadServiceCallMutation();
+  const [createServiceCall, { isLoading: isCreateLoading }] =
+    useCreateServiceCallMutation();
+
+  const [updateServiceCall, { isLoading: isUpdateLoading }] =
+    useUpdateServiceCallMutation();
+
+  const uploadServiceCall = isEdit ? updateServiceCall : createServiceCall;
+
+  const isLoading = isCreateLoading || isUpdateLoading;
 
   const onValid: SubmitHandler<CreateServiceCall> = async (
     data: CreateServiceCall
   ) => {
+    const allData = id ? { ...data, id } : { data };
     try {
-      const response = await uploadServiceCall(data);
+      const response = await uploadServiceCall(allData);
       console.log({ response });
       handleClose();
     } catch (e) {
@@ -192,17 +224,16 @@ export default function CreateServiceCallModal({
     }
   };
 
-  const fields = (
-    Object.keys(
-      createServiceCallFields
-    ) as (keyof typeof createServiceCallFields)[]
-  )
-    .map((key) => ({ name: key, ...createServiceCallFields[key] }))
+  const fields = Object.entries(createServiceCallFields)
+    .map(([key, value]) => ({ name: key as keyof CreateServiceCall, ...value }))
     .filter((field) => field.name !== 'isApproved');
 
   return (
     <Dialog open={open} onClose={handleClose} maxWidth='lg'>
-      <DialogTitle>Create User</DialogTitle>
+      <DialogTitle>
+        {previousServiceCall ? `Update ${previousServiceCall.id}` : 'Create'}{' '}
+        Service Call
+      </DialogTitle>
       <DialogContent>
         <Grid container spacing={2} paddingTop={1}>
           {fields.map((field) => (
