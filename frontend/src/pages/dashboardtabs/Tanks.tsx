@@ -1,9 +1,10 @@
 import {
   UserOption,
   useGetClientsQuery,
-  OwnedTanks
+  OwnedTanks,
+  UserQuearyArgs
 } from '../../redux/slices/users/userManagementSlice';
-import CreateTankForm from '../../components/CreateTankForm';
+import CreateTankForm from '../../components/forms/CreateTank';
 import UserSearchBar from '../../components/UserSearchBar';
 import Typography from '@mui/material/Typography';
 import UserCard from '../../components/UserCard';
@@ -135,8 +136,13 @@ export function TankTabs({
   );
 }
 
+const userQuearyArgs: UserQuearyArgs = {
+  includeTanks: true,
+  isEmployee: false
+};
+
 export default function Tanks() {
-  const { data: optionsList } = useGetClientsQuery(true);
+  const { data: optionsList } = useGetClientsQuery(userQuearyArgs);
   const [selectedUser, selectCurrentUser] = useState<UserOption | null>(null);
   const userId = selectedUser?.id;
   const collapse = !!selectedUser;
