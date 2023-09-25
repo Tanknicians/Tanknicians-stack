@@ -21,5 +21,4 @@ jobs:
           git config --global core.ignorecase true
           cd frontend
           npm ci
-          npm list zod
           npm run build --if-present
