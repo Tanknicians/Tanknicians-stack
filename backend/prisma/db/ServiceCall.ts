@@ -29,10 +29,7 @@ export async function read(id: number) {
 }
 
 // read ALL service calls for a tank
-export async function readAllByTankId(
-  tankId: number,
-  isApproved?: boolean,
-) {
+export async function readAllByTankId(tankId: number, isApproved?: boolean) {
   return await prisma.serviceCall.findMany({
     where: {
       tankId: tankId,
@@ -103,9 +100,9 @@ export async function searchByString(search: string, page: number) {
 export async function getAll(isApproved?: boolean) {
   return await prisma.serviceCall.findMany({
     where: {
-      isApproved: isApproved
-    }
-  })
+      isApproved: isApproved,
+    },
+  });
 }
 
 // SEARCH (needs to be implemented)
