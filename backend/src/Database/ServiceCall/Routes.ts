@@ -40,7 +40,7 @@ serviceCallRouter.get(
   async (req, res) => {
     const result = z
       .object({
-        isApproved: z.optional(z.boolean()),
+        isApproved: z.boolean().optional(),
       })
       .safeParse({ ...req.query });
 
@@ -88,8 +88,8 @@ serviceCallRouter.get(
     const result = z
       .object({
         tankId: z.coerce.number(),
-        start: z.optional(z.coerce.date()),
-        end: z.optional(z.coerce.date()),
+        start: z.coerce.date().optional(),
+        end: z.coerce.date().optional(),
       })
       .safeParse({ ...req.query, ...req.params });
     if (!result.success) {
@@ -118,7 +118,7 @@ serviceCallRouter.get(
     const result = z
       .object({
         tankId: z.coerce.number(),
-        isApproved: z.optional(z.boolean()),
+        isApproved: z.boolean().optional(),
       })
       .safeParse({ ...req.query, ...req.params });
     if (!result.success) {
