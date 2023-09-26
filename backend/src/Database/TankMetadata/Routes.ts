@@ -33,7 +33,7 @@ tankMetaDataRouter.post(
       const input = req.body;
       const newTank: CreateTankMetaData = {
         ...input,
-        qrSymbol: 0,
+        qrSymbol: 1,
         lastDateServiced: tankEpoch,
       };
       const result = await TankMetadataService.create(newTank);
