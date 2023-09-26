@@ -28,31 +28,16 @@ export async function read(id: number) {
   });
 }
 
-// should return the first few latest service calls from a specified tank
-export async function readLatestByTankId(tankId: number) {
-  return await prisma.serviceCall.findMany({
-    where: {
-      tankId: tankId,
-    },
-    orderBy: {
-      id: 'desc',
-    },
-    take: 5, // change this for n-service calls to return, currently set >1 to get averages on data
-  });
-}
-
 // read ALL service calls for a tank
 export async function readAllByTankId(
   tankId: number,
-  isApproved: boolean | undefined,
+  isApproved?: boolean,
 ) {
-  const where = {
-    tankId: tankId,
-    ...(isApproved !== undefined && { isApproved: isApproved }),
-  };
-
   return await prisma.serviceCall.findMany({
-    where: where,
+    where: {
+      tankId: tankId,
+      isApproved: isApproved,
+    },
   });
 }
 
@@ -115,14 +100,12 @@ export async function searchByString(search: string, page: number) {
 }
 
 // ALL
-export async function getAll(isApproved: boolean | undefined) {
-  const where = {
-    ...(isApproved !== undefined && { isApproved: isApproved }),
-  };
-
+export async function getAll(isApproved?: boolean) {
   return await prisma.serviceCall.findMany({
-    where: where,
-  });
+    where: {
+      isApproved: isApproved
+    }
+  })
 }
 
 // SEARCH (needs to be implemented)

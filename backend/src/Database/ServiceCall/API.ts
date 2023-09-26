@@ -39,7 +39,7 @@ export async function read(id: number) {
   }
 }
 
-export async function readAll(isApproved: boolean | undefined) {
+export async function readAll(isApproved?: boolean) {
   try {
     const serviceCalls = await serviceCallDB.getAll(isApproved);
     if (!serviceCalls) {
@@ -104,7 +104,7 @@ export async function readAllByDate(
 
 export async function readAllByTankId(
   tankId: number,
-  isApproved: boolean | undefined,
+  isApproved?: boolean,
 ) {
   try {
     const serviceCalls = await serviceCallDB.readAllByTankId(

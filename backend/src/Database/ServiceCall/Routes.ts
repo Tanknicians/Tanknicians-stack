@@ -40,7 +40,7 @@ serviceCallRouter.get(
   async (req, res) => {
     const result = z
       .object({
-        isApproved: z.optional(z.coerce.boolean()),
+        isApproved: z.optional(z.boolean()),
       })
       .safeParse({ ...req.query });
 
@@ -96,7 +96,7 @@ serviceCallRouter.get(
       return res.status(400).json({ error: result.error.errors });
     }
     // if dates are undefined, start and end dates are max range
-    const { tankId, start = new Date(0), end = new Date() } = result.data;
+    const { tankId, start, end } = result.data;
     try {
       const result = await ServiceCallService.readAllByDate(tankId, start, end);
       res.json(result);
@@ -118,7 +118,7 @@ serviceCallRouter.get(
     const result = z
       .object({
         tankId: z.coerce.number(),
-        isApproved: z.optional(z.coerce.boolean()),
+        isApproved: z.optional(z.boolean()),
       })
       .safeParse({ ...req.query, ...req.params });
     if (!result.success) {
