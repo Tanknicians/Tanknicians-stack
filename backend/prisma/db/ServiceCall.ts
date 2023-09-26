@@ -42,12 +42,14 @@ export async function readLatestByTankId(tankId: number) {
 }
 
 // read ALL service calls for a tank
-export async function readAllByTankId(tankId: number, isApproved: boolean) {
+export async function readAllByTankId(tankId: number, isApproved: boolean | undefined) {
+  const where = {
+    tankId: tankId,
+    ...(isApproved !== undefined && { isApproved: isApproved }),
+  };
+
   return await prisma.serviceCall.findMany({
-    where: {
-      tankId: tankId,
-      isApproved: isApproved,
-    },
+    where: where,
   });
 }
 

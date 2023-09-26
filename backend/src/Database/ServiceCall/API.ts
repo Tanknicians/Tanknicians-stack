@@ -102,7 +102,7 @@ export async function readAllByDate(
   }
 }
 
-export async function readAllByTankId(tankId: number, isApproved: boolean) {
+export async function readAllByTankId(tankId: number, isApproved: boolean | undefined) {
   try {
     const serviceCalls = await serviceCallDB.readAllByTankId(
       tankId,

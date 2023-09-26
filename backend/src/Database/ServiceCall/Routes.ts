@@ -119,7 +119,7 @@ serviceCallRouter.get(
     const result = z
       .object({
         tankId: z.coerce.number(),
-        isApproved: z.coerce.boolean(),
+        isApproved: z.optional(z.coerce.boolean()),
       })
       .safeParse({ ...req.query, ...req.params });
     if (!result.success) {
