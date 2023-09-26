@@ -6,7 +6,6 @@ import {
   UserRequest,
   createUser,
   updateUser,
-  userSchema,
   validateRequestBody,
 } from '../../zodTypes';
 import { z } from 'zod';
