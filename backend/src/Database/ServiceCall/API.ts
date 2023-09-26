@@ -55,8 +55,8 @@ export async function readAll(isApproved: boolean | undefined) {
 
 export async function readAllByDate(
   tankId: number,
-  startDate: Date,
-  endDate: Date,
+  startDate?: Date,
+  endDate?: Date,
 ) {
   interface ReturnDataSchema {
     tankId: number;

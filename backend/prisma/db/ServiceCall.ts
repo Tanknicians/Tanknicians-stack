@@ -59,8 +59,8 @@ export async function readAllByTankId(
 // READ range of service calls for a single tank
 export async function readByDateTime(
   tankId: number,
-  startDate: Date,
-  endDate: Date,
+  startDate?: Date,
+  endDate?: Date,
 ) {
   return await prisma.serviceCall.findMany({
     where: {
