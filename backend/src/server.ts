@@ -1,6 +1,7 @@
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import express from 'express';
+import booleanParser from 'express-query-boolean';
 
 import authRouter from './Authentication/Routes';
 import databaseRouter from './Database/Routes';
@@ -26,6 +27,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(httpLogger);
 app.use(cookieParser());
+app.use(booleanParser());
 
 // Service endpoints
 app
