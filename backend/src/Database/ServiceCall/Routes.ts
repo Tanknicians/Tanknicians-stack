@@ -40,13 +40,14 @@ serviceCallRouter.get(
   async (req, res) => {
     const result = z
       .object({
-        isApproved: z.coerce.boolean(),
+        isApproved: z.optional(z.coerce.boolean()),
       })
       .safeParse({ ...req.query });
+
     if (!result.success) {
       return res.status(400).json({ error: result.error.errors });
     }
-    const { isApproved = false } = result.data;
+    const { isApproved } = result.data;
     try {
       const result = await ServiceCallService.readAll(isApproved);
       res.json(result);
@@ -59,6 +60,7 @@ serviceCallRouter.get(
     }
   },
 );
+
 
 // Read ServiceCall
 serviceCallRouter.get(

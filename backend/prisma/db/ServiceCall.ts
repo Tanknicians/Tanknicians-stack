@@ -110,11 +110,13 @@ export async function searchByString(search: string, page: number) {
 }
 
 // ALL
-export async function getAll(isApproved: boolean) {
+export async function getAll(isApproved: boolean | undefined) {
+  const where = {
+    ...(isApproved !== undefined && { isApproved: isApproved }),
+  };
+
   return await prisma.serviceCall.findMany({
-    where: {
-      isApproved: isApproved,
-    },
+    where: where,
   });
 }
 

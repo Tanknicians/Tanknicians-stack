@@ -39,7 +39,7 @@ export async function read(id: number) {
   }
 }
 
-export async function readAll(isApproved: boolean) {
+export async function readAll(isApproved: boolean | undefined) {
   try {
     const serviceCalls = await serviceCallDB.getAll(isApproved);
     if (!serviceCalls) {
