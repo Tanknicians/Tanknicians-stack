@@ -2,19 +2,15 @@ import { tankDB } from '../../../prisma/db/TankMetadata';
 import { CreateTankMetaData, UpdateTankMetaData } from '../../zodTypes';
 
 /*
-The purpose of this function while creating a new Tank in the database is to relieve stress on the front-end's current tank limitation per-user. 
-
 qrSymbol is a discrete integer value that represents the User's local tank. 
-We want a collection of these values to look as: [1, 2, 3...]
+It must be unique per-User.
+We want a collection of these values to look as: [1, 2, 3]
 
-In the event a tank is removed, we want an elegant solution in the event we have a strange array: [1, 3, _, 4]. 
-We want to avoid incrementing as such: [1, _, 3, 4, 5]. 
+In the event a tank is removed, we want an elegant solution in the event we have a strange array: [1, 3]. 
+We want to avoid incrementing as such: [1, 3, 4]. 
+As well, we want to avoid a solution that may cause duplicates such as [1, 3, 3].
 
-Though it takes more time to process, being able to fill in the collection to [1, 2, 3, 4...] benefits the front-end and business. 
-By using all slots available, we avoid continued discrete increments as tanks are removed and added.
-
-Ultimately, this is not hard-locked to any value and will continue to increment if there are no slots available. 
-At that time, it will be up to the front-end to implement a solution. 
+Though it takes O(n) instead of O(1) to process, being able to fill in the collection to [1, 2, 3] is more important. 
 */
 export async function create(tank: CreateTankMetaData) {
   try {
