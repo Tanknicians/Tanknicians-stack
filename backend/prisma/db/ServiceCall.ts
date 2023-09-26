@@ -42,7 +42,10 @@ export async function readLatestByTankId(tankId: number) {
 }
 
 // read ALL service calls for a tank
-export async function readAllByTankId(tankId: number, isApproved: boolean | undefined) {
+export async function readAllByTankId(
+  tankId: number,
+  isApproved: boolean | undefined,
+) {
   const where = {
     tankId: tankId,
     ...(isApproved !== undefined && { isApproved: isApproved }),

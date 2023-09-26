@@ -61,7 +61,6 @@ serviceCallRouter.get(
   },
 );
 
-
 // Read ServiceCall
 serviceCallRouter.get(
   '/:id',
