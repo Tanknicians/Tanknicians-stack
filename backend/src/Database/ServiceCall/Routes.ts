@@ -124,7 +124,7 @@ serviceCallRouter.get(
     if (!result.success) {
       return res.status(400).json({ error: result.error.errors });
     }
-    const { tankId, isApproved } = result.data;
+    const { tankId, isApproved = false } = result.data;
     try {
       const result = await ServiceCallService.readAllByTankId(
         tankId,
