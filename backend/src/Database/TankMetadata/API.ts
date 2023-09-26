@@ -11,6 +11,7 @@ We want to avoid incrementing as such: [1, 3, 4].
 As well, we want to avoid a solution that may cause duplicates such as [1, 3, 3].
 
 Though it takes O(n) instead of O(1) to process, being able to fill in the collection to [1, 2, 3] is more important. 
+The purpose is to avoid hitting a soft limit on the front-end, whom has a limited amount of values (up to 20).
 */
 export async function create(tank: CreateTankMetaData) {
   try {
