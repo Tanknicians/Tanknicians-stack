@@ -35,14 +35,6 @@ export async function readTanksByUserId(customerId: number) {
   });
 }
 
-export async function readNumberOfTanksByUserId(customerId: number) {
-  return await prisma.tankMetadata.count({
-    where: {
-      customerId: customerId,
-    },
-  });
-}
-
 // UPDATE
 export async function update(tank: UpdateTankMetaData) {
   await prisma.tankMetadata.update({
