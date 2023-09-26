@@ -89,15 +89,15 @@ serviceCallRouter.get(
     const result = z
       .object({
         tankId: z.coerce.number(),
-        start: z.coerce.date(),
-        end: z.coerce.date(),
+        start: z.optional(z.coerce.date()),
+        end: z.optional(z.coerce.date()),
       })
       .safeParse({ ...req.query, ...req.params });
     if (!result.success) {
       return res.status(400).json({ error: result.error.errors });
     }
-    const { tankId, start, end } = result.data;
-
+    // if dates are undefined, start and end dates are max range
+    const { tankId, start = new Date(0), end = new Date() } = result.data;
     try {
       const result = await ServiceCallService.readAllByDate(tankId, start, end);
       res.json(result);
