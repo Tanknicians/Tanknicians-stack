@@ -1,5 +1,5 @@
-import { format } from "date-fns";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { format } from 'date-fns';
+import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Button,
   Checkbox,
@@ -10,22 +10,22 @@ import {
   DialogTitle,
   FormControlLabel,
   Grid,
-  TextField,
-} from "@mui/material";
-import { Control, Controller, SubmitHandler, useForm } from "react-hook-form";
+  TextField
+} from '@mui/material';
+import { Control, Controller, SubmitHandler, useForm } from 'react-hook-form';
 import {
   useCreateServiceCallMutation,
-  useUpdateServiceCallMutation,
-} from "../../redux/slices/forms/servicecallApiSlice";
+  useUpdateServiceCallMutation
+} from '../../redux/slices/forms/servicecallApiSlice';
 import {
   createServiceCall as createServiceCallSchema,
   CreateServiceCall,
-  ServiceCall,
-} from "../../zodTypes";
+  ServiceCall
+} from '../../zodTypes';
 
 type FormProps = {
   name: keyof CreateServiceCall;
-  type: "string" | "number" | "boolean" | "date" | "full";
+  type: 'string' | 'number' | 'boolean' | 'date' | 'full';
   control: Control<CreateServiceCall>;
   size?: number;
   multiline?: boolean;
@@ -33,9 +33,9 @@ type FormProps = {
 };
 
 function getLabel(input: string) {
-  if (!input) return "";
+  if (!input) return '';
   let result = input.charAt(0).toUpperCase() + input.slice(1);
-  result = result.replace(/(?<!^)([A-Z])/g, " $1");
+  result = result.replace(/(?<!^)([A-Z])/g, ' $1');
   result = result.replace(/\b(For|Or|And)\b/g, (match) => match.toLowerCase());
 
   return result;
@@ -47,11 +47,11 @@ export function CreateForm({
   control,
   size,
   multiline,
-  required,
+  required
 }: FormProps) {
   const label = getLabel(name.toString());
 
-  if (type === "boolean") {
+  if (type === 'boolean') {
     return (
       <Grid item xs={size ?? 4}>
         <Controller
@@ -70,10 +70,10 @@ export function CreateForm({
         name={name}
         control={control}
         render={({ field, fieldState }) => {
-          if (type === "date") {
+          if (type === 'date') {
             if (!field.value) {
               field.value = new Date();
-            } else if (typeof field.value !== "object") {
+            } else if (typeof field.value !== 'object') {
               try {
                 field.value = new Date(field.value.toString());
               } catch (e) {
@@ -87,13 +87,13 @@ export function CreateForm({
               required={!!required}
               fullWidth
               multiline={!!multiline}
-              type={type === "full" ? "string" : type}
+              type={type === 'full' ? 'string' : type}
               label={label}
-              InputLabelProps={{ shrink: type === "date" ? true : undefined }}
+              InputLabelProps={{ shrink: type === 'date' ? true : undefined }}
               {...field}
               value={
-                type === "date" && typeof field.value === "object"
-                  ? format(field.value, "yyyy-MM-dd")
+                type === 'date' && typeof field.value === 'object'
+                  ? format(field.value, 'yyyy-MM-dd')
                   : field.value
               }
             />
@@ -106,56 +106,56 @@ export function CreateForm({
 
 const createServiceCallFields: Record<
   keyof CreateServiceCall,
-  Omit<FormProps, "name" | "control">
+  Omit<FormProps, 'name' | 'control'>
 > = {
-  employeeId: { type: "number", required: true, size: 4 },
-  tankId: { type: "number", required: true, size: 4 },
-  createdOn: { type: "date", required: true, size: 4 },
-  customerRequest: { type: "string", size: 12 },
-  employeeNotes: { type: "string", size: 12 },
+  employeeId: { type: 'number', required: true, size: 4 },
+  tankId: { type: 'number', required: true, size: 4 },
+  createdOn: { type: 'date', required: true, size: 4 },
+  customerRequest: { type: 'string', size: 12 },
+  employeeNotes: { type: 'string', size: 12 },
 
-  notApprovedNotes: { type: "string", multiline: true, size: 8 },
-  notesUpdated: { type: "date", size: 4 },
-  alkalinity: { type: "number", required: true },
-  calcium: { type: "number", required: true },
-  nitrate: { type: "number", required: true },
-  phosphate: { type: "number", required: true },
+  notApprovedNotes: { type: 'string', multiline: true, size: 8 },
+  notesUpdated: { type: 'date', size: 4 },
+  alkalinity: { type: 'number', required: true },
+  calcium: { type: 'number', required: true },
+  nitrate: { type: 'number', required: true },
+  phosphate: { type: 'number', required: true },
 
-  ATOOperational: { type: "boolean" },
-  ATOReservoirFilled: { type: "boolean" },
-  chemFilterAdjusted: { type: "boolean" },
-  doserAdjustementOrManualDosing: { type: "boolean" },
-  dosingReservoirsFull: { type: "boolean" },
-  floorsCheckedForSpillsOrDirt: { type: "boolean" },
-  glassCleanedInside: { type: "boolean" },
-  glassCleanedOutside: { type: "boolean" },
-  mechFilterChanged: { type: "boolean" },
-  pumpsClearedOfDebris: { type: "boolean" },
-  saltCreepCleaned: { type: "boolean" },
-  skimmerCleanedAndOperational: { type: "boolean" },
-  waterChanged: { type: "boolean" },
-  waterTestedRecordedDated: { type: "boolean" },
+  ATOOperational: { type: 'boolean' },
+  ATOReservoirFilled: { type: 'boolean' },
+  chemFilterAdjusted: { type: 'boolean' },
+  doserAdjustementOrManualDosing: { type: 'boolean' },
+  dosingReservoirsFull: { type: 'boolean' },
+  floorsCheckedForSpillsOrDirt: { type: 'boolean' },
+  glassCleanedInside: { type: 'boolean' },
+  glassCleanedOutside: { type: 'boolean' },
+  mechFilterChanged: { type: 'boolean' },
+  pumpsClearedOfDebris: { type: 'boolean' },
+  saltCreepCleaned: { type: 'boolean' },
+  skimmerCleanedAndOperational: { type: 'boolean' },
+  waterChanged: { type: 'boolean' },
+  waterTestedRecordedDated: { type: 'boolean' },
 
-  pestAPresent: { type: "boolean" },
-  pestBPresent: { type: "boolean" },
-  pestCPresent: { type: "boolean" },
-  pestDPresent: { type: "boolean" },
-  isApproved: { type: "boolean" },
+  pestAPresent: { type: 'boolean' },
+  pestBPresent: { type: 'boolean' },
+  pestCPresent: { type: 'boolean' },
+  pestDPresent: { type: 'boolean' },
+  isApproved: { type: 'boolean' }
 };
 
 const defaultValues: CreateServiceCall = Object.fromEntries(
   Object.entries(createServiceCallFields).map(([key, { type }]) => {
     switch (type) {
-      case "boolean":
+      case 'boolean':
         return [key, false];
-      case "date":
+      case 'date':
         return [key, new Date()];
-      case "string":
-        return [key, ""];
-      case "number":
+      case 'string':
+        return [key, ''];
+      case 'number':
         return [key, 0];
-      case "full":
-        return [key, ""];
+      case 'full':
+        return [key, ''];
     }
   })
 );
@@ -166,7 +166,7 @@ export default function CreateServiceCallModal({
   setOpen,
   tankId,
   employeeId,
-  previousServiceCall,
+  previousServiceCall
 }: {
   open: boolean;
   setOpen: (open: boolean) => void;
@@ -191,8 +191,8 @@ export default function CreateServiceCallModal({
       ...defaultValues,
       ...previousValues,
       tankId,
-      employeeId,
-    },
+      employeeId
+    }
   });
 
   function handleClose() {
@@ -225,12 +225,12 @@ export default function CreateServiceCallModal({
 
   const fields = Object.entries(createServiceCallFields)
     .map(([key, value]) => ({ name: key as keyof CreateServiceCall, ...value }))
-    .filter((field) => field.name !== "isApproved");
+    .filter((field) => field.name !== 'isApproved');
 
   return (
-    <Dialog open={open} onClose={handleClose} maxWidth="lg">
+    <Dialog open={open} onClose={handleClose} maxWidth='lg'>
       <DialogTitle>
-        {previousServiceCall ? `Update ${previousServiceCall.id}` : "Create"}{" "}
+        {previousServiceCall ? `Update ${previousServiceCall.id}` : 'Create'}{' '}
         Service Call
       </DialogTitle>
       <DialogContent>
@@ -243,7 +243,7 @@ export default function CreateServiceCallModal({
       <DialogActions>
         <Button onClick={handleClose}>Cancel</Button>
         <Button
-          type="button"
+          type='button'
           onClick={handleSubmit(onValid)}
           startIcon={isLoading ? <CircularProgress /> : null}
           disabled={isLoading}
