@@ -15,20 +15,7 @@ import { z } from "zod";
 import { useEditUserMutation } from "../../redux/slices/users/userManagementSlice";
 import { UserOption } from "../../redux/slices/users/userManagementSlice";
 import { useEffect } from "react";
-
-export const userSchema = z.object({
-  id: z.number().int(),
-  firstName: z.string().optional(),
-  middleName: z.string().optional(),
-  lastName: z.string().optional(),
-  address: z.string().optional(),
-  phone: z.string().optional(),
-
-  isEmployee: z.boolean().default(false),
-});
-
-export const createUserSchema = userSchema.omit({ id: true });
-export type CreateUser = z.infer<typeof createUserSchema>;
+import { userSchema, CreateUser } from "../../zodTypes";
 
 export default function EditUserModal({
   open,
