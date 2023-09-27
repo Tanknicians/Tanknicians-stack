@@ -33,6 +33,13 @@ export type UserQuearyArgs = {
 
 export const userManagementSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
+    getUser: builder.query<UserOption, number>({
+      providesTags: () => [{ type: 'USERLIST', id: 'LIST' }],
+      query: (id) => ({
+        url: `/api/database/user/${id}`,
+        method: 'GET'
+      })
+    }),
     // Query returns a list of all users
     getClients: builder.query<UserOption[], UserQuearyArgs>({
       providesTags: (result) =>
@@ -87,5 +94,6 @@ export const {
   useGetClientsQuery,
   useAddUserMutation,
   useAddTankToUserMutation,
-  useEditUserMutation
+  useEditUserMutation,
+  useGetUserQuery
 } = userManagementSlice;
