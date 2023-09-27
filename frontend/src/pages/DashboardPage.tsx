@@ -16,6 +16,7 @@ import { Link } from 'react-router-dom';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import * as React from 'react';
+import { useGetUnapprovedServiceCallsQuery } from '../redux/slices/forms/servicecallApiSlice';
 
 let theme = createTheme({
   palette: {
@@ -210,6 +211,9 @@ export default function Paperbase() {
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const isSmUp = useMediaQuery(theme.breakpoints.up('sm'));
 
+  const numberOfUnapprovedForms =
+    useGetUnapprovedServiceCallsQuery().data?.length;
+
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
@@ -271,7 +275,10 @@ export default function Paperbase() {
                       sx={{ p: 0.5 }}
                       onClick={() => setActiveNavItem('Approve Forms')}
                     >
-                      <StyledBadge badgeContent={3} color='secondary'>
+                      <StyledBadge
+                        badgeContent={numberOfUnapprovedForms}
+                        color='secondary'
+                      >
                         <NotificationsIcon sx={item} />
                       </StyledBadge>
                     </IconButton>
