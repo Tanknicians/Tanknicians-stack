@@ -27,7 +27,7 @@ import {
   TableRow,
   Tabs
 } from '@mui/material';
-import { useGetServiceCallByTankIdQuery } from '../../Redux/slices/forms/servicecallApiSlice';
+import { useGetServiceCallByTankIdQuery } from '../../redux/slices/forms/servicecallApiSlice';
 import { Edit as EditIcon } from '@mui/icons-material';
 import CreateServiceCallModal from '../../components/forms/UpsertServiceCall';
 import Add from '@mui/icons-material/Add';
