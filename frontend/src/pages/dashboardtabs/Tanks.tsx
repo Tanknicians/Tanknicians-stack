@@ -35,7 +35,10 @@ import Add from '@mui/icons-material/Add';
 function ServiceCallTable({
   tank,
   employeeId
-}: { tank: OwnedTanks; employeeId: number }) {
+}: {
+  tank: OwnedTanks;
+  employeeId: number;
+}) {
   const [createServiceCallOpen, setCreateServiceCallOpen] = useState(false);
   const [editServiceCallId, setEditServiceCallId] = useState<
     number | undefined
@@ -113,8 +116,14 @@ function ServiceCallTable({
 export function TankTabs({
   tanks,
   employeeId
-}: { tanks: OwnedTanks[]; employeeId: number }) {
-  const [selectedTank, setSelectedTank] = useState<OwnedTanks>(tanks[0]);
+}: {
+  tanks: OwnedTanks[];
+  employeeId: number;
+}) {
+  const [selectedTank, setSelectedTank] = useState<OwnedTanks | undefined>(
+    tanks.at(-1)
+  );
+
   const [createTankOpen, setCreateTankOpen] = useState(false);
   return (
     <>
@@ -146,10 +155,21 @@ export function TankTabs({
               key={tank.id}
             />
           ))}
-          <Tab label='+' value='create' />
+          <Tab
+            label={
+              selectedTank ? (
+                <Add />
+              ) : (
+                <Button variant='outlined'>Add Tank</Button>
+              )
+            }
+            value='create'
+          />
         </Tabs>
       </Stack>
-      <ServiceCallTable tank={selectedTank} employeeId={employeeId} />
+      {selectedTank && (
+        <ServiceCallTable tank={selectedTank} employeeId={employeeId} />
+      )}
     </>
   );
 }
@@ -197,7 +217,7 @@ export default function Tanks() {
           <Typography variant='h4' gutterBottom>
             Service Calls
           </Typography>
-          {!!selectedUser?.OwnedTanks?.length && (
+          {selectedUser?.OwnedTanks && (
             <TankTabs
               key={selectedUser.id}
               tanks={selectedUser.OwnedTanks}
