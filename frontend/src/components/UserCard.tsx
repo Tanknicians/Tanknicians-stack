@@ -56,12 +56,12 @@ export default function UserCard(props: UserCardProps) {
           </Box>
         </Box>
       </Paper>
-      <EditUserModal
+      {userModalOpen &&<EditUserModal
         open={userModalOpen}
         setOpen={setUserModalOpen}
         userData={user}
         key={user?.id}
-      />
+      />}
     </Box>
   );
 }
