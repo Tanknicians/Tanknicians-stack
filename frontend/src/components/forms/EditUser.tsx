@@ -30,10 +30,6 @@ export default function EditUserModal({
     return null;
   }
 
-  useEffect(() => {
-    console.log('hit');
-  }, []);
-
   const [editUser, { isLoading }] = useEditUserMutation();
   const { handleSubmit, control, reset, formState } = useForm<UserOption>({
     resolver: zodResolver(userSchema),
