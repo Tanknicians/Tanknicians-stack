@@ -10,7 +10,7 @@ import AddIcon from '@mui/icons-material/Add';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import CreateUserModal from '../../components/forms/CreateUser';
 import { UserQuearyArgs } from '../../redux/slices/users/userManagementSlice';
 
@@ -24,15 +24,20 @@ export default function Employees() {
 
   const [tankModalOpen, setTankModalOpen] = useState(false);
   const [userModalOpen, setUserModalOpen] = useState(false);
-  const [selectedUser, selectCurrentUser] = useState<UserOption | null>(null);
+  const [selectedUserId, selectCurrentUserId] = useState<number | null>(null);
+
+  const selectedUser = useMemo(
+    () => optionsList?.find((user) => user.id === selectedUserId) ?? null,
+    [optionsList, selectedUserId]
+  );
+
   const [open, setOpen] = useState(false);
 
   const handleUserSelected = (
     _event: React.SyntheticEvent,
     customer: UserOption | null
   ) => {
-    selectCurrentUser(customer);
-    console.log('Employee: ', customer);
+    selectCurrentUserId(customer?.id ?? null);
   };
 
   const handleOpenUserModal = () => {
@@ -67,7 +72,8 @@ export default function Employees() {
         <Grid xs={1} sm={1} item />
         <Grid item xs={6} sm={6}>
           <UserSearchBar
-            optionsList={optionsList}
+            userList={optionsList}
+            selectedUser={selectedUser}
             handleUserSelected={handleUserSelected}
           />
         </Grid>

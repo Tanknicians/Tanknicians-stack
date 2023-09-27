@@ -12,7 +12,7 @@ import Container from '@mui/material/Container';
 import Collapse from '@mui/material/Collapse';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import {
   Box,
   Divider,
@@ -35,7 +35,10 @@ import Add from '@mui/icons-material/Add';
 function ServiceCallTable({
   tank,
   employeeId
-}: { tank: OwnedTanks; employeeId: number }) {
+}: {
+  tank: OwnedTanks;
+  employeeId: number;
+}) {
   const [createServiceCallOpen, setCreateServiceCallOpen] = useState(false);
   const [editServiceCallId, setEditServiceCallId] = useState<
     number | undefined
@@ -113,7 +116,10 @@ function ServiceCallTable({
 export function TankTabs({
   tanks,
   employeeId
-}: { tanks: OwnedTanks[]; employeeId: number }) {
+}: {
+  tanks: OwnedTanks[];
+  employeeId: number;
+}) {
   const [selectedTank, setSelectedTank] = useState<OwnedTanks>(tanks[0]);
   const [createTankOpen, setCreateTankOpen] = useState(false);
   return (
@@ -161,14 +167,19 @@ const userQuearyArgs: UserQuearyArgs = {
 
 export default function Tanks() {
   const { data: optionsList } = useGetClientsQuery(userQuearyArgs);
-  const [selectedUser, selectCurrentUser] = useState<UserOption | null>(null);
+  const [selectedUserId, selectCurrentUserId] = useState<number | null>(null);
+  const selectedUser = useMemo(
+    () => optionsList?.find((user) => user.id === selectedUserId) ?? null,
+    [optionsList, selectedUserId]
+  );
+
   const collapse = !!selectedUser;
 
   const handleUserSelected = (
     _event: React.SyntheticEvent,
     customer: UserOption | null
   ) => {
-    selectCurrentUser(customer);
+    selectCurrentUserId(customer?.id ?? null);
   };
 
   if (!optionsList) return <div>Loading...</div>;
@@ -185,7 +196,8 @@ export default function Tanks() {
           <Grid item xs={6} sm={7}>
             <Container maxWidth='sm'>
               <UserSearchBar
-                optionsList={optionsList}
+                userList={optionsList}
+                selectedUser={selectedUser}
                 handleUserSelected={handleUserSelected}
               />
             </Container>

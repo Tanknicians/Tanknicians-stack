@@ -11,7 +11,7 @@ import AddIcon from '@mui/icons-material/Add';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import CreateUserModal from '../../components/forms/CreateUser';
 import { UserQuearyArgs } from '../../redux/slices/users/userManagementSlice';
 
@@ -23,13 +23,17 @@ export default function Clients() {
   const { data: optionsList, error } = useGetClientsQuery(userQuearyArgs);
   const [tankModalOpen, setTankModalOpen] = useState(false);
   const [clientModalOpen, setClientModalOpen] = useState(false);
-  const [selectedClient, setSelectedClient] = useState<UserOption | null>(null);
+  const [selectedClientId, setSelectedClientId] = useState<number | null>(null);
+  const selectedClient = useMemo(
+    () => optionsList?.find((client) => client.id === selectedClientId) ?? null,
+    [optionsList, selectedClientId]
+  );
 
   const handleUserSelected = (
     _event: React.SyntheticEvent,
     client: UserOption | null
   ) => {
-    setSelectedClient(client);
+    setSelectedClientId(client?.id ?? null);
   };
 
   const handleOpenUserModal = () => {
@@ -66,7 +70,8 @@ export default function Clients() {
         <Grid xs={1} sm={1} item />
         <Grid item xs={6} sm={6}>
           <UserSearchBar
-            optionsList={optionsList}
+            userList={optionsList}
+            selectedUser={selectedClient}
             handleUserSelected={handleUserSelected}
           />
         </Grid>
