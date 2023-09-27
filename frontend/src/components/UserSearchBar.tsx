@@ -55,7 +55,6 @@ export default function UserSearchBar({
         .slice()
         .sort((a, b) => a.firstName.localeCompare(b.firstName))}
       groupBy={(option) => option.firstName?.charAt(0).toUpperCase() ?? ''}
-
       getOptionLabel={(option) =>
         `${option.firstName} ${option.middleName} ${option.lastName} ${option.address}`
       }
