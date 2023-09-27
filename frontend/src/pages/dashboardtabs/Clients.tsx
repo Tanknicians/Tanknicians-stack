@@ -26,6 +26,7 @@ export default function Clients() {
   const [selectedClientId, setSelectedClientId] = useState<number | null>(null);
   const selectedClient = useMemo(
     () => optionsList?.find((user) => user.id === selectedClientId) ?? null,
+
     [optionsList, selectedClientId]
   );
 
@@ -70,7 +71,8 @@ export default function Clients() {
         <Grid xs={1} sm={1} item />
         <Grid item xs={6} sm={6}>
           <UserSearchBar
-            optionsList={optionsList}
+            userList={optionsList}
+            selectedUser={selectedClient}
             handleUserSelected={handleUserSelected}
           />
         </Grid>

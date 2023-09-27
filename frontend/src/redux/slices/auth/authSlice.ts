@@ -3,10 +3,10 @@ import { RootState } from '../../store';
 
 const initialState = {
   user: {
-    id: null,
+    id: -1,
     email: '',
     role: '',
-    userId: null
+    userId: -1
   },
   token: null
 };

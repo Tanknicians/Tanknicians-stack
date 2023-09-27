@@ -1,3 +1,5 @@
+import { useGetUserQuery } from '../redux/slices/users/userManagementSlice';
+import { selectCurrentUser } from '../redux/slices/auth/authSlice';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Content from '../components/dashboard/ContentRoutes';
@@ -11,6 +13,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import { useLocation } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import Toolbar from '@mui/material/Toolbar';
+import { useSelector } from 'react-redux';
 import AppBar from '@mui/material/AppBar';
 import { Link } from 'react-router-dom';
 import Grid from '@mui/material/Grid';
@@ -195,9 +198,6 @@ const StyledBadge = styled(Badge)<BadgeProps>(({ theme }) => ({
 
 const drawerWidth = 256;
 
-// figure out how to get User's name from store and put it here
-const username = 'Will Mitchell';
-
 export default function Paperbase() {
   // Get URL on render
   const urlArray = useLocation().pathname.split('/');
@@ -209,6 +209,11 @@ export default function Paperbase() {
   const [activeNavItem, setActiveNavItem] = React.useState(selection);
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const isSmUp = useMediaQuery(theme.breakpoints.up('sm'));
+
+  // Get user info from redux store
+  const loggedInUser = useSelector(selectCurrentUser);
+  const { data } = useGetUserQuery(loggedInUser.userId);
+  const username = data ? `${data.firstName} ${data.lastName}` : '...';
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);

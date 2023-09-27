@@ -39,7 +39,7 @@ export async function read(id: number) {
   }
 }
 
-export async function readAll(isApproved: boolean) {
+export async function readAll(isApproved?: boolean) {
   try {
     const serviceCalls = await serviceCallDB.getAll(isApproved);
     if (!serviceCalls) {
@@ -55,8 +55,8 @@ export async function readAll(isApproved: boolean) {
 
 export async function readAllByDate(
   tankId: number,
-  startDate: Date,
-  endDate: Date,
+  startDate?: Date,
+  endDate?: Date,
 ) {
   interface ReturnDataSchema {
     tankId: number;
@@ -102,7 +102,7 @@ export async function readAllByDate(
   }
 }
 
-export async function readAllByTankId(tankId: number, isApproved: boolean) {
+export async function readAllByTankId(tankId: number, isApproved?: boolean) {
   try {
     const serviceCalls = await serviceCallDB.readAllByTankId(
       tankId,

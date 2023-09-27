@@ -5,8 +5,9 @@ import parse from 'autosuggest-highlight/parse';
 import match from 'autosuggest-highlight/match';
 import React from 'react';
 
-type OptionsList = {
-  optionsList: UserOption[];
+type UserList = {
+  userList: UserOption[];
+  selectedUser: UserOption | null;
   handleUserSelected: (
     _event: React.SyntheticEvent,
     value: UserOption | null
@@ -36,19 +37,25 @@ const styles = {
   }
 };
 
+function getUsersName(user: UserOption) {
+  return user?.firstName ?? user?.lastName ?? user?.middleName ?? '';
+}
+
 export default function UserSearchBar({
-  optionsList,
-  handleUserSelected
-}: OptionsList) {
-  if (!optionsList) return <div>Loading...</div>;
+  userList,
+  handleUserSelected,
+  selectedUser
+}: UserList) {
   return (
     <Autocomplete
       id='grouped-users-tanks'
       onChange={handleUserSelected}
-      options={optionsList
+      value={selectedUser}
+      options={userList
         .slice()
         .sort((a, b) => a.firstName.localeCompare(b.firstName))}
       groupBy={(option) => option.firstName?.charAt(0).toUpperCase() ?? ''}
+
       getOptionLabel={(option) =>
         `${option.firstName} ${option.middleName} ${option.lastName} ${option.address}`
       }
