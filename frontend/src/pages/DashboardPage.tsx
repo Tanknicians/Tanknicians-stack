@@ -1,3 +1,5 @@
+import { useGetUserQuery } from '../redux/slices/users/userManagementSlice';
+import { selectCurrentUser } from '../redux/slices/auth/authSlice';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Content from '../components/dashboard/ContentRoutes';
@@ -11,13 +13,12 @@ import MenuIcon from '@mui/icons-material/Menu';
 import { useLocation } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import Toolbar from '@mui/material/Toolbar';
+import { useSelector } from 'react-redux';
 import AppBar from '@mui/material/AppBar';
 import { Link } from 'react-router-dom';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import * as React from 'react';
-import { store } from '../redux/store';
-import { useGetUserQuery } from '../redux/slices/users/userManagementSlice';
 
 let theme = createTheme({
   palette: {
@@ -209,7 +210,9 @@ export default function Paperbase() {
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const isSmUp = useMediaQuery(theme.breakpoints.up('sm'));
 
-  const { data } = useGetUserQuery(store.getState().auth.user.userId ?? 0); // FIX: should probably not have to default this. if someone could verify that this is always set then we can throw an error if it's not.
+  // Get user info from redux store
+  const loggedInUser = useSelector(selectCurrentUser);
+  const { data } = useGetUserQuery(loggedInUser.userId);
   const username = data ? `${data.firstName} ${data.lastName}` : '...';
 
   const handleDrawerToggle = () => {
