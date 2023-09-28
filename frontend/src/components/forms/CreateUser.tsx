@@ -1,37 +1,21 @@
-import { zodResolver } from '@hookform/resolvers/zod';
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Button,
-  Checkbox,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
-  FormControlLabel,
   Grid,
-  TextField
-} from '@mui/material';
-import { Controller, SubmitHandler, useForm } from 'react-hook-form';
-import { z } from 'zod';
-import { useAddUserMutation } from '../../redux/slices/users/userManagementSlice';
-
-export const userSchema = z.object({
-  id: z.number().int(),
-  firstName: z.string().optional(),
-  middleName: z.string().optional(),
-  lastName: z.string().optional(),
-  address: z.string().optional(),
-  phone: z.string().optional(),
-
-  isEmployee: z.boolean().default(false)
-});
-
-export const createUserSchema = userSchema.omit({ id: true });
-export type CreateUser = z.infer<typeof createUserSchema>;
+  TextField,
+} from "@mui/material";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
+import { useAddUserMutation } from "../../redux/slices/users/userManagementSlice";
+import { createUserSchema, CreateUser } from "../../zodTypes";
 
 export default function CreateUserModal({
   open,
   setOpen,
-  isEmployee
+  isEmployee,
 }: {
   open: boolean;
   setOpen: (open: boolean) => void;
@@ -41,8 +25,8 @@ export default function CreateUserModal({
   const { handleSubmit, control, reset, formState } = useForm<CreateUser>({
     resolver: zodResolver(createUserSchema),
     defaultValues: {
-      isEmployee: isEmployee
-    }
+      isEmployee: isEmployee,
+    },
   });
   console.log({ formState });
 
@@ -64,53 +48,53 @@ export default function CreateUserModal({
   };
 
   return (
-    <Dialog open={open} onClose={handleClose} maxWidth='lg'>
-      <DialogTitle>Add {isEmployee ? 'Employee' : 'Client'}</DialogTitle>
+    <Dialog open={open} onClose={handleClose} maxWidth="lg">
+      <DialogTitle>Add {isEmployee ? "Employee" : "Client"}</DialogTitle>
       <DialogContent>
         <Grid container spacing={2} paddingTop={1}>
           <Grid item xs={4}>
             <Controller
-              name='firstName'
+              name="firstName"
               control={control}
               render={({ field }) => (
-                <TextField fullWidth label='First Name' {...field} />
+                <TextField fullWidth label="First Name" {...field} />
               )}
             />
           </Grid>
 
           <Grid item xs={4}>
             <Controller
-              name='middleName'
+              name="middleName"
               control={control}
               render={({ field }) => (
-                <TextField fullWidth label='Middle Name' {...field} />
+                <TextField fullWidth label="Middle Name" {...field} />
               )}
             />
           </Grid>
           <Grid item xs={4}>
             <Controller
-              name='lastName'
+              name="lastName"
               control={control}
               render={({ field }) => (
-                <TextField fullWidth label='Last Name' {...field} />
+                <TextField fullWidth label="Last Name" {...field} />
               )}
             />
           </Grid>
           <Grid item xs={4}>
             <Controller
-              name='address'
+              name="address"
               control={control}
               render={({ field }) => (
-                <TextField fullWidth label='Address' {...field} />
+                <TextField fullWidth label="Address" {...field} />
               )}
             />
           </Grid>
           <Grid item xs={4}>
             <Controller
-              name='phone'
+              name="phone"
               control={control}
               render={({ field }) => (
-                <TextField fullWidth label='Phone Number' {...field} />
+                <TextField fullWidth label="Phone Number" {...field} />
               )}
             />
           </Grid>
@@ -118,7 +102,7 @@ export default function CreateUserModal({
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose}>Cancel</Button>
-        <Button type='button' onClick={handleSubmit(onValid)}>
+        <Button type="button" onClick={handleSubmit(onValid)}>
           Submit
         </Button>
       </DialogActions>
