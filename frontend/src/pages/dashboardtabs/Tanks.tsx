@@ -124,7 +124,6 @@ export function TankTabs({
     tanks.at(-1)
   );
 
-
   const [createTankOpen, setCreateTankOpen] = useState(false);
   return (
     <>
