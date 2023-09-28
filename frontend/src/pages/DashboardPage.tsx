@@ -19,7 +19,6 @@ import { Link } from 'react-router-dom';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import * as React from 'react';
-import { useGetUnapprovedServiceCallsQuery } from '../redux/slices/forms/servicecallApiSlice';
 
 let theme = createTheme({
   palette: {
@@ -198,7 +197,6 @@ const StyledBadge = styled(Badge)<BadgeProps>(({ theme }) => ({
 }));
 
 const drawerWidth = 256;
-const oneMinuteInMilliseconds = 60000;
 
 export default function Paperbase() {
   // Get URL on render
@@ -211,10 +209,6 @@ export default function Paperbase() {
   const [activeNavItem, setActiveNavItem] = React.useState(selection);
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const isSmUp = useMediaQuery(theme.breakpoints.up('sm'));
-
-  const numberOfUnapprovedForms = useGetUnapprovedServiceCallsQuery(undefined, {
-    pollingInterval: oneMinuteInMilliseconds
-  }).data?.length;
 
   // Get user info from redux store
   const loggedInUser = useSelector(selectCurrentUser);
@@ -282,10 +276,7 @@ export default function Paperbase() {
                       sx={{ p: 0.5 }}
                       onClick={() => setActiveNavItem('Approve Forms')}
                     >
-                      <StyledBadge
-                        badgeContent={numberOfUnapprovedForms}
-                        color='secondary'
-                      >
+                      <StyledBadge badgeContent={3} color='secondary'>
                         <NotificationsIcon sx={item} />
                       </StyledBadge>
                     </IconButton>

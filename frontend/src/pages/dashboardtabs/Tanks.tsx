@@ -120,10 +120,7 @@ export function TankTabs({
   tanks: OwnedTanks[];
   employeeId: number;
 }) {
-  const [selectedTank, setSelectedTank] = useState<OwnedTanks | undefined>(
-    tanks.at(-1)
-  );
-
+  const [selectedTank, setSelectedTank] = useState<OwnedTanks>(tanks[0]);
   const [createTankOpen, setCreateTankOpen] = useState(false);
   return (
     <>
@@ -155,21 +152,10 @@ export function TankTabs({
               key={tank.id}
             />
           ))}
-          <Tab
-            label={
-              tanks.length ? (
-                <Add />
-              ) : (
-                <Button variant='outlined'>Add Tank</Button>
-              )
-            }
-            value='create'
-          />
+          <Tab label='+' value='create' />
         </Tabs>
       </Stack>
-      {selectedTank && (
-        <ServiceCallTable tank={selectedTank} employeeId={employeeId} />
-      )}
+      <ServiceCallTable tank={selectedTank} employeeId={employeeId} />
     </>
   );
 }
@@ -223,7 +209,7 @@ export default function Tanks() {
           <Typography variant='h4' gutterBottom>
             Service Calls
           </Typography>
-          {selectedUser?.OwnedTanks && (
+          {!!selectedUser?.OwnedTanks?.length && (
             <TankTabs
               key={selectedUser.id}
               tanks={selectedUser.OwnedTanks}

@@ -27,13 +27,6 @@ export const servicecallApiSlice = apiSlice.injectEndpoints({
         method: 'GET',
         params: { isApproved: !!onlyApprovedForms }
       })
-    }),
-    getUnapprovedServiceCalls: builder.query<ServiceCall[], void>({
-      query: () => ({
-        url: '/api/database/servicecall',
-        method: 'GET',
-        params: { isApproved: false }
-      })
     })
   })
 });
@@ -41,6 +34,5 @@ export const servicecallApiSlice = apiSlice.injectEndpoints({
 export const {
   useGetServiceCallByTankIdQuery,
   useCreateServiceCallMutation,
-  useUpdateServiceCallMutation,
-  useGetUnapprovedServiceCallsQuery
+  useUpdateServiceCallMutation
 } = servicecallApiSlice;

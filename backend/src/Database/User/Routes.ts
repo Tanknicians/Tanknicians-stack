@@ -57,19 +57,9 @@ userRouter.get(
   '/',
   authenticateRoleMiddleWare(['ADMIN', 'EMPLOYEE']),
   async (req, res) => {
-    const requestData = z
-      .object({
-        includeTanks: z.boolean().optional().default(false),
-        isEmployee: z.boolean().optional(),
-      })
-      .safeParse(req.query);
-    if (!requestData.success) {
-      return res.status(400).json({ error: requestData.error.errors });
-    }
-
     try {
-      const includeTanks = requestData.data.includeTanks;
-      const isEmployee = requestData.data.isEmployee;
+      const includeTanks = req.query.includeTanks === 'true';
+      const isEmployee = req.query.isEmployee === 'true';
       const result = await UserService.readAll(includeTanks, isEmployee);
       res.json(result);
     } catch (error) {
