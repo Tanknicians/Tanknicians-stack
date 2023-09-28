@@ -59,8 +59,8 @@ userRouter.get(
   async (req, res) => {
     const requestData = z
       .object({
-        includeTanks: z.optional(z.boolean()),
-        isEmployee: z.optional(z.boolean()),
+        includeTanks: z.boolean().optional().default(false),
+        isEmployee: z.boolean().optional(),
       })
       .safeParse(req.query);
     if (!requestData.success) {
