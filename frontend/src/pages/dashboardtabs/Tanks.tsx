@@ -157,7 +157,7 @@ export function TankTabs({
           ))}
           <Tab
             label={
-              selectedTank ? (
+              tanks.length ? (
                 <Add />
               ) : (
                 <Button variant='outlined'>Add Tank</Button>
