@@ -1,41 +1,41 @@
 import {
   UserOption,
-  useGetClientsQuery,
-} from "../../redux/slices/users/userManagementSlice";
-import CreateTankForm from "../../components/forms/CreateTank";
-import UserSearchBar from "../../components/UserSearchBar";
-import Typography from "@mui/material/Typography";
-import UserCard from "../../components/UserCard";
-import Collapse from "@mui/material/Collapse";
-import AddIcon from "@mui/icons-material/Add";
-import Button from "@mui/material/Button";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
-import { useMemo, useState } from "react";
-import CreateUserModal from "../../components/forms/CreateUser";
-import { UserQuearyArgs } from "../../redux/slices/users/userManagementSlice";
+  useGetClientsQuery
+} from '../../redux/slices/users/userManagementSlice';
+import CreateTankForm from '../../components/forms/CreateTank';
+import UserSearchBar from '../../components/UserSearchBar';
+import Typography from '@mui/material/Typography';
+import UserCard from '../../components/UserCard';
+import Collapse from '@mui/material/Collapse';
+import AddIcon from '@mui/icons-material/Add';
+import Button from '@mui/material/Button';
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
+import { useMemo, useState } from 'react';
+import CreateUserModal from '../../components/forms/CreateUser';
+import { UserQuearyArgs } from '../../redux/slices/users/userManagementSlice';
 
 export default function Clients() {
   const userQuearyArgs: UserQuearyArgs = {
     includeTanks: true,
-    isEmployee: false,
+    isEmployee: false
   };
   const { data: optionsList, error } = useGetClientsQuery(userQuearyArgs);
   const [tankModalOpen, setTankModalOpen] = useState(false);
   const [clientModalOpen, setClientModalOpen] = useState(false);
   const [selectedClientId, setSelectedClientId] = useState<number | null>(null);
-  console.log("selectedClientId on load: ", selectedClientId);
+  console.log('selectedClientId on load: ', selectedClientId);
   const selectedClient = useMemo(
     () => optionsList?.find((client) => client.id === selectedClientId) ?? null,
-    [optionsList, selectedClientId],
+    [optionsList, selectedClientId]
   );
-  console.log("selectedClient on load: ", selectedClient);
+  console.log('selectedClient on load: ', selectedClient);
 
   const handleUserSelected = (
     _event: React.SyntheticEvent,
-    client: UserOption | null,
+    client: UserOption | null
   ) => {
-    console.log("client.id on handleUserSelected: ", client?.id);
+    console.log('client.id on handleUserSelected: ', client?.id);
     setSelectedClientId(client?.id ?? null);
   };
 
@@ -57,16 +57,16 @@ export default function Clients() {
       <Grid
         container
         spacing={1}
-        sx={{ padding: "20px", margin: "auto", maxWidth: "1200px" }}
-        justifyContent="center"
-        alignItems="center"
+        sx={{ padding: '20px', margin: 'auto', maxWidth: '1200px' }}
+        justifyContent='center'
+        alignItems='center'
       >
         <Grid item xs={2} sm={2}>
           <Typography
-            color="inherit"
-            variant="h4"
-            component="h1"
-            align="center"
+            color='inherit'
+            variant='h4'
+            component='h1'
+            align='center'
           >
             Clients
           </Typography>
@@ -83,12 +83,12 @@ export default function Clients() {
         <Grid item xs={2} sm={2}>
           <Box
             sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center'
             }}
           >
-            <Button variant="contained" onClick={handleOpenUserModal}>
+            <Button variant='contained' onClick={handleOpenUserModal}>
               <AddIcon />
               Add Client
             </Button>
@@ -98,7 +98,7 @@ export default function Clients() {
         <Grid xs={12} sm={12} item>
           <Collapse in={!!selectedClient}>
             <UserCard user={selectedClient} />
-            <Button variant="contained" onClick={handleOpenTankModal}>
+            <Button variant='contained' onClick={handleOpenTankModal}>
               <AddIcon />
               Add Tank
             </Button>
