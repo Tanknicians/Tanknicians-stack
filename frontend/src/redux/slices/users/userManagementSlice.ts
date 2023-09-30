@@ -1,5 +1,5 @@
-import { CreateUser } from '../../../components/forms/CreateUser';
 import { apiSlice } from '../../api/apiSlice';
+import { CreateUser } from '../../../zodTypes';
 
 export type OwnedTanks = {
   customerId: number;

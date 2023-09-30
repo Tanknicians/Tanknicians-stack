@@ -1,32 +1,16 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Button,
-  Checkbox,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
-  FormControlLabel,
   Grid,
   TextField
 } from '@mui/material';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
-import { z } from 'zod';
 import { useAddUserMutation } from '../../redux/slices/users/userManagementSlice';
-
-export const userSchema = z.object({
-  id: z.number().int(),
-  firstName: z.string().optional(),
-  middleName: z.string().optional(),
-  lastName: z.string().optional(),
-  address: z.string().optional(),
-  phone: z.string().optional(),
-
-  isEmployee: z.boolean().default(false)
-});
-
-export const createUserSchema = userSchema.omit({ id: true });
-export type CreateUser = z.infer<typeof createUserSchema>;
+import { createUserSchema, CreateUser } from '../../zodTypes';
 
 export default function CreateUserModal({
   open,
