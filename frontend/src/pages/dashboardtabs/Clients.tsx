@@ -24,18 +24,15 @@ export default function Clients() {
   const [tankModalOpen, setTankModalOpen] = useState(false);
   const [clientModalOpen, setClientModalOpen] = useState(false);
   const [selectedClientId, setSelectedClientId] = useState<number | null>(null);
-  console.log('selectedClientId on load: ', selectedClientId);
   const selectedClient = useMemo(
     () => optionsList?.find((client) => client.id === selectedClientId) ?? null,
     [optionsList, selectedClientId]
   );
-  console.log('selectedClient on load: ', selectedClient);
 
   const handleUserSelected = (
     _event: React.SyntheticEvent,
     client: UserOption | null
   ) => {
-    console.log('client.id on handleUserSelected: ', client?.id);
     setSelectedClientId(client?.id ?? null);
   };
 
@@ -44,7 +41,6 @@ export default function Clients() {
   };
 
   const handleOpenTankModal = () => {
-    console.log(selectedClient?.firstName, selectedClient?.id);
     setTankModalOpen((prevState) => !prevState);
   };
 
