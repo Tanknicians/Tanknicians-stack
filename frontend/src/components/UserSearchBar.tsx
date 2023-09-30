@@ -1,68 +1,68 @@
-import { UserOption } from '../redux/slices/users/userManagementSlice';
-import Autocomplete from '@mui/material/Autocomplete';
-import TextField from '@mui/material/TextField';
-import parse from 'autosuggest-highlight/parse';
-import match from 'autosuggest-highlight/match';
-import React from 'react';
+import { UserData } from "../redux/slices/users/userManagementSlice";
+import Autocomplete from "@mui/material/Autocomplete";
+import TextField from "@mui/material/TextField";
+import parse from "autosuggest-highlight/parse";
+import match from "autosuggest-highlight/match";
+import React from "react";
 
 type UserList = {
-  userList: UserOption[];
-  selectedUser: UserOption | null;
+  userList: UserData[];
+  selectedUser: UserData | null;
   handleUserSelected: (
     _event: React.SyntheticEvent,
-    value: UserOption | null
+    value: UserData | null,
   ) => void;
 };
 
 const styles = {
   groupLabelContainer: {
-    backgroundColor: '#081627',
-    width: '100%'
+    backgroundColor: "#081627",
+    width: "100%",
   },
   groupLabel: {
-    fontWeight: 'bold',
-    width: '100%',
-    display: 'flex',
+    fontWeight: "bold",
+    width: "100%",
+    display: "flex",
     paddingLeft: 10,
-    color: 'white'
+    color: "white",
   },
   optionLabel: {
-    backgroundColor: 'white',
-    width: '100%',
-    display: 'flex',
-    paddingLeft: 10
+    backgroundColor: "white",
+    width: "100%",
+    display: "flex",
+    paddingLeft: 10,
   },
   customerNameandGroupLabel: {
-    width: '50%'
-  }
+    width: "50%",
+  },
 };
 
-function getUsersName(user: UserOption) {
-  return user?.firstName ?? user?.lastName ?? user?.middleName ?? '';
+function getUsersName(user: UserData) {
+  return user?.firstName ?? user?.lastName ?? user?.middleName ?? "";
 }
 
 export default function UserSearchBar({
   userList,
   handleUserSelected,
-  selectedUser
+  selectedUser,
 }: UserList) {
   return (
     <Autocomplete
-      id='grouped-users-tanks'
+      id="grouped-users-tanks"
       onChange={handleUserSelected}
       value={selectedUser}
       options={userList
         .slice()
         .sort((userA, userB) =>
-          getUsersName(userA).localeCompare(getUsersName(userB))
+          getUsersName(userA).localeCompare(getUsersName(userB)),
         )}
       groupBy={(user) => getUsersName(user).charAt(0).toUpperCase()}
       getOptionLabel={(option) =>
         `${option.firstName} ${option.middleName} ${option.lastName} ${option.address}`
       }
-      sx={{ width: '100%', backgroundColor: 'white', borderRadius: '10px' }}
+      sx={{ width: "100%", backgroundColor: "white", borderRadius: "10px" }}
       renderInput={(params) => (
-        <TextField autoFocus {...params} label='Search User' />
+        <TextField autoFocus {...params} label="Search User" />
       )}
       renderGroup={(params) => (
         <div {...params} style={styles.groupLabelContainer}>
@@ -74,22 +74,22 @@ export default function UserSearchBar({
         </div>
       )}
       renderOption={(props, option, { inputValue }) => {
-        const matches = match(option.firstName, inputValue, {
-          insideWords: true
+        const matches = match(option.firstName ?? "", inputValue, {
+          insideWords: true,
         });
-        const parts = parse(option.firstName, matches);
+        const parts = parse(option.firstName ?? "", matches);
 
         return (
           <li {...props} style={styles.optionLabel}>
             <span
-              id='customer-fullname'
+              id="customer-fullname"
               style={styles.customerNameandGroupLabel}
             >
               {parts.map((part, index) => (
                 <span
                   key={`e-${index}`}
                   style={{
-                    fontWeight: part.highlight ? 700 : 400
+                    fontWeight: part.highlight ? 700 : 400,
                   }}
                 >
                   {part.text}
@@ -97,7 +97,7 @@ export default function UserSearchBar({
               ))}
               <span>{` ${option.middleName} ${option.lastName}`}</span>
             </span>
-            <span id='customer-address'>{option.address}</span>
+            <span id="customer-address">{option.address}</span>
           </li>
         );
       }}
