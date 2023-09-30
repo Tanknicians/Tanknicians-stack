@@ -12,6 +12,7 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import { UpdateTankMetaData } from "../zodTypes";
 import { useState } from "react";
+import { Grid, Typography } from "@mui/material";
 
 function Row(props: { row: UpdateTankMetaData }) {
   const { row } = props;
@@ -19,7 +20,10 @@ function Row(props: { row: UpdateTankMetaData }) {
 
   return (
     <>
-      <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
+      <TableRow
+        sx={{ "& > *": { borderBottom: "unset" } }}
+        onClick={() => setOpen(!open)}
+      >
         <TableCell
           align="center"
           component="th"
@@ -51,7 +55,33 @@ function Row(props: { row: UpdateTankMetaData }) {
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box sx={{ margin: 1 }}>
-              {/* // TODO: Add tank details here // QR code, description, etc. */}
+              <Grid container spacing={1}>
+                <Grid item xs={6} sm={6}>
+                  <Typography variant="h6" gutterBottom component="div">
+                    Description
+                  </Typography>
+                  {row.description && (
+                    <Typography variant="body1" gutterBottom component="div">
+                      {row.description}
+                    </Typography>
+                  )}
+                  {!row.description && (
+                    <Typography
+                      variant="body1"
+                      gutterBottom
+                      component="div"
+                      style={{ fontStyle: "italic" }}
+                    >
+                      No description
+                    </Typography>
+                  )}
+                </Grid>
+                <Grid item xs={6} sm={6}>
+                  <Typography variant="h6" gutterBottom component="div">
+                    QR Code
+                  </Typography>
+                </Grid>
+              </Grid>
             </Box>
           </Collapse>
         </TableCell>
@@ -64,23 +94,25 @@ export default function TanksCollapsibleTable({
   tanks,
 }: { tanks: UpdateTankMetaData[] }) {
   return (
-    <TableContainer component={Paper}>
-      <Table aria-label="collapsible table">
-        <TableHead>
-          <TableRow>
-            <TableCell align="center">Volume</TableCell>
-            <TableCell align="center">Tank Type</TableCell>
-            <TableCell align="center">Tanknicians' Sourced</TableCell>
-            <TableCell align="center">Last Serviced</TableCell>
-            <TableCell />
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {tanks.map((tank) => (
-            <Row key={tank.id} row={tank} />
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+    <Paper sx={{ width: "100%", overflow: "hidden" }}>
+      <TableContainer sx={{ maxHeight: 550 }}>
+        <Table stickyHeader aria-label="tanks collapsible table">
+          <TableHead>
+            <TableRow>
+              <TableCell align="center">Volume</TableCell>
+              <TableCell align="center">Tank Type</TableCell>
+              <TableCell align="center">Tanknicians' Sourced</TableCell>
+              <TableCell align="center">Last Serviced</TableCell>
+              <TableCell />
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {tanks.map((tank) => (
+              <Row key={tank.id} row={tank} />
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Paper>
   );
 }

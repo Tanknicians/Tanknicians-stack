@@ -24,7 +24,6 @@ export default function Clients() {
   // Possible optimization:
   // query is ran every time the page is loaded, but it only needs to be ran once
   const { data: optionsList, error } = useGetClientsQuery(userQuearyArgs);
-  console.log("optionsList: ", optionsList);
   const [tankModalOpen, setTankModalOpen] = useState(false);
   const [clientModalOpen, setClientModalOpen] = useState(false);
   const [selectedClientId, setSelectedClientId] = useState<number | null>(null);
@@ -98,7 +97,6 @@ export default function Clients() {
         <Grid xs={12} sm={12} item>
           <Collapse in={!!selectedClient}>
             <UserCard user={selectedClient} />
-
             {selectedClient && (
               <CreateTankForm
                 userId={selectedClient.id}
@@ -108,25 +106,31 @@ export default function Clients() {
             )}
           </Collapse>
         </Grid>
-        <Grid xs={10} sm={10} item />
-        <Grid xs={2} sm={2} item>
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <Button variant="contained" onClick={handleOpenTankModal}>
-              <AddIcon />
-              Add Tank
-            </Button>
-          </Box>
-        </Grid>
-        <Grid xs={1} sm={1} item />
+        {selectedClient && (
+          <>
+            <Grid xs={10} sm={10} item />
+            <Grid xs={2} sm={2} item>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  marginTop: 1,
+                }}
+              >
+                <Button variant="contained" onClick={handleOpenTankModal}>
+                  <AddIcon />
+                  Add Tank
+                </Button>
+              </Box>
+            </Grid>
+          </>
+        )}
         {selectedClient?.OwnedTanks && (
-          <Grid xs={12} sm={12} item sx={{ paddingLeft: 20 }}>
-            <TanksCollapsibleTable tanks={selectedClient.OwnedTanks} />
+          <Grid xs={12} sm={12} item>
+            <Box sx={{ marginTop: 2, paddingLeft: 1, paddingRight: 1 }}>
+              <TanksCollapsibleTable tanks={selectedClient.OwnedTanks} />
+            </Box>
           </Grid>
         )}
       </Grid>
