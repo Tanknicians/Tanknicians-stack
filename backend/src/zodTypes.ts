@@ -170,3 +170,32 @@ export const refreshTokenSchema = z.object({
   isRefreshToken: z.literal(true),
 });
 export type RefreshToken = z.infer<typeof refreshTokenSchema>;
+
+// Implemented so that searching is consistent and works universally for all Database types.
+export const searchSchema = z.object({
+  // most of these values are optional, but will only return the first 25 values if page/size is not given
+
+  // pages go from 1-inf;
+  page: z.number().positive().optional().default(1),
+  // size of payload, defaults to 25
+  size: z.number().positive().optional().default(25),
+
+  // all optional, but should have at least one filled
+  searchString: z.string().optional(),
+  searchBoolean: z.boolean().optional(),
+  searchNum: z.number().optional(),
+
+  // for any min/max number search
+  minNum: z.number().optional(),
+  maxNum: z.number().optional(),
+
+  // for any min/max date search
+  minDate: z.date().optional(),
+  maxDate: z.date().optional(),
+
+  // defined enums, most searches may opt to not use
+  searchRole:  z.enum(['ADMIN', 'EMPLOYEE', 'CUSTOMER']).optional(),
+  searchType: z.enum(['FRESH', 'SALT', 'BRACKISH']).optional(),
+})
+
+export type SearchSchema = z.infer<typeof searchSchema>;
