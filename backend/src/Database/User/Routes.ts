@@ -5,6 +5,7 @@ import {
   UpdateUser,
   UserRequest,
   createUser,
+  searchSchema,
   updateUser,
   validateRequestBody,
 } from '../../zodTypes';
@@ -128,23 +129,17 @@ userRouter.delete(
 
 // Search User
 userRouter.get(
-  '/search/:searchString',
+  '/search',
   authenticateRoleMiddleWare(['ADMIN', 'EMPLOYEE']),
   async (req, res) => {
-    const searchString = req.params.searchString;
-    const pageNumberParse = z.coerce
-      .number()
-      .positive()
-      .default(1)
-      .safeParse(req.query.page);
-    if (!pageNumberParse.success) {
-      return res.status(400).json({ error: pageNumberParse.error.errors });
-    }
-    const pageNumber = pageNumberParse.data;
-
     try {
-      const result = await UserService.search(searchString, pageNumber);
-      res.json(result);
+      const searchQuery = searchSchema.safeParse(req.query);
+      if (!searchQuery.success) {
+        return res.status(400).json({ error: searchQuery.error.errors });
+      } else {
+        const result = await UserService.search(searchQuery.data);
+        res.json(result);
+      }
     } catch (error) {
       console.error(error);
       const errorMessage =
