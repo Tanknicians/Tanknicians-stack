@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { CreateServiceCall, UpdateServiceCall } from "../../src/zodTypes";
+import { CreateServiceCall, SearchSchema, UpdateServiceCall } from "../../src/zodTypes";
 const prisma = new PrismaClient();
 
 // CREATE
@@ -84,65 +84,58 @@ export async function deleteServiceCall(id: number) {
 
 // SEARCH
 export async function search(
-  page: number,
-  size: number,
-  searchString?: string,
-  searchBool?: boolean,
-  minNum?: number,
-  maxNum?: number,
-  minDate?: Date,
-  maxDate?: Date
+  search: SearchSchema
 ) {
   const where: any[] = [];
 
   // String search
-  if (searchString !== undefined) {
-    where.push({ customerRequest: { contains: searchString } });
-    where.push({ employeeNotes: { contains: searchString } });
-    where.push({ notApprovedNotes: { contains: searchString } });
+  if (search.searchString !== undefined) {
+    where.push({ customerRequest: { contains: search.searchString } });
+    where.push({ employeeNotes: { contains: search.searchString } });
+    where.push({ notApprovedNotes: { contains: search.searchString } });
   }
 
   // Boolean search
-  if (searchBool !== undefined) {
-    where.push({ isApproved: searchBool });
-    where.push({ ATOOperational: searchBool });
-    where.push({ ATOReservoirFilled: searchBool });
-    where.push({ chemFilterAdjusted: searchBool });
-    where.push({ doserAdjustementOrManualDosing: searchBool });
-    where.push({ dosingReservoirsFull: searchBool });
-    where.push({ floorsCheckedForSpillsOrDirt: searchBool });
-    where.push({ glassCleanedInside: searchBool });
-    where.push({ glassCleanedOutside: searchBool });
-    where.push({ mechFilterChanged: searchBool });
-    where.push({ pumpsClearedOfDebris: searchBool });
-    where.push({ saltCreepCleaned: searchBool });
-    where.push({ skimmerCleanedAndOperational: searchBool });
-    where.push({ waterChanged: searchBool });
-    where.push({ waterTestedRecordedDated: searchBool });
-    where.push({ pestAPresent: searchBool });
-    where.push({ pestBPresent: searchBool });
-    where.push({ pestCPresent: searchBool });
-    where.push({ pestDPresent: searchBool });
+  if (search.searchBoolean !== undefined) {
+    where.push({ isApproved: search.searchBoolean });
+    where.push({ ATOOperational: search.searchBoolean });
+    where.push({ ATOReservoirFilled: search.searchBoolean });
+    where.push({ chemFilterAdjusted: search.searchBoolean });
+    where.push({ doserAdjustementOrManualDosing: search.searchBoolean });
+    where.push({ dosingReservoirsFull: search.searchBoolean });
+    where.push({ floorsCheckedForSpillsOrDirt: search.searchBoolean });
+    where.push({ glassCleanedInside: search.searchBoolean });
+    where.push({ glassCleanedOutside: search.searchBoolean });
+    where.push({ mechFilterChanged: search.searchBoolean });
+    where.push({ pumpsClearedOfDebris: search.searchBoolean });
+    where.push({ saltCreepCleaned: search.searchBoolean });
+    where.push({ skimmerCleanedAndOperational: search.searchBoolean });
+    where.push({ waterChanged: search.searchBoolean });
+    where.push({ waterTestedRecordedDated: search.searchBoolean });
+    where.push({ pestAPresent: search.searchBoolean });
+    where.push({ pestBPresent: search.searchBoolean });
+    where.push({ pestCPresent: search.searchBoolean });
+    where.push({ pestDPresent: search.searchBoolean });
   }
 
   // Number search
-  if (minNum !== undefined || maxNum !== undefined) {
-    where.push({ alkalinity: { gte: minNum, lte: maxNum } });
-    where.push({ calcium: { gte: minNum, lte: maxNum } });
-    where.push({ nitrate: { gte: minNum, lte: maxNum } });
-    where.push({ phosphate: { gte: minNum, lte: maxNum } });
+  if (search.minNum !== undefined || search.maxNum !== undefined) {
+    where.push({ alkalinity: { gte: search.minNum, lte: search.maxNum } });
+    where.push({ calcium: { gte: search.minNum, lte: search.maxNum } });
+    where.push({ nitrate: { gte: search.minNum, lte: search.maxNum } });
+    where.push({ phosphate: { gte: search.minNum, lte: search.maxNum } });
   }
 
   // Date search
-  if (minDate !== undefined || maxDate !== undefined) {
-    where.push({ createdOn: { gte: minDate, lte: maxDate } });
-    where.push({ notesUpdated: { gte: minDate, lte: maxDate } });
+  if (search.minDate !== undefined || search.maxDate !== undefined) {
+    where.push({ createdOn: { gte: search.minDate, lte: search.maxDate } });
+    where.push({ notesUpdated: { gte: search.minDate, lte: search.maxDate } });
   }
 
   // Return all values
   return await prisma.serviceCall.findMany({
-    skip: (page - 1) * size,
-    take: size,
+    skip: (search.page - 1) * search.size,
+    take: search.size,
     where: {
       OR: where,
     },

@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { CreateUser, UpdateUser } from "../../src/zodTypes";
+import { CreateUser, SearchSchema, UpdateUser } from "../../src/zodTypes";
 const prisma = new PrismaClient();
 
 // CREATE
@@ -76,22 +76,19 @@ export async function deleteUser(id: number) {
 
 // SEARCH
 export async function search(
-  page: number,
-  size: number,
-  searchString?: string,
-  searchBool?: boolean
+  search: SearchSchema
 ) {
   return await prisma.user.findMany({
-    skip: (page - 1) * size,
-    take: size,
+    skip: (search.page - 1) * search.size,
+    take: search.size,
     where: {
       OR: [
-        { firstName: { contains: String(searchString) } },
-        { middleName: { contains: String(searchString) } },
-        { lastName: { contains: String(searchString) } },
-        { address: { contains: String(searchString) } },
-        { phone: { contains: String(searchString) } },
-        { isEmployee: searchBool },
+        { firstName: { contains: String(search.searchString) } },
+        { middleName: { contains: String(search.searchString) } },
+        { lastName: { contains: String(search.searchString) } },
+        { address: { contains: String(search.searchString) } },
+        { phone: { contains: String(search.searchString) } },
+        { isEmployee: search.searchBoolean },
       ],
     },
   });
