@@ -1,5 +1,5 @@
 import { userDB } from '../../../prisma/db/User';
-import { CreateUser, UpdateUser } from '../../zodTypes';
+import { CreateUser, SearchSchema, UpdateUser } from '../../zodTypes';
 
 export async function create(user: CreateUser) {
   try {
@@ -60,17 +60,11 @@ export async function deleteOne(id: number) {
 }
 
 export async function search(
-  page: number,
-  size: number,
-  searchString?: string,
-  searchBool?: boolean
+  searchBody: SearchSchema
 ) {
   try {
     const searchData = userDB.search(
-      page,
-      size,
-      searchString,
-      searchBool
+      searchBody
     );
     if (!searchData) {
       throw new Error('No User from search found.');
