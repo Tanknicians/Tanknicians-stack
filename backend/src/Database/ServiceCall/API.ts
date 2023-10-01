@@ -153,9 +153,27 @@ export async function deleteOne(id: number) {
   }
 }
 
-export async function search(search: string, page: number) {
+export async function search(
+  page: number,
+  size: number,
+  searchString?: string,
+  searchBool?: boolean,
+  minNum?: number,
+  maxNum?: number,
+  minDate?: Date,
+  maxDate?: Date
+) {
   try {
-    const searchData = serviceCallDB.searchByString(search, page);
+    const searchData = serviceCallDB.search(
+      page,
+      size,
+      searchString,
+      searchBool,
+      minNum,
+      maxNum,
+      minDate,
+      maxDate
+    );
     if (!searchData) {
       throw new Error('No Service Call from search found.');
     }

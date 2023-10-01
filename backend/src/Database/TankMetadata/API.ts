@@ -1,3 +1,4 @@
+import { TankType } from '@prisma/client';
 import { tankDB } from '../../../prisma/db/TankMetadata';
 import { CreateTankMetaData, UpdateTankMetaData } from '../../zodTypes';
 
@@ -83,9 +84,23 @@ export async function deleteOne(id: number) {
   }
 }
 
-export async function search(search: string, page: number) {
+export async function search(
+  page: number,
+  size: number,
+  searchString?: string,
+  searchType?: TankType,
+  minVolume?: number,
+  maxVolume?: number
+) {
   try {
-    const searchData = tankDB.searchByString(search, page);
+    const searchData = tankDB.search(
+      page,
+      size,
+      searchString,
+      searchType,
+      minVolume,
+      maxVolume
+    );
     if (!searchData) {
       throw new Error('No TankMetadata from search found.');
     }
