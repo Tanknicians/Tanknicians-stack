@@ -1,5 +1,5 @@
-import { PrismaClient } from '@prisma/client';
-import { CreateServiceCall, UpdateServiceCall } from '../../src/zodTypes';
+import { PrismaClient } from "@prisma/client";
+import { CreateServiceCall, UpdateServiceCall } from "../../src/zodTypes";
 const prisma = new PrismaClient();
 
 // CREATE
@@ -42,7 +42,7 @@ export async function readAllByTankId(tankId: number, isApproved?: boolean) {
 export async function readByDateTime(
   tankId: number,
   startDate?: Date,
-  endDate?: Date,
+  endDate?: Date
 ) {
   return await prisma.serviceCall.findMany({
     where: {
@@ -83,15 +83,68 @@ export async function deleteServiceCall(id: number) {
 }
 
 // SEARCH
-export async function searchByString(search: string, page: number) {
+export async function search(
+  page: number,
+  size: number,
+  searchString?: string,
+  searchBool?: boolean,
+  minNum?: number,
+  maxNum?: number,
+  minDate?: Date,
+  maxDate?: Date
+) {
+  const where: any[] = [];
+
+  // String search
+  if (searchString !== undefined) {
+    where.push({ customerRequest: { contains: searchString } });
+    where.push({ employeeNotes: { contains: searchString } });
+    where.push({ notApprovedNotes: { contains: searchString } });
+  }
+
+  // Boolean search
+  if (searchBool !== undefined) {
+    where.push({ isApproved: searchBool });
+    where.push({ ATOOperational: searchBool });
+    where.push({ ATOReservoirFilled: searchBool });
+    where.push({ chemFilterAdjusted: searchBool });
+    where.push({ doserAdjustementOrManualDosing: searchBool });
+    where.push({ dosingReservoirsFull: searchBool });
+    where.push({ floorsCheckedForSpillsOrDirt: searchBool });
+    where.push({ glassCleanedInside: searchBool });
+    where.push({ glassCleanedOutside: searchBool });
+    where.push({ mechFilterChanged: searchBool });
+    where.push({ pumpsClearedOfDebris: searchBool });
+    where.push({ saltCreepCleaned: searchBool });
+    where.push({ skimmerCleanedAndOperational: searchBool });
+    where.push({ waterChanged: searchBool });
+    where.push({ waterTestedRecordedDated: searchBool });
+    where.push({ pestAPresent: searchBool });
+    where.push({ pestBPresent: searchBool });
+    where.push({ pestCPresent: searchBool });
+    where.push({ pestDPresent: searchBool });
+  }
+
+  // Number search
+  if (minNum !== undefined || maxNum !== undefined) {
+    where.push({ alkalinity: { gte: minNum, lte: maxNum } });
+    where.push({ calcium: { gte: minNum, lte: maxNum } });
+    where.push({ nitrate: { gte: minNum, lte: maxNum } });
+    where.push({ phosphate: { gte: minNum, lte: maxNum } });
+  }
+
+  // Date search
+  if (minDate !== undefined || maxDate !== undefined) {
+    where.push({ createdOn: { gte: minDate, lte: maxDate } });
+    where.push({ notesUpdated: { gte: minDate, lte: maxDate } });
+  }
+
+  // Return all values
   return await prisma.serviceCall.findMany({
-    skip: (page - 1) * 25,
-    take: 25,
+    skip: (page - 1) * size,
+    take: size,
     where: {
-      OR: [
-        { customerRequest: { contains: String(search) } },
-        { employeeNotes: { contains: String(search) } },
-      ],
+      OR: where,
     },
   });
 }
@@ -107,4 +160,4 @@ export async function getAll(isApproved?: boolean) {
 
 // SEARCH (needs to be implemented)
 
-export * as serviceCallDB from './ServiceCall';
+export * as serviceCallDB from "./ServiceCall";

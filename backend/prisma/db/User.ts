@@ -1,5 +1,5 @@
-import { PrismaClient } from '@prisma/client';
-import { CreateUser, UpdateUser } from '../../src/zodTypes';
+import { PrismaClient } from "@prisma/client";
+import { CreateUser, UpdateUser } from "../../src/zodTypes";
 const prisma = new PrismaClient();
 
 // CREATE
@@ -75,17 +75,23 @@ export async function deleteUser(id: number) {
 }
 
 // SEARCH
-export async function searchByString(search: String, page: number) {
+export async function search(
+  page: number,
+  size: number,
+  searchString?: string,
+  searchBool?: boolean
+) {
   return await prisma.user.findMany({
-    skip: (page - 1) * 25,
-    take: 25,
+    skip: (page - 1) * size,
+    take: size,
     where: {
       OR: [
-        { firstName: { contains: String(search) } },
-        { middleName: { contains: String(search) } },
-        { lastName: { contains: String(search) } },
-        { address: { contains: String(search) } },
-        { phone: { contains: String(search) } },
+        { firstName: { contains: String(searchString) } },
+        { middleName: { contains: String(searchString) } },
+        { lastName: { contains: String(searchString) } },
+        { address: { contains: String(searchString) } },
+        { phone: { contains: String(searchString) } },
+        { isEmployee: searchBool },
       ],
     },
   });
@@ -103,4 +109,4 @@ export async function getAll(includeTanks: boolean, isEmployee?: boolean) {
   });
 }
 
-export * as userDB from './User';
+export * as userDB from "./User";

@@ -1,5 +1,5 @@
-import { PrismaClient, Role } from '@prisma/client';
-import { CreateLogin, UpdateLogin } from 'src/zodTypes';
+import { PrismaClient, Role } from "@prisma/client";
+import { CreateLogin, UpdateLogin } from "src/zodTypes";
 const prisma = new PrismaClient();
 
 // CREATE
@@ -54,16 +54,20 @@ export async function deleteLogin(id: number) {
 }
 
 // SEARCH
-export async function searchByString(search: String, page: number) {
+export async function search(
+  page: number,
+  size: number,
+  searchString?: string,
+  searchRole?: Role
+) {
   return await prisma.login.findMany({
-    skip: (page - 1) * 25,
-    take: 25,
+    skip: (page - 1) * size,
+    take: size,
     where: {
       OR: [
-        { email: { contains: String(search) } },
-        { role: { equals: search.toUpperCase() as Role } },
-        // we can add more parameters as-needed
-      ],
+        { email: { contains: searchString } },
+        { role: { equals: searchRole } },
+      ].filter(Boolean),
     },
   });
 }
@@ -76,4 +80,4 @@ export async function getAll(page: number) {
   });
 }
 
-export * as loginDB from './Login';
+export * as loginDB from "./Login";

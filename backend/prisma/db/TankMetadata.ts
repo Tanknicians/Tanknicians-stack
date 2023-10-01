@@ -1,5 +1,5 @@
-import { PrismaClient, TankType } from '@prisma/client';
-import { CreateTankMetaData, UpdateTankMetaData } from '../../src/zodTypes';
+import { PrismaClient, TankType } from "@prisma/client";
+import { CreateTankMetaData, UpdateTankMetaData } from "../../src/zodTypes";
 const prisma = new PrismaClient();
 
 // CREATE
@@ -56,15 +56,23 @@ export async function deleteTankMetadata(id: number) {
 }
 
 // SEARCH
-export async function searchByString(search: string, page: number) {
+export async function search(
+  page: number,
+  size: number,
+  searchString?: string,
+  searchType?: TankType,
+  minVolume?: number,
+  maxVolume?: number
+) {
   return await prisma.tankMetadata.findMany({
-    skip: (page - 1) * 25,
-    take: 25,
+    skip: (page - 1) * size,
+    take: size,
     where: {
       OR: [
-        { description: { contains: search } },
-        { type: { equals: search.toUpperCase() as TankType } },
-      ],
+        { description: { contains: searchString } },
+        { volume: { gte: minVolume, lte: maxVolume } },
+        { type: searchType },
+      ].filter(Boolean),
     },
   });
 }
@@ -86,4 +94,4 @@ export async function getAll() {
   return await prisma.tankMetadata.findMany();
 }
 
-export * as tankDB from './TankMetadata';
+export * as tankDB from "./TankMetadata";
