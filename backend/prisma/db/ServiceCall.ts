@@ -124,7 +124,8 @@ export async function search(search: SearchSchema) {
     // Date search
     { createdOn: { gte: search.minDate, lte: search.maxDate } },
     { notesUpdated: { gte: search.minDate, lte: search.maxDate } },
-  ];
+    // This removes any undefined values.
+  ].filter(Boolean);
   // Return all values
   return await prisma.serviceCall.findMany({
     skip: (search.page - 1) * search.size,
