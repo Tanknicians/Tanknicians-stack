@@ -69,7 +69,7 @@ export async function search(search: SearchSchema) {
         { description: { contains: search.searchString } },
         { volume: { gte: search.minNum, lte: search.maxNum } },
         { type: search.searchType },
-      ].filter(Boolean),
+      ],
     },
   });
 }

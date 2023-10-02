@@ -62,7 +62,7 @@ export async function search(search: SearchSchema) {
       OR: [
         { email: { contains: search.searchString } },
         { role: { equals: search.searchRole } },
-      ].filter(Boolean),
+      ],
     },
   });
 }
