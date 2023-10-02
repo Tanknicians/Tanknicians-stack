@@ -59,13 +59,9 @@ export async function deleteOne(id: number) {
   }
 }
 
-export async function search(
-  searchBody: SearchSchema
-) {
+export async function search(searchBody: SearchSchema) {
   try {
-    const searchData = userDB.search(
-      searchBody
-    );
+    const searchData = userDB.search(searchBody);
     if (!searchData) {
       throw new Error('No User from search found.');
     }

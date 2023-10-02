@@ -51,9 +51,7 @@ export async function deleteOne(id: number) {
   }
 }
 
-export async function search(
-  searchBody: SearchSchema
-) {
+export async function search(searchBody: SearchSchema) {
   try {
     const searchData = loginDB.search(searchBody);
     if (!searchData) {

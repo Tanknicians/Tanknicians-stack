@@ -154,13 +154,9 @@ export async function deleteOne(id: number) {
   }
 }
 
-export async function search(
-  searchBody: SearchSchema
-) {
+export async function search(searchBody: SearchSchema) {
   try {
-    const searchData = serviceCallDB.search(
-      searchBody
-    );
+    const searchData = serviceCallDB.search(searchBody);
     if (!searchData) {
       throw new Error('No Service Call from search found.');
     }
