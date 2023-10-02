@@ -20,64 +20,51 @@ function Row(props: { row: UpdateTankMetaData }) {
 
   return (
     <>
-      <TableRow
-        sx={{ '& > *': { borderBottom: 'unset' } }}
-        onClick={() => setOpen(!open)}
-      >
-        <TableCell
-          align='center'
-          component='th'
-          scope='row'
-          sx={{ width: '22%' }}
-        >
+      <TableRow onClick={() => setOpen(!open)}>
+        <TableCell sx={{ width: '22%' }} align='center'>
           {row.volume}
         </TableCell>
-        <TableCell align='center' sx={{ width: '22%' }}>
+        <TableCell sx={{ width: '22%' }} align='center'>
           {row.type}
         </TableCell>
-        <TableCell align='center' sx={{ width: '22%' }}>
+        <TableCell sx={{ width: '22%' }} align='center'>
           {row.tanknicianSourcedOnly ? 'Yes' : 'No'}
         </TableCell>
-        <TableCell align='center' sx={{ width: '22%' }}>
+        <TableCell sx={{ width: '22%' }} align='center'>
           {new Date(row.lastDateServiced).toLocaleDateString()}
         </TableCell>
-        <TableCell align='center' sx={{ width: '12%' }}>
-          <IconButton
-            aria-label='expand row'
-            size='small'
-            onClick={() => setOpen(!open)}
-          >
+        <TableCell sx={{ width: '12%' }} align='center'>
+          <IconButton size='small'>
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
         </TableCell>
       </TableRow>
       <TableRow>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+        <TableCell sx={{ py: 0 }} colSpan={12}>
           <Collapse in={open} timeout='auto' unmountOnExit>
-            <Box sx={{ margin: 1 }}>
+            <Box sx={{ padding: 1 }}>
               <Grid container spacing={1}>
                 <Grid item xs={6} sm={6}>
-                  <Typography variant='h6' gutterBottom component='div'>
+                  <Typography variant='h6' gutterBottom>
                     Description
                   </Typography>
-                  {row.description && (
-                    <Typography variant='body1' gutterBottom component='div'>
+                  {row.description ? (
+                    <Typography variant='body1' gutterBottom>
                       {row.description}
                     </Typography>
-                  )}
-                  {!row.description && (
+                  ) : (
                     <Typography
                       variant='body1'
                       gutterBottom
                       component='div'
-                      style={{ fontStyle: 'italic' }}
+                      fontStyle='italic'
                     >
                       No description
                     </Typography>
                   )}
                 </Grid>
                 <Grid item xs={6} sm={6}>
-                  <Typography variant='h6' gutterBottom component='div'>
+                  <Typography variant='h6' gutterBottom>
                     QR Code
                   </Typography>
                 </Grid>
@@ -94,25 +81,23 @@ export default function TanksCollapsibleTable({
   tanks
 }: { tanks: UpdateTankMetaData[] }) {
   return (
-    <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-      <TableContainer sx={{ maxHeight: 550 }}>
-        <Table stickyHeader aria-label='tanks collapsible table'>
-          <TableHead>
-            <TableRow>
-              <TableCell align='center'>Volume</TableCell>
-              <TableCell align='center'>Tank Type</TableCell>
-              <TableCell align='center'>Tanknicians' Sourced</TableCell>
-              <TableCell align='center'>Last Serviced</TableCell>
-              <TableCell />
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {tanks.map((tank) => (
-              <Row key={tank.id} row={tank} />
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-    </Paper>
+    <TableContainer component={Paper} sx={{ maxHeight: 550 }}>
+      <Table size='small' stickyHeader>
+        <TableHead>
+          <TableRow>
+            <TableCell align='center'>Volume</TableCell>
+            <TableCell align='center'>Tank Type</TableCell>
+            <TableCell align='center'>Tanknicians' Sourced</TableCell>
+            <TableCell align='center'>Last Serviced</TableCell>
+            <TableCell />
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {tanks.map((tank) => (
+            <Row key={tank.id} row={tank} />
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
   );
 }
