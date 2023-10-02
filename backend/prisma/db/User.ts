@@ -1,5 +1,5 @@
-import { PrismaClient } from "@prisma/client";
-import { CreateUser, SearchSchema, UpdateUser } from "../../src/zodTypes";
+import { PrismaClient } from '@prisma/client';
+import { CreateUser, SearchSchema, UpdateUser } from '../../src/zodTypes';
 const prisma = new PrismaClient();
 
 // CREATE
@@ -75,9 +75,7 @@ export async function deleteUser(id: number) {
 }
 
 // SEARCH
-export async function search(
-  search: SearchSchema
-) {
+export async function search(search: SearchSchema) {
   return await prisma.user.findMany({
     skip: (search.page - 1) * search.size,
     take: search.size,
@@ -106,4 +104,4 @@ export async function getAll(includeTanks: boolean, isEmployee?: boolean) {
   });
 }
 
-export * as userDB from "./User";
+export * as userDB from './User';
