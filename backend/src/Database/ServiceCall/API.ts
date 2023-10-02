@@ -2,6 +2,7 @@ import { serviceCallDB } from '../../../prisma/db/ServiceCall';
 import { tankDB } from '../../../prisma/db/TankMetadata';
 import {
   CreateServiceCall,
+  SearchSchema,
   UpdateServiceCall,
   tankMetaDataSchema,
 } from '../../zodTypes';
@@ -153,9 +154,9 @@ export async function deleteOne(id: number) {
   }
 }
 
-export async function search(search: string, page: number) {
+export async function search(searchBody: SearchSchema) {
   try {
-    const searchData = serviceCallDB.searchByString(search, page);
+    const searchData = serviceCallDB.search(searchBody);
     if (!searchData) {
       throw new Error('No Service Call from search found.');
     }

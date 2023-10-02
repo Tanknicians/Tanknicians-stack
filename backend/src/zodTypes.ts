@@ -16,7 +16,17 @@ export const validateRequestBody =
 
 // USER
 
-export const userSchema = z.object({
+const userNameRefine = [
+  ({
+    firstName,
+    middleName,
+    lastName,
+  }: { firstName?: string; middleName?: string; lastName?: string }) =>
+    firstName || middleName || lastName,
+  { message: 'You need to have firstName, middleName, or lastName' },
+] as const;
+
+export const userSchemaBase = z.object({
   id: z.number().int(),
   firstName: z.string().optional(),
   middleName: z.string().optional(),
@@ -27,8 +37,16 @@ export const userSchema = z.object({
   isEmployee: z.boolean(),
 });
 
-export const createUser = userSchema.omit({ id: true });
-export const updateUser = userSchema.omit({ id: true });
+const userSchema = userSchemaBase.refine(...userNameRefine);
+
+export const createUser = userSchemaBase
+  .omit({ id: true })
+  .refine(...userNameRefine);
+
+export const updateUser = userSchemaBase
+  .omit({ id: true })
+  .refine(...userNameRefine);
+
 export type CreateUser = z.infer<typeof createUser>;
 export type UpdateUser = z.infer<typeof userSchema>;
 export type UserRequest = ValidatedRequest<CreateUser>;
@@ -170,3 +188,41 @@ export const refreshTokenSchema = z.object({
   isRefreshToken: z.literal(true),
 });
 export type RefreshToken = z.infer<typeof refreshTokenSchema>;
+
+// Implemented so that searching is consistent and works universally for all Database types.
+export const searchSchema = z
+  .object({
+    // most of these values are optional, but will only return the first 25 values if page/size is not given
+
+    // pages go from 1-inf;
+    page: z.number().positive().optional().default(1),
+    // size of payload, defaults to 25
+    size: z.number().positive().optional().default(25),
+
+    // all optional, but should have at least one filled
+    searchString: z.string().optional(),
+    searchBoolean: z.boolean().optional(),
+    searchNum: z.number().optional(),
+
+    // for any min/max number search
+    minNum: z.number().optional(),
+    maxNum: z.number().optional(),
+
+    // for any min/max date search
+    minDate: z.date().optional(),
+    maxDate: z.date().optional(),
+
+    // defined enums, most searches may opt to not use
+    searchRole: z.enum(['ADMIN', 'EMPLOYEE', 'CUSTOMER']).optional(),
+    searchType: z.enum(['FRESH', 'SALT', 'BRACKISH']).optional(),
+  })
+  .refine(
+    ({ searchString, searchBoolean, searchNum }) =>
+      (searchString ?? searchBoolean ?? searchNum) !== undefined,
+    {
+      message:
+        'You need at least one of: searchString, searchBoolean, searchNum',
+    },
+  );
+
+export type SearchSchema = z.infer<typeof searchSchema>;

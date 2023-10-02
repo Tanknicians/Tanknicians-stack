@@ -1,5 +1,5 @@
 import { userDB } from '../../../prisma/db/User';
-import { CreateUser, UpdateUser } from '../../zodTypes';
+import { CreateUser, SearchSchema, UpdateUser } from '../../zodTypes';
 
 export async function create(user: CreateUser) {
   try {
@@ -59,11 +59,9 @@ export async function deleteOne(id: number) {
   }
 }
 
-// This looks to be an expensive search, might be worth
-// monitoring for slowdown once db grows.
-export async function search(search: string, page: number) {
+export async function search(searchBody: SearchSchema) {
   try {
-    const searchData = userDB.searchByString(search, page);
+    const searchData = userDB.search(searchBody);
     if (!searchData) {
       throw new Error('No User from search found.');
     }

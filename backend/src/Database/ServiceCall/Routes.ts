@@ -5,6 +5,7 @@ import {
   ServiceCallRequest,
   UpdateServiceCall,
   createServiceCall,
+  searchSchema,
   updateServiceCall,
   validateRequestBody,
 } from '../../zodTypes';
@@ -187,14 +188,17 @@ serviceCallRouter.delete(
 
 // Search ServiceCall
 serviceCallRouter.get(
-  '/search/:searchString',
+  '/search',
   authenticateRoleMiddleWare(['ADMIN']),
   async (req, res) => {
     try {
-      const searchString = req.params.searchString;
-      const pageNumber = req.body.page;
-      const result = await ServiceCallService.search(searchString, pageNumber);
-      res.json(result);
+      const searchQuery = searchSchema.safeParse(req.query);
+      if (!searchQuery.success) {
+        return res.status(400).json({ error: searchQuery.error.errors });
+      } else {
+        const result = await ServiceCallService.search(searchQuery.data);
+        res.json(result);
+      }
     } catch (error) {
       const errorMessage =
         error instanceof Error

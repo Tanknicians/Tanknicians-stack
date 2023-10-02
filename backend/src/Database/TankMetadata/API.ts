@@ -1,5 +1,10 @@
+import { TankType } from '@prisma/client';
 import { tankDB } from '../../../prisma/db/TankMetadata';
-import { CreateTankMetaData, UpdateTankMetaData } from '../../zodTypes';
+import {
+  CreateTankMetaData,
+  SearchSchema,
+  UpdateTankMetaData,
+} from '../../zodTypes';
 
 /*
 qrSymbol is a discrete integer value that represents the User's local tank. 
@@ -83,9 +88,9 @@ export async function deleteOne(id: number) {
   }
 }
 
-export async function search(search: string, page: number) {
+export async function search(searchBody: SearchSchema) {
   try {
-    const searchData = tankDB.searchByString(search, page);
+    const searchData = tankDB.search(searchBody);
     if (!searchData) {
       throw new Error('No TankMetadata from search found.');
     }
