@@ -60,7 +60,7 @@ export type LoginRequest = ValidatedRequest<CreateLogin>;
 export const tankMetaDataSchema = z.object({
   id: z.number().int(),
   description: z.string().optional(),
-  volume: z.number().int().positive(),
+  volume: z.coerce.number().int().positive(),
   type: z.enum(['FRESH', 'SALT', 'BRACKISH']),
 
   qrSymbol: z.number().int().positive(),
@@ -71,7 +71,11 @@ export const tankMetaDataSchema = z.object({
   customerId: z.number().int()
 });
 
-export const createTank = tankMetaDataSchema.omit({ id: true });
+export const createTank = tankMetaDataSchema.omit({
+  id: true,
+  qrSymbol: true,
+  lastDateServiced: true
+});
 export type CreateTankMetaData = z.infer<typeof createTank>;
 export type UpdateTankMetaData = z.infer<typeof tankMetaDataSchema>;
 export type TankMetaDataRequest = ValidatedRequest<CreateTankMetaData>;

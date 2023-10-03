@@ -81,6 +81,7 @@ function CreateTankForm({ userId, open, setOpen }: CreateTankFormProps) {
                   <TextField
                     error={!!errors.volume}
                     fullWidth
+                    type='number'
                     label='Volume'
                     value={value ?? ''}
                     onChange={onChange}
