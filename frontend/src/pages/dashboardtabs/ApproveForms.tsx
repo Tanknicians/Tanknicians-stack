@@ -1,7 +1,7 @@
 import { useGetUnapprovedServiceCallsQuery } from "../../redux/slices/forms/servicecallApiSlice";
-import ModeEditOutlineOutlinedIcon from "@mui/icons-material/ModeEditOutlineOutlined";
 import { useGetClientsQuery } from "../../redux/slices/users/userManagementSlice";
 import { UserQuearyArgs } from "../../redux/slices/users/userManagementSlice";
+import CreateServiceCallModal from "../../components/forms/UpsertServiceCall";
 import TableContainer from "@mui/material/TableContainer";
 import Typography from "@mui/material/Typography";
 import TableBody from "@mui/material/TableBody";
@@ -15,6 +15,10 @@ import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
+import { useState } from "react";
+import { ServiceCall } from "../../zodTypes";
+import { useSelector } from "react-redux";
+import { selectCurrentUser } from "../../redux/slices/auth/authSlice";
 
 const headerGridStyle = {
   flex: 1,
@@ -29,6 +33,9 @@ const userQuearyArgs: UserQuearyArgs = {
 const oneMinuteInMilliseconds = 60000;
 
 export default function ApproveForms() {
+  const loggedInUser = useSelector(selectCurrentUser);
+  const [createServiceCallOpen, setCreateServiceCallOpen] = useState(false);
+  const [serviceCall, setServiceCall] = useState<ServiceCall | null>();
   //  Get Forms for table display
   const unapprovedForms = useGetUnapprovedServiceCallsQuery(undefined, {
     pollingInterval: oneMinuteInMilliseconds,
@@ -70,10 +77,25 @@ export default function ApproveForms() {
     return ret;
   }
 
+  function handleModalOpen(serviceCall: ServiceCall) {
+    setCreateServiceCallOpen(true);
+    setServiceCall(serviceCall);
+  }
+
   return (
     <div
       style={{ marginLeft: "auto", marginRight: "auto", maxWidth: "1000px" }}
     >
+      {!!serviceCall && (
+        <CreateServiceCallModal
+          key={serviceCall.id}
+          open={createServiceCallOpen}
+          setOpen={setCreateServiceCallOpen}
+          tankId={serviceCall?.tankId}
+          employeeId={loggedInUser.id}
+          previousServiceCall={serviceCall}
+        />
+      )}
       {/* This box has a grid with the page title in one cell, a section to put a search bar in the middle cell, and a container for a button in the far right cell */}
       <Box sx={{ flexGrow: 1, display: "flex", padding: "20px" }}>
         <Grid container spacing={1}>
@@ -121,21 +143,21 @@ export default function ApproveForms() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {unapprovedForms?.map(({ tankId, employeeId, id }, index) => (
+              {unapprovedForms?.map((object, index) => (
                 <TableRow
-                  key={id}
+                  key={object.id}
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
                   <TableCell component="th" scope="row">
                     {index + 1}
                   </TableCell>
                   <TableCell component="th" scope="row">
-                    {getEmployeeName(employeeId)}
+                    {getEmployeeName(object.employeeId)}
                   </TableCell>
-                  <TableCell>{getClientName(tankId)}</TableCell>
-                  <TableCell>{tankId}</TableCell>
+                  <TableCell>{getClientName(object.tankId)}</TableCell>
+                  <TableCell>{object.tankId}</TableCell>
                   <TableCell>
-                    <Button onClick={() => console.log("Nice, you clicked it")}>
+                    <Button onClick={() => handleModalOpen(object)}>
                       <BorderColorIcon />
                     </Button>
                   </TableCell>
