@@ -1,11 +1,16 @@
 import * as bcrypt from 'bcryptjs';
 import { loginDB } from '../../../prisma/db/Login';
 import { CreateLogin, SearchSchema, UpdateLogin } from '../../zodTypes';
-import { Role } from '@prisma/client';
+import { Login } from '@prisma/client';
 
 export async function create(login: CreateLogin) {
+  // Convert from Zod to Prisma
+  const createLogin: Omit<Login, 'id'> = {
+    ...login
+  }
+
   try {
-    const createdId = await loginDB.create(login);
+    const createdId = await loginDB.create(createLogin);
     return { message: 'Login created successfully', id: createdId };
   } catch (e) {
     const errorMessage = e instanceof Error ? e.message : 'Unknown error.';
@@ -28,10 +33,16 @@ export async function read(email: string) {
   }
 }
 
-export async function update(login: UpdateLogin) {
+export async function update(id: number, data: UpdateLogin) {
+  // Convert from Zod to Prisma
+  const updateLogin: Login = {
+    id,
+    ...data
+  }
+  
   try {
-    login.password = await bcrypt.hash(login.password, 10);
-    await loginDB.update(login);
+    updateLogin.password = await bcrypt.hash(updateLogin.password, 10);
+    await loginDB.update(updateLogin);
     return { message: 'Login updated successfully' };
   } catch (e) {
     const errorMessage = e instanceof Error ? e.message : 'Unknown error.';

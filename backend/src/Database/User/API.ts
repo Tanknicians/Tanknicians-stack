@@ -1,9 +1,15 @@
+import { User } from '@prisma/client';
 import { userDB } from '../../../prisma/db/User';
 import { CreateUser, SearchSchema, UpdateUser } from '../../zodTypes';
 
-export async function create(user: CreateUser) {
+export async function create(data: CreateUser) {
+  // convert from Zod to Prisma
+  const createUser: Omit<CreateUser, 'id'> = {
+    ...data
+  }
+
   try {
-    const createdId = await userDB.create(user);
+    const createdId = await userDB.create(createUser);
     return { message: 'User created successfully', id: createdId };
   } catch (e) {
     const errorMessage = e instanceof Error ? e.message : 'Unknown error.';
@@ -37,9 +43,14 @@ export async function readAll(includeTanks: boolean, isEmployee?: boolean) {
   }
 }
 
-export async function update(user: UpdateUser) {
+export async function update(id: number, data: UpdateUser) {
+  // Convert from Zod to Prisma
+  const updateUser: User = {
+    id,
+    ...data
+  }
   try {
-    await userDB.update(user);
+    await userDB.update(updateUser);
     return { message: 'User updated successfully' };
   } catch (e) {
     const errorMessage = e instanceof Error ? e.message : 'Unknown error.';
