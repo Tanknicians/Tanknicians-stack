@@ -5,6 +5,7 @@ import {
   SearchSchema,
   UpdateTankMetaData,
 } from '../../zodTypes';
+import { userDB } from 'prisma/db/User';
 
 /*
 qrSymbol is a discrete integer value that represents the User's local tank. 
@@ -19,6 +20,14 @@ Though it takes O(n) instead of O(1) to process, being able to fill in the colle
 The purpose is to avoid hitting a soft limit on the front-end, whom has a limited amount of values (up to 20).
 */
 export async function create(tank: CreateTankMetaData) {
+  const customer = await userDB.read(tank.customerId);
+  if (!customer) {
+    throw new Error(`Customer with id: ${tank.customerId} not found.`);
+  }
+  if (customer.isEmployee) {
+    throw new Error(`Customer with id: ${tank.customerId} is an employee.`);
+  }
+
   try {
     const userTanks = await tankDB.readTanksByUserId(tank.customerId);
     // map the pre-existing qrSymbols
