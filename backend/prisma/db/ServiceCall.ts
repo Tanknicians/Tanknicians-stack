@@ -1,13 +1,11 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, ServiceCall } from '@prisma/client';
 import {
-  CreateServiceCall,
   SearchSchema,
-  UpdateServiceCall,
 } from '../../src/zodTypes';
 const prisma = new PrismaClient();
 
 // CREATE
-export async function create(form: CreateServiceCall) {
+export async function create(form: Omit<ServiceCall, 'id'>) {
   const { employeeId, tankId, ...formData } = form;
   const createdServiceCall = await prisma.serviceCall.create({
     data: {
@@ -67,7 +65,7 @@ export async function readByDateTime(
 }
 
 // UPDATE
-export async function update(serviceCall: UpdateServiceCall) {
+export async function update(serviceCall: ServiceCall) {
   await prisma.serviceCall.update({
     where: {
       id: serviceCall.id,
