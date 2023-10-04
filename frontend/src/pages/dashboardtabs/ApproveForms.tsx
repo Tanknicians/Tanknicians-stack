@@ -38,11 +38,13 @@ export default function ApproveForms() {
     // get the name of the technician associated with the passed employee id
     let ret = "EMPLOYEE NAME NOT FOUND";
     try {
-      const ret = optionsList?.find((element) => element.id === empId);
-      if (ret === undefined) {
+      const matchedUserOption = optionsList?.find(
+        (element) => element.id === empId,
+      );
+      if (matchedUserOption === undefined) {
         throw new Error(`No 'Employee Name' for employee ${empId}.`);
       } else {
-        ret = `${ret.firstName} ${ret.lastName}`;
+        ret = `${matchedUserOption.firstName} ${matchedUserOption.lastName}`;
       }
     } catch (e) {
       console.log(e);
