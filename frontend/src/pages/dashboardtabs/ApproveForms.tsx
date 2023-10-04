@@ -1,4 +1,5 @@
 import { useGetUnapprovedServiceCallsQuery } from "../../redux/slices/forms/servicecallApiSlice";
+import ModeEditOutlineOutlinedIcon from "@mui/icons-material/ModeEditOutlineOutlined";
 import { useGetClientsQuery } from "../../redux/slices/users/userManagementSlice";
 import { UserQuearyArgs } from "../../redux/slices/users/userManagementSlice";
 import TableContainer from "@mui/material/TableContainer";
@@ -8,10 +9,12 @@ import Container from "@mui/material/Container";
 import TableCell from "@mui/material/TableCell";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
+import Button from "@mui/material/Button";
 import Table from "@mui/material/Table";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
+import BorderColorIcon from "@mui/icons-material/BorderColor";
 
 const headerGridStyle = {
   flex: 1,
@@ -42,7 +45,6 @@ export default function ApproveForms() {
         (element) => element.id === empId,
       );
       if (matchedUserOption === undefined) {
-        throw new Error(`No 'Employee Name' for employee ${empId}.`);
       } else {
         ret = `${matchedUserOption.firstName} ${matchedUserOption.lastName}`;
       }
@@ -62,7 +64,6 @@ export default function ApproveForms() {
           }
         });
       });
-      throw new Error(`No 'Client Name' for tank ${tankId}.`);
     } catch (e) {
       console.log(e);
     }
@@ -133,7 +134,11 @@ export default function ApproveForms() {
                   </TableCell>
                   <TableCell>{getClientName(tankId)}</TableCell>
                   <TableCell>{tankId}</TableCell>
-                  <TableCell>BUTTON</TableCell>
+                  <TableCell>
+                    <Button onClick={() => console.log("Nice, you clicked it")}>
+                      <BorderColorIcon />
+                    </Button>
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
