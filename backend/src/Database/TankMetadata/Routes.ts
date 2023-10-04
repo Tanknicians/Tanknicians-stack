@@ -26,9 +26,7 @@ const tankEpoch = new Date('2010-01-01');
 tankMetaDataRouter.post(
   '/',
   authenticateRoleMiddleWare(['ADMIN']),
-  validateRequestBody(
-    createTank.omit({ qrSymbol: true, lastDateServiced: true }),
-  ),
+  validateRequestBody(createTank),
   async (req: TankMetaDataRequest, res) => {
     try {
       const input = req.body;

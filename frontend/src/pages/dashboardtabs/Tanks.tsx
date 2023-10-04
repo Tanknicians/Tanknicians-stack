@@ -1,7 +1,6 @@
 import {
-  UserData,
-  useGetClientsQuery,
-  UserQuearyArgs
+  UserWithTanks,
+  useGetClientsQuery
 } from '../../redux/slices/users/userManagementSlice';
 import CreateTankForm from '../../components/forms/CreateTank';
 import UserSearchBar from '../../components/UserSearchBar';
@@ -178,13 +177,11 @@ export function TankTabs({
   );
 }
 
-const userQuearyArgs: UserQuearyArgs = {
-  includeTanks: true,
-  isEmployee: false
-};
-
 export default function Tanks() {
-  const { data: optionsList } = useGetClientsQuery(userQuearyArgs);
+  const { data: optionsList } = useGetClientsQuery({
+    includeTanks: true,
+    isEmployee: false
+  });
   const [selectedUserId, selectCurrentUserId] = useState<number | null>(null);
   const selectedUser = useMemo(
     () => optionsList?.find((user) => user.id === selectedUserId) ?? null,
@@ -195,7 +192,7 @@ export default function Tanks() {
 
   const handleUserSelected = (
     _event: React.SyntheticEvent,
-    customer: UserData | null
+    customer: UserWithTanks | null
   ) => {
     selectCurrentUserId(customer?.id ?? null);
   };
