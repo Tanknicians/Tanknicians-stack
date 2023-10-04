@@ -5,7 +5,7 @@ import {
   SearchSchema,
   UpdateTankMetaData,
 } from '../../zodTypes';
-import { userDB } from 'prisma/db/User';
+import { userDB } from '../../../prisma/db/User';
 
 /*
 qrSymbol is a discrete integer value that represents the User's local tank. 
