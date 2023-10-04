@@ -132,7 +132,16 @@ export default function ApproveForms() {
       </Box>
       <Box>
         <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 650 }} aria-label="simple table">
+          <Table
+            sx={{
+              // "& .MuiTableRow-root:hover": {
+              //   backgroundColor: "primary.light",
+              // },
+
+              minWidth: "650px",
+            }}
+            aria-label="simple table"
+          >
             <TableHead>
               <TableRow>
                 <TableCell />
