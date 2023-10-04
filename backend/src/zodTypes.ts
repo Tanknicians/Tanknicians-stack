@@ -28,16 +28,14 @@ const userNameRefine = [
 
 export const userSchemaBase = z.object({
   id: z.number().int(),
-  firstName: z.string().optional(),
-  middleName: z.string().optional(),
-  lastName: z.string().optional(),
-  address: z.string().optional(),
-  phone: z.string().optional(),
+  firstName: z.string().optional().default(""),
+  middleName: z.string().optional().default(""),
+  lastName: z.string().optional().default(""),
+  address: z.string().optional().default(""),
+  phone: z.string().optional().default(""),
 
   isEmployee: z.boolean(),
 });
-
-const userSchema = userSchemaBase.refine(...userNameRefine);
 
 export const createUser = userSchemaBase
   .omit({ id: true })
@@ -48,8 +46,9 @@ export const updateUser = userSchemaBase
   .refine(...userNameRefine);
 
 export type CreateUser = z.infer<typeof createUser>;
-export type UpdateUser = z.infer<typeof userSchema>;
-export type UserRequest = ValidatedRequest<CreateUser>;
+export type UpdateUser = z.infer<typeof updateUser>;
+export type UserCreateRequest = ValidatedRequest<CreateUser>;
+export type UserUpdateRequest = ValidatedRequest<UpdateUser>;
 
 // LOGIN
 
@@ -72,14 +71,15 @@ export const loginSchema = z
 export const createLogin = loginSchema.omit({ id: true });
 export const updateLogin = loginSchema.omit({ id: true });
 export type CreateLogin = z.infer<typeof createLogin>;
-export type UpdateLogin = z.infer<typeof loginSchema>;
-export type LoginRequest = ValidatedRequest<CreateLogin>;
+export type UpdateLogin = z.infer<typeof updateLogin>;
+export type LoginCreateRequest = ValidatedRequest<CreateLogin>;
+export type LoginUpdateRequest = ValidatedRequest<UpdateLogin>;
 
 // TANKMETADATA
 
 export const tankMetaDataSchema = z.object({
   id: z.number().int(),
-  description: z.string().nullish(),
+  description: z.string().nullable().default(null),
   volume: z.number().int().positive(),
   type: z.enum(['FRESH', 'SALT', 'BRACKISH']),
 
@@ -91,24 +91,25 @@ export const tankMetaDataSchema = z.object({
   customerId: z.number().int(),
 });
 
-export const createTank = tankMetaDataSchema.omit({ id: true });
+export const createTank = tankMetaDataSchema.omit({ id: true, qrSymbol: true, lastDateServiced: true });
 export const updateTank = tankMetaDataSchema.omit({ id: true });
 export type CreateTankMetaData = z.infer<typeof createTank>;
-export type UpdateTankMetaData = z.infer<typeof tankMetaDataSchema>;
-export type TankMetaDataRequest = ValidatedRequest<CreateTankMetaData>;
+export type UpdateTankMetaData = z.infer<typeof updateTank>;
+export type TankMetaDataCreateRequest = ValidatedRequest<CreateTankMetaData>;
+export type TankMetaDataUpdateRequest = ValidatedRequest<UpdateTankMetaData>;
 
 // SERVICECALL
 
 export const serviceCallSchema = z.object({
   id: z.number().int(),
-  isApproved: z.boolean().optional(),
+  isApproved: z.boolean(),
   createdOn: z.coerce.date(),
 
-  customerRequest: z.string().optional(),
-  employeeNotes: z.string().optional(),
+  customerRequest: z.string().optional().nullable().default(null),
+  employeeNotes: z.string().optional().nullable().default(null),
   // server use only for not-approved notes
-  notApprovedNotes: z.string().optional(),
-  notesUpdated: z.coerce.date().optional(),
+  notApprovedNotes: z.string().optional().nullable().default(null),
+  notesUpdated: z.coerce.date().optional().nullable().default(null),
 
   alkalinity: z.number(),
   calcium: z.number(),
@@ -134,11 +135,13 @@ export const serviceCallSchema = z.object({
   pestBPresent: z.boolean(),
   pestCPresent: z.boolean(),
   pestDPresent: z.boolean(),
+
   employeeId: z.number().int(),
   tankId: z.number().int(),
 });
 
 export type ServiceCall = z.infer<typeof serviceCallSchema>;
+
 export const createServiceCall = serviceCallSchema.omit({ id: true });
 export const updateServiceCall = serviceCallSchema.omit({ id: true });
 export const mobileServiceCall = serviceCallSchema.omit({
@@ -146,10 +149,14 @@ export const mobileServiceCall = serviceCallSchema.omit({
   isApproved: true,
   notApprovedNotes: true,
 });
+
 export type CreateServiceCall = z.infer<typeof createServiceCall>;
-export type UpdateServiceCall = z.infer<typeof serviceCallSchema>;
+export type UpdateServiceCall = z.infer<typeof updateServiceCall>;
 export type MobileServiceCall = z.infer<typeof mobileServiceCall>;
-export type ServiceCallRequest = ValidatedRequest<CreateServiceCall>;
+
+export type ServiceCallCreateRequest = ValidatedRequest<CreateServiceCall>;
+export type ServiceCallUpdateRequest = ValidatedRequest<UpdateServiceCall>;
+export type ServiceCallMobileRequest = ValidatedRequest<MobileServiceCall>;
 
 // AUTH
 
