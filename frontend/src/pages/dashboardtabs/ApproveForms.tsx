@@ -19,7 +19,7 @@ const headerGridStyle = {
 };
 
 const userQuearyArgs: UserQuearyArgs = {
-  includeTanks: undefined,
+  includeTanks: true,
   isEmployee: undefined,
 };
 
@@ -31,14 +31,30 @@ export default function ApproveForms() {
   }).data;
 
   const { data: optionsList, error } = useGetClientsQuery(userQuearyArgs);
-  console.log(optionsList);
 
-  function getUserName(userId: number) {
-    const ret = optionsList?.find((element) => element.id === userId);
+  function getEmployeeName(empId: number) {
+    const ret = optionsList?.find((element) => element.id === empId);
     if (ret === undefined) {
       return "Name Not found";
     }
     return `${ret.firstName} ${ret.lastName}`;
+  }
+
+  function getClientName(tankId: number) {
+    let ret = "CLIENT NAME NOT FOUND";
+    try {
+      optionsList?.forEach(function (user) {
+        user.OwnedTanks?.forEach(function (tank) {
+          if (tank.id === tankId) {
+            ret = `${user.firstName} ${user.lastName}`;
+          }
+        });
+      });
+      throw new Error(`No 'Client Name' for tank ${tankId}.`);
+    } catch (e) {
+      console.log(e);
+    }
+    return ret;
   }
 
   return (
@@ -101,9 +117,9 @@ export default function ApproveForms() {
                     {index + 1}
                   </TableCell>
                   <TableCell component="th" scope="row">
-                    {getUserName(employeeId)}
+                    {getEmployeeName(employeeId)}
                   </TableCell>
-                  <TableCell>{getUserName(tankId)}</TableCell>
+                  <TableCell>{getClientName(tankId)}</TableCell>
                   <TableCell>{tankId}</TableCell>
                   <TableCell>BUTTON</TableCell>
                 </TableRow>
