@@ -1,5 +1,5 @@
 import {
-  UserWithTanks,
+  UserData,
   useGetClientsQuery
 } from '../../redux/slices/users/userManagementSlice';
 import UserSearchBar from '../../components/UserSearchBar';
@@ -12,12 +12,15 @@ import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import { useMemo, useState } from 'react';
 import CreateUserModal from '../../components/forms/CreateUser';
+import { UserQuearyArgs } from '../../redux/slices/users/userManagementSlice';
 
 export default function Employees() {
-  const { data: optionsList, error } = useGetClientsQuery({
+  const userId = 1;
+  const userQuearyArgs: UserQuearyArgs = {
     includeTanks: false,
     isEmployee: true
-  });
+  };
+  const { data: optionsList, error } = useGetClientsQuery(userQuearyArgs);
 
   const [tankModalOpen, setTankModalOpen] = useState(false);
   const [userModalOpen, setUserModalOpen] = useState(false);
@@ -32,7 +35,7 @@ export default function Employees() {
 
   const handleUserSelected = (
     _event: React.SyntheticEvent,
-    customer: UserWithTanks | null
+    customer: UserData | null
   ) => {
     selectCurrentUserId(customer?.id ?? null);
   };

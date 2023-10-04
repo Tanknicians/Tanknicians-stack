@@ -6,13 +6,18 @@ import {
   UpdateUser
 } from '../../../zodTypes';
 
-export type UserWithTanks = {
+export type UserData = {
   OwnedTanks?: UpdateTankMetaData[];
 } & UpdateUser;
 
+export type UserQuearyArgs = {
+  includeTanks: boolean;
+  isEmployee: boolean;
+};
+
 export const userManagementSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    getUser: builder.query<UserWithTanks, number>({
+    getUser: builder.query<UserData, number>({
       providesTags: () => [{ type: 'USERLIST', id: 'LIST' }],
       query: (id) => ({
         url: `/api/database/user/${id}`,
@@ -20,13 +25,7 @@ export const userManagementSlice = apiSlice.injectEndpoints({
       })
     }),
     // Query returns a list of all users
-    getClients: builder.query<
-      UserWithTanks[],
-      {
-        includeTanks: boolean;
-        isEmployee: boolean;
-      }
-    >({
+    getClients: builder.query<UserData[], UserQuearyArgs>({
       providesTags: (result) =>
         result
           ? [

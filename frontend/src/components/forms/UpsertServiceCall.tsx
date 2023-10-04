@@ -92,9 +92,7 @@ export function CreateForm({
               InputLabelProps={{ shrink: type === 'date' ? true : undefined }}
               {...field}
               value={
-                type === 'date' &&
-                typeof field.value === 'object' &&
-                field.value
+                type === 'date' && typeof field.value === 'object'
                   ? format(field.value, 'yyyy-MM-dd')
                   : field.value
               }
