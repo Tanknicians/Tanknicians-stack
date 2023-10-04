@@ -3,6 +3,7 @@ import { NextFunction, Response, Request } from 'express';
 import { ParamsDictionary } from 'express-serve-static-core';
 
 export type ValidatedRequest<T> = Request<ParamsDictionary, unknown, T>;
+const id = z.number().positive().int();
 
 export const validateRequestBody =
   (schema: Schema) => (req: Request, res: Response, next: NextFunction) => {
@@ -30,7 +31,7 @@ const userNameRefine = [
 ] as const;
 
 export const userSchemaBase = z.object({
-  id: z.number().int(),
+  id,
   firstName: z.string().nullable().default(null),
   middleName: z.string().nullable().default(null),
   lastName: z.string().nullable().default(null),
@@ -58,7 +59,7 @@ export type UserRequest = ValidatedRequest<CreateUser>;
 
 export const loginSchema = z
   .object({
-    id: z.number().int(),
+    id,
     email: z.string({ required_error: 'Email is required' }).email(),
     password: z.string({ required_error: 'Password is required' }),
     role: z.enum(['ADMIN', 'EMPLOYEE', 'CUSTOMER'], {
@@ -66,9 +67,7 @@ export const loginSchema = z
         message: 'Role must be ADMIN, EMPLOYEE, or CUSTOMER'
       })
     }),
-    userId: z
-      .number({ required_error: 'Must be a positive integer.' })
-      .positive()
+    userId: id
   })
   .strict();
 
@@ -81,17 +80,17 @@ export type LoginRequest = ValidatedRequest<CreateLogin>;
 // TANKMETADATA
 
 export const tankMetaDataSchema = z.object({
-  id: z.number().int(),
+  id,
   description: z.string().nullable().default(null),
-  volume: z.number().int().positive(),
+  volume: z.coerce.number().int().positive(),
   type: z.enum(['FRESH', 'SALT', 'BRACKISH']),
 
-  qrSymbol: z.number().int().positive(),
+  qrSymbol: id,
 
   tanknicianSourcedOnly: z.boolean(),
   lastDateServiced: z.coerce.date(),
 
-  customerId: z.number().int()
+  customerId: id
 });
 
 export const createTank = tankMetaDataSchema.omit({
@@ -111,7 +110,7 @@ export type TankMetaDataRequest = ValidatedRequest<CreateTankMetaData>;
 // SERVICECALL
 
 export const serviceCallSchema = z.object({
-  id: z.number().int(),
+  id,
   isApproved: z.boolean(),
   createdOn: z.coerce.date(),
 
@@ -121,10 +120,10 @@ export const serviceCallSchema = z.object({
   notApprovedNotes: z.string().nullable().default(null),
   notesUpdated: z.coerce.date().nullable().default(null),
 
-  alkalinity: z.number(),
-  calcium: z.number(),
-  nitrate: z.number(),
-  phosphate: z.number(),
+  alkalinity: z.coerce.number(),
+  calcium: z.coerce.number(),
+  nitrate: z.coerce.number(),
+  phosphate: z.coerce.number(),
 
   ATOOperational: z.boolean(),
   ATOReservoirFilled: z.boolean(),
@@ -145,8 +144,8 @@ export const serviceCallSchema = z.object({
   pestBPresent: z.boolean(),
   pestCPresent: z.boolean(),
   pestDPresent: z.boolean(),
-  employeeId: z.number().int(),
-  tankId: z.number().int()
+  employeeId: id,
+  tankId: id
 });
 
 export type ServiceCall = z.infer<typeof serviceCallSchema>;
@@ -185,7 +184,10 @@ export type EmailRequest = ValidatedRequest<Email>;
 
 // TOKEN
 
-const tokenData = loginSchema.extend({ id: z.number(), userId: z.number() });
+const tokenData = loginSchema.extend({
+  id,
+  userId: id
+});
 
 export const tokenSchema = z.object({
   data: tokenData,
