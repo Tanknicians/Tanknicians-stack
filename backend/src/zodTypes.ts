@@ -21,18 +21,21 @@ const userNameRefine = [
     firstName,
     middleName,
     lastName,
-  }: { firstName?: string; middleName?: string; lastName?: string }) =>
-    firstName || middleName || lastName,
+  }: {
+    firstName: string | null;
+    middleName: string | null;
+    lastName: string | null;
+  }) => firstName || middleName || lastName,
   { message: 'You need to have firstName, middleName, or lastName' },
 ] as const;
 
 export const userSchemaBase = z.object({
   id: z.number().int(),
-  firstName: z.string().optional(),
-  middleName: z.string().optional(),
-  lastName: z.string().optional(),
-  address: z.string().optional(),
-  phone: z.string().optional(),
+  firstName: z.string().nullable().default(null),
+  middleName: z.string().nullable().default(null),
+  lastName: z.string().nullable().default(null),
+  address: z.string().nullable().default(null),
+  phone: z.string().nullable().default(null),
 
   isEmployee: z.boolean(),
 });
@@ -79,7 +82,7 @@ export type LoginRequest = ValidatedRequest<CreateLogin>;
 
 export const tankMetaDataSchema = z.object({
   id: z.number().int(),
-  description: z.string().nullish(),
+  description: z.string().nullable().default(null),
   volume: z.number().int().positive(),
   type: z.enum(['FRESH', 'SALT', 'BRACKISH']),
 
@@ -91,8 +94,14 @@ export const tankMetaDataSchema = z.object({
   customerId: z.number().int(),
 });
 
-export const createTank = tankMetaDataSchema.omit({ id: true });
-export const updateTank = tankMetaDataSchema.omit({ id: true });
+export const createTank = tankMetaDataSchema.omit({
+  id: true,
+  tankMetadataId: true,
+});
+export const updateTank = tankMetaDataSchema.omit({
+  id: true,
+  tankMetadataId: true,
+});
 export type CreateTankMetaData = z.infer<typeof createTank>;
 export type UpdateTankMetaData = z.infer<typeof tankMetaDataSchema>;
 export type TankMetaDataRequest = ValidatedRequest<CreateTankMetaData>;
@@ -101,14 +110,14 @@ export type TankMetaDataRequest = ValidatedRequest<CreateTankMetaData>;
 
 export const serviceCallSchema = z.object({
   id: z.number().int(),
-  isApproved: z.boolean().optional(),
+  isApproved: z.boolean(),
   createdOn: z.coerce.date(),
 
-  customerRequest: z.string().optional(),
-  employeeNotes: z.string().optional(),
+  customerRequest: z.string().nullable().default(null),
+  employeeNotes: z.string().nullable().default(null),
   // server use only for not-approved notes
-  notApprovedNotes: z.string().optional(),
-  notesUpdated: z.coerce.date().optional(),
+  notApprovedNotes: z.string().nullable().default(null),
+  notesUpdated: z.coerce.date().nullable().default(null),
 
   alkalinity: z.number(),
   calcium: z.number(),

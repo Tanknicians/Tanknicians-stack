@@ -1,4 +1,4 @@
-import { UserData } from '../redux/slices/users/userManagementSlice';
+import { UserWithTanks } from '../redux/slices/users/userManagementSlice';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 import parse from 'autosuggest-highlight/parse';
@@ -6,11 +6,11 @@ import match from 'autosuggest-highlight/match';
 import React from 'react';
 
 type UserList = {
-  userList: UserData[];
-  selectedUser: UserData | null;
+  userList: UserWithTanks[];
+  selectedUser: UserWithTanks | null;
   handleUserSelected: (
     _event: React.SyntheticEvent,
-    value: UserData | null
+    value: UserWithTanks | null
   ) => void;
 };
 
@@ -37,7 +37,7 @@ const styles = {
   }
 };
 
-function getUsersName(user: UserData) {
+function getUsersName(user: UserWithTanks) {
   return user?.firstName ?? user?.lastName ?? user?.middleName ?? '';
 }
 

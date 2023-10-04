@@ -4,17 +4,15 @@ import {
   CreateServiceCall,
   SearchSchema,
   UpdateServiceCall,
-  tankMetaDataSchema,
 } from '../../zodTypes';
 
 export async function create(serviceCall: CreateServiceCall) {
   // Update Tank's "lastDateServiced" to serviceCall's "createdOn" and upload ServiceCall
   try {
-    const readTank = await tankDB.read(serviceCall.tankId);
-    if (!readTank) {
+    const updateTank = await tankDB.read(serviceCall.tankId);
+    if (!updateTank) {
       throw new Error(`No tankId of ${serviceCall.tankId} found.`);
     }
-    const updateTank = tankMetaDataSchema.parse(readTank);
     updateTank.lastDateServiced = serviceCall.createdOn;
     await serviceCallDB.create(serviceCall);
     const createdId = await tankDB.update(updateTank);

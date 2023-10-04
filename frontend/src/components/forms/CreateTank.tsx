@@ -28,7 +28,14 @@ type CreateTankFormProps = {
 function CreateTankForm({ userId, open, setOpen }: CreateTankFormProps) {
   //API call to create tank
   const [addTankToUser, { isLoading }] = useAddTankToUserMutation();
-
+  const defaultValues: CreateTankMetaData = {
+    description: '',
+    volume: 0,
+    type: 'FRESH',
+    tanknicianSourcedOnly: false,
+    lastDateServiced: new Date(),
+    customerId: userId
+  };
   const {
     control,
     reset,
@@ -36,10 +43,7 @@ function CreateTankForm({ userId, open, setOpen }: CreateTankFormProps) {
     formState: { errors }
   } = useForm<CreateTankMetaData>({
     resolver: zodResolver(createTank),
-    defaultValues: {
-      tanknicianSourcedOnly: false,
-      customerId: userId
-    }
+    defaultValues
   });
 
   console.log('Create Tank Form RHF Errors: ', errors);

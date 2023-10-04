@@ -3,12 +3,12 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
-import { UserData } from '../redux/slices/users/userManagementSlice';
+import { UserWithTanks } from '../redux/slices/users/userManagementSlice';
 import { useState } from 'react';
 import EditUserModal from './forms/EditUser';
 
 export interface UserCardProps {
-  user: UserData | null;
+  user: UserWithTanks | null;
 }
 
 export default function UserCard(props: UserCardProps) {
