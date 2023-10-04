@@ -12,7 +12,7 @@ export type UserData = {
 
 export type UserQuearyArgs = {
   includeTanks: boolean;
-  isEmployee: boolean;
+  isEmployee: boolean | undefined;
 };
 
 export const userManagementSlice = apiSlice.injectEndpoints({
