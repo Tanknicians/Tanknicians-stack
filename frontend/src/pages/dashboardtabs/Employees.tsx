@@ -1,22 +1,22 @@
 import {
   UserWithTanks,
-  useGetClientsQuery,
-} from "../../redux/slices/users/userManagementSlice";
-import UserSearchBar from "../../components/UserSearchBar";
-import Typography from "@mui/material/Typography";
-import UserCard from "../../components/UserCard";
-import Collapse from "@mui/material/Collapse";
-import AddIcon from "@mui/icons-material/Add";
-import Button from "@mui/material/Button";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
-import { useMemo, useState } from "react";
-import CreateUserModal from "../../components/forms/CreateUser";
+  useGetClientsQuery
+} from '../../redux/slices/users/userManagementSlice';
+import UserSearchBar from '../../components/UserSearchBar';
+import Typography from '@mui/material/Typography';
+import UserCard from '../../components/UserCard';
+import Collapse from '@mui/material/Collapse';
+import AddIcon from '@mui/icons-material/Add';
+import Button from '@mui/material/Button';
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
+import { useMemo, useState } from 'react';
+import CreateUserModal from '../../components/forms/CreateUser';
 
 export default function Employees() {
   const { data: optionsList, error } = useGetClientsQuery({
     includeTanks: false,
-    isEmployee: true,
+    isEmployee: true
   });
 
   const [tankModalOpen, setTankModalOpen] = useState(false);
@@ -52,16 +52,16 @@ export default function Employees() {
       <Grid
         container
         spacing={1}
-        sx={{ padding: "20px", margin: "auto", maxWidth: "1200px" }}
-        justifyContent="center"
-        alignItems="center"
+        sx={{ padding: '20px', margin: 'auto', maxWidth: '1200px' }}
+        justifyContent='center'
+        alignItems='center'
       >
         <Grid item xs={2} sm={2}>
           <Typography
-            color="inherit"
-            variant="h4"
-            component="h1"
-            align="center"
+            color='inherit'
+            variant='h4'
+            component='h1'
+            align='center'
           >
             Employees
           </Typography>
@@ -78,12 +78,12 @@ export default function Employees() {
         <Grid item xs={2} sm={2}>
           <Box
             sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center'
             }}
           >
-            <Button variant="contained" onClick={handleOpenUserModal}>
+            <Button variant='contained' onClick={handleOpenUserModal}>
               <AddIcon />
               Add Employee
             </Button>

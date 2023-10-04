@@ -1,24 +1,24 @@
 import {
   UserWithTanks,
-  useGetClientsQuery,
-} from "../../redux/slices/users/userManagementSlice";
-import CreateTankForm from "../../components/forms/CreateTank";
-import UserSearchBar from "../../components/UserSearchBar";
-import Typography from "@mui/material/Typography";
-import UserCard from "../../components/UserCard";
-import Collapse from "@mui/material/Collapse";
-import AddIcon from "@mui/icons-material/Add";
-import Button from "@mui/material/Button";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
-import { useMemo, useState } from "react";
-import CreateUserModal from "../../components/forms/CreateUser";
-import TanksCollapsibleTable from "../../components/TanksCollapsibleTable";
+  useGetClientsQuery
+} from '../../redux/slices/users/userManagementSlice';
+import CreateTankForm from '../../components/forms/CreateTank';
+import UserSearchBar from '../../components/UserSearchBar';
+import Typography from '@mui/material/Typography';
+import UserCard from '../../components/UserCard';
+import Collapse from '@mui/material/Collapse';
+import AddIcon from '@mui/icons-material/Add';
+import Button from '@mui/material/Button';
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
+import { useMemo, useState } from 'react';
+import CreateUserModal from '../../components/forms/CreateUser';
+import TanksCollapsibleTable from '../../components/TanksCollapsibleTable';
 
 export default function Clients() {
   const { data: optionsList, error } = useGetClientsQuery({
     includeTanks: true,
-    isEmployee: false,
+    isEmployee: false
   });
   const [tankModalOpen, setTankModalOpen] = useState(false);
   const [clientModalOpen, setClientModalOpen] = useState(false);
@@ -52,16 +52,16 @@ export default function Clients() {
       <Grid
         container
         spacing={1}
-        sx={{ padding: "20px", margin: "auto", maxWidth: "1200px" }}
-        justifyContent="center"
-        alignItems="center"
+        sx={{ padding: '20px', margin: 'auto', maxWidth: '1200px' }}
+        justifyContent='center'
+        alignItems='center'
       >
         <Grid item xs={2} sm={2}>
           <Typography
-            color="inherit"
-            variant="h4"
-            component="h1"
-            align="center"
+            color='inherit'
+            variant='h4'
+            component='h1'
+            align='center'
           >
             Clients
           </Typography>
@@ -78,12 +78,12 @@ export default function Clients() {
         <Grid item xs={2} sm={2}>
           <Box
             sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center'
             }}
           >
-            <Button variant="contained" onClick={handleOpenUserModal}>
+            <Button variant='contained' onClick={handleOpenUserModal}>
               <AddIcon />
               Add Client
             </Button>
@@ -108,13 +108,13 @@ export default function Clients() {
             <Grid xs={2} sm={2} item>
               <Box
                 sx={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  marginTop: 1,
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginTop: 1
                 }}
               >
-                <Button variant="contained" onClick={handleOpenTankModal}>
+                <Button variant='contained' onClick={handleOpenTankModal}>
                   <AddIcon />
                   Add Tank
                 </Button>

@@ -1,16 +1,16 @@
 import {
   UserWithTanks,
-  useGetClientsQuery,
-} from "../../redux/slices/users/userManagementSlice";
-import CreateTankForm from "../../components/forms/CreateTank";
-import UserSearchBar from "../../components/UserSearchBar";
-import Typography from "@mui/material/Typography";
-import UserCard from "../../components/UserCard";
-import Container from "@mui/material/Container";
-import Collapse from "@mui/material/Collapse";
-import Button from "@mui/material/Button";
-import Grid from "@mui/material/Grid";
-import { useMemo, useState } from "react";
+  useGetClientsQuery
+} from '../../redux/slices/users/userManagementSlice';
+import CreateTankForm from '../../components/forms/CreateTank';
+import UserSearchBar from '../../components/UserSearchBar';
+import Typography from '@mui/material/Typography';
+import UserCard from '../../components/UserCard';
+import Container from '@mui/material/Container';
+import Collapse from '@mui/material/Collapse';
+import Button from '@mui/material/Button';
+import Grid from '@mui/material/Grid';
+import { useMemo, useState } from 'react';
 import {
   Box,
   Divider,
@@ -25,17 +25,17 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Tabs,
-} from "@mui/material";
-import { useGetServiceCallByTankIdQuery } from "../../redux/slices/forms/servicecallApiSlice";
-import { Edit as EditIcon } from "@mui/icons-material";
-import CreateServiceCallModal from "../../components/forms/UpsertServiceCall";
-import Add from "@mui/icons-material/Add";
-import { UpdateTankMetaData } from "../../zodTypes";
+  Tabs
+} from '@mui/material';
+import { useGetServiceCallByTankIdQuery } from '../../redux/slices/forms/servicecallApiSlice';
+import { Edit as EditIcon } from '@mui/icons-material';
+import CreateServiceCallModal from '../../components/forms/UpsertServiceCall';
+import Add from '@mui/icons-material/Add';
+import { UpdateTankMetaData } from '../../zodTypes';
 
 function ServiceCallTable({
   tank,
-  employeeId,
+  employeeId
 }: {
   tank: UpdateTankMetaData;
   employeeId: number;
@@ -46,13 +46,13 @@ function ServiceCallTable({
   >();
   const { data, isLoading } = useGetServiceCallByTankIdQuery({
     tankId: tank.id,
-    onlyApprovedForms: true,
+    onlyApprovedForms: true
   });
 
   if (isLoading) {
     return (
       <Box pt={1}>
-        <LinearProgress color="primary" />
+        <LinearProgress color='primary' />
       </Box>
     );
   }
@@ -77,8 +77,8 @@ function ServiceCallTable({
               <TableCell>Technician Id</TableCell>
               <TableCell>
                 <Button
-                  size="small"
-                  endIcon={<Add fontSize="inherit" />}
+                  size='small'
+                  endIcon={<Add fontSize='inherit' />}
                   onClick={() => setCreateServiceCallOpen(true)}
                 >
                   Add Service Form
@@ -103,9 +103,9 @@ function ServiceCallTable({
                   />
                   <IconButton
                     onClick={() => setEditServiceCallId(form.id)}
-                    size="small"
+                    size='small'
                   >
-                    <EditIcon fontSize="inherit" />
+                    <EditIcon fontSize='inherit' />
                   </IconButton>
                 </TableCell>
               </TableRow>
@@ -118,7 +118,7 @@ function ServiceCallTable({
 }
 export function TankTabs({
   tanks,
-  employeeId,
+  employeeId
 }: {
   tanks: UpdateTankMetaData[];
   employeeId: number;
@@ -135,11 +135,11 @@ export function TankTabs({
         open={createTankOpen}
         setOpen={setCreateTankOpen}
       />
-      <Stack direction="row" justifyContent="space-between">
+      <Stack direction='row' justifyContent='space-between'>
         <Tabs
           value={selectedTank?.id}
-          onChange={(_, newTankId: number | "create") => {
-            if (typeof newTankId === "number") {
+          onChange={(_, newTankId: number | 'create') => {
+            if (typeof newTankId === 'number') {
               const newTank = tanks.find(({ id }) => id === newTankId);
               if (newTank) {
                 setSelectedTank(newTank);
@@ -163,10 +163,10 @@ export function TankTabs({
               tanks.length ? (
                 <Add />
               ) : (
-                <Button variant="outlined">Add Tank</Button>
+                <Button variant='outlined'>Add Tank</Button>
               )
             }
-            value="create"
+            value='create'
           />
         </Tabs>
       </Stack>
@@ -180,7 +180,7 @@ export function TankTabs({
 export default function Tanks() {
   const { data: optionsList } = useGetClientsQuery({
     includeTanks: true,
-    isEmployee: false,
+    isEmployee: false
   });
   const [selectedUserId, selectCurrentUserId] = useState<number | null>(null);
   const selectedUser = useMemo(
@@ -204,12 +204,12 @@ export default function Tanks() {
       <Container sx={{ p: 2 }}>
         <Grid container>
           <Grid item xs={12} sm={3}>
-            <Typography color="inherit" variant="h4" component="h1">
+            <Typography color='inherit' variant='h4' component='h1'>
               Tanks
             </Typography>
           </Grid>
           <Grid item xs={6} sm={7}>
-            <Container maxWidth="sm">
+            <Container maxWidth='sm'>
               <UserSearchBar
                 userList={optionsList}
                 selectedUser={selectedUser}
@@ -221,7 +221,7 @@ export default function Tanks() {
         <Collapse in={collapse}>
           <UserCard user={selectedUser} />
           <Divider />
-          <Typography variant="h4" gutterBottom>
+          <Typography variant='h4' gutterBottom>
             Service Calls
           </Typography>
           {selectedUser?.OwnedTanks && (
