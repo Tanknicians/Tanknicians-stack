@@ -1,7 +1,6 @@
-import React from 'react';
 //  Component for a Line chart
 import { Line } from 'react-chartjs-2';
-import { ChartData, ChartOptions } from 'chart.js';
+import { ChartData } from 'chart.js';
 
 import {
   Chart as ChartJS,

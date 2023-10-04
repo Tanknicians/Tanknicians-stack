@@ -22,6 +22,8 @@ import {
   CreateServiceCall,
   ServiceCall
 } from '../../zodTypes';
+import { useSelector } from 'react-redux';
+import { selectCurrentUser } from '../../redux/slices/auth/authSlice';
 
 type FormProps = {
   name: keyof CreateServiceCall;
@@ -176,6 +178,7 @@ export default function CreateServiceCallModal({
 }) {
   let id: undefined | number;
   let previousValues: undefined | CreateServiceCall;
+  const loggedInUser = useSelector(selectCurrentUser);
 
   if (previousServiceCall) {
     const { id: _id, ..._previousValues } = previousServiceCall;
@@ -191,7 +194,7 @@ export default function CreateServiceCallModal({
       ...defaultValues,
       ...previousValues,
       tankId,
-      employeeId
+      employeeId: loggedInUser.userId
     }
   });
 

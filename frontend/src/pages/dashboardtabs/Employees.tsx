@@ -1,5 +1,5 @@
 import {
-  UserOption,
+  UserData,
   useGetClientsQuery
 } from '../../redux/slices/users/userManagementSlice';
 import UserSearchBar from '../../components/UserSearchBar';
@@ -35,7 +35,7 @@ export default function Employees() {
 
   const handleUserSelected = (
     _event: React.SyntheticEvent,
-    customer: UserOption | null
+    customer: UserData | null
   ) => {
     selectCurrentUserId(customer?.id ?? null);
   };

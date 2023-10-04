@@ -10,7 +10,7 @@ import {
 } from '@mui/material';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { useEditUserMutation } from '../../redux/slices/users/userManagementSlice';
-import { UserOption } from '../../redux/slices/users/userManagementSlice';
+import { UserData } from '../../redux/slices/users/userManagementSlice';
 import { userSchema } from '../../zodTypes';
 
 export default function EditUserModal({
@@ -20,14 +20,14 @@ export default function EditUserModal({
 }: {
   open: boolean;
   setOpen: (open: boolean) => void;
-  userData: UserOption | null;
+  userData: UserData | null;
 }) {
   if (!userData) {
     return null;
   }
 
   const [editUser, { isLoading }] = useEditUserMutation();
-  const { handleSubmit, control, reset, formState } = useForm<UserOption>({
+  const { handleSubmit, control, reset, formState } = useForm<UserData>({
     resolver: zodResolver(userSchema),
     defaultValues: {
       id: userData?.id,
@@ -46,7 +46,7 @@ export default function EditUserModal({
     reset();
   }
 
-  const onValid: SubmitHandler<UserOption> = async (data: UserOption) => {
+  const onValid: SubmitHandler<UserData> = async (data: UserData) => {
     try {
       const response = await editUser({ ...data });
       console.log('response', response);

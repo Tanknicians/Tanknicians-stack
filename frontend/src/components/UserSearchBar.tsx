@@ -1,4 +1,4 @@
-import { UserOption } from '../redux/slices/users/userManagementSlice';
+import { UserData } from '../redux/slices/users/userManagementSlice';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 import parse from 'autosuggest-highlight/parse';
@@ -6,11 +6,11 @@ import match from 'autosuggest-highlight/match';
 import React from 'react';
 
 type UserList = {
-  userList: UserOption[];
-  selectedUser: UserOption | null;
+  userList: UserData[];
+  selectedUser: UserData | null;
   handleUserSelected: (
     _event: React.SyntheticEvent,
-    value: UserOption | null
+    value: UserData | null
   ) => void;
 };
 
@@ -37,7 +37,7 @@ const styles = {
   }
 };
 
-function getUsersName(user: UserOption) {
+function getUsersName(user: UserData) {
   return user?.firstName ?? user?.lastName ?? user?.middleName ?? '';
 }
 
@@ -74,10 +74,10 @@ export default function UserSearchBar({
         </div>
       )}
       renderOption={(props, option, { inputValue }) => {
-        const matches = match(option.firstName, inputValue, {
+        const matches = match(option.firstName ?? '', inputValue, {
           insideWords: true
         });
-        const parts = parse(option.firstName, matches);
+        const parts = parse(option.firstName ?? '', matches);
 
         return (
           <li {...props} style={styles.optionLabel}>
