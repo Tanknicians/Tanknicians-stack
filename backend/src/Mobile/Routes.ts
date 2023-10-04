@@ -4,7 +4,7 @@ import { authenticateRoleMiddleWare } from '../Authentication/API';
 import {
   createServiceCall,
   mobileServiceCall,
-  ServiceCallRequest,
+  ServiceCallMobileRequest,
   validateRequestBody,
 } from '../zodTypes';
 
@@ -16,10 +16,10 @@ mobileRouter.post(
   '/uploadForm',
   authenticateRoleMiddleWare(['ADMIN', 'EMPLOYEE']),
   validateRequestBody(mobileServiceCall),
-  async (req: ServiceCallRequest, res) => {
+  async (req: ServiceCallMobileRequest, res) => {
     try {
-      const input = createServiceCall.parse(req.body);
-      const message = await uploadServiceCall(input);
+      const data = createServiceCall.parse(req.body);
+      const message = await uploadServiceCall(data);
       res.status(200).json({ success: `Form uploaded. Form ${message}.` });
     } catch (error) {
       const errorMessage =

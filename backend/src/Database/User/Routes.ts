@@ -3,7 +3,8 @@ import * as UserService from './API';
 import { authenticateRoleMiddleWare } from '../../Authentication/API';
 import {
   UpdateUser,
-  UserRequest,
+  UserCreateRequest,
+  UserUpdateRequest,
   createUser,
   searchSchema,
   updateUser,
@@ -19,10 +20,10 @@ userRouter.post(
   '/',
   authenticateRoleMiddleWare(['ADMIN']),
   validateRequestBody(createUser),
-  async (req: UserRequest, res) => {
+  async (req: UserCreateRequest, res) => {
     try {
-      const input = createUser.parse(req.body);
-      const result = await UserService.create(input);
+      const data = createUser.parse(req.body);
+      const result = await UserService.create(data);
       res.json(result);
     } catch (error) {
       const errorMessage =
@@ -88,15 +89,11 @@ userRouter.put(
   '/:id',
   authenticateRoleMiddleWare(['ADMIN']),
   validateRequestBody(updateUser),
-  async (req: UserRequest, res) => {
+  async (req: UserUpdateRequest, res) => {
     try {
       const id = Number(req.params.id);
-      const input = req.body;
-      const userData: UpdateUser = {
-        id,
-        ...input,
-      };
-      const result = await UserService.update(userData);
+      const data: UpdateUser = updateUser.parse(req.body);
+      const result = await UserService.update(id, data);
       res.json(result);
     } catch (error) {
       const errorMessage =

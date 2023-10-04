@@ -2,7 +2,9 @@ import express from 'express';
 import * as LoginService from './API';
 import { authenticateRoleMiddleWare } from '../../Authentication/API';
 import {
-  LoginRequest,
+  CreateLogin,
+  LoginCreateRequest,
+  LoginUpdateRequest,
   UpdateLogin,
   createLogin,
   searchSchema,
@@ -18,10 +20,10 @@ loginRouter.post(
   '/',
   authenticateRoleMiddleWare(['ADMIN']),
   validateRequestBody(createLogin),
-  async (req: LoginRequest, res) => {
+  async (req: LoginCreateRequest, res) => {
     try {
-      const input = createLogin.parse(req.body);
-      const result = await LoginService.create(input);
+      const data: CreateLogin = createLogin.parse(req.body);
+      const result = await LoginService.create(data);
       res.json(result);
     } catch (error) {
       const errorMessage =
@@ -57,15 +59,11 @@ loginRouter.put(
   '/:id',
   authenticateRoleMiddleWare(['ADMIN']),
   validateRequestBody(updateLogin),
-  async (req: LoginRequest, res) => {
+  async (req: LoginUpdateRequest, res) => {
     try {
       const id = Number(req.params.id);
-      const input = req.body;
-      const loginData: UpdateLogin = {
-        id,
-        ...input,
-      };
-      const result = await LoginService.update(loginData);
+      const data: UpdateLogin = updateLogin.parse(req.body);
+      const result = await LoginService.update(id, data);
       res.json(result);
     } catch (error) {
       const errorMessage =

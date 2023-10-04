@@ -3,13 +3,15 @@ import * as TankMetadataService from './API';
 import { authenticateRoleMiddleWare } from '../../Authentication/API';
 import {
   CreateTankMetaData,
-  TankMetaDataRequest,
+  TankMetaDataCreateRequest,
+  TankMetaDataUpdateRequest,
   UpdateTankMetaData,
   createTank,
   searchSchema,
   updateTank,
   validateRequestBody,
 } from '../../zodTypes';
+import { TankMetadata } from '@prisma/client';
 
 /**
  * This router is for providing modification access to individual tank
@@ -19,24 +21,17 @@ import {
 const tankMetaDataRouter = express.Router();
 tankMetaDataRouter.use(express.json());
 
-// brand new tank has epoch of 2010
-const tankEpoch = new Date('2010-01-01');
 
 // Create TankMetadata
 tankMetaDataRouter.post(
   '/',
   authenticateRoleMiddleWare(['ADMIN']),
   validateRequestBody(
-    createTank.omit({ qrSymbol: true, lastDateServiced: true }),
+    createTank,
   ),
-  async (req: TankMetaDataRequest, res) => {
+  async (req: TankMetaDataCreateRequest, res) => {
     try {
-      const input = req.body;
-      const newTank: CreateTankMetaData = {
-        ...input,
-        qrSymbol: 0,
-        lastDateServiced: tankEpoch,
-      };
+      const newTank: CreateTankMetaData = createTank.parse(req.body);
       const result = await TankMetadataService.create(newTank);
       res.json(result);
     } catch (error) {
@@ -73,15 +68,11 @@ tankMetaDataRouter.put(
   '/:id',
   authenticateRoleMiddleWare(['ADMIN']),
   validateRequestBody(updateTank),
-  async (req: TankMetaDataRequest, res) => {
+  async (req: TankMetaDataUpdateRequest, res) => {
     try {
       const id = Number(req.params.id);
-      const input = req.body;
-      const tankData: UpdateTankMetaData = {
-        id,
-        ...input,
-      };
-      const result = await TankMetadataService.update(tankData);
+      const data: UpdateTankMetaData = updateTank.parse(req.body);
+      const result = await TankMetadataService.update(id, data);
       res.json(result);
     } catch (error) {
       const errorMessage =
