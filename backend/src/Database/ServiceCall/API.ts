@@ -14,7 +14,7 @@ export async function create(data: CreateServiceCall) {
   // Convert from Zod to Prisma
   const createServiceCall: Omit<ServiceCall, 'id'> = {
     ...data,
-  }
+  };
 
   try {
     const readTank = await tankDB.read(createServiceCall.tankId);
@@ -144,7 +144,7 @@ export async function update(id: number, data: UpdateServiceCall) {
   const updateServiceCall: ServiceCall = {
     id,
     ...data,
-  }
+  };
 
   try {
     await serviceCallDB.update(updateServiceCall);

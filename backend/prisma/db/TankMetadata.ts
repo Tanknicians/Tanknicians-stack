@@ -1,7 +1,5 @@
 import { PrismaClient, TankMetadata } from '@prisma/client';
-import {
-  SearchSchema,
-} from '../../src/zodTypes';
+import { SearchSchema } from '../../src/zodTypes';
 const prisma = new PrismaClient();
 
 // CREATE

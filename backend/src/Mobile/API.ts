@@ -25,7 +25,6 @@ const paramLimits = {
 };
 
 export async function uploadServiceCall(data: MobileServiceCall) {
-
   const createServiceCall: Omit<ServiceCall, 'id'> = {
     ...data,
     notApprovedNotes: '',

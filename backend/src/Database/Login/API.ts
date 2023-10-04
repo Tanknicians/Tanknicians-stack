@@ -6,8 +6,8 @@ import { Login } from '@prisma/client';
 export async function create(login: CreateLogin) {
   // Convert from Zod to Prisma
   const createLogin: Omit<Login, 'id'> = {
-    ...login
-  }
+    ...login,
+  };
 
   try {
     const createdId = await loginDB.create(createLogin);
@@ -37,9 +37,9 @@ export async function update(id: number, data: UpdateLogin) {
   // Convert from Zod to Prisma
   const updateLogin: Login = {
     id,
-    ...data
-  }
-  
+    ...data,
+  };
+
   try {
     updateLogin.password = await bcrypt.hash(updateLogin.password, 10);
     await loginDB.update(updateLogin);

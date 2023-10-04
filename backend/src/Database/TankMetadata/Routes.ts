@@ -21,14 +21,11 @@ import { TankMetadata } from '@prisma/client';
 const tankMetaDataRouter = express.Router();
 tankMetaDataRouter.use(express.json());
 
-
 // Create TankMetadata
 tankMetaDataRouter.post(
   '/',
   authenticateRoleMiddleWare(['ADMIN']),
-  validateRequestBody(
-    createTank,
-  ),
+  validateRequestBody(createTank),
   async (req: TankMetaDataCreateRequest, res) => {
     try {
       const newTank: CreateTankMetaData = createTank.parse(req.body);

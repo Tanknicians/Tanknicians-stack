@@ -28,11 +28,11 @@ const userNameRefine = [
 
 export const userSchemaBase = z.object({
   id: z.number().int(),
-  firstName: z.string().optional().default(""),
-  middleName: z.string().optional().default(""),
-  lastName: z.string().optional().default(""),
-  address: z.string().optional().default(""),
-  phone: z.string().optional().default(""),
+  firstName: z.string().optional().default(''),
+  middleName: z.string().optional().default(''),
+  lastName: z.string().optional().default(''),
+  address: z.string().optional().default(''),
+  phone: z.string().optional().default(''),
 
   isEmployee: z.boolean(),
 });
@@ -91,7 +91,11 @@ export const tankMetaDataSchema = z.object({
   customerId: z.number().int(),
 });
 
-export const createTank = tankMetaDataSchema.omit({ id: true, qrSymbol: true, lastDateServiced: true });
+export const createTank = tankMetaDataSchema.omit({
+  id: true,
+  qrSymbol: true,
+  lastDateServiced: true,
+});
 export const updateTank = tankMetaDataSchema.omit({ id: true });
 export type CreateTankMetaData = z.infer<typeof createTank>;
 export type UpdateTankMetaData = z.infer<typeof updateTank>;

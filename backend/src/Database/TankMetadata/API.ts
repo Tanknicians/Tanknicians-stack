@@ -9,7 +9,6 @@ import {
 // brand new tank has epoch of 2010
 const tankEpoch = new Date('2010-01-01');
 
-
 /*
 qrSymbol is a discrete integer value that represents the User's local tank. 
 It must be unique per-User.
@@ -33,7 +32,7 @@ export async function create(data: CreateTankMetaData) {
     const createTank: Omit<TankMetadata, 'id'> = {
       ...data,
       qrSymbol: findNextInteger(qrSymbolsArray),
-      lastDateServiced: tankEpoch
+      lastDateServiced: tankEpoch,
     };
     await tankDB.create(createTank);
     return { message: 'TankMetadata created successfully' };
@@ -76,8 +75,8 @@ export async function update(id: number, data: UpdateTankMetaData) {
   // Convert from Zod to Prisma
   const updateTank: TankMetadata = {
     id,
-    ...data
-  }
+    ...data,
+  };
   try {
     await tankDB.update(updateTank);
     return { message: 'TankMetadata updated successfully' };
