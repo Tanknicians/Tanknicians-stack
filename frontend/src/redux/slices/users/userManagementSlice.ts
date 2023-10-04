@@ -1,30 +1,14 @@
 import { apiSlice } from '../../api/apiSlice';
-import { CreateUser } from '../../../zodTypes';
+import {
+  CreateTankMetaData,
+  CreateUser,
+  UpdateTankMetaData,
+  UpdateUser
+} from '../../../zodTypes';
 
-export type OwnedTanks = {
-  customerId: number;
-  description?: string;
-  id: number;
-  lastDateServiced: Date;
-  qrSymbol: number;
-  tanknicianSourcedOnly: boolean;
-  type: string;
-  volume: number;
-};
-export type CreateTank = Omit<
-  OwnedTanks,
-  'id' | 'qrSymbol' | 'lastDateServiced'
->;
-export type UserOption = {
-  OwnedTanks?: OwnedTanks[];
-  id: number;
-  firstName: string;
-  middleName: string;
-  lastName: string;
-  address: string;
-  phone: string;
-  isEmployee: boolean;
-};
+export type UserData = {
+  OwnedTanks?: UpdateTankMetaData[];
+} & UpdateUser;
 
 export type UserQuearyArgs = {
   includeTanks: boolean;
@@ -33,7 +17,7 @@ export type UserQuearyArgs = {
 
 export const userManagementSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    getUser: builder.query<UserOption, number>({
+    getUser: builder.query<UserData, number>({
       providesTags: () => [{ type: 'USERLIST', id: 'LIST' }],
       query: (id) => ({
         url: `/api/database/user/${id}`,
@@ -41,7 +25,7 @@ export const userManagementSlice = apiSlice.injectEndpoints({
       })
     }),
     // Query returns a list of all users
-    getClients: builder.query<UserOption[], UserQuearyArgs>({
+    getClients: builder.query<UserData[], UserQuearyArgs>({
       providesTags: (result) =>
         result
           ? [
@@ -70,7 +54,7 @@ export const userManagementSlice = apiSlice.injectEndpoints({
       })
     }),
     // Mutation adds a tank to a user
-    addTankToUser: builder.mutation<number, CreateTank>({
+    addTankToUser: builder.mutation<number, CreateTankMetaData>({
       invalidatesTags: () => [{ type: 'USERLIST', id: 'LIST' }],
       query: (tankData) => ({
         url: '/api/database/tank',
@@ -79,7 +63,7 @@ export const userManagementSlice = apiSlice.injectEndpoints({
       })
     }),
     // Mutation edits user in database
-    editUser: builder.mutation<void, UserOption>({
+    editUser: builder.mutation<void, UpdateUser>({
       invalidatesTags: () => [{ type: 'USERLIST', id: 'LIST' }],
       query: ({ id, ...userData }) => ({
         url: `/api/database/user/${id}`,

@@ -1,7 +1,6 @@
 import {
-  UserOption,
+  UserData,
   useGetClientsQuery,
-  OwnedTanks,
   UserQuearyArgs
 } from '../../redux/slices/users/userManagementSlice';
 import CreateTankForm from '../../components/forms/CreateTank';
@@ -18,11 +17,13 @@ import {
   Divider,
   IconButton,
   LinearProgress,
+  Paper,
   Stack,
   Tab,
   Table,
   TableBody,
   TableCell,
+  TableContainer,
   TableHead,
   TableRow,
   Tabs
@@ -31,12 +32,13 @@ import { useGetServiceCallByTankIdQuery } from '../../redux/slices/forms/service
 import { Edit as EditIcon } from '@mui/icons-material';
 import CreateServiceCallModal from '../../components/forms/UpsertServiceCall';
 import Add from '@mui/icons-material/Add';
+import { UpdateTankMetaData } from '../../zodTypes';
 
 function ServiceCallTable({
   tank,
   employeeId
 }: {
-  tank: OwnedTanks;
+  tank: UpdateTankMetaData;
   employeeId: number;
 }) {
   const [createServiceCallOpen, setCreateServiceCallOpen] = useState(false);
@@ -68,48 +70,50 @@ function ServiceCallTable({
         tankId={tank.id}
         employeeId={employeeId}
       />
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>Date</TableCell>
-            <TableCell>Technician Id</TableCell>
-            <TableCell>
-              <Button
-                size='small'
-                endIcon={<Add fontSize='inherit' />}
-                onClick={() => setCreateServiceCallOpen(true)}
-              >
-                Add Service Form
-              </Button>
-            </TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {data.map((form) => (
-            <TableRow key={form.id}>
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>Date</TableCell>
+              <TableCell>Technician Id</TableCell>
               <TableCell>
-                {new Date(form.createdOn).toLocaleDateString()}
-              </TableCell>
-              <TableCell>{form.employeeId}</TableCell>
-              <TableCell>
-                <CreateServiceCallModal
-                  setOpen={(_) => setEditServiceCallId(undefined)}
-                  open={editServiceCallId === form.id}
-                  tankId={tank.id}
-                  employeeId={employeeId}
-                  previousServiceCall={form}
-                />
-                <IconButton
-                  onClick={() => setEditServiceCallId(form.id)}
+                <Button
                   size='small'
+                  endIcon={<Add fontSize='inherit' />}
+                  onClick={() => setCreateServiceCallOpen(true)}
                 >
-                  <EditIcon fontSize='inherit' />
-                </IconButton>
+                  Add Service Form
+                </Button>
               </TableCell>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHead>
+          <TableBody>
+            {data.map((form) => (
+              <TableRow key={form.id}>
+                <TableCell>
+                  {new Date(form.createdOn).toLocaleDateString()}
+                </TableCell>
+                <TableCell>{form.employeeId}</TableCell>
+                <TableCell>
+                  <CreateServiceCallModal
+                    setOpen={(_) => setEditServiceCallId(undefined)}
+                    open={editServiceCallId === form.id}
+                    tankId={tank.id}
+                    employeeId={employeeId}
+                    previousServiceCall={form}
+                  />
+                  <IconButton
+                    onClick={() => setEditServiceCallId(form.id)}
+                    size='small'
+                  >
+                    <EditIcon fontSize='inherit' />
+                  </IconButton>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </>
   );
 }
@@ -117,12 +121,12 @@ export function TankTabs({
   tanks,
   employeeId
 }: {
-  tanks: OwnedTanks[];
+  tanks: UpdateTankMetaData[];
   employeeId: number;
 }) {
-  const [selectedTank, setSelectedTank] = useState<OwnedTanks | undefined>(
-    tanks.at(-1)
-  );
+  const [selectedTank, setSelectedTank] = useState<
+    UpdateTankMetaData | undefined
+  >(tanks.at(-1));
 
   const [createTankOpen, setCreateTankOpen] = useState(false);
   return (
@@ -191,7 +195,7 @@ export default function Tanks() {
 
   const handleUserSelected = (
     _event: React.SyntheticEvent,
-    customer: UserOption | null
+    customer: UserData | null
   ) => {
     selectCurrentUserId(customer?.id ?? null);
   };

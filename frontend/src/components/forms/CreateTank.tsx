@@ -17,35 +17,13 @@ import { useAddTankToUserMutation } from '../../redux/slices/users/userManagemen
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import LoadingProgressButton from '../LoadingProgressButton';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
+import { CreateTankMetaData, createTank } from '../../zodTypes';
 
 type CreateTankFormProps = {
   userId: number;
   open: boolean;
   setOpen: (open: boolean) => void;
 };
-
-export const tankMetaDataSchema = z.object({
-  id: z.number().int(),
-  description: z.string().optional(),
-  volume: z.coerce.number().int().positive(),
-  type: z.enum(['FRESH', 'SALT', 'BRACKISH']),
-
-  qrSymbol: z.number().int().positive(),
-
-  tanknicianSourcedOnly: z.boolean(),
-  lastDateServiced: z.date(),
-
-  customerId: z.number().int()
-});
-
-export const createTank = tankMetaDataSchema.omit({
-  id: true,
-  qrSymbol: true,
-  lastDateServiced: true
-});
-
-type CreateTankFormData = z.infer<typeof createTank>;
 
 function CreateTankForm({ userId, open, setOpen }: CreateTankFormProps) {
   //API call to create tank
@@ -56,7 +34,7 @@ function CreateTankForm({ userId, open, setOpen }: CreateTankFormProps) {
     reset,
     handleSubmit,
     formState: { errors }
-  } = useForm<CreateTankFormData>({
+  } = useForm<CreateTankMetaData>({
     resolver: zodResolver(createTank),
     defaultValues: {
       tanknicianSourcedOnly: false,
@@ -71,7 +49,7 @@ function CreateTankForm({ userId, open, setOpen }: CreateTankFormProps) {
     setOpen(false);
   };
 
-  const onValid: SubmitHandler<CreateTankFormData> = async (data) => {
+  const onValid: SubmitHandler<CreateTankMetaData> = async (data) => {
     console.log(data);
     try {
       const response = await addTankToUser(data).unwrap();
@@ -103,6 +81,7 @@ function CreateTankForm({ userId, open, setOpen }: CreateTankFormProps) {
                   <TextField
                     error={!!errors.volume}
                     fullWidth
+                    type='number'
                     label='Volume'
                     value={value ?? ''}
                     onChange={onChange}
