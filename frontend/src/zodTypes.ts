@@ -3,7 +3,6 @@ import { NextFunction, Response, Request } from 'express';
 import { ParamsDictionary } from 'express-serve-static-core';
 
 export type ValidatedRequest<T> = Request<ParamsDictionary, unknown, T>;
-const id = z.number().positive().int();
 
 export const validateRequestBody =
   (schema: Schema) => (req: Request, res: Response, next: NextFunction) => {
@@ -17,41 +16,19 @@ export const validateRequestBody =
 
 // USER
 
-const userNameRefine = [
-  ({
-    firstName,
-    middleName,
-    lastName
-  }: {
-    firstName: string | null;
-    middleName: string | null;
-    lastName: string | null;
-  }) => firstName || middleName || lastName,
-  { message: 'You need to have firstName, middleName, or lastName' }
-] as const;
-
-export const userSchemaBase = z.object({
-  id,
-  firstName: z.string().nullable().default(null),
-  middleName: z.string().nullable().default(null),
-  lastName: z.string().nullable().default(null),
-  address: z.string().nullable().default(null),
-  phone: z.string().nullable().default(null),
+export const userSchema = z.object({
+  id: z.number().int(),
+  firstName: z.string().optional(),
+  middleName: z.string().optional(),
+  lastName: z.string().optional(),
+  address: z.string().optional(),
+  phone: z.string().optional(),
 
   isEmployee: z.boolean()
 });
 
-const userSchema = userSchemaBase.refine(...userNameRefine);
-
-export const createUser = userSchemaBase
-  .omit({ id: true })
-  .refine(...userNameRefine);
-
-export const updateUser = userSchemaBase
-  .omit({ id: true })
-  .refine(...userNameRefine);
-
-export type CreateUser = z.infer<typeof createUser>;
+export const createUserSchema = userSchema.omit({ id: true });
+export type CreateUser = z.infer<typeof createUserSchema>;
 export type UpdateUser = z.infer<typeof userSchema>;
 export type UserRequest = ValidatedRequest<CreateUser>;
 
@@ -59,7 +36,7 @@ export type UserRequest = ValidatedRequest<CreateUser>;
 
 export const loginSchema = z
   .object({
-    id,
+    id: z.number().int(),
     email: z.string({ required_error: 'Email is required' }).email(),
     password: z.string({ required_error: 'Password is required' }),
     role: z.enum(['ADMIN', 'EMPLOYEE', 'CUSTOMER'], {
@@ -67,12 +44,13 @@ export const loginSchema = z
         message: 'Role must be ADMIN, EMPLOYEE, or CUSTOMER'
       })
     }),
-    userId: id
+    userId: z
+      .number({ required_error: 'Must be a positive integer.' })
+      .positive()
   })
   .strict();
 
 export const createLogin = loginSchema.omit({ id: true });
-export const updateLogin = loginSchema.omit({ id: true });
 export type CreateLogin = z.infer<typeof createLogin>;
 export type UpdateLogin = z.infer<typeof loginSchema>;
 export type LoginRequest = ValidatedRequest<CreateLogin>;
@@ -80,28 +58,23 @@ export type LoginRequest = ValidatedRequest<CreateLogin>;
 // TANKMETADATA
 
 export const tankMetaDataSchema = z.object({
-  id,
-  description: z.string().nullable().default(null),
+  id: z.number().int(),
+  description: z.string().optional(),
   volume: z.coerce.number().int().positive(),
   type: z.enum(['FRESH', 'SALT', 'BRACKISH']),
 
-  qrSymbol: id,
+  qrSymbol: z.number().int().positive(),
 
   tanknicianSourcedOnly: z.boolean(),
   lastDateServiced: z.coerce.date(),
 
-  customerId: id
+  customerId: z.number().int()
 });
 
 export const createTank = tankMetaDataSchema.omit({
   id: true,
-  tankMetadataId: true,
-  qrSymbol: true
-});
-export const updateTank = tankMetaDataSchema.omit({
-  id: true,
-  tankMetadataId: true,
-  qrSymbol: true
+  qrSymbol: true,
+  lastDateServiced: true
 });
 export type CreateTankMetaData = z.infer<typeof createTank>;
 export type UpdateTankMetaData = z.infer<typeof tankMetaDataSchema>;
@@ -110,15 +83,15 @@ export type TankMetaDataRequest = ValidatedRequest<CreateTankMetaData>;
 // SERVICECALL
 
 export const serviceCallSchema = z.object({
-  id,
-  isApproved: z.boolean(),
+  id: z.number().int(),
+  isApproved: z.boolean().optional(),
   createdOn: z.coerce.date(),
 
-  customerRequest: z.string().nullable().default(null),
-  employeeNotes: z.string().nullable().default(null),
+  customerRequest: z.string().optional(),
+  employeeNotes: z.string().optional(),
   // server use only for not-approved notes
-  notApprovedNotes: z.string().nullable().default(null),
-  notesUpdated: z.coerce.date().nullable().default(null),
+  notApprovedNotes: z.string().optional(),
+  notesUpdated: z.coerce.date().optional(),
 
   alkalinity: z.coerce.number(),
   calcium: z.coerce.number(),
@@ -144,21 +117,15 @@ export const serviceCallSchema = z.object({
   pestBPresent: z.boolean(),
   pestCPresent: z.boolean(),
   pestDPresent: z.boolean(),
-  employeeId: id,
-  tankId: id
+  employeeId: z.number().int(),
+  tankId: z.number().int()
 });
 
 export type ServiceCall = z.infer<typeof serviceCallSchema>;
 export const createServiceCall = serviceCallSchema.omit({ id: true });
-export const updateServiceCall = serviceCallSchema.omit({ id: true });
-export const mobileServiceCall = serviceCallSchema.omit({
-  id: true,
-  isApproved: true,
-  notApprovedNotes: true
-});
 export type CreateServiceCall = z.infer<typeof createServiceCall>;
+export const updateServiceCall = serviceCallSchema;
 export type UpdateServiceCall = z.infer<typeof serviceCallSchema>;
-export type MobileServiceCall = z.infer<typeof mobileServiceCall>;
 export type ServiceCallRequest = ValidatedRequest<CreateServiceCall>;
 
 // AUTH
@@ -184,10 +151,7 @@ export type EmailRequest = ValidatedRequest<Email>;
 
 // TOKEN
 
-const tokenData = loginSchema.extend({
-  id,
-  userId: id
-});
+const tokenData = loginSchema.extend({ id: z.number(), userId: z.number() });
 
 export const tokenSchema = z.object({
   data: tokenData,
@@ -201,41 +165,3 @@ export const refreshTokenSchema = z.object({
   isRefreshToken: z.literal(true)
 });
 export type RefreshToken = z.infer<typeof refreshTokenSchema>;
-
-// Implemented so that searching is consistent and works universally for all Database types.
-export const searchSchema = z
-  .object({
-    // most of these values are optional, but will only return the first 25 values if page/size is not given
-
-    // pages go from 1-inf;
-    page: z.number().positive().optional().default(1),
-    // size of payload, defaults to 25
-    size: z.number().positive().optional().default(25),
-
-    // all optional, but should have at least one filled
-    searchString: z.string().optional(),
-    searchBoolean: z.boolean().optional(),
-    searchNum: z.number().optional(),
-
-    // for any min/max number search
-    minNum: z.number().optional(),
-    maxNum: z.number().optional(),
-
-    // for any min/max date search
-    minDate: z.date().optional(),
-    maxDate: z.date().optional(),
-
-    // defined enums, most searches may opt to not use
-    searchRole: z.enum(['ADMIN', 'EMPLOYEE', 'CUSTOMER']).optional(),
-    searchType: z.enum(['FRESH', 'SALT', 'BRACKISH']).optional()
-  })
-  .refine(
-    ({ searchString, searchBoolean, searchNum }) =>
-      (searchString ?? searchBoolean ?? searchNum) !== undefined,
-    {
-      message:
-        'You need at least one of: searchString, searchBoolean, searchNum'
-    }
-  );
-
-export type SearchSchema = z.infer<typeof searchSchema>;

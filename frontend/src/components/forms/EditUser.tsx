@@ -10,8 +10,8 @@ import {
 } from '@mui/material';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { useEditUserMutation } from '../../redux/slices/users/userManagementSlice';
-import { UserWithTanks } from '../../redux/slices/users/userManagementSlice';
-import { updateUser } from '../../zodTypes';
+import { UserData } from '../../redux/slices/users/userManagementSlice';
+import { userSchema } from '../../zodTypes';
 
 export default function EditUserModal({
   open,
@@ -20,32 +20,35 @@ export default function EditUserModal({
 }: {
   open: boolean;
   setOpen: (open: boolean) => void;
-  userData: UserWithTanks | null;
+  userData: UserData | null;
 }) {
   if (!userData) {
     return null;
   }
-  console.log(userData);
 
   const [editUser, { isLoading }] = useEditUserMutation();
-  //TODO: use isloading to show loading progress button
-  const { id: _, ...defaultValues } = userData;
-  const { handleSubmit, control, reset, formState } = useForm<
-    Omit<UserWithTanks, 'id'>
-  >({
-    resolver: zodResolver(updateUser),
-    defaultValues
+  const { handleSubmit, control, reset, formState } = useForm<UserData>({
+    resolver: zodResolver(userSchema),
+    defaultValues: {
+      id: userData?.id,
+      firstName: userData?.firstName,
+      middleName: userData?.middleName,
+      lastName: userData?.lastName,
+      address: userData?.address,
+      phone: userData?.phone,
+      isEmployee: userData?.isEmployee
+    }
   });
+  console.log({ formState });
 
   function handleClose() {
     setOpen(false);
     reset();
   }
 
-  const onValid: SubmitHandler<Omit<UserWithTanks, 'id'>> = async (data) => {
-    console.log({ data });
+  const onValid: SubmitHandler<UserData> = async (data: UserData) => {
     try {
-      const response = await editUser({ ...data, id: userData.id });
+      const response = await editUser({ ...data });
       console.log('response', response);
       handleClose();
     } catch (err) {

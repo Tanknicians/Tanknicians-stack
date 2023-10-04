@@ -10,7 +10,7 @@ import {
 } from '@mui/material';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { useAddUserMutation } from '../../redux/slices/users/userManagementSlice';
-import { createUser as createUserSchema, CreateUser } from '../../zodTypes';
+import { createUserSchema, CreateUser } from '../../zodTypes';
 
 export default function CreateUserModal({
   open,
@@ -25,13 +25,7 @@ export default function CreateUserModal({
   const { handleSubmit, control, reset, formState } = useForm<CreateUser>({
     resolver: zodResolver(createUserSchema),
     defaultValues: {
-      firstName: '',
-      middleName: '',
-      lastName: '',
-      address: '',
-      phone: '',
-
-      isEmployee
+      isEmployee: isEmployee
     }
   });
   console.log({ formState });

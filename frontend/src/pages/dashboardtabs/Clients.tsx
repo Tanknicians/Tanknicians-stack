@@ -1,5 +1,5 @@
 import {
-  UserWithTanks,
+  UserData,
   useGetClientsQuery
 } from '../../redux/slices/users/userManagementSlice';
 import CreateTankForm from '../../components/forms/CreateTank';
@@ -13,13 +13,17 @@ import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import { useMemo, useState } from 'react';
 import CreateUserModal from '../../components/forms/CreateUser';
+import { UserQuearyArgs } from '../../redux/slices/users/userManagementSlice';
 import TanksCollapsibleTable from '../../components/TanksCollapsibleTable';
 
 export default function Clients() {
-  const { data: optionsList, error } = useGetClientsQuery({
+  const userQuearyArgs: UserQuearyArgs = {
     includeTanks: true,
     isEmployee: false
-  });
+  };
+  // Possible optimization:
+  // query is ran every time the page is loaded, but it only needs to be ran once
+  const { data: optionsList, error } = useGetClientsQuery(userQuearyArgs);
   const [tankModalOpen, setTankModalOpen] = useState(false);
   const [clientModalOpen, setClientModalOpen] = useState(false);
   const [selectedClientId, setSelectedClientId] = useState<number | null>(null);
@@ -30,7 +34,7 @@ export default function Clients() {
 
   const handleUserSelected = (
     _event: React.SyntheticEvent,
-    client: UserWithTanks | null
+    client: UserData | null
   ) => {
     setSelectedClientId(client?.id ?? null);
   };

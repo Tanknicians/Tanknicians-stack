@@ -1,6 +1,11 @@
 import { tankDB } from '../../prisma/db/TankMetadata';
 import { serviceCallDB } from '../../prisma/db/ServiceCall';
-import { CreateServiceCall, MobileServiceCall } from '../zodTypes';
+import {
+  CreateServiceCall,
+  MobileServiceCall,
+  UpdateTankMetaData,
+  tankMetaDataSchema,
+} from '../zodTypes';
 
 const paramLimits = {
   /*
@@ -33,10 +38,11 @@ export async function uploadServiceCall(serviceCall: MobileServiceCall) {
     : 'not approved';
   // Update Tank's "lastDateServiced" to serviceCall's "createdOn" and upload ServiceCall
   try {
-    const updateTank = await tankDB.read(createServiceCall.tankId);
-    if (!updateTank) {
+    const readTank = await tankDB.read(createServiceCall.tankId);
+    if (!readTank) {
       throw new Error(`No tankId of ${createServiceCall.tankId} found.`);
     }
+    const updateTank: UpdateTankMetaData = tankMetaDataSchema.parse(readTank);
     updateTank.lastDateServiced = createServiceCall.createdOn;
     await serviceCallDB.create(createServiceCall);
     await tankDB.update(updateTank);
