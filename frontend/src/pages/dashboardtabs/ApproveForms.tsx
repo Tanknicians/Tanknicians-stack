@@ -10,10 +10,17 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+import { useGetClientsQuery } from "../../redux/slices/users/userManagementSlice";
+import { UserQuearyArgs } from "../../redux/slices/users/userManagementSlice";
 
 const headerGridStyle = {
   flex: 1,
   alignContent: "center",
+};
+
+const userQuearyArgs: UserQuearyArgs = {
+  includeTanks: undefined,
+  isEmployee: undefined,
 };
 
 const oneMinuteInMilliseconds = 60000;
@@ -23,12 +30,15 @@ export default function ApproveForms() {
     pollingInterval: oneMinuteInMilliseconds,
   }).data;
 
-  function getEmployeeName(empId: number) {
-    return 1;
-  }
+  const { data: optionsList, error } = useGetClientsQuery(userQuearyArgs);
+  console.log(optionsList);
 
-  function getClientName(clientId: number) {
-    return 2;
+  function getUserName(userId: number) {
+    const ret = optionsList?.find((element) => element.id === userId);
+    if (ret === undefined) {
+      return "Name Not found";
+    }
+    return `${ret.firstName} ${ret.lastName}`;
   }
 
   return (
@@ -74,22 +84,28 @@ export default function ApproveForms() {
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
               <TableRow>
+                <TableCell />
                 <TableCell>Technician</TableCell>
-                <TableCell align="right">Client</TableCell>
-                <TableCell align="right">Tank ID</TableCell>
+                <TableCell>Client</TableCell>
+                <TableCell>Tank ID</TableCell>
+                <TableCell />
               </TableRow>
             </TableHead>
             <TableBody>
-              {unapprovedForms?.map(({ tankId, employeeId, id }, key) => (
+              {unapprovedForms?.map(({ tankId, employeeId, id }, index) => (
                 <TableRow
                   key={id}
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
                   <TableCell component="th" scope="row">
-                    {getEmployeeName(employeeId)}
+                    {index + 1}
                   </TableCell>
-                  <TableCell align="right">{getClientName(tankId)}</TableCell>
-                  <TableCell align="right">{tankId}</TableCell>
+                  <TableCell component="th" scope="row">
+                    {getUserName(employeeId)}
+                  </TableCell>
+                  <TableCell>{getUserName(tankId)}</TableCell>
+                  <TableCell>{tankId}</TableCell>
+                  <TableCell>BUTTON</TableCell>
                 </TableRow>
               ))}
             </TableBody>
