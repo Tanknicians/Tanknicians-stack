@@ -1,17 +1,17 @@
-import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
 import { useGetUnapprovedServiceCallsQuery } from "../../redux/slices/forms/servicecallApiSlice";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
 import { useGetClientsQuery } from "../../redux/slices/users/userManagementSlice";
 import { UserQuearyArgs } from "../../redux/slices/users/userManagementSlice";
+import TableContainer from "@mui/material/TableContainer";
+import Typography from "@mui/material/Typography";
+import TableBody from "@mui/material/TableBody";
+import Container from "@mui/material/Container";
+import TableCell from "@mui/material/TableCell";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Table from "@mui/material/Table";
+import Paper from "@mui/material/Paper";
+import Grid from "@mui/material/Grid";
+import Box from "@mui/material/Box";
 
 const headerGridStyle = {
   flex: 1,
@@ -26,18 +26,28 @@ const userQuearyArgs: UserQuearyArgs = {
 const oneMinuteInMilliseconds = 60000;
 
 export default function ApproveForms() {
+  //  Get Forms for table display
   const unapprovedForms = useGetUnapprovedServiceCallsQuery(undefined, {
     pollingInterval: oneMinuteInMilliseconds,
   }).data;
 
+  // Get Clients list with tanks included to find Technician and Client name associated with the service record
   const { data: optionsList, error } = useGetClientsQuery(userQuearyArgs);
 
   function getEmployeeName(empId: number) {
-    const ret = optionsList?.find((element) => element.id === empId);
-    if (ret === undefined) {
-      return "Name Not found";
+    // get the name of the technician associated with the passed employee id
+    let ret = "EMPLOYEE NAME NOT FOUND";
+    try {
+      const ret = optionsList?.find((element) => element.id === empId);
+      if (ret === undefined) {
+        throw new Error(`No 'Employee Name' for employee ${empId}.`);
+      } else {
+        ret = `${ret.firstName} ${ret.lastName}`;
+      }
+    } catch (e) {
+      console.log(e);
     }
-    return `${ret.firstName} ${ret.lastName}`;
+    return ret;
   }
 
   function getClientName(tankId: number) {
