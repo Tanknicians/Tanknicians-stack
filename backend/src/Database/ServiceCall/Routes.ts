@@ -2,8 +2,8 @@ import express from 'express';
 import * as ServiceCallService from './API';
 import { authenticateRoleMiddleWare } from '../../Authentication/API';
 import {
-  ServiceCallRequest,
-  UpdateServiceCall,
+  ServiceCallCreateRequest,
+  ServiceCallUpdateRequest,
   createServiceCall,
   searchSchema,
   updateServiceCall,
@@ -19,10 +19,10 @@ serviceCallRouter.post(
   '/',
   authenticateRoleMiddleWare(['EMPLOYEE', 'ADMIN']),
   validateRequestBody(createServiceCall),
-  async (req: ServiceCallRequest, res) => {
+  async (req: ServiceCallCreateRequest, res) => {
     try {
-      const input = createServiceCall.parse(req.body);
-      const result = await ServiceCallService.create(input);
+      const data = req.body;
+      const result = await ServiceCallService.create(data);
       res.json(result);
     } catch (error) {
       const errorMessage =
@@ -147,15 +147,11 @@ serviceCallRouter.put(
   '/:id',
   authenticateRoleMiddleWare(['ADMIN']),
   validateRequestBody(updateServiceCall),
-  async (req: ServiceCallRequest, res) => {
+  async (req: ServiceCallUpdateRequest, res) => {
     try {
       const id = Number(req.params.id);
-      const input = req.body;
-      const serviceCallData: UpdateServiceCall = {
-        id,
-        ...input,
-      };
-      const result = await ServiceCallService.update(serviceCallData);
+      const data = req.body;
+      const result = await ServiceCallService.update(id, data);
       res.json(result);
     } catch (error) {
       const errorMessage =

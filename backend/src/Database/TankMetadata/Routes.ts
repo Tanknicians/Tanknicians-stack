@@ -3,7 +3,8 @@ import * as TankMetadataService from './API';
 import { authenticateRoleMiddleWare } from '../../Authentication/API';
 import {
   CreateTankMetaData,
-  TankMetaDataRequest,
+  TankMetaDataCreateRequest,
+  TankMetaDataUpdateRequest,
   UpdateTankMetaData,
   createTank,
   searchSchema,
@@ -19,25 +20,15 @@ import {
 const tankMetaDataRouter = express.Router();
 tankMetaDataRouter.use(express.json());
 
-// brand new tank has epoch of 2010
-const tankEpoch = new Date('2010-01-01');
-
 // Create TankMetadata
 tankMetaDataRouter.post(
   '/',
   authenticateRoleMiddleWare(['ADMIN']),
-  validateRequestBody(
-    createTank.omit({ qrSymbol: true, lastDateServiced: true }),
-  ),
-  async (req: TankMetaDataRequest, res) => {
+  validateRequestBody(createTank),
+  async (req: TankMetaDataCreateRequest, res) => {
     try {
-      const input = req.body;
-      const newTank: CreateTankMetaData = {
-        ...input,
-        qrSymbol: 0,
-        lastDateServiced: tankEpoch,
-      };
-      const result = await TankMetadataService.create(newTank);
+      const data = req.body;
+      const result = await TankMetadataService.create(data);
       res.json(result);
     } catch (error) {
       const errorMessage =
@@ -73,15 +64,11 @@ tankMetaDataRouter.put(
   '/:id',
   authenticateRoleMiddleWare(['ADMIN']),
   validateRequestBody(updateTank),
-  async (req: TankMetaDataRequest, res) => {
+  async (req: TankMetaDataUpdateRequest, res) => {
     try {
       const id = Number(req.params.id);
-      const input = req.body;
-      const tankData: UpdateTankMetaData = {
-        id,
-        ...input,
-      };
-      const result = await TankMetadataService.update(tankData);
+      const data = req.body;
+      const result = await TankMetadataService.update(id, data);
       res.json(result);
     } catch (error) {
       const errorMessage =
