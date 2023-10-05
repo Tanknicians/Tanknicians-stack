@@ -21,8 +21,8 @@ serviceCallRouter.post(
   validateRequestBody(createServiceCall),
   async (req: ServiceCallCreateRequest, res) => {
     try {
-      const input = createServiceCall.parse(req.body);
-      const result = await ServiceCallService.create(input);
+      const data = createServiceCall.parse(req.body);
+      const result = await ServiceCallService.create(data);
       res.json(result);
     } catch (error) {
       const errorMessage =

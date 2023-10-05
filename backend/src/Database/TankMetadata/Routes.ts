@@ -27,8 +27,8 @@ tankMetaDataRouter.post(
   validateRequestBody(createTank),
   async (req: TankMetaDataCreateRequest, res) => {
     try {
-      const newTank: CreateTankMetaData = createTank.parse(req.body);
-      const result = await TankMetadataService.create(newTank);
+      const data: CreateTankMetaData = createTank.parse(req.body);
+      const result = await TankMetadataService.create(data);
       res.json(result);
     } catch (error) {
       const errorMessage =
