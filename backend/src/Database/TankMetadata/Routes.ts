@@ -27,7 +27,7 @@ tankMetaDataRouter.post(
   validateRequestBody(createTank),
   async (req: TankMetaDataCreateRequest, res) => {
     try {
-      const data: CreateTankMetaData = createTank.parse(req.body);
+      const data = req.body;
       const result = await TankMetadataService.create(data);
       res.json(result);
     } catch (error) {
@@ -67,7 +67,7 @@ tankMetaDataRouter.put(
   async (req: TankMetaDataUpdateRequest, res) => {
     try {
       const id = Number(req.params.id);
-      const data: UpdateTankMetaData = updateTank.parse(req.body);
+      const data = req.body;
       const result = await TankMetadataService.update(id, data);
       res.json(result);
     } catch (error) {

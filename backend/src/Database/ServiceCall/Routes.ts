@@ -21,7 +21,7 @@ serviceCallRouter.post(
   validateRequestBody(createServiceCall),
   async (req: ServiceCallCreateRequest, res) => {
     try {
-      const data = createServiceCall.parse(req.body);
+      const data = req.body;
       const result = await ServiceCallService.create(data);
       res.json(result);
     } catch (error) {
@@ -150,7 +150,7 @@ serviceCallRouter.put(
   async (req: ServiceCallUpdateRequest, res) => {
     try {
       const id = Number(req.params.id);
-      const data = updateServiceCall.parse(req.body);
+      const data = req.body;
       const result = await ServiceCallService.update(id, data);
       res.json(result);
     } catch (error) {

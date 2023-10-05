@@ -7,7 +7,7 @@ export type ValidatedRequest<T> = Request<ParamsDictionary, unknown, T>;
 export const validateRequestBody =
   (schema: Schema) => (req: Request, res: Response, next: NextFunction) => {
     try {
-      schema.parse(req.body);
+      req.body = schema.parse(req.body);
       next();
     } catch (e) {
       return res.status(400).json({ error: e });

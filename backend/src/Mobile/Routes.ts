@@ -18,7 +18,7 @@ mobileRouter.post(
   validateRequestBody(mobileServiceCall),
   async (req: ServiceCallMobileRequest, res) => {
     try {
-      const data = createServiceCall.parse(req.body);
+      const data = req.body;
       const message = await uploadServiceCall(data);
       res.status(200).json({ success: `Form uploaded. Form ${message}.` });
     } catch (error) {
