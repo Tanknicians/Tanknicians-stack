@@ -22,7 +22,7 @@ userRouter.post(
   validateRequestBody(createUser),
   async (req: UserCreateRequest, res) => {
     try {
-      const data = createUser.parse(req.body);
+      const data = req.body;
       const result = await UserService.create(data);
       res.json(result);
     } catch (error) {
@@ -92,7 +92,7 @@ userRouter.put(
   async (req: UserUpdateRequest, res) => {
     try {
       const id = Number(req.params.id);
-      const data: UpdateUser = updateUser.parse(req.body);
+      const data = req.body;
       const result = await UserService.update(id, data);
       res.json(result);
     } catch (error) {

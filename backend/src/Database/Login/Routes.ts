@@ -2,10 +2,8 @@ import express from 'express';
 import * as LoginService from './API';
 import { authenticateRoleMiddleWare } from '../../Authentication/API';
 import {
-  CreateLogin,
   LoginCreateRequest,
   LoginUpdateRequest,
-  UpdateLogin,
   createLogin,
   searchSchema,
   updateLogin,
@@ -22,7 +20,7 @@ loginRouter.post(
   validateRequestBody(createLogin),
   async (req: LoginCreateRequest, res) => {
     try {
-      const data: CreateLogin = createLogin.parse(req.body);
+      const data = req.body;
       const result = await LoginService.create(data);
       res.json(result);
     } catch (error) {
@@ -62,7 +60,7 @@ loginRouter.put(
   async (req: LoginUpdateRequest, res) => {
     try {
       const id = Number(req.params.id);
-      const data: UpdateLogin = updateLogin.parse(req.body);
+      const data = req.body;
       const result = await LoginService.update(id, data);
       res.json(result);
     } catch (error) {

@@ -22,7 +22,7 @@ authRouter.post(
   '/login',
   validateRequestBody(authLogin),
   async (req: AuthLoginRequest, res) => {
-    const data = authLogin.parse(req.body);
+    const data = req.body;
     try {
       await AuthService.login(data, res);
     } catch (error) {
@@ -38,7 +38,7 @@ authRouter.post(
   '/register',
   validateRequestBody(authRegister),
   async (req: AuthRegisterRequest, res) => {
-    const data = authRegister.parse(req.body);
+    const data = req.body;
     try {
       await AuthService.register(data, res);
     } catch (error) {
@@ -64,7 +64,7 @@ authRouter.post(
   validateRequestBody(emailSchema),
   validateJwtToken,
   async (req: EmailRequest, res) => {
-    const data = emailSchema.parse(req.body);
+    const data = req.body;
     const refreshToken = req.cookies.jwt;
     try {
       await AuthService.refresh(data.email, refreshToken, res);

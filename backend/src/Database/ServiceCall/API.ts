@@ -17,11 +17,10 @@ export async function create(data: CreateServiceCall) {
   };
 
   try {
-    const readTank = await tankDB.read(createServiceCall.tankId);
-    if (!readTank) {
+    const updateTank = await tankDB.read(createServiceCall.tankId);
+    if (!updateTank) {
       throw new Error(`No tankId of ${createServiceCall.tankId} found.`);
     }
-    const updateTank = tankMetaDataSchema.parse(readTank);
     updateTank.lastDateServiced = createServiceCall.createdOn;
     await serviceCallDB.create(createServiceCall);
     const createdId = await tankDB.update(updateTank);

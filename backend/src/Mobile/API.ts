@@ -38,11 +38,10 @@ export async function uploadServiceCall(data: MobileServiceCall) {
     : 'not approved';
   // Update Tank's "lastDateServiced" to serviceCall's "createdOn" and upload ServiceCall
   try {
-    const readTank = await tankDB.read(createServiceCall.tankId);
-    if (!readTank) {
+    const updateTank = await tankDB.read(createServiceCall.tankId);
+    if (!updateTank) {
       throw new Error(`No tankId of ${createServiceCall.tankId} found.`);
     }
-    const updateTank: TankMetadata = tankMetaDataSchema.parse(readTank);
     updateTank.lastDateServiced = createServiceCall.createdOn;
     await serviceCallDB.create(createServiceCall);
     await tankDB.update(updateTank);
