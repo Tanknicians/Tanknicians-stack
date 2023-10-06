@@ -49,7 +49,11 @@ authRouter.post(
   },
 );
 
-const validateRefreshToken = (req: Request, res: Response, next: NextFunction) => {
+const validateRefreshToken = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     z.string().parse(req.cookies.jwt);
     next();
@@ -59,19 +63,15 @@ const validateRefreshToken = (req: Request, res: Response, next: NextFunction) =
 };
 
 // Refresh route
-authRouter.get(
-  '/refresh',
-  validateRefreshToken,
-  async (req, res) => {
-    const refreshToken = req.cookies.jwt;
-    try {
-      await AuthService.refresh(refreshToken, res);
-    } catch (error) {
-      res
-        .status(500)
-        .json({ error: 'An error occurred with the refresh function.' });
-    }
-  },
-);
+authRouter.get('/refresh', validateRefreshToken, async (req, res) => {
+  const refreshToken = req.cookies.jwt;
+  try {
+    await AuthService.refresh(refreshToken, res);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ error: 'An error occurred with the refresh function.' });
+  }
+});
 
 export default authRouter;

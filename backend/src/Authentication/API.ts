@@ -164,11 +164,7 @@ export async function resetPassword(email: string) {
 }
 
 // Generate a new access token using a refresh token
-export async function refresh(
-  refreshToken: string,
-  res: Response,
-) {
-
+export async function refresh(refreshToken: string, res: Response) {
   let decryptToken: RefreshToken;
 
   console.log('refreshing token');
