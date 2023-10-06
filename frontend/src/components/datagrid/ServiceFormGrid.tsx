@@ -34,7 +34,7 @@ const serviceFormColumns: GridColDef<ServiceCall>[] = [
   { field: 'pestDPresent' },
   { field: 'employeeId' },
   { field: 'tankId' }
-] as const;
+];
 
 export default function ServiceFormGrid({
   hideToolbar

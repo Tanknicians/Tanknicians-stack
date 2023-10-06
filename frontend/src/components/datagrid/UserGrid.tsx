@@ -12,7 +12,7 @@ const userColumns: GridColDef<UserData>[] = [
   { field: 'lastName', flex: 1 },
   { field: 'address', flex: 2 },
   { field: 'phone', flex: 1 }
-] as const;
+];
 
 export default function UserGrid({
   hideToolbar,

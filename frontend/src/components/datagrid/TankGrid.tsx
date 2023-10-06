@@ -17,8 +17,7 @@ const tankColumns: GridColDef<UpdateTankMetaData>[] = [
   },
   { field: 'customerId', flex: 1 },
   { field: 'description', flex: 1 }
-] as const;
-
+];
 export default function TankGrid({
   hideToolbar,
   selectTankId
