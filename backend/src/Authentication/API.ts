@@ -216,7 +216,7 @@ export function authenticateRoleMiddleWare(roles: string[]) {
     try {
       verifyToken(token);
     } catch (error) {
-      return res.status(401).send({ message: 'Invalid token' });
+      return res.status(403).send({ message: 'Invalid token' });
     }
     const decodedToken = verifyToken(token);
     if (!roles.includes(decodedToken.data.role)) {
