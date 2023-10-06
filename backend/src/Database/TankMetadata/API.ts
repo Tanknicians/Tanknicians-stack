@@ -57,6 +57,17 @@ function findNextInteger(array: number[]): number {
   return nextInteger;
 }
 
+export async function readAll() {
+  try {
+    const tanks = await tankDB.readAll();
+    return tanks;
+  } catch (e) {
+    const errorMessage = e instanceof Error ? e.message : 'Unknown error.';
+    console.error(errorMessage);
+    throw new Error(`An error occurred during read: ${errorMessage}`);
+  }
+}
+
 export async function read(id: number) {
   try {
     const tank = await tankDB.read(id);
