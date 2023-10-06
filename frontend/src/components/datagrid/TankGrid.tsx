@@ -19,7 +19,11 @@ const tankColumns: GridColDef<UpdateTankMetaData>[] = [
   { field: "description", flex: 1 },
 ] as const;
 
-export default function TankGrid() {
+export default function TankGrid({
+  hideToolbar,
+}: {
+  hideToolbar?: boolean;
+}) {
   const { data: tanks, isLoading: isLoadingTanks } =
     useGetAllTanksQuery(undefined);
 
@@ -28,7 +32,7 @@ export default function TankGrid() {
       rows={tanks ?? []}
       columns={tankColumns}
       loading={isLoadingTanks}
-      slots={{ toolbar: GridToolbar }}
+      slots={{ toolbar: hideToolbar ? undefined : GridToolbar }}
     />
   );
 }

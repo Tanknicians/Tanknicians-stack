@@ -14,7 +14,7 @@ const userColumns: GridColDef<UserData>[] = [
   { field: "phone", flex: 1 },
 ] as const;
 
-export default function UserGrid() {
+export default function UserGrid({ hideToolbar }: { hideToolbar?: boolean }) {
   const { data: users, isLoading: isLoadingUsers } = useGetClientsQuery({
     includeTanks: false,
     isEmployee: undefined,
@@ -25,7 +25,7 @@ export default function UserGrid() {
       rows={users ?? []}
       columns={userColumns}
       loading={isLoadingUsers}
-      slots={{ toolbar: GridToolbar }}
+      slots={{ toolbar: hideToolbar ? undefined : GridToolbar }}
     />
   );
 }
