@@ -49,7 +49,7 @@ authRouter.post(
   },
 );
 
-const validateJwtToken = (req: Request, res: Response, next: NextFunction) => {
+const validateRefreshToken = (req: Request, res: Response, next: NextFunction) => {
   try {
     z.string().parse(req.cookies.jwt);
     next();
@@ -59,9 +59,9 @@ const validateJwtToken = (req: Request, res: Response, next: NextFunction) => {
 };
 
 // Refresh route
-authRouter.post(
+authRouter.get(
   '/refresh',
-  validateJwtToken,
+  validateRefreshToken,
   async (req, res) => {
     const refreshToken = req.cookies.jwt;
     try {
