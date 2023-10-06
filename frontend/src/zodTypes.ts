@@ -55,6 +55,20 @@ export type CreateLogin = z.infer<typeof createLogin>;
 export type UpdateLogin = z.infer<typeof loginSchema>;
 export type LoginRequest = ValidatedRequest<CreateLogin>;
 
+// AUTH
+
+export const RefreshTokenData = z.object({
+  token: z.string(),
+  savedCredentials: loginSchema.pick({
+    id: true,
+    email: true,
+    role: true,
+    userId: true
+  })
+});
+
+export type RefreshTokenData = z.infer<typeof RefreshTokenData>;
+
 // TANKMETADATA
 
 export const tankMetaDataSchema = z.object({

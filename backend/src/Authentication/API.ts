@@ -10,7 +10,7 @@ import {
 
 import { loginDB } from '../../prisma/db/Login';
 import { Request, Response, NextFunction } from 'express';
-import { AuthLogin, AuthRegister } from '../zodTypes';
+import { AuthLogin, AuthRegister, RefreshToken } from '../zodTypes';
 import { randomBytes } from 'crypto';
 import { sendEmail } from '../Email/API';
 
@@ -164,14 +164,12 @@ export async function resetPassword(email: string) {
 }
 
 // Generate a new access token using a refresh token
-export async function refresh(
-  email: string,
-  refreshToken: string,
-  res: Response,
-) {
+export async function refresh(refreshToken: string, res: Response) {
+  let decryptToken: RefreshToken;
+
   console.log('refreshing token');
   try {
-    verifyRefreshToken(refreshToken);
+    decryptToken = verifyRefreshToken(refreshToken);
   } catch (error) {
     console.log('Invalid token.');
     return res.status(403).json({
@@ -180,7 +178,7 @@ export async function refresh(
     });
   }
 
-  const foundCredentials = await loginDB.read(email);
+  const foundCredentials = await loginDB.read(decryptToken.data.email);
 
   if (!foundCredentials) {
     return res.status(404).json({
@@ -216,7 +214,7 @@ export function authenticateRoleMiddleWare(roles: string[]) {
     try {
       verifyToken(token);
     } catch (error) {
-      return res.status(401).send({ message: 'Invalid token' });
+      return res.status(403).send({ message: 'Invalid token' });
     }
     const decodedToken = verifyToken(token);
     if (!roles.includes(decodedToken.data.role)) {
