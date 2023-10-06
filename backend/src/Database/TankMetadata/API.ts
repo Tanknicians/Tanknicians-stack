@@ -5,6 +5,7 @@ import {
   SearchSchema,
   UpdateTankMetaData,
 } from '../../zodTypes';
+import { userDB } from '../../../prisma/db/User';
 
 // brand new tank has epoch of 2010
 const tankEpoch = new Date('2010-01-01');
@@ -22,6 +23,14 @@ Though it takes O(n) instead of O(1) to process, being able to fill in the colle
 The purpose is to avoid hitting a soft limit on the front-end, whom has a limited amount of values (up to 20).
 */
 export async function create(data: CreateTankMetaData) {
+  const customer = await userDB.read(data.customerId);
+  if (!customer) {
+    throw new Error(`Customer with id: ${data.customerId} not found.`);
+  }
+  if (customer.isEmployee) {
+    throw new Error(`Customer with id: ${data.customerId} is an employee.`);
+  }
+
   try {
     const userTanks = await tankDB.readTanksByUserId(data.customerId);
     // map the pre-existing qrSymbols
