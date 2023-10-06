@@ -1,3 +1,4 @@
+import { ServiceCall } from '@prisma/client';
 import { serviceCallDB } from '../../../prisma/db/ServiceCall';
 import { tankDB } from '../../../prisma/db/TankMetadata';
 import {
@@ -7,16 +8,21 @@ import {
   tankMetaDataSchema,
 } from '../../zodTypes';
 
-export async function create(serviceCall: CreateServiceCall) {
+export async function create(data: CreateServiceCall) {
   // Update Tank's "lastDateServiced" to serviceCall's "createdOn" and upload ServiceCall
+
+  // Convert from Zod to Prisma
+  const createServiceCall: Omit<ServiceCall, 'id'> = {
+    ...data,
+  };
+
   try {
-    const readTank = await tankDB.read(serviceCall.tankId);
-    if (!readTank) {
-      throw new Error(`No tankId of ${serviceCall.tankId} found.`);
+    const updateTank = await tankDB.read(createServiceCall.tankId);
+    if (!updateTank) {
+      throw new Error(`No tankId of ${createServiceCall.tankId} found.`);
     }
-    const updateTank = tankMetaDataSchema.parse(readTank);
-    updateTank.lastDateServiced = serviceCall.createdOn;
-    await serviceCallDB.create(serviceCall);
+    updateTank.lastDateServiced = createServiceCall.createdOn;
+    await serviceCallDB.create(createServiceCall);
     const createdId = await tankDB.update(updateTank);
     return { message: 'Service Call created successfully', id: createdId };
   } catch (e) {
@@ -132,9 +138,15 @@ export async function readAllByTankId(tankId: number, isApproved?: boolean) {
   }
 }
 
-export async function update(serviceCall: UpdateServiceCall) {
+export async function update(id: number, data: UpdateServiceCall) {
+  // Convert from Zod to Prisma
+  const updateServiceCall: ServiceCall = {
+    id,
+    ...data,
+  };
+
   try {
-    await serviceCallDB.update(serviceCall);
+    await serviceCallDB.update(updateServiceCall);
     return { message: 'Service Call updated successfully' };
   } catch (e) {
     const errorMessage = e instanceof Error ? e.message : 'Unknown error.';
