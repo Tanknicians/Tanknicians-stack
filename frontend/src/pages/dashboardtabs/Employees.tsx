@@ -190,21 +190,21 @@ export default function Employees() {
         isEmployee={true}
       />
 
-      <div style={{ height: 400, width: "100%" }}>
+      <Box style={{ width: "100%", overflowX: "auto", maxWidth: "1000px" }}>
         {!!serviceCallsByEmpId && (
           <DataGrid
             rows={serviceCallsByEmpId}
             columns={columns}
             initialState={{
               pagination: {
-                paginationModel: { page: 0, pageSize: 5 },
+                paginationModel: { page: 0, pageSize: 10 },
               },
             }}
             pageSizeOptions={[5, 10]}
             checkboxSelection
           />
         )}
-      </div>
+      </Box>
     </>
   );
 }
