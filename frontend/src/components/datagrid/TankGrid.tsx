@@ -21,7 +21,9 @@ const tankColumns: GridColDef<UpdateTankMetaData>[] = [
 
 export default function TankGrid({
   hideToolbar,
+  selectTankId,
 }: {
+  selectTankId?: (userId: UpdateTankMetaData["id"]) => void;
   hideToolbar?: boolean;
 }) {
   const { data: tanks, isLoading: isLoadingTanks } =
@@ -32,6 +34,10 @@ export default function TankGrid({
       rows={tanks ?? []}
       columns={tankColumns}
       loading={isLoadingTanks}
+      getRowId={({ id }) => id}
+      onRowClick={
+        selectTankId ? ({ row }) => selectTankId(row.customerId) : undefined
+      }
       slots={{ toolbar: hideToolbar ? undefined : GridToolbar }}
     />
   );

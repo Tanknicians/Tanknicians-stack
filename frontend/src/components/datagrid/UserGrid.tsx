@@ -14,16 +14,27 @@ const userColumns: GridColDef<UserData>[] = [
   { field: "phone", flex: 1 },
 ] as const;
 
-export default function UserGrid({ hideToolbar }: { hideToolbar?: boolean }) {
+export default function UserGrid({
+  hideToolbar,
+  selectUserId,
+  isEmployee,
+}: {
+  hideToolbar?: boolean;
+  selectUserId?: (userId: UserData["id"]) => void;
+  isEmployee?: boolean;
+}) {
   const { data: users, isLoading: isLoadingUsers } = useGetClientsQuery({
     includeTanks: false,
-    isEmployee: undefined,
+    isEmployee,
   });
-
   return (
     <DataGrid
       rows={users ?? []}
       columns={userColumns}
+      getRowId={({ id }) => id}
+      onRowClick={
+        selectUserId ? ({ id }) => selectUserId(Number(id)) : undefined
+      }
       loading={isLoadingUsers}
       slots={{ toolbar: hideToolbar ? undefined : GridToolbar }}
     />
