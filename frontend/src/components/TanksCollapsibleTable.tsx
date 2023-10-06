@@ -13,6 +13,8 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { UpdateTankMetaData } from '../zodTypes';
 import { useState } from 'react';
 import { Grid, Typography } from '@mui/material';
+import QRCodeCard from './QRCodeCard';
+import { UserData } from '../redux/slices/users/userManagementSlice';
 
 function Row(props: { row: UpdateTankMetaData }) {
   const { row } = props;
@@ -45,15 +47,16 @@ function Row(props: { row: UpdateTankMetaData }) {
             <Box sx={{ padding: 1 }}>
               <Grid container spacing={1}>
                 <Grid item xs={6} sm={6}>
-                  <Typography variant='h6' gutterBottom>
+                  <Typography textAlign='center' variant='h6' gutterBottom>
                     Description
                   </Typography>
                   {row.description ? (
-                    <Typography variant='body1' gutterBottom>
+                    <Typography textAlign='center' variant='body1' gutterBottom>
                       {row.description}
                     </Typography>
                   ) : (
                     <Typography
+                      textAlign='center'
                       variant='body1'
                       gutterBottom
                       component='div'
@@ -64,9 +67,14 @@ function Row(props: { row: UpdateTankMetaData }) {
                   )}
                 </Grid>
                 <Grid item xs={6} sm={6}>
-                  <Typography variant='h6' gutterBottom>
+                  <Typography textAlign='center' variant='h6' gutterBottom>
                     QR Code
                   </Typography>
+                  <QRCodeCard
+                    client={CURRENTCLIENT}
+                    tankId={row.id}
+                    qrSymbol={row.qrSymbol}
+                  />
                 </Grid>
               </Grid>
             </Box>
@@ -77,9 +85,13 @@ function Row(props: { row: UpdateTankMetaData }) {
   );
 }
 
+let CURRENTCLIENT = {} as UserData;
+
 export default function TanksCollapsibleTable({
+  client,
   tanks
-}: { tanks: UpdateTankMetaData[] }) {
+}: { client: UserData; tanks: UpdateTankMetaData[] }) {
+  CURRENTCLIENT = client;
   return (
     <TableContainer component={Paper} sx={{ maxHeight: 550 }}>
       <Table size='small' stickyHeader>
