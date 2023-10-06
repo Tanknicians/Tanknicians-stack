@@ -3,6 +3,7 @@ import {
   fetchBaseQuery,
   BaseQueryFn
 } from '@reduxjs/toolkit/query/react';
+import { RefreshTokenData } from '../../zodTypes';
 import { setCredentials, logout } from '../slices/auth/authSlice';
 import { RootState } from '../store';
 
@@ -26,7 +27,6 @@ const baseQuery = fetchBaseQuery({
 
 const baseQueryWithReauth: BaseQueryFn = async (args, api, extraOptions) => {
   let result = await baseQuery(args, api, extraOptions);
-
   if (result?.error?.status === 403) {
     // send refresh token to get new access token
     const refreshResult = await baseQuery(
@@ -34,14 +34,16 @@ const baseQueryWithReauth: BaseQueryFn = async (args, api, extraOptions) => {
       api,
       extraOptions
     );
-    console.log(refreshResult);
     if (refreshResult?.data) {
-      const user = (api.getState() as RootState).auth.user;
+      const { token, savedCredentials: user } =
+        refreshResult.data as RefreshTokenData;
       // store the new token
-      api.dispatch(setCredentials({ ...refreshResult.data, user }));
+      api.dispatch(setCredentials({ token, user }));
       // retry the original query with new access token
       result = await baseQuery(args, api, extraOptions);
     } else {
+      // if refresh token is invalid, log out
+      // TODO: display error message to user then log out after 5 seconds
       api.dispatch(logout());
     }
   }
