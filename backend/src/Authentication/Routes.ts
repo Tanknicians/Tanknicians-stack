@@ -61,13 +61,11 @@ const validateJwtToken = (req: Request, res: Response, next: NextFunction) => {
 // Refresh route
 authRouter.post(
   '/refresh',
-  validateRequestBody(emailSchema),
   validateJwtToken,
-  async (req: EmailRequest, res) => {
-    const data = req.body;
+  async (req, res) => {
     const refreshToken = req.cookies.jwt;
     try {
-      await AuthService.refresh(data.email, refreshToken, res);
+      await AuthService.refresh(refreshToken, res);
     } catch (error) {
       res
         .status(500)
