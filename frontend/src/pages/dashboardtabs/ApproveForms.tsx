@@ -1,5 +1,5 @@
 import { useGetUnapprovedServiceCallsQuery } from "../../redux/slices/forms/servicecallApiSlice";
-import { useGetClientsQuery } from "../../redux/slices/users/userManagementSlice";
+import { UserData, useGetClientsQuery } from "../../redux/slices/users/userManagementSlice";
 import { UserQueryArgs } from "../../redux/slices/users/userManagementSlice";
 import CreateServiceCallModal from "../../components/forms/UpsertServiceCall";
 import TableContainer from "@mui/material/TableContainer";
@@ -16,7 +16,7 @@ import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 import { useState } from "react";
-import { ServiceCall } from "../../zodTypes";
+import { ServiceCall, UpdateTankMetaData } from "../../zodTypes";
 import { useSelector } from "react-redux";
 import { selectCurrentUser } from "../../redux/slices/auth/authSlice";
 
@@ -62,19 +62,18 @@ export default function ApproveForms() {
   }
 
   function getClientName(tankId: number) {
-    let ret = "CLIENT NAME NOT FOUND";
     try {
-      optionsList?.forEach(function (user) {
-        user.OwnedTanks?.forEach(function (tank) {
+      optionsList?.forEach(function (user:UserData) {
+        user.OwnedTanks?.forEach(function (tank:UpdateTankMetaData) {
           if (tank.id === tankId) {
-            ret = `${user.firstName} ${user.lastName}`;
+            return `${user.firstName} ${user.lastName}`;
           }
         });
       });
     } catch (e) {
       console.log(e);
     }
-    return ret;
+    return "CLIENT NAME NOT FOUND";
   }
 
   function handleModalOpen(serviceCall: ServiceCall) {
