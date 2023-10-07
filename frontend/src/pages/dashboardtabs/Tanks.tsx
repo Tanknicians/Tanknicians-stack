@@ -1,7 +1,7 @@
 import {
   UserData,
   useGetClientsQuery,
-  UserQuearyArgs,
+  UserQuearyArgs
 } from '../../redux/slices/users/userManagementSlice';
 import CreateTankForm from '../../components/forms/CreateTank';
 import UserSearchBar from '../../components/UserSearchBar';
@@ -10,7 +10,7 @@ import {
   GridColDef,
   GridRenderCellParams,
   GridRenderEditCellParams,
-  GridRowsProp,
+  GridRowsProp
 } from '@mui/x-data-grid';
 import type {} from '@mui/x-data-grid/themeAugmentation';
 import { useMemo, useState } from 'react';
@@ -40,12 +40,12 @@ import {
   Container,
   Grid,
   Typography,
-  createTheme,
+  createTheme
 } from '@mui/material';
 
 function ServiceCallDataGrid({
   tank,
-  employeeId,
+  employeeId
 }: {
   tank: UpdateTankMetaData;
   employeeId: number;
@@ -56,7 +56,7 @@ function ServiceCallDataGrid({
   >();
   const { data, isLoading } = useGetServiceCallByTankIdQuery({
     tankId: tank.id,
-    onlyApprovedForms: false,
+    onlyApprovedForms: false
   });
 
   const editButton = (params: GridRenderCellParams) => {
@@ -88,14 +88,14 @@ function ServiceCallDataGrid({
       headerName: 'Edit',
       width: 130,
       sortable: false,
-      renderCell: editButton,
-    },
+      renderCell: editButton
+    }
   ];
 
   function rowCreate(
     id: number,
     date: string,
-    employeeId: number,
+    employeeId: number
   ): {
     id: number;
     date: string;
@@ -120,7 +120,7 @@ function ServiceCallDataGrid({
     return rowCreate(
       serviceCall.id,
       new Date(serviceCall.createdOn).toLocaleDateString(),
-      serviceCall.employeeId,
+      serviceCall.employeeId
     );
   });
 
@@ -140,12 +140,12 @@ function ServiceCallDataGrid({
 
 const userQuearyArgs = {
   includeTanks: true,
-  isEmployee: false,
+  isEmployee: false
 };
 
 function ServiceCallTable({
   tank,
-  employeeId,
+  employeeId
 }: {
   tank: UpdateTankMetaData;
   employeeId: number;
@@ -156,7 +156,7 @@ function ServiceCallTable({
   >();
   const { data, isLoading } = useGetServiceCallByTankIdQuery({
     tankId: tank.id,
-    onlyApprovedForms: false,
+    onlyApprovedForms: false
   });
 
   if (isLoading) {
@@ -170,7 +170,7 @@ function ServiceCallTable({
   if (!data) {
     return <div>'An error occured.'</div>;
   }
-  
+
   return (
     <>
       <CreateServiceCallModal
@@ -244,7 +244,7 @@ function ServiceCallTable({
 
 export function TankTabs({
   tanks,
-  employeeId,
+  employeeId
 }: {
   tanks: UpdateTankMetaData[];
   employeeId: number;
@@ -309,14 +309,14 @@ export default function Tanks() {
   const [selectedUserId, selectCurrentUserId] = useState<number | null>(null);
   const selectedUser = useMemo(
     () => optionsList?.find((user) => user.id === selectedUserId) ?? null,
-    [optionsList, selectedUserId],
+    [optionsList, selectedUserId]
   );
 
   const collapse = !!selectedUser;
 
   const handleUserSelected = (
     _event: React.SyntheticEvent,
-    customer: UserData | null,
+    customer: UserData | null
   ) => {
     selectCurrentUserId(customer?.id ?? null);
   };
