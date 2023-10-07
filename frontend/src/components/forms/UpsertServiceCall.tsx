@@ -10,17 +10,17 @@ import {
   DialogTitle,
   FormControlLabel,
   Grid,
-  TextField
+  TextField,
 } from '@mui/material';
 import { Control, Controller, SubmitHandler, useForm } from 'react-hook-form';
 import {
   useCreateServiceCallMutation,
-  useUpdateServiceCallMutation
+  useUpdateServiceCallMutation,
 } from '../../redux/slices/forms/servicecallApiSlice';
 import {
   createServiceCall as createServiceCallSchema,
   CreateServiceCall,
-  ServiceCall
+  ServiceCall,
 } from '../../zodTypes';
 import { useSelector } from 'react-redux';
 import { selectCurrentUser } from '../../redux/slices/auth/authSlice';
@@ -49,7 +49,7 @@ export function CreateForm({
   control,
   size,
   multiline,
-  required
+  required,
 }: FormProps) {
   const label = getLabel(name.toString());
 
@@ -142,7 +142,7 @@ const createServiceCallFields: Record<
   pestBPresent: { type: 'boolean' },
   pestCPresent: { type: 'boolean' },
   pestDPresent: { type: 'boolean' },
-  isApproved: { type: 'boolean' }
+  isApproved: { type: 'boolean' },
 };
 
 const defaultValues: CreateServiceCall = Object.fromEntries(
@@ -159,7 +159,7 @@ const defaultValues: CreateServiceCall = Object.fromEntries(
       case 'full':
         return [key, ''];
     }
-  })
+  }),
 );
 defaultValues.isApproved = true;
 
@@ -168,7 +168,7 @@ export default function CreateServiceCallModal({
   setOpen,
   tankId,
   employeeId,
-  previousServiceCall
+  previousServiceCall,
 }: {
   open: boolean;
   setOpen: (open: boolean) => void;
@@ -194,8 +194,8 @@ export default function CreateServiceCallModal({
       ...defaultValues,
       ...previousValues,
       tankId,
-      employeeId: loggedInUser.userId
-    }
+      employeeId: isEdit ? employeeId : loggedInUser.userId,
+    },
   });
 
   function handleClose() {
@@ -214,7 +214,7 @@ export default function CreateServiceCallModal({
   const isLoading = isCreateLoading || isUpdateLoading;
 
   const onValid: SubmitHandler<CreateServiceCall> = async (
-    data: CreateServiceCall
+    data: CreateServiceCall,
   ) => {
     const allData = id ? { ...data, id } : data;
     try {
@@ -233,8 +233,9 @@ export default function CreateServiceCallModal({
   return (
     <Dialog open={open} onClose={handleClose} maxWidth='lg'>
       <DialogTitle>
-        {previousServiceCall ? `Update ${previousServiceCall.id}` : 'Create'}{' '}
-        Service Call
+        {previousServiceCall
+          ? `Update Service Call ${previousServiceCall.id}`
+          : 'Create Service Call'}{' '}
       </DialogTitle>
       <DialogContent>
         <Grid container spacing={2} paddingTop={1}>

@@ -2,37 +2,141 @@ import {
   UserData,
   useGetClientsQuery,
   UserQuearyArgs,
-} from "../../redux/slices/users/userManagementSlice";
-import CreateTankForm from "../../components/forms/CreateTank";
-import UserSearchBar from "../../components/UserSearchBar";
-import Typography from "@mui/material/Typography";
-import UserCard from "../../components/UserCard";
-import Container from "@mui/material/Container";
-import Collapse from "@mui/material/Collapse";
-import Button from "@mui/material/Button";
-import Grid from "@mui/material/Grid";
-import { useMemo, useState } from "react";
+} from '../../redux/slices/users/userManagementSlice';
+import CreateTankForm from '../../components/forms/CreateTank';
+import UserSearchBar from '../../components/UserSearchBar';
 import {
-  Box,
-  Divider,
-  IconButton,
+  DataGrid,
+  GridColDef,
+  GridRenderCellParams,
+  GridRenderEditCellParams,
+  GridRowsProp,
+} from '@mui/x-data-grid';
+import type {} from '@mui/x-data-grid/themeAugmentation';
+import { useMemo, useState } from 'react';
+
+import { useGetServiceCallByTankIdQuery } from '../../redux/slices/forms/servicecallApiSlice';
+import { Edit as EditIcon } from '@mui/icons-material';
+import CreateServiceCallModal from '../../components/forms/UpsertServiceCall';
+import Add from '@mui/icons-material/Add';
+import { ServiceCall, UpdateTankMetaData } from '../../zodTypes';
+import {
   LinearProgress,
-  Paper,
-  Stack,
-  Tab,
-  Table,
-  TableBody,
-  TableCell,
   TableContainer,
+  Paper,
+  Table,
   TableHead,
   TableRow,
+  TableCell,
+  TableBody,
+  IconButton,
+  Stack,
+  Tab,
   Tabs,
-} from "@mui/material";
-import { useGetServiceCallByTankIdQuery } from "../../redux/slices/forms/servicecallApiSlice";
-import { Edit as EditIcon } from "@mui/icons-material";
-import CreateServiceCallModal from "../../components/forms/UpsertServiceCall";
-import Add from "@mui/icons-material/Add";
-import { UpdateTankMetaData } from "../../zodTypes";
+  Divider,
+  Box,
+  Button,
+  Collapse,
+  Container,
+  Grid,
+  Typography,
+  createTheme,
+} from '@mui/material';
+
+function ServiceCallDataGrid({
+  tank,
+  employeeId,
+}: {
+  tank: UpdateTankMetaData;
+  employeeId: number;
+}) {
+  const [createServiceCallOpen, setCreateServiceCallOpen] = useState(false);
+  const [editServiceCallId, setEditServiceCallId] = useState<
+    number | undefined
+  >();
+  const { data, isLoading } = useGetServiceCallByTankIdQuery({
+    tankId: tank.id,
+    onlyApprovedForms: false,
+  });
+
+  const editButton = (params: GridRenderCellParams) => {
+    return (
+      <>
+        <CreateServiceCallModal
+          setOpen={(_) => setEditServiceCallId(undefined)}
+          open={editServiceCallId === params.row.id}
+          tankId={tank.id}
+          employeeId={params.row.employeeId}
+          previousServiceCall={params.row}
+        />
+        <IconButton
+          onClick={() => setEditServiceCallId(params.row.id)}
+          size='small'
+        >
+          <EditIcon fontSize='inherit' />
+        </IconButton>
+      </>
+    );
+  };
+
+  const columns: GridColDef[] = [
+    { field: 'id', headerName: 'ID', width: 130 },
+    { field: 'date', headerName: 'Date', width: 130 },
+    { field: 'employeeId', headerName: 'Technician ID', width: 130 },
+    {
+      field: 'edit',
+      headerName: 'Edit',
+      width: 130,
+      sortable: false,
+      renderCell: editButton,
+    },
+  ];
+
+  function rowCreate(
+    id: number,
+    date: string,
+    employeeId: number,
+  ): {
+    id: number;
+    date: string;
+    employeeId: number;
+  } {
+    return { id, date, employeeId };
+  }
+
+  if (isLoading) {
+    return (
+      <Box pt={1}>
+        <LinearProgress color='primary' />
+      </Box>
+    );
+  }
+
+  if (!data) {
+    return <div>'An error occurred.'</div>;
+  }
+
+  const rows: GridRowsProp = data?.map((serviceCall: ServiceCall) => {
+    return rowCreate(
+      serviceCall.id,
+      new Date(serviceCall.createdOn).toLocaleDateString(),
+      serviceCall.employeeId,
+    );
+  });
+
+  return (
+    <div style={{ height: '700px', width: '100%' }}>
+      <CreateServiceCallModal
+        key={tank.id}
+        open={createServiceCallOpen}
+        setOpen={setCreateServiceCallOpen}
+        tankId={tank.id}
+        employeeId={employeeId}
+      />
+      <DataGrid columns={columns} rows={rows} />
+    </div>
+  );
+}
 
 function ServiceCallTable({
   tank,
@@ -53,13 +157,13 @@ function ServiceCallTable({
   if (isLoading) {
     return (
       <Box pt={1}>
-        <LinearProgress color="primary" />
+        <LinearProgress color='primary' />
       </Box>
     );
   }
 
   if (!data) {
-    return <div>"An error occured."</div>;
+    return <div>'An error occured.'</div>;
   }
   return (
     <>
@@ -75,16 +179,16 @@ function ServiceCallTable({
           <TableHead>
             <TableRow>
               <TableCell>
-                <Typography variant="h6" gutterBottom>
+                <Typography variant='h6' gutterBottom>
                   Service Calls
                 </Typography>
               </TableCell>
-              <TableCell align="right" />
-              <TableCell align="right" />
-              <TableCell align="right">
+              <TableCell align='right' />
+              <TableCell align='right' />
+              <TableCell align='right'>
                 <Button
-                  size="small"
-                  endIcon={<Add fontSize="inherit" />}
+                  size='small'
+                  endIcon={<Add fontSize='inherit' />}
                   onClick={() => setCreateServiceCallOpen(true)}
                 >
                   Add Service Form
@@ -95,20 +199,20 @@ function ServiceCallTable({
           <TableHead>
             <TableRow>
               <TableCell>ID</TableCell>
-              <TableCell align="right">Date</TableCell>
-              <TableCell align="right">Technician Id</TableCell>
-              <TableCell align="right">Edit</TableCell>
+              <TableCell align='right'>Date</TableCell>
+              <TableCell align='right'>Technician Id</TableCell>
+              <TableCell align='right'>Edit</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {data.map((form) => (
               <TableRow key={form.id}>
                 <TableCell>{form.id}</TableCell>
-                <TableCell>
+                <TableCell align='right'>
                   {new Date(form.createdOn).toLocaleDateString()}
                 </TableCell>
-                <TableCell>{form.employeeId}</TableCell>
-                <TableCell>
+                <TableCell align='right'>{form.employeeId}</TableCell>
+                <TableCell align='right'>
                   <CreateServiceCallModal
                     setOpen={(_) => setEditServiceCallId(undefined)}
                     open={editServiceCallId === form.id}
@@ -118,9 +222,9 @@ function ServiceCallTable({
                   />
                   <IconButton
                     onClick={() => setEditServiceCallId(form.id)}
-                    size="small"
+                    size='small'
                   >
-                    <EditIcon fontSize="inherit" />
+                    <EditIcon fontSize='inherit' />
                   </IconButton>
                 </TableCell>
               </TableRow>
@@ -151,11 +255,11 @@ export function TankTabs({
         open={createTankOpen}
         setOpen={setCreateTankOpen}
       />
-      <Stack direction="row" justifyContent="left">
+      <Stack direction='row' justifyContent='left'>
         <Tabs
           value={selectedTank?.id}
-          onChange={(_, newTankId: number | "create") => {
-            if (typeof newTankId === "number") {
+          onChange={(_, newTankId: number | 'create') => {
+            if (typeof newTankId === 'number') {
               const newTank = tanks.find(({ id }) => id === newTankId);
               if (newTank) {
                 setSelectedTank(newTank);
@@ -180,27 +284,26 @@ export function TankTabs({
               tanks.length ? (
                 <Add />
               ) : (
-                <Button variant="outlined">Add Tank</Button>
+                <Button variant='outlined'>Add Tank</Button>
               )
             }
-            value="create"
+            value='create'
           />
         </Tabs>
       </Stack>
 
       {selectedTank && (
-        <ServiceCallTable tank={selectedTank} employeeId={employeeId} />
+        <ServiceCallDataGrid tank={selectedTank} employeeId={employeeId} />
       )}
     </>
   );
 }
 
-const userQuearyArgs: UserQuearyArgs = {
-  includeTanks: true,
-  isEmployee: false,
-};
-
 export default function Tanks() {
+  const userQuearyArgs = {
+    includeTanks: true,
+    isEmployee: false,
+  };
   const { data: optionsList } = useGetClientsQuery(userQuearyArgs);
   const [selectedUserId, selectCurrentUserId] = useState<number | null>(null);
   const selectedUser = useMemo(
@@ -222,14 +325,14 @@ export default function Tanks() {
   return (
     <>
       <Container sx={{ p: 2 }}>
-        <Grid container sx={{ paddingBottom: "10px" }}>
+        <Grid container sx={{ paddingBottom: '10px' }}>
           <Grid item xs={12} sm={3}>
-            <Typography color="inherit" variant="h4" component="h1">
+            <Typography color='inherit' variant='h4' component='h1'>
               Tanks
             </Typography>
           </Grid>
           <Grid item xs={6} sm={7}>
-            <Container maxWidth="sm">
+            <Container maxWidth='sm'>
               <UserSearchBar
                 userList={optionsList}
                 selectedUser={selectedUser}
@@ -238,8 +341,8 @@ export default function Tanks() {
             </Container>
           </Grid>
         </Grid>
+        <Divider />
         <Collapse in={collapse}>
-          <Divider />
           {selectedUser?.OwnedTanks && (
             <TankTabs
               key={selectedUser.id}
