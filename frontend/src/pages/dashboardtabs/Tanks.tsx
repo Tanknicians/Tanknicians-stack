@@ -138,6 +138,11 @@ function ServiceCallDataGrid({
   );
 }
 
+const userQuearyArgs = {
+  includeTanks: true,
+  isEmployee: false,
+};
+
 function ServiceCallTable({
   tank,
   employeeId,
@@ -165,6 +170,7 @@ function ServiceCallTable({
   if (!data) {
     return <div>'An error occured.'</div>;
   }
+  
   return (
     <>
       <CreateServiceCallModal
@@ -183,9 +189,9 @@ function ServiceCallTable({
                   Service Calls
                 </Typography>
               </TableCell>
-              <TableCell align='right' />
-              <TableCell align='right' />
-              <TableCell align='right'>
+              <TableCell />
+              <TableCell />
+              <TableCell>
                 <Button
                   size='small'
                   endIcon={<Add fontSize='inherit' />}
@@ -199,20 +205,20 @@ function ServiceCallTable({
           <TableHead>
             <TableRow>
               <TableCell>ID</TableCell>
-              <TableCell align='right'>Date</TableCell>
-              <TableCell align='right'>Technician Id</TableCell>
-              <TableCell align='right'>Edit</TableCell>
+              <TableCell>Date</TableCell>
+              <TableCell>Technician Id</TableCell>
+              <TableCell>Edit</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {data.map((form) => (
               <TableRow key={form.id}>
                 <TableCell>{form.id}</TableCell>
-                <TableCell align='right'>
+                <TableCell>
                   {new Date(form.createdOn).toLocaleDateString()}
                 </TableCell>
-                <TableCell align='right'>{form.employeeId}</TableCell>
-                <TableCell align='right'>
+                <TableCell>{form.employeeId}</TableCell>
+                <TableCell>
                   <CreateServiceCallModal
                     setOpen={(_) => setEditServiceCallId(undefined)}
                     open={editServiceCallId === form.id}
@@ -263,7 +269,6 @@ export function TankTabs({
               const newTank = tanks.find(({ id }) => id === newTankId);
               if (newTank) {
                 setSelectedTank(newTank);
-                console.log(newTank);
               } else {
                 console.error("Selected tank id that isn't in tank list");
               }
@@ -300,10 +305,6 @@ export function TankTabs({
 }
 
 export default function Tanks() {
-  const userQuearyArgs = {
-    includeTanks: true,
-    isEmployee: false,
-  };
   const { data: optionsList } = useGetClientsQuery(userQuearyArgs);
   const [selectedUserId, selectCurrentUserId] = useState<number | null>(null);
   const selectedUser = useMemo(
