@@ -134,11 +134,6 @@ function ServiceCallDataGrid({
   );
 }
 
-const userQuearyArgs = {
-  includeTanks: true,
-  isEmployee: false
-};
-
 function ServiceCallTable({
   tank,
   employeeId,
