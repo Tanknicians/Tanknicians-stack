@@ -1,7 +1,6 @@
 import {
   UserData,
   useGetClientsQuery,
-  UserQuearyArgs
 } from '../../redux/slices/users/userManagementSlice';
 import CreateTankForm from '../../components/forms/CreateTank';
 import UserSearchBar from '../../components/UserSearchBar';
@@ -9,7 +8,6 @@ import {
   DataGrid,
   GridColDef,
   GridRenderCellParams,
-  GridRenderEditCellParams,
   GridRowsProp
 } from '@mui/x-data-grid';
 import type {} from '@mui/x-data-grid/themeAugmentation';
@@ -39,9 +37,7 @@ import {
   Collapse,
   Container,
   Grid,
-  Typography,
-  createTheme
-} from '@mui/material';
+  Typography} from '@mui/material';
 
 function ServiceCallDataGrid({
   tank,
@@ -145,7 +141,7 @@ const userQuearyArgs = {
 
 function ServiceCallTable({
   tank,
-  employeeId
+  employeeId,
 }: {
   tank: UpdateTankMetaData;
   employeeId: number;
@@ -162,7 +158,7 @@ function ServiceCallTable({
   if (isLoading) {
     return (
       <Box pt={1}>
-        <LinearProgress color='primary' />
+        <LinearProgress color="primary" />
       </Box>
     );
   }
@@ -193,8 +189,8 @@ function ServiceCallTable({
               <TableCell />
               <TableCell>
                 <Button
-                  size='small'
-                  endIcon={<Add fontSize='inherit' />}
+                  size="small"
+                  endIcon={<Add fontSize="inherit" />}
                   onClick={() => setCreateServiceCallOpen(true)}
                 >
                   Add Service Form
@@ -228,9 +224,9 @@ function ServiceCallTable({
                   />
                   <IconButton
                     onClick={() => setEditServiceCallId(form.id)}
-                    size='small'
+                    size="small"
                   >
-                    <EditIcon fontSize='inherit' />
+                    <EditIcon fontSize="inherit" />
                   </IconButton>
                 </TableCell>
               </TableRow>
@@ -244,7 +240,7 @@ function ServiceCallTable({
 
 export function TankTabs({
   tanks,
-  employeeId
+  employeeId,
 }: {
   tanks: UpdateTankMetaData[];
   employeeId: number;
@@ -264,8 +260,8 @@ export function TankTabs({
       <Stack direction='row' justifyContent='left'>
         <Tabs
           value={selectedTank?.id}
-          onChange={(_, newTankId: number | 'create') => {
-            if (typeof newTankId === 'number') {
+          onChange={(_, newTankId: number | "create") => {
+            if (typeof newTankId === "number") {
               const newTank = tanks.find(({ id }) => id === newTankId);
               if (newTank) {
                 setSelectedTank(newTank);
@@ -289,10 +285,10 @@ export function TankTabs({
               tanks.length ? (
                 <Add />
               ) : (
-                <Button variant='outlined'>Add Tank</Button>
+                <Button variant="outlined">Add Tank</Button>
               )
             }
-            value='create'
+            value="create"
           />
         </Tabs>
       </Stack>
@@ -305,7 +301,10 @@ export function TankTabs({
 }
 
 export default function Tanks() {
-  const { data: optionsList } = useGetClientsQuery(userQuearyArgs);
+  const { data: optionsList } = useGetClientsQuery({
+    includeTanks: true,
+    isEmployee: false,
+  });
   const [selectedUserId, selectCurrentUserId] = useState<number | null>(null);
   const selectedUser = useMemo(
     () => optionsList?.find((user) => user.id === selectedUserId) ?? null,
@@ -328,12 +327,12 @@ export default function Tanks() {
       <Container sx={{ p: 2 }}>
         <Grid container sx={{ paddingBottom: '10px' }}>
           <Grid item xs={12} sm={3}>
-            <Typography color='inherit' variant='h4' component='h1'>
+            <Typography color="inherit" variant="h4" component="h1">
               Tanks
             </Typography>
           </Grid>
           <Grid item xs={6} sm={7}>
-            <Container maxWidth='sm'>
+            <Container maxWidth="sm">
               <UserSearchBar
                 userList={optionsList}
                 selectedUser={selectedUser}

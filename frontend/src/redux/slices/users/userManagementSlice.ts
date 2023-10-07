@@ -1,16 +1,16 @@
-import { apiSlice } from '../../api/apiSlice';
+import { apiSlice } from "../../api/apiSlice";
 import {
   CreateTankMetaData,
   CreateUser,
   UpdateTankMetaData,
-  UpdateUser
-} from '../../../zodTypes';
+  UpdateUser,
+} from "../../../zodTypes";
 
 export type UserData = {
   OwnedTanks?: UpdateTankMetaData[];
 } & UpdateUser;
 
-export type UserQuearyArgs = {
+export type UserQueryArgs = {
   includeTanks: boolean;
   isEmployee: boolean | undefined;
 };
@@ -18,60 +18,60 @@ export type UserQuearyArgs = {
 export const userManagementSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getUser: builder.query<UserData, number>({
-      providesTags: () => [{ type: 'USERLIST', id: 'LIST' }],
+      providesTags: () => [{ type: "USERLIST", id: "LIST" }],
       query: (id) => ({
         url: `/api/database/user/${id}`,
-        method: 'GET'
-      })
+        method: "GET",
+      }),
     }),
     // Query returns a list of all users
-    getClients: builder.query<UserData[], UserQuearyArgs>({
+    getClients: builder.query<UserData[], UserQueryArgs>({
       providesTags: (result) =>
         result
           ? [
-              ...result.map(({ id }) => ({ type: 'USERLIST' as const, id })),
-              { type: 'USERLIST', id: 'LIST' }
+              ...result.map(({ id }) => ({ type: "USERLIST" as const, id })),
+              { type: "USERLIST", id: "LIST" },
             ]
-          : [{ type: 'USERLIST', id: 'LIST' }],
+          : [{ type: "USERLIST", id: "LIST" }],
       query: (params) => {
         return {
-          url: '/api/database/user',
-          method: 'GET',
+          url: "/api/database/user",
+          method: "GET",
           params: {
             includeTanks: params.includeTanks,
-            isEmployee: params.isEmployee
-          }
+            isEmployee: params.isEmployee,
+          },
         };
-      }
+      },
     }),
     // Mutation adds a user to the database
     addUser: builder.mutation<void, CreateUser>({
-      invalidatesTags: () => [{ type: 'USERLIST', id: 'LIST' }],
+      invalidatesTags: () => [{ type: "USERLIST", id: "LIST" }],
       query: (userData) => ({
-        url: '/api/database/user',
-        method: 'POST',
-        body: { ...userData }
-      })
+        url: "/api/database/user",
+        method: "POST",
+        body: { ...userData },
+      }),
     }),
     // Mutation adds a tank to a user
     addTankToUser: builder.mutation<number, CreateTankMetaData>({
-      invalidatesTags: () => [{ type: 'USERLIST', id: 'LIST' }],
+      invalidatesTags: () => [{ type: "USERLIST", id: "LIST" }],
       query: (tankData) => ({
-        url: '/api/database/tank',
-        method: 'POST',
-        body: { ...tankData }
-      })
+        url: "/api/database/tank",
+        method: "POST",
+        body: { ...tankData },
+      }),
     }),
     // Mutation edits user in database
     editUser: builder.mutation<void, UpdateUser>({
-      invalidatesTags: () => [{ type: 'USERLIST', id: 'LIST' }],
+      invalidatesTags: () => [{ type: "USERLIST", id: "LIST" }],
       query: ({ id, ...userData }) => ({
         url: `/api/database/user/${id}`,
-        method: 'PUT',
-        body: { ...userData }
-      })
-    })
-  })
+        method: "PUT",
+        body: { ...userData },
+      }),
+    }),
+  }),
 });
 
 export const {
@@ -79,5 +79,5 @@ export const {
   useAddUserMutation,
   useAddTankToUserMutation,
   useEditUserMutation,
-  useGetUserQuery
+  useGetUserQuery,
 } = userManagementSlice;
