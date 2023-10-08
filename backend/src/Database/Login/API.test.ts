@@ -1,5 +1,5 @@
 import { create, read, update, deleteOne, search } from './API';
-import { CreateLogin, SearchSchema, UpdateLogin } from 'src/zodTypes';
+import { CreateLogin, SearchSchema, UpdateLogin } from '../../zodTypes';
 
 describe('Login CRUD operations', () => {
   const testLogin: CreateLogin = {
