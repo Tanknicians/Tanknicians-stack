@@ -3,10 +3,10 @@ import { CreateLogin, SearchSchema, UpdateLogin } from '../../zodTypes';
 
 describe('Login CRUD operations', () => {
   const testLogin: CreateLogin = {
-      email: 'supertest@email.com',
-      password: 'supertest',
-      role: 'CUSTOMER',
-      userId: 0
+    email: 'supertest@email.com',
+    password: 'supertest',
+    role: 'CUSTOMER',
+    userId: 0,
   };
 
   let createdLoginId: number;
@@ -25,10 +25,10 @@ describe('Login CRUD operations', () => {
 
   it('should update a login', async () => {
     const updateData: UpdateLogin = {
-        email: 'supertestupdate@email.com',
-        password: 'supertest',
-        role: 'CUSTOMER',
-        userId: 0
+      email: 'supertestupdate@email.com',
+      password: 'supertest',
+      role: 'CUSTOMER',
+      userId: 0,
     };
     const result = await update(createdLoginId, updateData);
     expect(result.message).toBe('Login updated successfully');
@@ -38,7 +38,7 @@ describe('Login CRUD operations', () => {
     const searchCriteria: SearchSchema = {
       page: 1,
       size: 5,
-      searchString: "supertestupdate@email.com",
+      searchString: 'supertestupdate@email.com',
     };
     const result = await search(searchCriteria);
     expect(result).toBeDefined();

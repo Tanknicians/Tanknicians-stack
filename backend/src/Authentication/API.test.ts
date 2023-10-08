@@ -1,4 +1,3 @@
-
 import { generateRandomPassword, resetPassword } from './API';
 import { generateRefreshToken, verifyRefreshToken } from './../Token/Generator';
 
@@ -12,8 +11,6 @@ describe('authentication api', () => {
     expect(actual.length).toBe(expected);
   });
 
-  
-
   it('throws error when token invalid', () => {
     // Arrange
     const refreshToken: string = generateRefreshToken({
@@ -21,7 +18,7 @@ describe('authentication api', () => {
       role: 'ADMIN',
       email: 'test@email.com',
       password: 'testtesttest',
-      userId: 0
+      userId: 0,
     });
     // Act
     // Assert
