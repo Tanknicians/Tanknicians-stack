@@ -42,6 +42,24 @@ tankMetaDataRouter.post(
 
 // Read TankMetadata
 tankMetaDataRouter.get(
+  '/',
+  authenticateRoleMiddleWare(['ADMIN', 'EMPLOYEE']),
+  async (_, res) => {
+    try {
+      const result = await TankMetadataService.readAll();
+      res.json(result);
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : 'Unknown Error: Failed to read Tank Metadata';
+      res.status(500).json({ error: errorMessage });
+    }
+  },
+);
+
+// Read TankMetadata
+tankMetaDataRouter.get(
   '/:id',
   authenticateRoleMiddleWare(['ADMIN', 'EMPLOYEE']),
   async (req, res) => {

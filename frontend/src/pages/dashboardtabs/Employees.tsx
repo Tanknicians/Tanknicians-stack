@@ -13,6 +13,8 @@ import Box from '@mui/material/Box';
 import { useMemo, useState } from 'react';
 import CreateUserModal from '../../components/forms/CreateUser';
 import { UserQuearyArgs } from '../../redux/slices/users/userManagementSlice';
+import UserGrid from '../../components/datagrid/UserGrid';
+import { Paper } from '@mui/material';
 
 export default function Employees() {
   const userId = 1;
@@ -96,6 +98,15 @@ export default function Employees() {
         <Grid xs={12} sm={12} item>
           <Collapse in={!!selectedUser}>
             <UserCard user={selectedUser} />
+          </Collapse>
+          <Collapse in={!selectedUser} unmountOnExit>
+            <Paper>
+              <UserGrid
+                hideToolbar
+                isEmployee={true}
+                selectUserId={selectCurrentUserId}
+              />
+            </Paper>
           </Collapse>
         </Grid>
         <Grid xs={1} sm={1} item />

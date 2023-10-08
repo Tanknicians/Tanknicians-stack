@@ -15,6 +15,8 @@ import { useMemo, useState } from 'react';
 import CreateUserModal from '../../components/forms/CreateUser';
 import { UserQuearyArgs } from '../../redux/slices/users/userManagementSlice';
 import TanksCollapsibleTable from '../../components/TanksCollapsibleTable';
+import UserGrid from '../../components/datagrid/UserGrid';
+import { Paper } from '@mui/material';
 
 export default function Clients() {
   const userQuearyArgs: UserQuearyArgs = {
@@ -95,7 +97,7 @@ export default function Clients() {
         </Grid>
         <Grid xs={1} sm={1} item />
         <Grid xs={12} sm={12} item>
-          <Collapse in={!!selectedClient}>
+          <Collapse in={!!selectedClient} unmountOnExit>
             <UserCard user={selectedClient} />
             {selectedClient && (
               <CreateTankForm
@@ -104,6 +106,15 @@ export default function Clients() {
                 setOpen={handleOpenTankModal}
               />
             )}
+          </Collapse>
+          <Collapse in={!selectedClient} unmountOnExit>
+            <Paper>
+              <UserGrid
+                hideToolbar
+                isEmployee={false}
+                selectUserId={setSelectedClientId}
+              />
+            </Paper>
           </Collapse>
         </Grid>
         {selectedClient && (
