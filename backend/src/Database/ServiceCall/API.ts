@@ -22,8 +22,8 @@ export async function create(data: CreateServiceCall) {
       throw new Error(`No tankId of ${createServiceCall.tankId} found.`);
     }
     updateTank.lastDateServiced = createServiceCall.createdOn;
-    await serviceCallDB.create(createServiceCall);
-    const createdId = await tankDB.update(updateTank);
+    const createdId = await serviceCallDB.create(createServiceCall);
+    await tankDB.update(updateTank);
     return { message: 'Service Call created successfully', id: createdId };
   } catch (e) {
     const errorMessage = e instanceof Error ? e.message : 'Unknown error.';
