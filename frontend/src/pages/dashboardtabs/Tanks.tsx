@@ -33,6 +33,7 @@ import { Edit as EditIcon } from '@mui/icons-material';
 import CreateServiceCallModal from '../../components/forms/UpsertServiceCall';
 import Add from '@mui/icons-material/Add';
 import { UpdateTankMetaData } from '../../zodTypes';
+import TankGrid from '../../components/datagrid/TankGrid';
 
 function ServiceCallTable({
   tank,
@@ -205,7 +206,7 @@ export default function Tanks() {
   return (
     <>
       <Container sx={{ p: 2 }}>
-        <Grid container>
+        <Grid container spacing={2}>
           <Grid item xs={12} sm={3}>
             <Typography color='inherit' variant='h4' component='h1'>
               Tanks
@@ -220,21 +221,28 @@ export default function Tanks() {
               />
             </Container>
           </Grid>
+          <Grid item xs={12}>
+            <Collapse in={collapse}>
+              <UserCard user={selectedUser} />
+              <Divider />
+              <Typography variant='h4' gutterBottom>
+                Service Calls
+              </Typography>
+              {selectedUser?.OwnedTanks && (
+                <TankTabs
+                  key={selectedUser.id}
+                  tanks={selectedUser.OwnedTanks}
+                  employeeId={selectedUser.id}
+                />
+              )}
+            </Collapse>
+            <Collapse in={!collapse}>
+              <Paper>
+                <TankGrid hideToolbar selectTankId={selectCurrentUserId} />
+              </Paper>
+            </Collapse>
+          </Grid>
         </Grid>
-        <Collapse in={collapse}>
-          <UserCard user={selectedUser} />
-          <Divider />
-          <Typography variant='h4' gutterBottom>
-            Service Calls
-          </Typography>
-          {selectedUser?.OwnedTanks && (
-            <TankTabs
-              key={selectedUser.id}
-              tanks={selectedUser.OwnedTanks}
-              employeeId={selectedUser.id}
-            />
-          )}
-        </Collapse>
       </Container>
     </>
   );
