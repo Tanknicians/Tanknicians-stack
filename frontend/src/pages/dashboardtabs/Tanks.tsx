@@ -46,7 +46,7 @@ export function TankTabs({
       />
       <Stack direction="row" justifyContent="left">
         <Tabs
-          value={selectedTank?.id}
+          value={selectedTank ? selectedTank.id : false}
           onChange={(_, newTankId: number | "create") => {
             if (typeof newTankId === "number") {
               const newTank = tanks.find(({ id }) => id === newTankId);
