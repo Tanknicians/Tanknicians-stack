@@ -132,8 +132,8 @@ export default function SCDataGrid({
         headerAlign: 'center'
       },
       {
-        field: 'employeeName',
-        headerName: 'Employee Name',
+        field: 'clientName',
+        headerName: 'Client Name',
         width: 130,
         align: 'center',
         headerAlign: 'center'
@@ -335,7 +335,7 @@ export default function SCDataGrid({
     rows = serviceCallsForEmployee.map((s: ServiceCall) => {
       return {
         ...s,
-        employeeName: getEmployeeName(employeeId),
+        clientName: getClientName(s.tankId),
         date: new Date(s.createdOn).toLocaleDateString(),
         customerNotes: s.customerRequest,
         employeeNotes: s.employeeNotes,
