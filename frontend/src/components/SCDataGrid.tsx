@@ -14,9 +14,7 @@ import { UpdateTankMetaData, ServiceCall } from '../zodTypes';
 import CreateServiceCallModal from './forms/UpsertServiceCall';
 import { Edit as EditIcon } from '@mui/icons-material';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import {
-  useGetClientsQuery
-} from '../redux/slices/users/userManagementSlice';
+import { useGetClientsQuery } from '../redux/slices/users/userManagementSlice';
 
 export default function SCDataGrid({
   employeeId,
