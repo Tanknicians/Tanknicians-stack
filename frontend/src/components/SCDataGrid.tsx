@@ -15,7 +15,6 @@ import CreateServiceCallModal from './forms/UpsertServiceCall';
 import { Edit as EditIcon } from '@mui/icons-material';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import {
-  UserData,
   useGetClientsQuery
 } from '../redux/slices/users/userManagementSlice';
 
