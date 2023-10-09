@@ -4,7 +4,6 @@ const prisma = new PrismaClient();
 
 // CREATE
 export async function create(login: Omit<Login, 'id'>) {
-  console.log(login);
   const createdLogin = await prisma.login.create({
     data: {
       ...login,
