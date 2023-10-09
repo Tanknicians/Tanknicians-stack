@@ -60,7 +60,15 @@ export function CreateForm({
           name={name}
           control={control}
           render={({ field }) => (
-            <FormControlLabel control={<Checkbox {...field} />} label={label} />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  onChange={(e) => field.onChange(e.target.checked)}
+                  checked={!!field.value}
+                />
+              }
+              label={label}
+            />
           )}
         />
       </Grid>
@@ -187,6 +195,7 @@ export default function CreateServiceCallModal({
   }
 
   const isEdit = !!previousServiceCall && !!id && !!previousValues;
+  console.log(previousValues);
 
   const { handleSubmit, control, reset } = useForm<CreateServiceCall>({
     resolver: zodResolver(createServiceCallSchema),
