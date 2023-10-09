@@ -19,9 +19,12 @@ import {
   Collapse,
   Container,
   Grid,
-  Typography
+  Typography,
+  Paper
 } from '@mui/material';
 import SCDataGrid from '../../components/SCDataGrid';
+import UserCard from '../../components/UserCard';
+import TankGrid from '../../components/datagrid/TankGrid';
 
 export function TankTabs({
   tanks,

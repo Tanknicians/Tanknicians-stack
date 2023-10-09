@@ -97,7 +97,9 @@ export default function SCDataGrid({
   //
   //
   if (employeeId) {
-    const { data: allServiceCalls } = useGetAllServiceCallsQuery();
+    const { data: allServiceCalls } = useGetAllServiceCallsQuery({
+      isApproved: undefined
+    });
 
     if (!allServiceCalls) return <div>error not allServiceCalls</div>;
     const serviceCallsForEmployee: ServiceCall[] = allServiceCalls.filter(
@@ -583,6 +585,7 @@ export default function SCDataGrid({
   return (
     <div style={{ height: '700px', width: '100%' }}>
       <DataGrid
+        autoHeight
         initialState={{
           columns: {
             columnVisibilityModel: {

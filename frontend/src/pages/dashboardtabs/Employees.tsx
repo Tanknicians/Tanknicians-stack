@@ -12,9 +12,9 @@ import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import { useMemo, useState } from 'react';
 import CreateUserModal from '../../components/forms/CreateUser';
-import { UserQuearyArgs } from '../../redux/slices/users/userManagementSlice';
 import UserGrid from '../../components/datagrid/UserGrid';
 import { Paper } from '@mui/material';
+import SCDataGrid from '../../components/SCDataGrid';
 
 export default function Employees() {
   const { data: optionsList, error: clientsError } = useGetClientsQuery({
@@ -109,7 +109,7 @@ export default function Employees() {
         {selectedUserId && (
           <SCDataGrid employeeId={selectedUserId} tank={undefined} />
         )}
-      </Container>
+      </Grid>
     </>
   );
 }
