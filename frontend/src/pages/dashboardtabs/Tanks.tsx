@@ -4,137 +4,24 @@ import {
 } from "../../redux/slices/users/userManagementSlice";
 import CreateTankForm from "../../components/forms/CreateTank";
 import UserSearchBar from "../../components/UserSearchBar";
-import {
-  DataGrid,
-  GridColDef,
-  GridRenderCellParams,
-  GridRowsProp,
-} from "@mui/x-data-grid";
 import type {} from "@mui/x-data-grid/themeAugmentation";
 import { useMemo, useState } from "react";
 
-import { useGetServiceCallByTankIdQuery } from "../../redux/slices/forms/servicecallApiSlice";
-import { Edit as EditIcon } from "@mui/icons-material";
 import CreateServiceCallModal from "../../components/forms/UpsertServiceCall";
 import Add from "@mui/icons-material/Add";
-import { ServiceCall, UpdateTankMetaData } from "../../zodTypes";
+import { UpdateTankMetaData } from "../../zodTypes";
 import {
-  LinearProgress,
-  TableContainer,
-  Paper,
-  Table,
-  TableHead,
-  TableRow,
-  TableCell,
-  TableBody,
-  IconButton,
   Stack,
   Tab,
   Tabs,
   Divider,
-  Box,
   Button,
   Collapse,
   Container,
   Grid,
   Typography,
 } from "@mui/material";
-import SCDataGridTank from "../../components/SCDataGridTank";
-
-function ServiceCallDataGrid({
-  tank,
-  employeeId,
-}: {
-  tank: UpdateTankMetaData;
-  employeeId: number;
-}) {
-  const [createServiceCallOpen, setCreateServiceCallOpen] = useState(false);
-  const [editServiceCallId, setEditServiceCallId] = useState<
-    number | undefined
-  >();
-  const { data, isLoading } = useGetServiceCallByTankIdQuery({
-    tankId: tank.id,
-    onlyApprovedForms: false,
-  });
-
-  const editButton = (params: GridRenderCellParams) => {
-    return (
-      <>
-        <CreateServiceCallModal
-          setOpen={(_) => setEditServiceCallId(undefined)}
-          open={editServiceCallId === params.row.id}
-          tankId={tank.id}
-          employeeId={params.row.employeeId}
-          previousServiceCall={params.row}
-        />
-        <IconButton
-          onClick={() => setEditServiceCallId(params.row.id)}
-          size="small"
-        >
-          <EditIcon fontSize="inherit" />
-        </IconButton>
-      </>
-    );
-  };
-
-  const columns: GridColDef[] = [
-    { field: "id", headerName: "ID", width: 130 },
-    { field: "date", headerName: "Date", width: 130 },
-    { field: "employeeId", headerName: "Technician ID", width: 130 },
-    {
-      field: "edit",
-      headerName: "Edit",
-      width: 130,
-      sortable: false,
-      renderCell: editButton,
-    },
-  ];
-
-  function rowCreate(
-    id: number,
-    date: string,
-    employeeId: number,
-  ): {
-    id: number;
-    date: string;
-    employeeId: number;
-  } {
-    return { id, date, employeeId };
-  }
-
-  if (isLoading) {
-    return (
-      <Box pt={1}>
-        <LinearProgress color="primary" />
-      </Box>
-    );
-  }
-
-  if (!data) {
-    return <div>'An error occurred.'</div>;
-  }
-
-  const rows: GridRowsProp = data?.map((serviceCall: ServiceCall) => {
-    return rowCreate(
-      serviceCall.id,
-      new Date(serviceCall.createdOn).toLocaleDateString(),
-      serviceCall.employeeId,
-    );
-  });
-
-  return (
-    <div style={{ height: "700px", width: "100%" }}>
-      <CreateServiceCallModal
-        key={tank.id}
-        open={createServiceCallOpen}
-        setOpen={setCreateServiceCallOpen}
-        tankId={tank.id}
-        employeeId={employeeId}
-      />
-      <DataGrid columns={columns} rows={rows} />
-    </div>
-  );
-}
+import SCDataGrid from "../../components/SCDataGrid";
 
 export function TankTabs({
   tanks,
@@ -201,7 +88,7 @@ export function TankTabs({
             tankId={selectedTank.id}
             employeeId={employeeId}
           />
-          <SCDataGridTank tank={selectedTank} employeeId={employeeId} />
+          <SCDataGrid tank={selectedTank} employeeId={employeeId} />
         </>
       )}
     </>

@@ -11,7 +11,7 @@ import {
   InputLabel,
   MenuItem,
   Select,
-  TextField
+  TextField,
 } from '@mui/material';
 import { useAddTankToUserMutation } from '../../redux/slices/users/userManagementSlice';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
@@ -33,16 +33,16 @@ function CreateTankForm({ userId, open, setOpen }: CreateTankFormProps) {
     control,
     reset,
     handleSubmit,
-    formState: { errors }
+    formState: { errors },
   } = useForm<CreateTankMetaData>({
     resolver: zodResolver(createTank),
     defaultValues: {
       tanknicianSourcedOnly: false,
-      customerId: userId
-    }
+      customerId: userId,
+    },
   });
 
-  console.log('Create Tank Form RHF Errors: ', errors);
+  // console.log('Create Tank Form RHF Errors: ', errors);
 
   const handleClose = () => {
     reset();
@@ -69,7 +69,7 @@ function CreateTankForm({ userId, open, setOpen }: CreateTankFormProps) {
             container
             spacing={2}
             sx={{
-              pt: 1
+              pt: 1,
             }}
           >
             <Grid item xs={4}>

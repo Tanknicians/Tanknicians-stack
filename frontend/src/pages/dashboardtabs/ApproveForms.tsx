@@ -1,5 +1,8 @@
 import { useGetUnapprovedServiceCallsQuery } from "../../redux/slices/forms/servicecallApiSlice";
-import { UserData, useGetClientsQuery } from "../../redux/slices/users/userManagementSlice";
+import {
+  UserData,
+  useGetClientsQuery,
+} from "../../redux/slices/users/userManagementSlice";
 import { UserQueryArgs } from "../../redux/slices/users/userManagementSlice";
 import CreateServiceCallModal from "../../components/forms/UpsertServiceCall";
 import TableContainer from "@mui/material/TableContainer";
@@ -49,7 +52,7 @@ export default function ApproveForms() {
     let ret = "EMPLOYEE NAME NOT FOUND";
     try {
       const matchedUserOption = optionsList?.find(
-        (element) => element.id === empId
+        (element) => element.id === empId,
       );
       if (matchedUserOption === undefined) {
       } else {
@@ -62,18 +65,19 @@ export default function ApproveForms() {
   }
 
   function getClientName(tankId: number) {
+    let ret = "CLIENT NAME NOT FOUND";
     try {
-      optionsList?.forEach(function (user:UserData) {
-        user.OwnedTanks?.forEach(function (tank:UpdateTankMetaData) {
+      optionsList?.forEach(function (user) {
+        user.OwnedTanks?.forEach(function (tank) {
           if (tank.id === tankId) {
-            return `${user.firstName} ${user.lastName}`;
+            ret = `${user.firstName} ${user.lastName}`;
           }
         });
       });
     } catch (e) {
       console.log(e);
     }
-    return "CLIENT NAME NOT FOUND";
+    return ret;
   }
 
   function handleModalOpen(serviceCall: ServiceCall) {
