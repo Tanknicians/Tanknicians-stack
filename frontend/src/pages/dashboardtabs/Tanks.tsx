@@ -135,6 +135,27 @@ export default function Tanks() {
               />
             </Container>
           </Grid>
+          <Grid item xs={12}>
+            <Collapse in={collapse}>
+              <UserCard user={selectedUser} />
+              <Divider />
+              <Typography variant='h4' gutterBottom>
+                Service Calls
+              </Typography>
+              {selectedUser?.OwnedTanks && (
+                <TankTabs
+                  key={selectedUser.id}
+                  tanks={selectedUser.OwnedTanks}
+                  employeeId={selectedUser.id}
+                />
+              )}
+            </Collapse>
+            <Collapse in={!collapse}>
+              <Paper>
+                <TankGrid hideToolbar selectTankId={selectCurrentUserId} />
+              </Paper>
+            </Collapse>
+          </Grid>
         </Grid>
         <Divider />
         <Collapse in={collapse}>

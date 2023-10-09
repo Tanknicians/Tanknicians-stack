@@ -95,7 +95,7 @@ export default function ApproveForms() {
           open={createServiceCallOpen}
           setOpen={setCreateServiceCallOpen}
           tankId={serviceCall?.tankId}
-          employeeId={loggedInUser.id}
+          employeeId={serviceCall?.employeeId}
           previousServiceCall={serviceCall}
         />
       )}
