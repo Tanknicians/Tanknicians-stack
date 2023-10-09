@@ -42,7 +42,7 @@ export default function ServiceFormGrid({
   hideToolbar?: boolean;
 }) {
   const { data: serviceForms, isLoading: isLoadingServiceForms } =
-    useGetAllServiceCallsQuery(undefined);
+    useGetAllServiceCallsQuery({ isApproved: undefined });
 
   return (
     <DataGrid

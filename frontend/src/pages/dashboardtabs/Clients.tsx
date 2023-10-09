@@ -1,5 +1,6 @@
 import {
   UserData,
+  UserQueryArgs,
   useGetClientsQuery
 } from '../../redux/slices/users/userManagementSlice';
 import CreateTankForm from '../../components/forms/CreateTank';
@@ -13,19 +14,18 @@ import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import { useMemo, useState } from 'react';
 import CreateUserModal from '../../components/forms/CreateUser';
-import { UserQuearyArgs } from '../../redux/slices/users/userManagementSlice';
 import TanksCollapsibleTable from '../../components/TanksCollapsibleTable';
 import UserGrid from '../../components/datagrid/UserGrid';
 import { Paper } from '@mui/material';
 
 export default function Clients() {
-  const userQuearyArgs: UserQuearyArgs = {
+  const userQueryArgs: UserQueryArgs = {
     includeTanks: true,
     isEmployee: false
   };
   // Possible optimization:
   // query is ran every time the page is loaded, but it only needs to be ran once
-  const { data: optionsList, error } = useGetClientsQuery(userQuearyArgs);
+  const { data: optionsList, error } = useGetClientsQuery(userQueryArgs);
   const [tankModalOpen, setTankModalOpen] = useState(false);
   const [clientModalOpen, setClientModalOpen] = useState(false);
   const [selectedClientId, setSelectedClientId] = useState<number | null>(null);

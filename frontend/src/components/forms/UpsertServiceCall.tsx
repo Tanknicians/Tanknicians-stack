@@ -194,7 +194,7 @@ export default function CreateServiceCallModal({
       ...defaultValues,
       ...previousValues,
       tankId,
-      employeeId: loggedInUser.userId
+      employeeId: isEdit ? employeeId : loggedInUser.userId
     }
   });
 
@@ -233,8 +233,9 @@ export default function CreateServiceCallModal({
   return (
     <Dialog open={open} onClose={handleClose} maxWidth='lg'>
       <DialogTitle>
-        {previousServiceCall ? `Update ${previousServiceCall.id}` : 'Create'}{' '}
-        Service Call
+        {previousServiceCall
+          ? `Update Service Call ${previousServiceCall.id}`
+          : 'Create Service Call'}{' '}
       </DialogTitle>
       <DialogContent>
         <Grid container spacing={2} paddingTop={1}>

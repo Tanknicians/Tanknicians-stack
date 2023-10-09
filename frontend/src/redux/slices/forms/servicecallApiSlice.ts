@@ -3,7 +3,7 @@ import { apiSlice } from '../../api/apiSlice';
 
 export const servicecallApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    getAllServiceCalls: builder.query<ServiceCall[], undefined>({
+    getAllServiceCalls: builder.query<ServiceCall[], { isApproved?: boolean }>({
       query: () => ({ url: '/api/database/servicecall', method: 'GET' })
     }),
     createServiceCall: builder.mutation({
@@ -20,7 +20,6 @@ export const servicecallApiSlice = apiSlice.injectEndpoints({
         body: serviceCall
       })
     }),
-
     getServiceCallByTankId: builder.query<
       ServiceCall[],
       { tankId: number; onlyApprovedForms?: boolean }

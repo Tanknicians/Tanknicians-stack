@@ -13,7 +13,7 @@ export default function Content() {
         {/* Define inline CSS for body tag */}
         <style type='text/css'>{`
         body {
-            background-color: #BDBDBD;
+            background-color: #FAFAFA;
         }
     `}</style>
       </Helmet>

@@ -1,6 +1,9 @@
 import { useGetUnapprovedServiceCallsQuery } from '../../redux/slices/forms/servicecallApiSlice';
-import { useGetClientsQuery } from '../../redux/slices/users/userManagementSlice';
-import { UserQuearyArgs } from '../../redux/slices/users/userManagementSlice';
+import {
+  UserData,
+  useGetClientsQuery
+} from '../../redux/slices/users/userManagementSlice';
+import { UserQueryArgs } from '../../redux/slices/users/userManagementSlice';
 import CreateServiceCallModal from '../../components/forms/UpsertServiceCall';
 import TableContainer from '@mui/material/TableContainer';
 import Typography from '@mui/material/Typography';
@@ -16,7 +19,7 @@ import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import BorderColorIcon from '@mui/icons-material/BorderColor';
 import { useState } from 'react';
-import { ServiceCall } from '../../zodTypes';
+import { ServiceCall, UpdateTankMetaData } from '../../zodTypes';
 import { useSelector } from 'react-redux';
 import { selectCurrentUser } from '../../redux/slices/auth/authSlice';
 
@@ -25,7 +28,7 @@ const headerGridStyle = {
   alignContent: 'center'
 };
 
-const userQuearyArgs: UserQuearyArgs = {
+const userQueryArgs: UserQueryArgs = {
   includeTanks: true,
   isEmployee: undefined
 };
@@ -42,7 +45,7 @@ export default function ApproveForms() {
   }).data;
 
   // Get Clients list with tanks included to find Technician and Client name associated with the service record
-  const { data: optionsList, error } = useGetClientsQuery(userQuearyArgs);
+  const { data: optionsList, error } = useGetClientsQuery(userQueryArgs);
 
   function getEmployeeName(empId: number) {
     // get the name of the technician associated with the passed employee id
