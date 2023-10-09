@@ -88,7 +88,7 @@ export function TankTabs({
             tankId={selectedTank.id}
             employeeId={employeeId}
           />
-          <SCDataGrid tank={selectedTank} employeeId={employeeId} />
+          <SCDataGrid tank={selectedTank} employeeId={undefined} />
         </>
       )}
     </>

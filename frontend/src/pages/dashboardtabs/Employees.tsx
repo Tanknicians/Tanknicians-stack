@@ -12,7 +12,7 @@ import Button from "@mui/material/Button";
 import { useMemo, useState } from "react";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
-import SCDataGridEmployee from "../../components/SCDataGridEmployee";
+import SCDataGrid from "../../components/SCDataGrid";
 import { Container } from "@mui/material";
 
 export default function Employees() {
@@ -99,7 +99,9 @@ export default function Employees() {
           setOpen={setUserModalOpen}
           isEmployee={true}
         />
-        {selectedUserId && <SCDataGridEmployee employeeId={selectedUserId} />}
+        {selectedUserId && (
+          <SCDataGrid employeeId={selectedUserId} tank={undefined} />
+        )}
       </Container>
     </>
   );
