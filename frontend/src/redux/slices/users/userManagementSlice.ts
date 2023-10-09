@@ -10,7 +10,7 @@ export type UserData = {
   OwnedTanks?: UpdateTankMetaData[];
 } & UpdateUser;
 
-export type UserQuearyArgs = {
+export type UserQueryArgs = {
   includeTanks: boolean;
   isEmployee: boolean | undefined;
 };
@@ -25,7 +25,7 @@ export const userManagementSlice = apiSlice.injectEndpoints({
       })
     }),
     // Query returns a list of all users
-    getClients: builder.query<UserData[], UserQuearyArgs>({
+    getClients: builder.query<UserData[], UserQueryArgs>({
       providesTags: (result) =>
         result
           ? [

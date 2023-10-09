@@ -60,7 +60,15 @@ export function CreateForm({
           name={name}
           control={control}
           render={({ field }) => (
-            <FormControlLabel control={<Checkbox {...field} />} label={label} />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  onChange={(e) => field.onChange(e.target.checked)}
+                  checked={!!field.value}
+                />
+              }
+              label={label}
+            />
           )}
         />
       </Grid>
@@ -187,6 +195,7 @@ export default function CreateServiceCallModal({
   }
 
   const isEdit = !!previousServiceCall && !!id && !!previousValues;
+  console.log(previousValues);
 
   const { handleSubmit, control, reset } = useForm<CreateServiceCall>({
     resolver: zodResolver(createServiceCallSchema),
@@ -194,7 +203,7 @@ export default function CreateServiceCallModal({
       ...defaultValues,
       ...previousValues,
       tankId,
-      employeeId: loggedInUser.userId
+      employeeId: isEdit ? employeeId : loggedInUser.userId
     }
   });
 
@@ -233,8 +242,9 @@ export default function CreateServiceCallModal({
   return (
     <Dialog open={open} onClose={handleClose} maxWidth='lg'>
       <DialogTitle>
-        {previousServiceCall ? `Update ${previousServiceCall.id}` : 'Create'}{' '}
-        Service Call
+        {previousServiceCall
+          ? `Update Service Call ${previousServiceCall.id}`
+          : 'Create Service Call'}{' '}
       </DialogTitle>
       <DialogContent>
         <Grid container spacing={2} paddingTop={1}>

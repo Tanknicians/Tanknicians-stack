@@ -12,26 +12,24 @@ import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import { useMemo, useState } from 'react';
 import CreateUserModal from '../../components/forms/CreateUser';
-import { UserQuearyArgs } from '../../redux/slices/users/userManagementSlice';
+import UserGrid from '../../components/datagrid/UserGrid';
+import { Paper } from '@mui/material';
+import SCDataGrid from '../../components/SCDataGrid';
 
 export default function Employees() {
-  const userId = 1;
-  const userQuearyArgs: UserQuearyArgs = {
+  const { data: optionsList, error: clientsError } = useGetClientsQuery({
     includeTanks: false,
     isEmployee: true
-  };
-  const { data: optionsList, error } = useGetClientsQuery(userQuearyArgs);
+  });
 
-  const [tankModalOpen, setTankModalOpen] = useState(false);
   const [userModalOpen, setUserModalOpen] = useState(false);
-  const [selectedUserId, selectCurrentUserId] = useState<number | null>(null);
 
+  const [selectedUserId, selectCurrentUserId] = useState<number | null>(null);
   const selectedUser = useMemo(
-    () => optionsList?.find((user) => user.id === selectedUserId) ?? null,
+    () =>
+      optionsList?.find((user: UserData) => user.id === selectedUserId) ?? null,
     [optionsList, selectedUserId]
   );
-
-  const [open, setOpen] = useState(false);
 
   const handleUserSelected = (
     _event: React.SyntheticEvent,
@@ -42,10 +40,6 @@ export default function Employees() {
 
   const handleOpenUserModal = () => {
     setUserModalOpen((prevState) => !prevState);
-  };
-
-  const handleOpenTankModal = () => {
-    setTankModalOpen((prevState) => !prevState);
   };
 
   if (!optionsList) return <div>Loading...</div>;
@@ -97,14 +91,25 @@ export default function Employees() {
           <Collapse in={!!selectedUser}>
             <UserCard user={selectedUser} />
           </Collapse>
+          <Collapse in={!selectedUser} unmountOnExit>
+            <Paper>
+              <UserGrid
+                hideToolbar
+                isEmployee={true}
+                selectUserId={selectCurrentUserId}
+              />
+            </Paper>
+          </Collapse>
         </Grid>
-        <Grid xs={1} sm={1} item />
+        <CreateUserModal
+          open={userModalOpen}
+          setOpen={setUserModalOpen}
+          isEmployee={true}
+        />
+        {selectedUserId && (
+          <SCDataGrid employeeId={selectedUserId} tank={undefined} />
+        )}
       </Grid>
-      <CreateUserModal
-        open={userModalOpen}
-        setOpen={setUserModalOpen}
-        isEmployee={true}
-      />
     </>
   );
 }

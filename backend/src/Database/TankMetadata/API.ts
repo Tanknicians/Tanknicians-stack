@@ -43,8 +43,8 @@ export async function create(data: CreateTankMetaData) {
       qrSymbol: findNextInteger(qrSymbolsArray),
       lastDateServiced: tankEpoch,
     };
-    await tankDB.create(createTank);
-    return { message: 'TankMetadata created successfully' };
+    const createdId = await tankDB.create(createTank);
+    return { message: 'TankMetadata created successfully', id: createdId };
   } catch (e) {
     throw new Error('An error occurred during create.');
   }
@@ -64,6 +64,17 @@ function findNextInteger(array: number[]): number {
     }
   }
   return nextInteger;
+}
+
+export async function readAll() {
+  try {
+    const tanks = await tankDB.readAll();
+    return tanks;
+  } catch (e) {
+    const errorMessage = e instanceof Error ? e.message : 'Unknown error.';
+    console.error(errorMessage);
+    throw new Error(`An error occurred during read: ${errorMessage}`);
+  }
 }
 
 export async function read(id: number) {

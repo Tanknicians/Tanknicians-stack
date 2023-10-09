@@ -83,7 +83,7 @@ export async function searchByDateTime(startDate: Date, endDate: Date) {
 }
 
 // ALL
-export async function getAll() {
+export async function readAll() {
   return await prisma.tankMetadata.findMany();
 }
 

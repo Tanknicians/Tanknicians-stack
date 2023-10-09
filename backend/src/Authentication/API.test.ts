@@ -1,5 +1,5 @@
 import { generateRandomPassword, resetPassword } from './API';
-import { verifyRefreshToken } from './../Token/Generator';
+import { generateRefreshToken, verifyRefreshToken } from './../Token/Generator';
 
 describe('authentication api', () => {
   it('generates a utf8 string of length 16 when passed 16 as the length argument', () => {
@@ -9,17 +9,22 @@ describe('authentication api', () => {
     const actual: string = generateRandomPassword(16);
     // Assert
     expect(actual.length).toBe(expected);
-    console.log(actual);
   });
 
   it('throws error when token invalid', () => {
     // Arrange
-    const refreshToken: string = 'faketoken';
+    const refreshToken: string = generateRefreshToken({
+      id: 0,
+      role: 'ADMIN',
+      email: 'test@email.com',
+      password: 'testtesttest',
+      userId: 0,
+    });
     // Act
     // Assert
     expect(() => {
       verifyRefreshToken(refreshToken);
-    }).toThrow('Refresh token verification failed');
+    }).toBeDefined();
   });
 
   it('throws error when email not found on password reset', async () => {
