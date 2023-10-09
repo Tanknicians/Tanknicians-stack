@@ -1,5 +1,6 @@
 import {
   UserData,
+  UserQueryArgs,
   useGetClientsQuery
 } from '../../redux/slices/users/userManagementSlice';
 import CreateTankForm from '../../components/forms/CreateTank';
@@ -13,7 +14,6 @@ import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import { useMemo, useState } from 'react';
 import CreateUserModal from '../../components/forms/CreateUser';
-import { UserQuearyArgs } from '../../redux/slices/users/userManagementSlice';
 import TanksCollapsibleTable from '../../components/TanksCollapsibleTable';
 import UserGrid from '../../components/datagrid/UserGrid';
 import { Paper } from '@mui/material';
