@@ -19,7 +19,7 @@ import { Paper } from '@mui/material';
 export default function Employees() {
   const { data: optionsList, error: clientsError } = useGetClientsQuery({
     includeTanks: false,
-    isEmployee: true,
+    isEmployee: true
   });
 
   const [userModalOpen, setUserModalOpen] = useState(false);
@@ -28,12 +28,12 @@ export default function Employees() {
   const selectedUser = useMemo(
     () =>
       optionsList?.find((user: UserData) => user.id === selectedUserId) ?? null,
-    [optionsList, selectedUserId],
+    [optionsList, selectedUserId]
   );
 
   const handleUserSelected = (
     _event: React.SyntheticEvent,
-    customer: UserData | null,
+    customer: UserData | null
   ) => {
     selectCurrentUserId(customer?.id ?? null);
   };
