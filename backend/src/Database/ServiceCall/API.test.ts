@@ -91,33 +91,36 @@ const commonUserData: Omit<CreateUser, 'isEmployee'> = {
     phone: "11111111111",
   };
 
-describe("ServiceCall pre-test setup operations", async () => {
+describe("ServiceCall pre-test setup operations", () => {
 
-    // create a customer and set the global id
-    const customerResponse = await createUser({
-        ...commonUserData,
-        isEmployee: false
-    })
-    createCustomerId = customerResponse.id;
+    it("create a customer and set the global id", async () => {
+        const customerResponse = await createUser({
+            ...commonUserData,
+            isEmployee: false
+        })
+        createCustomerId = customerResponse.id;
+    });
     
-    // create an employee and set the global id
-    const employeeResponse = await createUser({
-        ...commonUserData,
-        isEmployee: true
-    })
-    createEmployeeId = employeeResponse.id;
-
-    // set the tankMetaData customerId and create the tank; set tank global id
-    createTankMetadata.customerId = createCustomerId
-    const tankMetadataResponse = await createTank(createTankMetadata)
-    createTankId = tankMetadataResponse.id;
-
-    // update the createServiceCall to the required ids
-    createServiceCall.employeeId = createEmployeeId;
-    createServiceCall.tankId = createTankId;
-
-    // pre-test setup complete
-
+    it("create an employee and set the global id", async () => {
+        const employeeResponse = await createUser({
+          ...commonUserData,
+          isEmployee: true,
+        });
+        createEmployeeId = employeeResponse.id;
+      });
+    
+      it("set the tankMetaData customerId and create the tank; set tank global id", async () => {
+        createTankMetadata.customerId = createCustomerId;
+        const tankMetadataResponse = await createTank(createTankMetadata);
+        createTankId = tankMetadataResponse.id;
+      });
+    
+      it("update the createServiceCall to the required ids", () => {
+        createServiceCall.employeeId = createEmployeeId;
+        createServiceCall.tankId = createTankId;
+      });
+    
+      it("pre-test setup complete", () => {});
 });
 
 // ServiceCall CRUD testing suite can now be run:
@@ -161,13 +164,12 @@ describe("ServiceCall CRUD operations", () => {
     const result = await deleteOne(createServiceCallId);
     expect(result.message).toBe('Service Call deleted successfully');
   });
-});
 
-// Delete extraneous testing data:
-describe("ServiceCall post-test cleanup operations", async () => {
 
+  it("delete extraneous testing data", async () => {
     await deleteTank(createTankId);
     await deleteUser(createEmployeeId);
     await deleteUser(createCustomerId);
+  })
 
 });
