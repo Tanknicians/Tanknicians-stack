@@ -119,7 +119,7 @@ describe('ServiceCall CRUD operations', () => {
     });
 
     it('pre-test setup complete', () => {});
-  });
+  }); 
 
   describe('ServiceCall CRUD testing suite can now be run:', () => {
     it('should create a service call', async () => {
