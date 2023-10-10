@@ -4,6 +4,6 @@ export type Routes = {
   ServiceCallFormScreen: undefined;
 };
 
-export const LOGINSCREEN = 'LoginScreen';
-export const QRSCANNERSCREEN = 'QRScannerScreen';
-export const SERVICECALLFORMSCREEN = 'ServiceCallFormScreen';
+export const LOGINSCREEN = "LoginScreen";
+export const QRSCANNERSCREEN = "QRScannerScreen";
+export const SERVICECALLFORMSCREEN = "ServiceCallFormScreen";

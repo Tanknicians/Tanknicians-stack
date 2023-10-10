@@ -1,16 +1,16 @@
-import { apiSlice } from '../../api/apiSlice';
+import { apiSlice } from "../../api/apiSlice";
 
 export const servicecallApiSlice = apiSlice.injectEndpoints({
-  endpoints: builder => ({
+  endpoints: (builder) => ({
     uploadServiceCall: builder.mutation({
-      query: serviceCall => ({
+      query: (serviceCall) => ({
         url: `/api/mobile/uploadForm`,
-        method: 'POST',
+        method: "POST",
         body: { ...serviceCall },
-        responseHandler: 'text'
-      })
-    })
-  })
+        responseHandler: "text",
+      }),
+    }),
+  }),
 });
 
 export const { useUploadServiceCallMutation } = servicecallApiSlice;

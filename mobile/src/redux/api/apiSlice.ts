@@ -1,10 +1,11 @@
 import {
   createApi,
   fetchBaseQuery,
-  BaseQueryFn
-} from '@reduxjs/toolkit/query/react';
-import { setCredentials, logout } from '../slices/auth/authSlice';
-import { RootState } from '../store';
+  BaseQueryFn,
+} from "@reduxjs/toolkit/query/react";
+import { setCredentials, logout } from "../slices/auth/authSlice";
+import { RootState } from "../store";
+import { RefreshTokenData } from "../../zodTypes";
 
 // ! CHANGE THIS FOR PRODUCTION
 // This URL works for android emulator when "npm start" is executed
@@ -12,19 +13,19 @@ import { RootState } from '../store';
 // This URL works for physical device when "npm start" is executed
 // ! The url will be given by ngrok after running the command ngrok http 5000
 const BASE_URL =
-  'https://1ad7-2603-9001-2e00-1465-a9b1-3715-e80e-5b46.ngrok.io';
+  "https://da20-2603-9001-2e00-1465-2437-70d2-bae6-7129.ngrok.io";
 
 const baseQuery = fetchBaseQuery({
   baseUrl: BASE_URL,
-  credentials: 'include',
+  credentials: "include",
   prepareHeaders: (headers, { getState }) => {
     const token = (getState() as RootState).auth.token;
 
     if (token) {
-      headers.set('Authorization', `Bearer ${token}`);
+      headers.set("Authorization", `Bearer ${token}`);
     }
     return headers;
-  }
+  },
 });
 
 const baseQueryWithReauth: BaseQueryFn = async (args, api, extraOptions) => {
@@ -32,15 +33,15 @@ const baseQueryWithReauth: BaseQueryFn = async (args, api, extraOptions) => {
   if (result?.error?.status === 403) {
     // send refresh token to get new access token
     const refreshResult = await baseQuery(
-      '/api/auth/refresh',
+      "/api/auth/refresh",
       api,
-      extraOptions
+      extraOptions,
     );
-    console.log('refresh result: ', refreshResult);
     if (refreshResult?.data) {
-      const user = (api.getState() as RootState).auth.user;
+      const { token, savedCredentials: user } =
+        refreshResult.data as RefreshTokenData;
       // store the new token
-      api.dispatch(setCredentials({ ...refreshResult.data, user }));
+      api.dispatch(setCredentials({ token, user }));
       // retry the original query with new access token
       result = await baseQuery(args, api, extraOptions);
     } else {
@@ -53,5 +54,5 @@ const baseQueryWithReauth: BaseQueryFn = async (args, api, extraOptions) => {
 
 export const apiSlice = createApi({
   baseQuery: baseQueryWithReauth,
-  endpoints: builder => ({})
+  endpoints: (builder) => ({}),
 });
