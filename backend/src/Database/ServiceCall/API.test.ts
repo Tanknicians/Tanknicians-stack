@@ -16,14 +16,14 @@ of tests and assume that they run in-order. Thus, we must run Create and Delete 
 At the very least, this allows for double-checking the integrity of previous tests. 
 */
 
-import { create, read, update, deleteOne, search } from "./API";
+import { create, read, update, deleteOne, search } from './API';
 
-import { create as createUser, deleteOne as deleteUser } from "./../User/API";
+import { create as createUser, deleteOne as deleteUser } from './../User/API';
 
 import {
   create as createTank,
   deleteOne as deleteTank,
-} from "./../TankMetadata/API";
+} from './../TankMetadata/API';
 
 import {
   SearchSchema,
@@ -31,7 +31,7 @@ import {
   CreateTankMetaData,
   CreateServiceCall,
   UpdateServiceCall,
-} from "../../zodTypes";
+} from '../../zodTypes';
 
 // we need to keep track of the id of the creations to delete them later
 let createCustomerId: number;
@@ -73,23 +73,23 @@ const createServiceCall: CreateServiceCall = {
 };
 
 const createTankMetadata: CreateTankMetaData = {
-  type: "FRESH",
+  type: 'FRESH',
   description: null,
   volume: 0,
   tanknicianSourcedOnly: false,
   customerId: 0,
 };
 
-const commonUserData: Omit<CreateUser, "isEmployee"> = {
-  firstName: "SC_TEST",
-  middleName: "SC_TEST",
-  lastName: "SC_TEST",
-  address: "SC_TEST",
-  phone: "11111111111",
+const commonUserData: Omit<CreateUser, 'isEmployee'> = {
+  firstName: 'SC_TEST',
+  middleName: 'SC_TEST',
+  lastName: 'SC_TEST',
+  address: 'SC_TEST',
+  phone: '11111111111',
 };
 
-describe("ServiceCall pre-test setup operations", () => {
-  it("create a customer and set the global id", async () => {
+describe('ServiceCall pre-test setup operations', () => {
+  it('create a customer and set the global id', async () => {
     const customerResponse = await createUser({
       ...commonUserData,
       isEmployee: false,
@@ -97,7 +97,7 @@ describe("ServiceCall pre-test setup operations", () => {
     createCustomerId = customerResponse.id;
   });
 
-  it("create an employee and set the global id", async () => {
+  it('create an employee and set the global id', async () => {
     const employeeResponse = await createUser({
       ...commonUserData,
       isEmployee: true,
@@ -105,62 +105,62 @@ describe("ServiceCall pre-test setup operations", () => {
     createEmployeeId = employeeResponse.id;
   });
 
-  it("set the tankMetaData customerId and create the tank; set tank global id", async () => {
+  it('set the tankMetaData customerId and create the tank; set tank global id', async () => {
     createTankMetadata.customerId = createCustomerId;
     const tankMetadataResponse = await createTank(createTankMetadata);
     createTankId = tankMetadataResponse.id;
   });
 
-  it("update the createServiceCall to the required ids", () => {
+  it('update the createServiceCall to the required ids', () => {
     createServiceCall.employeeId = createEmployeeId;
     createServiceCall.tankId = createTankId;
   });
 
-  it("pre-test setup complete", () => {});
+  it('pre-test setup complete', () => {});
 });
 
 // ServiceCall CRUD testing suite can now be run:
-describe("ServiceCall CRUD operations", () => {
-  it("should create a service call", async () => {
+describe('ServiceCall CRUD operations', () => {
+  it('should create a service call', async () => {
     const result = await create(createServiceCall);
-    expect(result.message).toBe("Service Call created successfully");
+    expect(result.message).toBe('Service Call created successfully');
     expect(result.id).toBeDefined();
     createServiceCallId = result.id;
   });
 
-  it("should read a service call", async () => {
+  it('should read a service call', async () => {
     const result = await read(createServiceCallId);
     expect(result).toBeDefined();
   });
 
-  it("should update a service call", async () => {
+  it('should update a service call', async () => {
     // Update Service Call object
     const { isApproved, employeeNotes, ...serviceCallData } = createServiceCall;
     const updateData: UpdateServiceCall = {
       ...serviceCallData,
-      employeeNotes: "SC_TEST",
+      employeeNotes: 'SC_TEST',
       isApproved: true,
     };
     const result = await update(createServiceCallId, updateData);
-    expect(result.message).toBe("Service Call updated successfully");
+    expect(result.message).toBe('Service Call updated successfully');
   });
 
-  it("should search for service calls", async () => {
+  it('should search for service calls', async () => {
     const searchCriteria: SearchSchema = {
       page: 1,
       size: 5,
-      searchString: "SC_TEST",
+      searchString: 'SC_TEST',
     };
     const result = await search(searchCriteria);
     expect(result).toBeDefined();
   });
 
-  it("should delete a service call", async () => {
+  it('should delete a service call', async () => {
     const result = await deleteOne(createServiceCallId);
-    expect(result.message).toBe("Service Call deleted successfully");
+    expect(result.message).toBe('Service Call deleted successfully');
   });
 
-  it("delete extraneous testing data", async () => {
+  it('delete extraneous testing data', async () => {
     await deleteTank(createTankId);
     await deleteUser(createEmployeeId);
     await deleteUser(createCustomerId);

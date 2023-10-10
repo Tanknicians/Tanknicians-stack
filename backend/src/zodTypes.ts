@@ -10,9 +10,10 @@ export const validateRequestBody =
       req.body = schema.parse(req.body);
       next();
     } catch (e) {
-      return res.status(400).json({ 
-        message: "Request body does not fit expected Zod Schema. Check error for specifics.",
-        error: e
+      return res.status(400).json({
+        message:
+          'Request body does not fit expected Zod Schema. Check error for specifics.',
+        error: e,
       });
     }
   };
