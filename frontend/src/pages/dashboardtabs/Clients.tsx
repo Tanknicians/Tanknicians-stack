@@ -140,7 +140,10 @@ export default function Clients() {
         {selectedClient?.OwnedTanks && (
           <Grid xs={12} sm={12} item>
             <Box sx={{ marginTop: 2, paddingLeft: 1, paddingRight: 1 }}>
-              <TanksCollapsibleTable tanks={selectedClient.OwnedTanks} />
+              <TanksCollapsibleTable
+                client={selectedClient}
+                tanks={selectedClient.OwnedTanks}
+              />
             </Box>
           </Grid>
         )}
