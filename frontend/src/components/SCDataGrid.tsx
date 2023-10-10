@@ -30,7 +30,7 @@ export default function SCDataGrid({
     number | undefined
   >();
 
-  const { data: clients, error } = useGetClientsQuery({
+  const { data: clients } = useGetClientsQuery({
     includeTanks: true,
     isEmployee: undefined
   });
@@ -348,11 +348,6 @@ export default function SCDataGrid({
   //
   //
   else if (tank) {
-    // Get Clients list with tanks included to find Technician and Client name associated with the service record
-    const { data: clients, isLoading } = useGetClientsQuery({
-      includeTanks: true,
-      isEmployee: undefined
-    });
     const { data: serviceCallsForTankID } = useGetServiceCallByTankIdQuery({
       tankId: tank.id
     });
