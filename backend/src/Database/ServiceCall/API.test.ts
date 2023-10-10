@@ -18,10 +18,7 @@ At the very least, this allows for double-checking the integrity of previous tes
 
 import { create, read, update, deleteOne, search } from "./API";
 
-import { 
-    create as createUser, 
-    deleteOne as deleteUser 
-} from "./../User/API";
+import { create as createUser, deleteOne as deleteUser } from "./../User/API";
 
 import {
   create as createTank,
@@ -42,90 +39,88 @@ let createEmployeeId: number;
 let createTankId: number;
 let createServiceCallId: number;
 
-let createServiceCall: CreateServiceCall = {
-    isApproved: false,
-    createdOn: new Date(),
-    customerRequest: null,
-    employeeNotes: null,
-    notApprovedNotes: null,
-    notesUpdated: null,
-    alkalinity: 0,
-    calcium: 0,
-    nitrate: 0,
-    phosphate: 0,
-    ATOOperational: false,
-    ATOReservoirFilled: false,
-    chemFilterAdjusted: false,
-    doserAdjustementOrManualDosing: false,
-    dosingReservoirsFull: false,
-    floorsCheckedForSpillsOrDirt: false,
-    glassCleanedInside: false,
-    glassCleanedOutside: false,
-    mechFilterChanged: false,
-    pumpsClearedOfDebris: false,
-    saltCreepCleaned: false,
-    skimmerCleanedAndOperational: false,
-    waterChanged: false,
-    waterTestedRecordedDated: false,
-    pestAPresent: false,
-    pestBPresent: false,
-    pestCPresent: false,
-    pestDPresent: false,
-    employeeId: 0, // update on pre-test setup
-    tankId: 0 // update on pre-test setup
-}
+const createServiceCall: CreateServiceCall = {
+  isApproved: false,
+  createdOn: new Date(),
+  customerRequest: null,
+  employeeNotes: null,
+  notApprovedNotes: null,
+  notesUpdated: null,
+  alkalinity: 0,
+  calcium: 0,
+  nitrate: 0,
+  phosphate: 0,
+  ATOOperational: false,
+  ATOReservoirFilled: false,
+  chemFilterAdjusted: false,
+  doserAdjustementOrManualDosing: false,
+  dosingReservoirsFull: false,
+  floorsCheckedForSpillsOrDirt: false,
+  glassCleanedInside: false,
+  glassCleanedOutside: false,
+  mechFilterChanged: false,
+  pumpsClearedOfDebris: false,
+  saltCreepCleaned: false,
+  skimmerCleanedAndOperational: false,
+  waterChanged: false,
+  waterTestedRecordedDated: false,
+  pestAPresent: false,
+  pestBPresent: false,
+  pestCPresent: false,
+  pestDPresent: false,
+  employeeId: 0, // update on pre-test setup
+  tankId: 0, // update on pre-test setup
+};
 
-let createTankMetadata: CreateTankMetaData = {
-    type: "FRESH",
-    description: null,
-    volume: 0,
-    tanknicianSourcedOnly: false,
-    customerId: 0
-}
+const createTankMetadata: CreateTankMetaData = {
+  type: "FRESH",
+  description: null,
+  volume: 0,
+  tanknicianSourcedOnly: false,
+  customerId: 0,
+};
 
-const commonUserData: Omit<CreateUser, 'isEmployee'> = {
-    firstName: "SC_TEST",
-    middleName: "SC_TEST",
-    lastName: "SC_TEST",
-    address: "SC_TEST",
-    phone: "11111111111",
-  };
+const commonUserData: Omit<CreateUser, "isEmployee"> = {
+  firstName: "SC_TEST",
+  middleName: "SC_TEST",
+  lastName: "SC_TEST",
+  address: "SC_TEST",
+  phone: "11111111111",
+};
 
 describe("ServiceCall pre-test setup operations", () => {
-
-    it("create a customer and set the global id", async () => {
-        const customerResponse = await createUser({
-            ...commonUserData,
-            isEmployee: false
-        })
-        createCustomerId = customerResponse.id;
+  it("create a customer and set the global id", async () => {
+    const customerResponse = await createUser({
+      ...commonUserData,
+      isEmployee: false,
     });
-    
-    it("create an employee and set the global id", async () => {
-        const employeeResponse = await createUser({
-          ...commonUserData,
-          isEmployee: true,
-        });
-        createEmployeeId = employeeResponse.id;
-      });
-    
-      it("set the tankMetaData customerId and create the tank; set tank global id", async () => {
-        createTankMetadata.customerId = createCustomerId;
-        const tankMetadataResponse = await createTank(createTankMetadata);
-        createTankId = tankMetadataResponse.id;
-      });
-    
-      it("update the createServiceCall to the required ids", () => {
-        createServiceCall.employeeId = createEmployeeId;
-        createServiceCall.tankId = createTankId;
-      });
-    
-      it("pre-test setup complete", () => {});
+    createCustomerId = customerResponse.id;
+  });
+
+  it("create an employee and set the global id", async () => {
+    const employeeResponse = await createUser({
+      ...commonUserData,
+      isEmployee: true,
+    });
+    createEmployeeId = employeeResponse.id;
+  });
+
+  it("set the tankMetaData customerId and create the tank; set tank global id", async () => {
+    createTankMetadata.customerId = createCustomerId;
+    const tankMetadataResponse = await createTank(createTankMetadata);
+    createTankId = tankMetadataResponse.id;
+  });
+
+  it("update the createServiceCall to the required ids", () => {
+    createServiceCall.employeeId = createEmployeeId;
+    createServiceCall.tankId = createTankId;
+  });
+
+  it("pre-test setup complete", () => {});
 });
 
 // ServiceCall CRUD testing suite can now be run:
 describe("ServiceCall CRUD operations", () => {
-
   it("should create a service call", async () => {
     const result = await create(createServiceCall);
     expect(result.message).toBe("Service Call created successfully");
@@ -162,14 +157,12 @@ describe("ServiceCall CRUD operations", () => {
 
   it("should delete a service call", async () => {
     const result = await deleteOne(createServiceCallId);
-    expect(result.message).toBe('Service Call deleted successfully');
+    expect(result.message).toBe("Service Call deleted successfully");
   });
-
 
   it("delete extraneous testing data", async () => {
     await deleteTank(createTankId);
     await deleteUser(createEmployeeId);
     await deleteUser(createCustomerId);
-  })
-
+  });
 });
