@@ -48,23 +48,31 @@ export const errorSchema = z.object({
 
 // SERVICE CALL FORM
 
+// Invalid type error for now
+// FIXME: required_error is not working for some reason
+// invalid_type_error is executed due to possible improper coercion
+// within the value passed to the textinput
 const numericQuestions = z.object({
   alkalinity: z.coerce.number({
-    required_error: "Alkalinity reading is required*",
+    // required_error: "Alkalinity reading is required*",
+    invalid_type_error: "Alkalinity reading is required*",
   }),
   calcium: z.coerce.number({
-    required_error: "Calcium reading is required*",
+    // required_error: "Calcium reading is required*",
+    invalid_type_error: "Calcium reading is required*",
   }),
   nitrate: z.coerce.number({
-    required_error: "Nitrate reading is required*",
+    // required_error: "Nitrate reading is required*",
+    invalid_type_error: "Nitrate reading is required*",
   }),
   phosphate: z.coerce.number({
-    required_error: "Phosphate reading is required*",
+    // required_error: "Phosphate reading is required*",
+    invalid_type_error: "Phosphate reading is required*",
   }),
 });
 
 const booleanQuestions = z.object({
-  ATOOperational: z.boolean().default(false),
+  ATOOperational: z.boolean(),
   ATOReservoirFilled: z.boolean(),
   chemFilterAdjusted: z.boolean(),
   doserAdjustementOrManualDosing: z.boolean(),
