@@ -16,7 +16,7 @@ import { useMemo, useState } from 'react';
 import CreateUserModal from '../../components/forms/CreateUser';
 import TanksCollapsibleTable from '../../components/TanksCollapsibleTable';
 import UserGrid from '../../components/datagrid/UserGrid';
-import { Paper } from '@mui/material';
+import { CircularProgress, Paper } from '@mui/material';
 
 export default function Clients() {
   const userQueryArgs: UserQueryArgs = {
@@ -49,44 +49,35 @@ export default function Clients() {
     setTankModalOpen((prevState) => !prevState);
   };
 
-  if (!optionsList) return <div>Loading...</div>;
+  if (!optionsList) return <CircularProgress />;
 
   return (
     <>
       {/* This box has a grid with the page title in one cell, a section to put a search bar in the middle cell, and a container for a button in the far right cell */}
 
-      <Grid
-        container
-        spacing={1}
-        sx={{ padding: '20px', margin: 'auto', maxWidth: '1200px' }}
-        justifyContent='center'
-        alignItems='center'
-      >
-        <Grid item xs={2} sm={2}>
-          <Typography
-            color='inherit'
-            variant='h4'
-            component='h1'
-            align='center'
-          >
+      <Grid container spacing={1} maxWidth={'100%'}>
+        <Grid item xs={12} sm={12} md={3} xl={3}>
+          <Typography variant='h4' component='h1'>
             Clients
           </Typography>
         </Grid>
-        <Grid xs={1} sm={1} item />
-        <Grid item xs={6} sm={6}>
+
+        <Grid item xs={12} sm={12} md={6} xl={6}>
           <UserSearchBar
             userList={optionsList}
             selectedUser={selectedClient}
             handleUserSelected={handleUserSelected}
           />
         </Grid>
-        <Grid xs={1} sm={1} item />
-        <Grid item xs={2} sm={2}>
+        <Grid item xs={12} sm={12} md={3} xl={3}>
           <Box
             sx={{
               display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center'
+              justifyContent: {
+                xs: 'flex-start',
+                sm: 'flex-start',
+                md: 'flex-end'
+              }
             }}
           >
             <Button variant='contained' onClick={handleOpenUserModal}>
@@ -95,8 +86,7 @@ export default function Clients() {
             </Button>
           </Box>
         </Grid>
-        <Grid xs={1} sm={1} item />
-        <Grid xs={12} sm={12} item>
+        <Grid item xs={12} sm={12} md={12} xl={12}>
           <Collapse in={!!selectedClient} unmountOnExit>
             <UserCard user={selectedClient} />
             {selectedClient && (
@@ -119,16 +109,11 @@ export default function Clients() {
         </Grid>
         {selectedClient && (
           <>
-            <Grid xs={10} sm={10} item />
-            <Grid xs={2} sm={2} item>
-              <Box
-                sx={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  marginTop: 1
-                }}
-              >
+            <Grid item xs={12} sm={12} md={12} xl={12}>
+              <Box display={'flex'} justifyContent={'space-between'}>
+                <Typography variant='h6' component='h1'>
+                  {`${selectedClient.firstName}'s`} Tanks
+                </Typography>
                 <Button variant='contained' onClick={handleOpenTankModal}>
                   <AddIcon />
                   Add Tank
@@ -138,13 +123,11 @@ export default function Clients() {
           </>
         )}
         {selectedClient?.OwnedTanks && (
-          <Grid xs={12} sm={12} item>
-            <Box sx={{ marginTop: 2, paddingLeft: 1, paddingRight: 1 }}>
-              <TanksCollapsibleTable
-                client={selectedClient}
-                tanks={selectedClient.OwnedTanks}
-              />
-            </Box>
+          <Grid item xs={12} sm={12} md={12} xl={12}>
+            <TanksCollapsibleTable
+              client={selectedClient}
+              tanks={selectedClient.OwnedTanks}
+            />
           </Grid>
         )}
       </Grid>

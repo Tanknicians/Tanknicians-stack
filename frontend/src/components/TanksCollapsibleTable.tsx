@@ -23,19 +23,15 @@ function Row(props: { row: UpdateTankMetaData }) {
   return (
     <>
       <TableRow onClick={() => setOpen(!open)}>
-        <TableCell sx={{ width: '22%' }} align='center'>
-          {row.volume}
-        </TableCell>
-        <TableCell sx={{ width: '22%' }} align='center'>
-          {row.type}
-        </TableCell>
-        <TableCell sx={{ width: '22%' }} align='center'>
+        <TableCell align='center'>{row.volume}</TableCell>
+        <TableCell align='center'>{row.type}</TableCell>
+        <TableCell align='center'>
           {row.tanknicianSourcedOnly ? 'Yes' : 'No'}
         </TableCell>
-        <TableCell sx={{ width: '22%' }} align='center'>
+        <TableCell align='center'>
           {new Date(row.lastDateServiced).toLocaleDateString()}
         </TableCell>
-        <TableCell sx={{ width: '12%' }} align='center'>
+        <TableCell align='center'>
           <IconButton size='small'>
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>

@@ -21,40 +21,25 @@ export default function UserCard(props: UserCardProps) {
   };
 
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        flexWrap: 'wrap',
-        '& > :not(style)': {
-          m: 1,
-          width: '100%',
-          height: 128
-        }
-      }}
-    >
-      <Paper elevation={2} sx={{ backgroundColor: 'white' }}>
-        <Box sx={{ margin: '2%' }}>
-          <Box sx={{ float: 'left', marginTop: 'auto', marginAuto: 'auto' }}>
-            {user && (
-              <>
-                <Typography variant='subtitle1' component='h2'>
-                  {`${user.firstName} ${user.lastName}`}
-                </Typography>
-                <Typography variant='subtitle1' component='h2'>
-                  {user.address}
-                </Typography>
-                <Typography variant='subtitle1' component='h2'>
-                  {user.phone}
-                </Typography>
-              </>
-            )}
-          </Box>
-          <Box sx={{ float: 'right' }}>
-            <Button variant='contained' onClick={handleOpenUserModal}>
-              <ModeEditOutlineOutlinedIcon />
-            </Button>
-          </Box>
-        </Box>
+    <>
+      <Paper elevation={2}>
+        {user && (
+          <>
+            <Typography variant='subtitle1' component='h2'>
+              {`${user.firstName} ${user.middleName} ${user.lastName}`}
+            </Typography>
+            <Typography variant='subtitle1' component='h2'>
+              {user.address}
+            </Typography>
+            <Typography variant='subtitle1' component='h2'>
+              {user.phone}
+            </Typography>
+          </>
+        )}
+
+        <Button variant='contained' onClick={handleOpenUserModal}>
+          <ModeEditOutlineOutlinedIcon />
+        </Button>
       </Paper>
       {userModalOpen && (
         <EditUserModal
@@ -64,6 +49,6 @@ export default function UserCard(props: UserCardProps) {
           key={user?.id}
         />
       )}
-    </Box>
+    </>
   );
 }
