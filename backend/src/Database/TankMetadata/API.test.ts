@@ -1,5 +1,5 @@
 /* 
-This test requires a specific heirarchy before testing a Tank Metadata:
+This test requires a specific hierarchy before testing a Tank Metadata:
 
 1. 1 User: 1 Customer
 2. 1 TankMetadata: tied to previous Customer
