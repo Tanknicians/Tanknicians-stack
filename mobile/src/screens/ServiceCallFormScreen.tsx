@@ -18,32 +18,18 @@ import {
 } from "../redux/slices/forms/servicecallTankSlice";
 import { StatusBar } from "expo-status-bar";
 import {
-  serviceFormFieldQuestionsBoolean,
-  serviceFormFieldQuestionsNumeric,
-  serviceFormFieldQuestionsText,
   ServiceFormData,
   serviceFormSchema,
   defaultServiceFormValues,
-} from "../types/ServiceFormandData";
-import { Text, SegmentedButtons, HelperText, Button } from "react-native-paper";
+  errorSchema,
+} from "../zodTypes";
+import { Text, Button } from "react-native-paper";
 import React, { useRef } from "react";
-import {
-  PRIMARY_COLOR,
-  SECONDARY_COLOR,
-  TERTIARY_COLOR,
-  ERROR_COLOR,
-  QUARTERNARY_COLOR,
-} from "../types/Styling";
-import {
-  Keyboard,
-  Platform,
-  StyleSheet,
-  TouchableOpacity,
-  TextInput as RNTextInput,
-  View,
-} from "react-native";
-import { errorSchema } from "../zodTypes";
+import { TERTIARY_COLOR } from "../types/Styling";
+import { Platform, TouchableOpacity, View } from "react-native";
+import servicecallstyles from "../styles/servicecall";
 import Icon from "react-native-vector-icons/FontAwesome";
+import ServiceCallFormQuestions from "../components/ServiceCallFormQuestions";
 
 type Props = NativeStackScreenProps<Routes, typeof SERVICECALLFORMSCREEN>;
 
@@ -62,8 +48,6 @@ const ServiceCallForm = ({ navigation }: Props) => {
     }
   };
 
-  console.log("clientTankId: ", clientTankId);
-
   const { control, handleSubmit, formState } = useForm<ServiceFormData>({
     defaultValues: defaultServiceFormValues,
     resolver: zodResolver(serviceFormSchema),
@@ -73,8 +57,6 @@ const ServiceCallForm = ({ navigation }: Props) => {
 
   // Scroll to top if there are errors
   if (errors && Object.keys(errors).length > 0) scrollToTop();
-
-  console.log("Validation Errors: ", errors);
 
   const onSubmit: SubmitHandler<ServiceFormData> = async (data) => {
     // Add employeeId, tankId, and date service call was created to data object
@@ -110,111 +92,12 @@ const ServiceCallForm = ({ navigation }: Props) => {
     }
   };
 
-  const renderedServiceFormQuestionsNumeric =
-    serviceFormFieldQuestionsNumeric.map(({ id, label }, index) => {
-      return (
-        <Controller
-          key={id}
-          control={control}
-          name={id}
-          rules={{ required: true }}
-          render={({ field: { onChange, onBlur, value } }) => (
-            <>
-              <Text style={styles.label}>{label}</Text>
-              <RNTextInput
-                keyboardType="numeric"
-                autoFocus={index === 0 ? true : false}
-                placeholder="0"
-                onBlur={onBlur}
-                value={value !== undefined ? String(value) : ""}
-                onChangeText={onChange}
-                style={[styles.input, errors?.[id] && styles.errorInput]}
-              />
-              <HelperText type="error" visible={!!errors[id]}>
-                {errors[id]?.message}
-              </HelperText>
-            </>
-          )}
-        />
-      );
-    });
-
-  const renderedServiceFormQuestionsBoolean =
-    serviceFormFieldQuestionsBoolean.map(({ id, label }) => (
-      <Controller
-        key={id}
-        control={control}
-        name={id}
-        rules={{ required: true }}
-        render={({ field: { onChange, value } }) => {
-          const handleValueChange = (newValue: string) => {
-            Keyboard.dismiss();
-            onChange(newValue === "true" ? true : false);
-          };
-          return (
-            <>
-              <Text style={styles.label}>{label}</Text>
-              <SegmentedButtons
-                value={value ? "true" : "false"}
-                onValueChange={handleValueChange}
-                buttons={[
-                  {
-                    label: "No",
-                    value: "false",
-                    checkedColor: TERTIARY_COLOR,
-                    style: value
-                      ? { backgroundColor: TERTIARY_COLOR }
-                      : { backgroundColor: QUARTERNARY_COLOR },
-                  },
-                  {
-                    label: "Yes",
-                    value: "true",
-                    checkedColor: TERTIARY_COLOR,
-                    uncheckedColor: PRIMARY_COLOR,
-                    style: value
-                      ? { backgroundColor: PRIMARY_COLOR }
-                      : { backgroundColor: TERTIARY_COLOR },
-                  },
-                ]}
-                style={styles.segmentedButtons}
-              />
-            </>
-          );
-        }}
-      />
-    ));
-
-  const renderedServiceFormQuestionsText = serviceFormFieldQuestionsText.map(
-    ({ id, label }) => (
-      <Controller
-        key={id}
-        control={control}
-        name={id}
-        rules={{ required: true }}
-        render={({ field: { onChange, onBlur, value } }) => (
-          <>
-            <Text style={styles.label}>{`${label} (optional)`}</Text>
-            <RNTextInput
-              key={id}
-              id={`${id}-input`}
-              onBlur={onBlur}
-              onChangeText={onChange}
-              value={value !== undefined ? String(value) : ""} // Convert value to a string explicitly or set it as an empty string if undefined
-              style={[styles.input, styles.multilineInput]}
-              multiline
-            />
-          </>
-        )}
-      />
-    ),
-  );
-
   return (
     <>
       {isLoading && <LoadingSpinner />}
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView style={servicecallstyles.container}>
         <StatusBar style="light" />
-        <View style={styles.headerContainer}>
+        <View style={servicecallstyles.headerContainer}>
           <Button
             icon={() => (
               <Icon name="chevron-left" size={26} color={TERTIARY_COLOR} />
@@ -223,12 +106,12 @@ const ServiceCallForm = ({ navigation }: Props) => {
             rippleColor="transparent"
             children={undefined}
           />
-          <Text style={styles.header}>Service Call Form</Text>
+          <Text style={servicecallstyles.header}>Service Call Form</Text>
         </View>
         <KeyboardAwareScrollView
           ref={scrollViewRef}
-          style={styles.keyboardAwareContainer}
-          contentContainerStyle={styles.keyboardAwareContent}
+          style={servicecallstyles.keyboardAwareContainer}
+          contentContainerStyle={servicecallstyles.keyboardAwareContent}
           keyboardDismissMode="on-drag"
           keyboardOpeningTime={0}
           keyboardShouldPersistTaps={"handled"}
@@ -241,19 +124,14 @@ const ServiceCallForm = ({ navigation }: Props) => {
             android: 120,
           })}
         >
-          {/* Questions with expected numeric answers */}
-          {renderedServiceFormQuestionsNumeric}
-          {/* Questions with expected boolean answers */}
-          {renderedServiceFormQuestionsBoolean}
-          {/* Questions with expected text answers */}
-          {renderedServiceFormQuestionsText}
-          <View style={styles.submitButtonContainer}>
+          <ServiceCallFormQuestions control={control} />
+          <View style={servicecallstyles.submitButtonContainer}>
             <TouchableOpacity
               onPress={handleSubmit(onSubmit)}
-              style={styles.submitButton}
+              style={servicecallstyles.submitButton}
               disabled={isLoading}
             >
-              <Text style={styles.submitButtonText}>Submit</Text>
+              <Text style={servicecallstyles.submitButtonText}>Submit</Text>
             </TouchableOpacity>
           </View>
         </KeyboardAwareScrollView>
@@ -263,81 +141,3 @@ const ServiceCallForm = ({ navigation }: Props) => {
 };
 
 export default ServiceCallForm;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: SECONDARY_COLOR,
-    paddingBottom: 30,
-  },
-  keyboardAwareContainer: {
-    flex: 1,
-    backgroundColor: TERTIARY_COLOR,
-    width: "100%",
-    borderWidth: 1,
-    borderRadius: 4,
-  },
-  headerContainer: {
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-    width: "100%",
-  },
-  header: {
-    fontStyle: "italic",
-    fontWeight: "bold",
-    fontSize: 32,
-    color: TERTIARY_COLOR,
-    marginTop: 15,
-    marginBottom: 15,
-  },
-  input: {
-    height: 50,
-    marginHorizontal: 0,
-    marginVertical: 5,
-    paddingHorizontal: 5,
-    borderWidth: 1,
-    borderRadius: 5,
-    backgroundColor: "white",
-  },
-  multilineInput: {
-    height: 75,
-  },
-  errorInput: {
-    borderColor: ERROR_COLOR,
-    borderWidth: 2,
-  },
-  inputView: {
-    marginBottom: 5,
-  },
-  label: {
-    fontSize: 16,
-  },
-  segmentedButtons: { marginTop: 8, marginBottom: 20 },
-  keyboardAwareContent: {
-    flexGrow: 1,
-    justifyContent: "center",
-    padding: 24,
-    paddingBottom: 20,
-  },
-  submitButtonContainer: {
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  submitButton: {
-    width: "80%",
-    backgroundColor: PRIMARY_COLOR,
-    borderRadius: 25,
-    height: 50,
-    alignItems: "center",
-    justifyContent: "center",
-    marginTop: 20,
-    marginBottom: 40,
-  },
-  submitButtonText: {
-    color: TERTIARY_COLOR,
-    fontSize: 20,
-  },
-});
