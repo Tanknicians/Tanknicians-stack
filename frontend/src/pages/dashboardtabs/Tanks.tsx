@@ -42,7 +42,9 @@ export function TankTabs({
   const [createServiceCallOpen, setCreateServiceCallOpen] = useState(false);
 
   const handleTankSelection = (event: SelectChangeEvent) => {
-    const selectedTank = tanks.find(({ id }) => id === parseInt(event.target.value));
+    const selectedTank = tanks.find(
+      ({ id }) => id === parseInt(event.target.value)
+    );
     setSelectedTank(selectedTank);
   };
   const handleAddTank = () => {
@@ -115,7 +117,9 @@ export function TankTabs({
                 >
                   {tanks.map((tank) => {
                     return (
-                      <MenuItem value={tank.id}>{tank.description ?? tank.id}</MenuItem>
+                      <MenuItem value={tank.id}>
+                        {tank.description ?? tank.id}
+                      </MenuItem>
                     );
                   })}
                 </Select>
