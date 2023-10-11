@@ -1,5 +1,5 @@
 /* 
-This test requires a specific heirarchy before testing a service call:
+This test requires a specific hierarchy before testing a service call:
 
 1. 2 User: 1 Customer, 1 Employee
 2. 1 TankMetadata: tied to previous Customer

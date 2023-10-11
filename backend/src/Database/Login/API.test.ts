@@ -8,7 +8,7 @@ import {
 } from "../../zodTypes";
 
 /* 
-This test requires a specific heirarchy before testing a Login:
+This test requires a specific hierarchy before testing a Login:
 
 1. 1 User: 1 Customer
 2. 1 Login: Tied to previous User
