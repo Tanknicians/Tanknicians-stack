@@ -1,10 +1,10 @@
 -- Create the Login table
 CREATE TABLE `Login` (
-    `id` INT NOT NULL AUTO_INCREMENT,
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
     `role` ENUM('ADMIN', 'CUSTOMER', 'EMPLOYEE') NOT NULL,
     `email` VARCHAR(191) NOT NULL,
     `password` VARCHAR(191) NOT NULL,
-    `userId` INT NOT NULL,
+    `userId` INTEGER NOT NULL,
     UNIQUE INDEX `Login_email_key`(`email`),
     INDEX `Login_userId_idx`(`userId`),
     PRIMARY KEY (`id`)
@@ -12,7 +12,7 @@ CREATE TABLE `Login` (
 
 -- Create the User table
 CREATE TABLE `User` (
-    `id` INT NOT NULL AUTO_INCREMENT,
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
     `firstName` VARCHAR(191) NULL,
     `middleName` VARCHAR(191) NULL,
     `lastName` VARCHAR(191) NULL,
@@ -24,7 +24,7 @@ CREATE TABLE `User` (
 
 -- Create the ServiceCall table
 CREATE TABLE `ServiceCall` (
-    `id` INT NOT NULL AUTO_INCREMENT,
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
     `isApproved` BOOLEAN NOT NULL DEFAULT false,
     `createdOn` DATETIME NOT NULL,
     `customerRequest` VARCHAR(191) NOT NULL,
@@ -53,8 +53,8 @@ CREATE TABLE `ServiceCall` (
     `pestBPresent` BOOLEAN NOT NULL,
     `pestCPresent` BOOLEAN NOT NULL,
     `pestDPresent` BOOLEAN NOT NULL,
-    `employeeId` INT NOT NULL,
-    `tankId` INT NOT NULL,
+    `employeeId` INTEGER NOT NULL,
+    `tankId` INTEGER NOT NULL,
     INDEX `ServiceCall_employeeId_idx`(`employeeId`),
     INDEX `ServiceCall_tankId_idx`(`tankId`),
     PRIMARY KEY (`id`)
@@ -62,25 +62,15 @@ CREATE TABLE `ServiceCall` (
 
 -- Create the TankMetadata table
 CREATE TABLE `TankMetadata` (
-    `id` INT NOT NULL AUTO_INCREMENT,
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
     `description` VARCHAR(191),
-    `volume` INT NOT NULL,
+    `volume` INTEGER NOT NULL,
     `type` ENUM('FRESH', 'SALT', 'BRACKISH') NOT NULL,
-    `qrSymbol` INT NOT NULL,
+    `qrSymbol` INTEGER NOT NULL,
     `tanknicianSourcedOnly` BOOLEAN NOT NULL,
     `lastDateServiced` DATETIME NOT NULL,
-    `customerId` INT NOT NULL,
+    `customerId` INTEGER NOT NULL,
     INDEX `TankMetadata_customerId_idx`(`customerId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
--- Add foreign key constraints
-ALTER TABLE `Login`
-    ADD CONSTRAINT `LoginUser` FOREIGN KEY (`userId`) REFERENCES `User` (`id`);
-
-ALTER TABLE `ServiceCall`
-    ADD CONSTRAINT `ServiceCallEmployee` FOREIGN KEY (`employeeId`) REFERENCES `User` (`id`),
-    ADD CONSTRAINT `ServiceCallTank` FOREIGN KEY (`tankId`) REFERENCES `TankMetadata` (`id`);
-
-ALTER TABLE `TankMetadata`
-    ADD CONSTRAINT `TankMetadataCustomer` FOREIGN KEY (`customerId`) REFERENCES `User` (`id`);
