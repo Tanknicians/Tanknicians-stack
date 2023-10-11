@@ -1,5 +1,5 @@
 import { create, read, update, deleteOne, search } from './API';
-import { CreateUser, UpdateUser, SearchSchema } from 'src/zodTypes';
+import { CreateUser, UpdateUser, SearchSchema } from '../../zodTypes';
 
 // we need to keep track of the id of the user to delete later
 let createUserId: number;
