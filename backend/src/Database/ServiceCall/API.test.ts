@@ -42,9 +42,9 @@ let createServiceCallId: number;
 const createServiceCall: CreateServiceCall = {
   isApproved: false,
   createdOn: new Date(),
-  customerRequest: "SC_TEST",
-  employeeNotes: "SC_TEST",
-  notApprovedNotes: "SC_TEST",
+  customerRequest: 'SC_TEST',
+  employeeNotes: 'SC_TEST',
+  notApprovedNotes: 'SC_TEST',
   notesUpdated: new Date(),
   alkalinity: 0,
   calcium: 0,
@@ -74,7 +74,7 @@ const createServiceCall: CreateServiceCall = {
 
 const createTankMetadata: CreateTankMetaData = {
   type: 'FRESH',
-  description: "SC_TEST",
+  description: 'SC_TEST',
   volume: 0,
   tanknicianSourcedOnly: false,
   customerId: 0,
