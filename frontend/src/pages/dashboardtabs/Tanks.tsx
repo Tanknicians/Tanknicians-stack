@@ -8,12 +8,8 @@ import type {} from '@mui/x-data-grid/themeAugmentation';
 import { useMemo, useState } from 'react';
 
 import CreateServiceCallModal from '../../components/forms/UpsertServiceCall';
-import Add from '@mui/icons-material/Add';
 import { UpdateTankMetaData } from '../../zodTypes';
 import {
-  Stack,
-  Tab,
-  Tabs,
   Divider,
   Button,
   Collapse,
@@ -24,14 +20,11 @@ import {
   Select,
   MenuItem,
   SelectChangeEvent,
-  InputLabel,
-  Menu,
   FormControl,
   Box,
   Card
 } from '@mui/material';
 import SCDataGrid from '../../components/SCDataGrid';
-import UserCard from '../../components/UserCard';
 import TankGrid from '../../components/datagrid/TankGrid';
 
 export function TankTabs({
@@ -45,23 +38,13 @@ export function TankTabs({
     UpdateTankMetaData | undefined
   >(tanks.at(0));
 
-  const [description, setDescription] = useState<string>(
-    selectedTank?.description ?? ''
-  );
-
   const [createTankOpen, setCreateTankOpen] = useState(false);
   const [createServiceCallOpen, setCreateServiceCallOpen] = useState(false);
-  const handleTankSelection = (event: SelectChangeEvent) => {
-    const selectedTankId = event.target.value;
-    const newTank = tanks.find(({ id }) => id === parseInt(selectedTankId));
-    if (newTank) {
-      setSelectedTank(newTank);
-      setDescription(event.target.value);
-    } else {
-      console.error("Selected tank id that isn't in tank list");
-    }
-  };
 
+  const handleTankSelection = (event: SelectChangeEvent) => {
+    const selectedTank = tanks.find(({ id }) => id === parseInt(event.target.value));
+    setSelectedTank(selectedTank);
+  };
   const handleAddTank = () => {
     setCreateTankOpen(true);
   };
@@ -122,14 +105,17 @@ export function TankTabs({
                   variant='standard'
                   labelId='tank-id-selector-label'
                   id='tank-id-selector'
-                  value={description}
+                  displayEmpty={true}
+                  renderValue={() => {
+                    return selectedTank.description ?? selectedTank.id;
+                  }}
                   onChange={handleTankSelection}
                   label='Tanks'
-                  sx={{ borderBottom: '0', textAlign: 'center' }}
+                  sx={{ textAlign: 'center' }}
                 >
                   {tanks.map((tank) => {
                     return (
-                      <MenuItem value={tank.id}>{tank.description}</MenuItem>
+                      <MenuItem value={tank.id}>{tank.description ?? tank.id}</MenuItem>
                     );
                   })}
                 </Select>
