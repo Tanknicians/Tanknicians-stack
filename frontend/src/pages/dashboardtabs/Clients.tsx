@@ -16,7 +16,7 @@ import { useMemo, useState } from 'react';
 import CreateUserModal from '../../components/forms/CreateUser';
 import TanksCollapsibleTable from '../../components/TanksCollapsibleTable';
 import UserGrid from '../../components/datagrid/UserGrid';
-import { CircularProgress, Paper } from '@mui/material';
+import { CircularProgress, Container, Paper } from '@mui/material';
 
 export default function Clients() {
   const userQueryArgs: UserQueryArgs = {
@@ -107,12 +107,13 @@ export default function Clients() {
             </Paper>
           </Collapse>
         </Grid>
-        {selectedClient && (
+        {selectedClient?.OwnedTanks && (
           <>
             <Grid item xs={12} sm={12} md={12} xl={12}>
               <Box display={'flex'} justifyContent={'space-between'}>
                 <Typography variant='h6' component='h1'>
-                  {`${selectedClient.firstName}'s`} Tanks
+                  {`${selectedClient.firstName} ${selectedClient.lastName}'s`}{' '}
+                  Tanks
                 </Typography>
                 <Button variant='contained' onClick={handleOpenTankModal}>
                   <AddIcon />
@@ -120,15 +121,16 @@ export default function Clients() {
                 </Button>
               </Box>
             </Grid>
+
+            <Grid item xs={12} sm={12} md={12} xl={12}>
+              <Container>
+                <TanksCollapsibleTable
+                  client={selectedClient}
+                  tanks={selectedClient.OwnedTanks}
+                />
+              </Container>
+            </Grid>
           </>
-        )}
-        {selectedClient?.OwnedTanks && (
-          <Grid item xs={12} sm={12} md={12} xl={12}>
-            <TanksCollapsibleTable
-              client={selectedClient}
-              tanks={selectedClient.OwnedTanks}
-            />
-          </Grid>
         )}
       </Grid>
       <CreateUserModal

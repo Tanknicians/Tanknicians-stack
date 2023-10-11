@@ -23,6 +23,7 @@ function Row(props: { row: UpdateTankMetaData }) {
   return (
     <>
       <TableRow onClick={() => setOpen(!open)}>
+        <TableCell align='center'>{row.description}</TableCell>
         <TableCell align='center'>{row.volume}</TableCell>
         <TableCell align='center'>{row.type}</TableCell>
         <TableCell align='center'>
@@ -31,6 +32,7 @@ function Row(props: { row: UpdateTankMetaData }) {
         <TableCell align='center'>
           {new Date(row.lastDateServiced).toLocaleDateString()}
         </TableCell>
+
         <TableCell align='center'>
           <IconButton size='small'>
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
@@ -40,40 +42,14 @@ function Row(props: { row: UpdateTankMetaData }) {
       <TableRow>
         <TableCell sx={{ py: 0 }} colSpan={12}>
           <Collapse in={open} timeout='auto' unmountOnExit>
-            <Box sx={{ padding: 1 }}>
-              <Grid container spacing={1}>
-                <Grid item xs={6} sm={6}>
-                  <Typography textAlign='center' variant='h6' gutterBottom>
-                    Description
-                  </Typography>
-                  {row.description ? (
-                    <Typography textAlign='center' variant='body1' gutterBottom>
-                      {row.description}
-                    </Typography>
-                  ) : (
-                    <Typography
-                      textAlign='center'
-                      variant='body1'
-                      gutterBottom
-                      component='div'
-                      fontStyle='italic'
-                    >
-                      No description
-                    </Typography>
-                  )}
-                </Grid>
-                <Grid item xs={6} sm={6}>
-                  <Typography textAlign='center' variant='h6' gutterBottom>
-                    QR Code
-                  </Typography>
-                  <QRCodeCard
-                    client={CURRENTCLIENT}
-                    tankId={row.id}
-                    qrSymbol={row.qrSymbol}
-                  />
-                </Grid>
-              </Grid>
-            </Box>
+            <Typography textAlign='center' variant='h6' gutterBottom>
+              QR Code
+            </Typography>
+            <QRCodeCard
+              client={CURRENTCLIENT}
+              tankId={row.id}
+              qrSymbol={row.qrSymbol}
+            />
           </Collapse>
         </TableCell>
       </TableRow>
@@ -89,23 +65,22 @@ export default function TanksCollapsibleTable({
 }: { client: UserData; tanks: UpdateTankMetaData[] }) {
   CURRENTCLIENT = client;
   return (
-    <TableContainer component={Paper} sx={{ maxHeight: 550 }}>
-      <Table size='small' stickyHeader>
-        <TableHead>
-          <TableRow>
-            <TableCell align='center'>Volume</TableCell>
-            <TableCell align='center'>Tank Type</TableCell>
-            <TableCell align='center'>Tanknicians' Sourced</TableCell>
-            <TableCell align='center'>Last Serviced</TableCell>
-            <TableCell />
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {tanks.map((tank) => (
-            <Row key={tank.id} row={tank} />
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+    <Table stickyHeader>
+      <TableHead>
+        <TableRow>
+          <TableCell align='center'>Name</TableCell>
+          <TableCell align='center'>Volume</TableCell>
+          <TableCell align='center'>Tank Type</TableCell>
+          <TableCell align='center'>Tanknicians' Sourced</TableCell>
+          <TableCell align='center'>Last Serviced</TableCell>
+          <TableCell />
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        {tanks.map((tank) => (
+          <Row key={tank.id} row={tank} />
+        ))}
+      </TableBody>
+    </Table>
   );
 }
