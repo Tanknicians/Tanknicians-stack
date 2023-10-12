@@ -172,25 +172,26 @@ export default function Tanks() {
 
   return (
     <>
-      <Container sx={{ p: 2 }}>
-        <Grid container sx={{ paddingBottom: '10px' }}>
-          <Grid item xs={12} sm={3}>
-            <Typography color='inherit' variant='h4' component='h1'>
+      <Container>
+        <Grid container spacing={1} maxWidth={'100%'}>
+          <Grid item xs={12} sm={12} md={3} xl={3}>
+            <Typography variant='h4' component='h1'>
               Tanks
             </Typography>
           </Grid>
-          <Grid item xs={6} sm={7}>
-            <Container maxWidth='sm'>
-              <UserSearchBar
-                userList={optionsList}
-                selectedUser={selectedUser}
-                handleUserSelected={handleUserSelected}
-              />
-            </Container>
+          <Grid item xs={12} sm={12} md={6} xl={6}>
+            <UserSearchBar
+              userList={optionsList}
+              selectedUser={selectedUser}
+              handleUserSelected={handleUserSelected}
+            />
           </Grid>
-          <Grid item xs={12}>
+          <Grid item xs={12} sm={12} md={3} xl={3} />
+          <Grid item xs={12} sm={12} md={12} xl={12}>
             <Collapse in={collapse}>
-              <Divider sx={{ marginTop: 1 }} />
+              <Typography variant='h4' gutterBottom>
+                Service Calls
+              </Typography>
               {selectedUser?.OwnedTanks && (
                 <TankTabs
                   key={selectedUser.id}

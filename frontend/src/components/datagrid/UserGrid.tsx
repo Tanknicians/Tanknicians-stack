@@ -5,13 +5,12 @@ import {
 } from '../../redux/slices/users/userManagementSlice';
 
 const userColumns: GridColDef<UserData>[] = [
-  { field: 'id', flex: 0 },
-  { field: 'isEmployee', flex: 1 },
-  { field: 'firstName', flex: 1 },
-  { field: 'middleName', flex: 1 },
-  { field: 'lastName', flex: 1 },
-  { field: 'address', flex: 2 },
-  { field: 'phone', flex: 1 }
+  { field: 'id', headerName: '', flex: 0 },
+  { field: 'firstName', headerName: 'First Name', flex: 1 },
+
+  { field: 'lastName', headerName: 'Last Name', flex: 1 },
+  { field: 'address', headerName: 'Address', flex: 2 },
+  { field: 'phone', headerName: 'Phone', flex: 1 }
 ];
 
 export default function UserGrid({
@@ -29,6 +28,7 @@ export default function UserGrid({
   });
   return (
     <DataGrid
+      rowBuffer={1}
       rows={users ?? []}
       columns={userColumns}
       getRowId={({ id }) => id}
