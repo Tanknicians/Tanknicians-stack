@@ -69,6 +69,7 @@ export default function Employees() {
             userList={optionsList}
             selectedUser={selectedUser}
             handleUserSelected={handleUserSelected}
+            label='Employees'
           />
         </Grid>
         <Grid xs={1} sm={1} item />

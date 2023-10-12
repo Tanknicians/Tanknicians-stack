@@ -12,6 +12,7 @@ type UserList = {
     _event: React.SyntheticEvent,
     value: UserData | null
   ) => void;
+  label: string;
 };
 
 const styles = {
@@ -44,7 +45,8 @@ function getUsersName(user: UserData) {
 export default function UserSearchBar({
   userList,
   handleUserSelected,
-  selectedUser
+  selectedUser,
+  label
 }: UserList) {
   return (
     <Autocomplete
@@ -62,7 +64,7 @@ export default function UserSearchBar({
       }
       sx={{ width: '100%', backgroundColor: 'white', borderRadius: '10px' }}
       renderInput={(params) => (
-        <TextField autoFocus {...params} label='Search User' />
+        <TextField autoFocus {...params} label={`Search ${label}`} />
       )}
       renderGroup={(params) => (
         <div {...params} style={styles.groupLabelContainer}>

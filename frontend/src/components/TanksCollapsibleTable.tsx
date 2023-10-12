@@ -99,7 +99,7 @@ export default function TanksCollapsibleTable({
           <TableRow>
             <TableCell align='center'>Volume</TableCell>
             <TableCell align='center'>Tank Type</TableCell>
-            <TableCell align='center'>Tanknicians' Sourced</TableCell>
+            <TableCell align='center'>Tanknicians-Sourced</TableCell>
             <TableCell align='center'>Last Serviced</TableCell>
             <TableCell />
           </TableRow>

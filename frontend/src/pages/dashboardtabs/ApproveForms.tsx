@@ -147,11 +147,11 @@ export default function ApproveForms() {
           >
             <TableHead>
               <TableRow>
-                <TableCell />
-                <TableCell>Technician</TableCell>
-                <TableCell>Client</TableCell>
-                <TableCell>Tank ID</TableCell>
-                <TableCell />
+                <TableCell align='center' />
+                <TableCell align='center'>Technician</TableCell>
+                <TableCell align='center'>Client</TableCell>
+                <TableCell align='center'>Tank ID</TableCell>
+                <TableCell align='center' />
               </TableRow>
             </TableHead>
             <TableBody>
@@ -160,15 +160,21 @@ export default function ApproveForms() {
                   key={object.id}
                   sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                 >
-                  <TableCell component='th' scope='row'>
+                  <TableCell component='th' scope='row' align='center'>
                     {index + 1}
                   </TableCell>
-                  <TableCell component='th' scope='row'>
+                  <TableCell
+                    component='th'
+                    scope='row'
+                    sx={{ textAlign: 'center' }}
+                  >
                     {getEmployeeName(object.employeeId)}
                   </TableCell>
-                  <TableCell>{getClientName(object.tankId)}</TableCell>
-                  <TableCell>{object.tankId}</TableCell>
-                  <TableCell>
+                  <TableCell align='center'>
+                    {getClientName(object.tankId)}
+                  </TableCell>
+                  <TableCell align='center'>{object.tankId}</TableCell>
+                  <TableCell align='center'>
                     <Button onClick={() => handleModalOpen(object)}>
                       <BorderColorIcon />
                     </Button>

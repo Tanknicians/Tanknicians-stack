@@ -135,6 +135,7 @@ export default function Tanks() {
                 userList={optionsList}
                 selectedUser={selectedUser}
                 handleUserSelected={handleUserSelected}
+                label='Clients'
               />
             </Container>
           </Grid>

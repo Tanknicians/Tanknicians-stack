@@ -78,6 +78,7 @@ export default function Clients() {
             userList={optionsList}
             selectedUser={selectedClient}
             handleUserSelected={handleUserSelected}
+            label='Clients'
           />
         </Grid>
         <Grid xs={1} sm={1} item />

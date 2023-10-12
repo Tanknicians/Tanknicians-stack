@@ -5,13 +5,48 @@ import {
 } from '../../redux/slices/users/userManagementSlice';
 
 const userColumns: GridColDef<UserData>[] = [
-  { field: 'id', flex: 0 },
-  { field: 'isEmployee', flex: 1 },
-  { field: 'firstName', flex: 1 },
-  { field: 'middleName', flex: 1 },
-  { field: 'lastName', flex: 1 },
-  { field: 'address', flex: 2 },
-  { field: 'phone', flex: 1 }
+  {
+    field: 'id',
+    headerName: 'ID',
+    flex: 0,
+    headerAlign: 'center',
+    align: 'center'
+  },
+  {
+    field: 'firstName',
+    headerName: 'First',
+    flex: 1,
+    headerAlign: 'center',
+    align: 'center'
+  },
+  {
+    field: 'middleName',
+    headerName: 'Middle',
+    flex: 1,
+    headerAlign: 'center',
+    align: 'center'
+  },
+  {
+    field: 'lastName',
+    headerName: 'Last',
+    flex: 1,
+    headerAlign: 'center',
+    align: 'center'
+  },
+  {
+    field: 'address',
+    headerName: 'Address',
+    flex: 2,
+    headerAlign: 'center',
+    align: 'center'
+  },
+  {
+    field: 'phone',
+    headerName: 'Phone',
+    flex: 1,
+    headerAlign: 'center',
+    align: 'center'
+  }
 ];
 
 export default function UserGrid({

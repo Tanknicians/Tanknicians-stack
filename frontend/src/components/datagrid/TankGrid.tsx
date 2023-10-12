@@ -3,20 +3,65 @@ import { UpdateTankMetaData } from '../../zodTypes';
 import { useGetAllTanksQuery } from '../../redux/slices/tanks/tankDataSlice';
 
 const tankColumns: GridColDef<UpdateTankMetaData>[] = [
-  { field: 'id', flex: 0 },
-  { field: 'type', flex: 1 },
-  { field: 'volume', flex: 1 },
-  { field: 'qrSymbol', flex: 1 },
-  { field: 'tanknicianSourcedOnly', flex: 1 },
+  {
+    field: 'id',
+    headerName: 'ID',
+    flex: 1,
+    headerAlign: 'center',
+    align: 'center'
+  },
+  {
+    field: 'description',
+    headerName: 'Nickname',
+    flex: 2,
+    headerAlign: 'center',
+    align: 'center'
+  },
+  {
+    field: 'type',
+    headerName: 'Type',
+    flex: 2,
+    headerAlign: 'center',
+    align: 'center'
+  },
+  {
+    field: 'volume',
+    headerName: 'Volume',
+    flex: 1,
+    headerAlign: 'center',
+    align: 'center'
+  },
+  {
+    field: 'qrSymbol',
+    headerName: 'QR Symbol',
+    flex: 1,
+    headerAlign: 'center',
+    align: 'center'
+  },
+  {
+    field: 'tanknicianSourcedOnly',
+    headerName: 'Tanknician-sourced Only',
+    flex: 2,
+    headerAlign: 'center',
+    align: 'center'
+  },
   {
     field: 'lastDateServiced',
-    flex: 1,
+    flex: 2,
+    headerAlign: 'center',
+    align: 'center',
+    headerName: 'Last Date Serviced',
     valueGetter({ row }) {
       return new Date(row.lastDateServiced).toDateString();
     }
   },
-  { field: 'customerId', flex: 1 },
-  { field: 'description', flex: 1 }
+  {
+    field: 'customerId',
+    headerName: 'Customer ID',
+    flex: 1,
+    headerAlign: 'center',
+    align: 'center'
+  }
 ];
 export default function TankGrid({
   hideToolbar,
