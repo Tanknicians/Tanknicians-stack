@@ -1,38 +1,38 @@
 import {
   UserData,
-  useGetClientsQuery,
-} from "../../redux/slices/users/userManagementSlice";
-import CreateTankForm from "../../components/forms/CreateTank";
-import UserSearchBar from "../../components/UserSearchBar";
-import Typography from "@mui/material/Typography";
-import UserCard from "../../components/UserCard";
-import Collapse from "@mui/material/Collapse";
-import AddIcon from "@mui/icons-material/Add";
-import Button from "@mui/material/Button";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
-import { useMemo, useState } from "react";
-import CreateUserModal from "../../components/forms/CreateUser";
-import TanksCollapsibleTable from "../../components/TanksCollapsibleTable";
-import UserGrid from "../../components/datagrid/UserGrid";
-import { CircularProgress, Container, Paper } from "@mui/material";
+  useGetClientsQuery
+} from '../../redux/slices/users/userManagementSlice';
+import CreateTankForm from '../../components/forms/CreateTank';
+import UserSearchBar from '../../components/UserSearchBar';
+import Typography from '@mui/material/Typography';
+import UserCard from '../../components/UserCard';
+import Collapse from '@mui/material/Collapse';
+import AddIcon from '@mui/icons-material/Add';
+import Button from '@mui/material/Button';
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
+import { useMemo, useState } from 'react';
+import CreateUserModal from '../../components/forms/CreateUser';
+import TanksCollapsibleTable from '../../components/TanksCollapsibleTable';
+import UserGrid from '../../components/datagrid/UserGrid';
+import { CircularProgress, Container, Paper } from '@mui/material';
 
 export default function Clients() {
   const { data: optionsList, error } = useGetClientsQuery({
     includeTanks: true,
-    isEmployee: false,
+    isEmployee: false
   });
   const [tankModalOpen, setTankModalOpen] = useState(false);
   const [clientModalOpen, setClientModalOpen] = useState(false);
   const [selectedClientId, setSelectedClientId] = useState<number | null>(null);
   const selectedClient = useMemo(
     () => optionsList?.find((client) => client.id === selectedClientId) ?? null,
-    [optionsList, selectedClientId],
+    [optionsList, selectedClientId]
   );
 
   const handleUserSelected = (
     _event: React.SyntheticEvent,
-    client: UserData | null,
+    client: UserData | null
   ) => {
     setSelectedClientId(client?.id ?? null);
   };
@@ -49,11 +49,9 @@ export default function Clients() {
 
   return (
     <Container>
-      {/* This box has a grid with the page title in one cell, a section to put a search bar in the middle cell, and a container for a button in the far right cell */}
-
-      <Grid container spacing={1} maxWidth={"100%"}>
+      <Grid container spacing={1} maxWidth={'100%'}>
         <Grid item xs={12} sm={12} md={3} xl={3}>
-          <Typography variant="h4" component="h1">
+          <Typography variant='h4' component='h1'>
             Clients
           </Typography>
         </Grid>
@@ -67,16 +65,16 @@ export default function Clients() {
         <Grid item xs={12} sm={12} md={3} xl={3}>
           <Box
             sx={{
-              display: "flex",
+              display: 'flex',
               justifyContent: {
-                xs: "flex-start",
-                sm: "flex-start",
-                md: "flex-end",
-              },
+                xs: 'flex-start',
+                sm: 'flex-start',
+                md: 'flex-end'
+              }
             }}
           >
             <Button
-              variant="contained"
+              variant='contained'
               onClick={handleOpenUserModal}
               startIcon={<AddIcon />}
             >
@@ -108,13 +106,13 @@ export default function Clients() {
         {selectedClient?.OwnedTanks && (
           <>
             <Grid item xs={12} sm={12} md={12} xl={12}>
-              <Box display={"flex"} justifyContent={"space-between"}>
-                <Typography variant="h6" component="h1">
-                  {`${selectedClient.firstName} ${selectedClient.lastName}'s`}{" "}
+              <Box display={'flex'} justifyContent={'space-between'}>
+                <Typography variant='h6' component='h1'>
+                  {`${selectedClient.firstName} ${selectedClient.lastName}'s`}{' '}
                   Tanks
                 </Typography>
                 <Button
-                  variant="contained"
+                  variant='contained'
                   onClick={handleOpenTankModal}
                   startIcon={<AddIcon />}
                 >

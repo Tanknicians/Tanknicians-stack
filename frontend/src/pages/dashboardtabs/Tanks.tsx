@@ -1,15 +1,15 @@
 import {
   UserData,
-  useGetClientsQuery,
-} from "../../redux/slices/users/userManagementSlice";
-import CreateTankForm from "../../components/forms/CreateTank";
-import UserSearchBar from "../../components/UserSearchBar";
-import type {} from "@mui/x-data-grid/themeAugmentation";
-import { useMemo, useState } from "react";
+  useGetClientsQuery
+} from '../../redux/slices/users/userManagementSlice';
+import CreateTankForm from '../../components/forms/CreateTank';
+import UserSearchBar from '../../components/UserSearchBar';
+import type {} from '@mui/x-data-grid/themeAugmentation';
+import { useMemo, useState } from 'react';
 
-import CreateServiceCallModal from "../../components/forms/UpsertServiceCall";
-import Add from "@mui/icons-material/Add";
-import { UpdateTankMetaData } from "../../zodTypes";
+import CreateServiceCallModal from '../../components/forms/UpsertServiceCall';
+import Add from '@mui/icons-material/Add';
+import { UpdateTankMetaData } from '../../zodTypes';
 import {
   Stack,
   Tab,
@@ -20,15 +20,15 @@ import {
   Container,
   Grid,
   Typography,
-  Paper,
-} from "@mui/material";
-import SCDataGrid from "../../components/SCDataGrid";
-import UserCard from "../../components/UserCard";
-import TankGrid from "../../components/datagrid/TankGrid";
+  Paper
+} from '@mui/material';
+import SCDataGrid from '../../components/SCDataGrid';
+import UserCard from '../../components/UserCard';
+import TankGrid from '../../components/datagrid/TankGrid';
 
 export function TankTabs({
   tanks,
-  employeeId,
+  employeeId
 }: {
   tanks: UpdateTankMetaData[];
   employeeId: number;
@@ -47,11 +47,11 @@ export function TankTabs({
         open={createTankOpen}
         setOpen={setCreateTankOpen}
       />
-      <Stack direction="row" justifyContent="left">
+      <Stack direction='row' justifyContent='left'>
         <Tabs
           value={selectedTank ? selectedTank.id : false}
-          onChange={(_, newTankId: number | "create") => {
-            if (typeof newTankId === "number") {
+          onChange={(_, newTankId: number | 'create') => {
+            if (typeof newTankId === 'number') {
               const newTank = tanks.find(({ id }) => id === newTankId);
               if (newTank) {
                 setSelectedTank(newTank);
@@ -75,10 +75,10 @@ export function TankTabs({
               tanks.length ? (
                 <Add />
               ) : (
-                <Button variant="outlined">Add Tank</Button>
+                <Button variant='outlined'>Add Tank</Button>
               )
             }
-            value="create"
+            value='create'
           />
         </Tabs>
       </Stack>
@@ -101,19 +101,19 @@ export function TankTabs({
 export default function Tanks() {
   const { data: optionsList } = useGetClientsQuery({
     includeTanks: true,
-    isEmployee: false,
+    isEmployee: false
   });
   const [selectedUserId, selectCurrentUserId] = useState<number | null>(null);
   const selectedUser = useMemo(
     () => optionsList?.find((user) => user.id === selectedUserId) ?? null,
-    [optionsList, selectedUserId],
+    [optionsList, selectedUserId]
   );
 
   const collapse = !!selectedUser;
 
   const handleUserSelected = (
     _event: React.SyntheticEvent,
-    customer: UserData | null,
+    customer: UserData | null
   ) => {
     selectCurrentUserId(customer?.id ?? null);
   };
@@ -123,9 +123,9 @@ export default function Tanks() {
   return (
     <>
       <Container>
-        <Grid container spacing={1} maxWidth={"100%"}>
+        <Grid container spacing={1} maxWidth={'100%'}>
           <Grid item xs={12} sm={12} md={3} xl={3}>
-            <Typography variant="h4" component="h1">
+            <Typography variant='h4' component='h1'>
               Tanks
             </Typography>
           </Grid>
@@ -139,7 +139,7 @@ export default function Tanks() {
           <Grid item xs={12} sm={12} md={3} xl={3} />
           <Grid item xs={12} sm={12} md={12} xl={12}>
             <Collapse in={collapse}>
-              <Typography variant="h4" gutterBottom>
+              <Typography variant='h4' gutterBottom>
                 Service Calls
               </Typography>
               {selectedUser?.OwnedTanks && (
