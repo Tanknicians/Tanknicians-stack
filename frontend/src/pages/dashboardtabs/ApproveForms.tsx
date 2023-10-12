@@ -80,7 +80,7 @@ export default function ApproveForms() {
   }
 
   return (
-    <>
+    <Container>
       <Grid container spacing={1} maxWidth={"100%"}>
         <Grid item xs={12} sm={12} md={12} xl={12}>
           <Typography variant="h4" component="h1">
@@ -135,6 +135,6 @@ export default function ApproveForms() {
           previousServiceCall={serviceCall}
         />
       )}
-    </>
+    </Container>
   );
 }

@@ -15,7 +15,7 @@ import { useMemo, useState } from "react";
 import CreateUserModal from "../../components/forms/CreateUser";
 import TanksCollapsibleTable from "../../components/TanksCollapsibleTable";
 import UserGrid from "../../components/datagrid/UserGrid";
-import { CircularProgress, Paper } from "@mui/material";
+import { CircularProgress, Container, Paper } from "@mui/material";
 
 export default function Clients() {
   const { data: optionsList, error } = useGetClientsQuery({
@@ -48,7 +48,7 @@ export default function Clients() {
   if (!optionsList) return <CircularProgress />;
 
   return (
-    <>
+    <Container>
       {/* This box has a grid with the page title in one cell, a section to put a search bar in the middle cell, and a container for a button in the far right cell */}
 
       <Grid container spacing={1} maxWidth={"100%"}>
@@ -137,6 +137,6 @@ export default function Clients() {
         setOpen={setClientModalOpen}
         isEmployee={false}
       />
-    </>
+    </Container>
   );
 }

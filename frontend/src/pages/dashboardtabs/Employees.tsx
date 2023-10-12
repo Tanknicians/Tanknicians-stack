@@ -13,7 +13,7 @@ import Box from "@mui/material/Box";
 import { useMemo, useState } from "react";
 import CreateUserModal from "../../components/forms/CreateUser";
 import UserGrid from "../../components/datagrid/UserGrid";
-import { CircularProgress, Paper } from "@mui/material";
+import { CircularProgress, Container, Paper } from "@mui/material";
 import SCDataGrid from "../../components/SCDataGrid";
 
 export default function Employees() {
@@ -47,7 +47,7 @@ export default function Employees() {
 
   if (!optionsList) return <CircularProgress />;
   return (
-    <>
+    <Container>
       {/* This box has a grid with the page title in one cell, a section to put a search bar in the middle cell, and a container for a button in the far right cell */}
       <Grid container spacing={1} maxWidth={"100%"}>
         <Grid item xs={12} sm={12} md={3} xl={3}>
@@ -102,6 +102,6 @@ export default function Employees() {
         setOpen={setEmployeeModalOpen}
         isEmployee={true}
       />
-    </>
+    </Container>
   );
 }
