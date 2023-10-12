@@ -13,7 +13,7 @@ import Box from '@mui/material/Box';
 import { useMemo, useState } from 'react';
 import CreateUserModal from '../../components/forms/CreateUser';
 import UserGrid from '../../components/datagrid/UserGrid';
-import { Paper } from '@mui/material';
+import { CircularProgress, Container, Paper } from '@mui/material';
 import SCDataGrid from '../../components/SCDataGrid';
 
 export default function Employees() {
@@ -22,62 +22,54 @@ export default function Employees() {
     isEmployee: true
   });
 
-  const [userModalOpen, setUserModalOpen] = useState(false);
+  const [employeeModalOpen, setEmployeeModalOpen] = useState(false);
 
-  const [selectedUserId, selectCurrentUserId] = useState<number | null>(null);
-  const selectedUser = useMemo(
+  const [selectedEmplyeeId, setSelectedEmplyeeId] = useState<number | null>(
+    null
+  );
+  const selectedEmployee = useMemo(
     () =>
-      optionsList?.find((user: UserData) => user.id === selectedUserId) ?? null,
-    [optionsList, selectedUserId]
+      optionsList?.find((user: UserData) => user.id === selectedEmplyeeId) ??
+      null,
+    [optionsList, selectedEmplyeeId]
   );
 
   const handleUserSelected = (
     _event: React.SyntheticEvent,
-    customer: UserData | null
+    employee: UserData | null
   ) => {
-    selectCurrentUserId(customer?.id ?? null);
+    setSelectedEmplyeeId(employee?.id ?? null);
   };
 
   const handleOpenUserModal = () => {
-    setUserModalOpen((prevState) => !prevState);
+    setEmployeeModalOpen((prevState) => !prevState);
   };
 
-  if (!optionsList) return <div>Loading...</div>;
+  if (!optionsList) return <CircularProgress />;
   return (
-    <>
-      {/* This box has a grid with the page title in one cell, a section to put a search bar in the middle cell, and a container for a button in the far right cell */}
-      <Grid
-        container
-        spacing={1}
-        sx={{ padding: '20px', margin: 'auto', maxWidth: '1200px' }}
-        justifyContent='center'
-        alignItems='center'
-      >
-        <Grid item xs={2} sm={2}>
-          <Typography
-            color='inherit'
-            variant='h4'
-            component='h1'
-            align='center'
-          >
+    <Container>
+      <Grid container spacing={1} maxWidth={'100%'}>
+        <Grid item xs={12} sm={12} md={3} xl={3}>
+          <Typography variant='h4' component='h1'>
             Employees
           </Typography>
         </Grid>
-        <Grid xs={1} sm={1} item />
-        <Grid item xs={6} sm={6}>
+        <Grid item xs={12} sm={12} md={6} xl={6}>
           <UserSearchBar
             userList={optionsList}
-            selectedUser={selectedUser}
+            selectedUser={selectedEmployee}
             handleUserSelected={handleUserSelected}
           />
         </Grid>
-        <Grid xs={1} sm={1} item />
-        <Grid item xs={2} sm={2}>
+        <Grid item xs={12} sm={12} md={3} xl={3}>
           <Box
             sx={{
               display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center'
+              justifyContent: {
+                xs: 'flex-start',
+                sm: 'flex-start',
+                md: 'flex-end'
+              }
             }}
           >
             <Button variant='contained' onClick={handleOpenUserModal}>
@@ -86,30 +78,29 @@ export default function Employees() {
             </Button>
           </Box>
         </Grid>
-        <Grid xs={1} sm={1} item />
-        <Grid xs={12} sm={12} item>
-          <Collapse in={!!selectedUser}>
-            <UserCard user={selectedUser} />
+        <Grid item xs={12} sm={12} md={12} xl={12}>
+          <Collapse in={!!selectedEmployee} unmountOnExit>
+            <UserCard user={selectedEmployee} />
+            {selectedEmplyeeId && (
+              <SCDataGrid employeeId={selectedEmplyeeId} tank={undefined} />
+            )}
           </Collapse>
-          <Collapse in={!selectedUser} unmountOnExit>
+          <Collapse in={!selectedEmployee} unmountOnExit>
             <Paper>
               <UserGrid
                 hideToolbar
                 isEmployee={true}
-                selectUserId={selectCurrentUserId}
+                selectUserId={setSelectedEmplyeeId}
               />
             </Paper>
           </Collapse>
         </Grid>
-        <CreateUserModal
-          open={userModalOpen}
-          setOpen={setUserModalOpen}
-          isEmployee={true}
-        />
-        {selectedUserId && (
-          <SCDataGrid employeeId={selectedUserId} tank={undefined} />
-        )}
       </Grid>
-    </>
+      <CreateUserModal
+        open={employeeModalOpen}
+        setOpen={setEmployeeModalOpen}
+        isEmployee={true}
+      />
+    </Container>
   );
 }
