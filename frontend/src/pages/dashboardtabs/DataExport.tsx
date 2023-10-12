@@ -15,21 +15,16 @@ function CustomTabPanel(props: TabPanelProps) {
 
   return (
     <div
-      role="tabpanel"
+      role='tabpanel'
       hidden={value !== index}
       id={`simple-tabpanel-${index}`}
       aria-labelledby={`simple-tab-${index}`}
       {...other}
     >
-      {value === index && (
-        <Box>
-          {children}
-        </Box>
-      )}
+      {value === index && <Box>{children}</Box>}
     </div>
   );
 }
-
 
 export default function DataExport() {
   const [value, setValue] = useState(0);
@@ -46,47 +41,52 @@ export default function DataExport() {
           </Typography>
         </Grid>
 
-        <Grid item xs={12} sm={12} md={12} xl={12} sx ={{marginTop: 0, paddingTop: 0}}>
-          <Tabs  value={value} onChange={handleChange}>
-            <Tab  label = 'Clients'/>
-            <Tab  label = 'Employees'/>
-            <Tab  label = 'Tanks'/>
-            <Tab  label = 'Service Calls'/>
+        <Grid
+          item
+          xs={12}
+          sm={12}
+          md={12}
+          xl={12}
+          sx={{ marginTop: 0, paddingTop: 0 }}
+        >
+          <Tabs value={value} onChange={handleChange}>
+            <Tab label='Clients' />
+            <Tab label='Employees' />
+            <Tab label='Tanks' />
+            <Tab label='Service Calls' />
           </Tabs>
           <CustomTabPanel value={value} index={0}>
-          <Stack height={'100vh'} spacing={2} component={Paper} padding={2}>
-            <Typography variant='h6' component='h1'>
-              All Clients
-            </Typography>
-            <UserGrid isEmployee={false}/>
-          </Stack>
+            <Stack height={'100vh'} spacing={2} component={Paper} padding={2}>
+              <Typography variant='h6' component='h1'>
+                All Clients
+              </Typography>
+              <UserGrid isEmployee={false} />
+            </Stack>
           </CustomTabPanel>
           <CustomTabPanel value={value} index={1}>
-          <Stack height={'100vh'} spacing={2} component={Paper} padding={2}>
-            <Typography variant='h6' component='h1'>
-              All Employees
-            </Typography>
-            <UserGrid isEmployee = {true}/>
-          </Stack>
+            <Stack height={'100vh'} spacing={2} component={Paper} padding={2}>
+              <Typography variant='h6' component='h1'>
+                All Employees
+              </Typography>
+              <UserGrid isEmployee={true} />
+            </Stack>
           </CustomTabPanel>
           <CustomTabPanel value={value} index={2}>
-          <Stack height={'100vh'} spacing={2} component={Paper} padding={2}>
-          <Typography variant='h6' component='h1'>
-              All Tanks
-            </Typography>
-            <TankGrid />
-          </Stack>
-
+            <Stack height={'100vh'} spacing={2} component={Paper} padding={2}>
+              <Typography variant='h6' component='h1'>
+                All Tanks
+              </Typography>
+              <TankGrid />
+            </Stack>
           </CustomTabPanel>
           <CustomTabPanel value={value} index={3}>
-          <Stack height={'100vh'} spacing={2} component={Paper} padding={2}>
-            <Typography variant='h6' component='h1'>
-              All Service Calls
-            </Typography>
-            <ServiceFormGrid />
-          </Stack>
+            <Stack height={'100vh'} spacing={2} component={Paper} padding={2}>
+              <Typography variant='h6' component='h1'>
+                All Service Calls
+              </Typography>
+              <ServiceFormGrid />
+            </Stack>
           </CustomTabPanel>
-          
         </Grid>
       </Grid>
     </Container>
