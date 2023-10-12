@@ -8,22 +8,23 @@ import type {} from '@mui/x-data-grid/themeAugmentation';
 import { useMemo, useState } from 'react';
 
 import CreateServiceCallModal from '../../components/forms/UpsertServiceCall';
-import Add from '@mui/icons-material/Add';
 import { UpdateTankMetaData } from '../../zodTypes';
 import {
-  Stack,
-  Tab,
-  Tabs,
   Divider,
   Button,
   Collapse,
   Container,
   Grid,
   Typography,
-  Paper
+  Paper,
+  Select,
+  MenuItem,
+  SelectChangeEvent,
+  FormControl,
+  Box,
+  Card
 } from '@mui/material';
 import SCDataGrid from '../../components/SCDataGrid';
-import UserCard from '../../components/UserCard';
 import TankGrid from '../../components/datagrid/TankGrid';
 
 export function TankTabs({
@@ -40,6 +41,16 @@ export function TankTabs({
   const [createTankOpen, setCreateTankOpen] = useState(false);
   const [createServiceCallOpen, setCreateServiceCallOpen] = useState(false);
 
+  const handleTankSelection = (event: SelectChangeEvent) => {
+    const selectedTank = tanks.find(
+      ({ id }) => id === parseInt(event.target.value)
+    );
+    setSelectedTank(selectedTank);
+  };
+  const handleAddTank = () => {
+    setCreateTankOpen(true);
+  };
+
   return (
     <>
       <CreateTankForm
@@ -47,43 +58,82 @@ export function TankTabs({
         open={createTankOpen}
         setOpen={setCreateTankOpen}
       />
-      <Stack direction='row' justifyContent='left'>
-        <Tabs
-          value={selectedTank ? selectedTank.id : false}
-          onChange={(_, newTankId: number | 'create') => {
-            if (typeof newTankId === 'number') {
-              const newTank = tanks.find(({ id }) => id === newTankId);
-              if (newTank) {
-                setSelectedTank(newTank);
-              } else {
-                console.error("Selected tank id that isn't in tank list");
-              }
-            } else {
-              setCreateTankOpen(true);
-            }
+      {!selectedTank && (
+        <Container
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            height: '100%'
           }}
         >
-          {tanks.map((tank) => (
-            <Tab
-              label={`Tank: ${tank.qrSymbol}`}
-              value={tank.id}
-              key={tank.id}
-            />
-          ))}
-          <Tab
-            label={
-              tanks.length ? (
-                <Add />
-              ) : (
-                <Button variant='outlined'>Add Tank</Button>
-              )
-            }
-            value='create'
-          />
-        </Tabs>
-      </Stack>
+          <Card
+            elevation={3}
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              maxWidth: 300,
+              padding: 5,
+              minHeight: 200,
+              marginTop: 10
+            }}
+          >
+            <Typography variant='h6'>This user has no tanks.</Typography>
+            <Button
+              sx={{ maxHeight: 40, marginBottom: 1 }}
+              variant='outlined'
+              onClick={handleAddTank}
+            >
+              Add Tank
+            </Button>
+          </Card>
+        </Container>
+      )}
       {selectedTank && (
         <>
+          <Box>
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'flex-end',
+                justifyContent: 'space-between'
+              }}
+            >
+              <FormControl variant='standard' sx={{ m: 1, minWidth: 160 }}>
+                <Select
+                  autoWidth
+                  variant='standard'
+                  labelId='tank-id-selector-label'
+                  id='tank-id-selector'
+                  displayEmpty={true}
+                  renderValue={() => {
+                    return selectedTank.description ?? selectedTank.id;
+                  }}
+                  onChange={handleTankSelection}
+                  label='Tanks'
+                  sx={{ textAlign: 'center' }}
+                >
+                  {tanks.map((tank) => {
+                    return (
+                      <MenuItem value={tank.id}>
+                        {tank.description ?? tank.id}
+                      </MenuItem>
+                    );
+                  })}
+                </Select>
+              </FormControl>
+              <Button
+                sx={{ maxHeight: 40, marginBottom: 1 }}
+                variant='outlined'
+                onClick={handleAddTank}
+              >
+                Add Tank
+              </Button>
+            </Box>
+            <Typography variant='h6'>Service Calls</Typography>
+          </Box>
           <CreateServiceCallModal
             key={selectedTank.id}
             open={createServiceCallOpen}
@@ -157,16 +207,6 @@ export default function Tanks() {
             </Collapse>
           </Grid>
         </Grid>
-        <Divider />
-        <Collapse in={collapse}>
-          {selectedUser?.OwnedTanks && (
-            <TankTabs
-              key={selectedUser.id}
-              tanks={selectedUser.OwnedTanks}
-              employeeId={selectedUser.id}
-            />
-          )}
-        </Collapse>
       </Container>
     </>
   );

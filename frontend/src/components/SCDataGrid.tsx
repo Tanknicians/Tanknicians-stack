@@ -30,7 +30,7 @@ export default function SCDataGrid({
     number | undefined
   >();
 
-  const { data: clients, error } = useGetClientsQuery({
+  const { data: clients } = useGetClientsQuery({
     includeTanks: true,
     isEmployee: undefined
   });
@@ -104,7 +104,7 @@ export default function SCDataGrid({
     );
 
     // TODO does not go to <Link /Tanks?tankId=id> or something...
-    // Also should code some way to navigate back from link
+    // Also should code some way to navigate back from link...Breadcrumbs?
     // (unless desired state is saved through normal page navigation)
     const goToTankButton = (params: GridRenderCellParams) => {
       return (
@@ -289,16 +289,11 @@ export default function SCDataGrid({
   //
   //
   else if (tank) {
-    // Get Clients list with tanks included to find Technician and Client name associated with the service record
-    const { data: clients, isLoading } = useGetClientsQuery({
-      includeTanks: true,
-      isEmployee: undefined
-    });
     const { data: serviceCallsForTankID } = useGetServiceCallByTankIdQuery({
       tankId: tank.id
     });
 
-    if (!serviceCallsForTankID) return <div>error</div>;
+    if (!serviceCallsForTankID) return <div>no serviceCallsForTankID</div>;
 
     columns = [
       {
