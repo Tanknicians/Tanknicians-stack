@@ -1,6 +1,7 @@
 import { format } from "date-fns";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
+  Box,
   Button,
   Checkbox,
   CircularProgress,
@@ -24,6 +25,11 @@ import {
 } from "../../zodTypes";
 import { useSelector } from "react-redux";
 import { selectCurrentUser } from "../../redux/slices/auth/authSlice";
+import UserSearchBar from "../UserSearchBar";
+import {
+  useGetClientsQuery,
+  useGetUserQuery,
+} from "../../redux/slices/users/userManagementSlice";
 
 type FormProps = {
   name: keyof CreateServiceCall;
@@ -116,10 +122,9 @@ export function CreateForm({
 }
 
 const createServiceCallFields: Record<
-  keyof CreateServiceCall,
+  keyof Omit<CreateServiceCall, "employeeId">,
   Omit<FormProps, "name" | "control">
 > = {
-  employeeId: { type: "number", required: true, size: 4 },
   tankId: { type: "number", required: true, size: 4 },
   createdOn: { type: "date", required: true, size: 4 },
   customerRequest: { type: "string", size: 12 },
@@ -178,7 +183,7 @@ export default function CreateServiceCallModal({
   open,
   setOpen,
   tankId,
-  employeeId,
+  employeeId: prevEmployeeId,
   previousServiceCall,
 }: {
   open: boolean;
@@ -191,6 +196,11 @@ export default function CreateServiceCallModal({
   let previousValues: undefined | CreateServiceCall;
   const loggedInUser = useSelector(selectCurrentUser);
 
+  const { data: employees } = useGetClientsQuery({
+    includeTanks: true,
+    isEmployee: true,
+  });
+
   if (previousServiceCall) {
     const { id: _id, ..._previousValues } = previousServiceCall;
     id = _id;
@@ -199,16 +209,19 @@ export default function CreateServiceCallModal({
 
   const isEdit = !!previousServiceCall && !!id && !!previousValues;
 
-  const { handleSubmit, control, reset, setValue, getValues } =
+  const { handleSubmit, control, reset, setValue, watch } =
     useForm<CreateServiceCall>({
       resolver: zodResolver(createServiceCallSchema),
       defaultValues: {
         ...defaultValues,
         ...previousValues,
         tankId,
-        employeeId: isEdit ? employeeId : loggedInUser.userId,
+        employeeId: isEdit ? prevEmployeeId : loggedInUser.userId,
       },
     });
+  const employeeId = watch("employeeId");
+  const employee =
+    employees?.find((employee) => employee.id === employeeId) ?? null;
 
   function handleClose() {
     setOpen(false);
@@ -258,6 +271,20 @@ export default function CreateServiceCallModal({
       </DialogTitle>
       <DialogContent>
         <Grid container spacing={2} paddingTop={1}>
+          <Grid item xs={4}>
+            {employees ? (
+              <UserSearchBar
+                userList={employees ?? []}
+                selectedUser={employee}
+                handleUserSelected={(_, user) =>
+                  user?.id && setValue("employeeId", user.id)
+                }
+                label="Employee"
+              />
+            ) : (
+              <Box>Loading...</Box>
+            )}
+          </Grid>
           {fields.map((field) => (
             <CreateForm key={field.name} control={control} {...field} />
           ))}
