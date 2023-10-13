@@ -189,11 +189,7 @@ const item = {
 const StyledBadge = styled(Badge)<BadgeProps>(({ theme }) => ({
   '& .MuiBadge-badge': {
     right: 8,
-    // left: -5,
     top: 13
-
-    // border: `2px solid ${theme.palette.background.paper}`,
-    //padding: '0 4px',
   }
 }));
 
@@ -227,7 +223,8 @@ export default function Paperbase() {
 
   return (
     <ThemeProvider theme={theme}>
-      <Box sx={{ display: 'flex' }}>
+      {/* the 100 vh is part of the MUI boilerplate code, pls dont remove without a good reason */}
+      <Box sx={{ display: 'flex', height: '100vh' }}>
         <CssBaseline />
         <Box
           component='nav'
@@ -255,7 +252,6 @@ export default function Paperbase() {
             flex: 1,
             display: 'flex',
             flexDirection: 'column'
-            // height: '1000px'
           }}
         >
           <AppBar color='primary' position='sticky' elevation={0}>
@@ -299,7 +295,12 @@ export default function Paperbase() {
               </Grid>
             </Toolbar>
           </AppBar>
-          <Content />
+          <Box
+            component='main'
+            sx={{ flex: 1, py: 6, px: 4, bgcolor: '#eaeff1' }}
+          >
+            <Content />
+          </Box>
         </Box>
       </Box>
     </ThemeProvider>

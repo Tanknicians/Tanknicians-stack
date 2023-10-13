@@ -22,12 +22,12 @@ export const servicecallApiSlice = apiSlice.injectEndpoints({
     }),
     getServiceCallByTankId: builder.query<
       ServiceCall[],
-      { tankId: number; onlyApprovedForms?: boolean }
+      { tankId: number; isApproved?: boolean }
     >({
-      query: ({ tankId, onlyApprovedForms }) => ({
-        url: `/api/database/servicecall/fromTank/${tankId}?`,
+      query: ({ tankId, isApproved }) => ({
+        url: `/api/database/servicecall/fromTank/${tankId}`,
         method: 'GET',
-        params: { isApproved: !!onlyApprovedForms }
+        params: { isApproved: isApproved }
       })
     }),
     getUnapprovedServiceCalls: builder.query<ServiceCall[], void>({

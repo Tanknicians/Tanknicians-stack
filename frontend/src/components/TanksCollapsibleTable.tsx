@@ -23,61 +23,39 @@ function Row(props: { row: UpdateTankMetaData }) {
   return (
     <>
       <TableRow onClick={() => setOpen(!open)}>
-        <TableCell sx={{ width: '22%' }} align='center'>
+        {/* <TableCell align="center" sx={{ flex: 1 }}>
+          {row.description}
+        </TableCell> */}
+        <TableCell align='center' sx={{ flex: 1 }}>
           {row.volume}
         </TableCell>
-        <TableCell sx={{ width: '22%' }} align='center'>
+        <TableCell align='center' sx={{ flex: 1 }}>
           {row.type}
         </TableCell>
-        <TableCell sx={{ width: '22%' }} align='center'>
+        <TableCell align='center' sx={{ flex: 1 }}>
           {row.tanknicianSourcedOnly ? 'Yes' : 'No'}
         </TableCell>
-        <TableCell sx={{ width: '22%' }} align='center'>
+        <TableCell align='center' sx={{ flex: 1 }}>
           {new Date(row.lastDateServiced).toLocaleDateString()}
         </TableCell>
-        <TableCell sx={{ width: '12%' }} align='center'>
+
+        <TableCell align='center' sx={{ flex: 1 }}>
           <IconButton size='small'>
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
         </TableCell>
       </TableRow>
       <TableRow>
-        <TableCell sx={{ py: 0 }} colSpan={12}>
+        <TableCell sx={{ py: 0, flex: 1 }} colSpan={6}>
           <Collapse in={open} timeout='auto' unmountOnExit>
-            <Box sx={{ padding: 1 }}>
-              <Grid container spacing={1}>
-                <Grid item xs={6} sm={6}>
-                  <Typography textAlign='center' variant='h6' gutterBottom>
-                    Description
-                  </Typography>
-                  {row.description ? (
-                    <Typography textAlign='center' variant='body1' gutterBottom>
-                      {row.description}
-                    </Typography>
-                  ) : (
-                    <Typography
-                      textAlign='center'
-                      variant='body1'
-                      gutterBottom
-                      component='div'
-                      fontStyle='italic'
-                    >
-                      No description
-                    </Typography>
-                  )}
-                </Grid>
-                <Grid item xs={6} sm={6}>
-                  <Typography textAlign='center' variant='h6' gutterBottom>
-                    QR Code
-                  </Typography>
-                  <QRCodeCard
-                    client={CURRENTCLIENT}
-                    tankId={row.id}
-                    qrSymbol={row.qrSymbol}
-                  />
-                </Grid>
-              </Grid>
-            </Box>
+            <Typography textAlign='center' variant='h6' gutterBottom>
+              QR Code
+            </Typography>
+            <QRCodeCard
+              client={CURRENTCLIENT}
+              tankId={row.id}
+              qrSymbol={row.qrSymbol}
+            />
           </Collapse>
         </TableCell>
       </TableRow>
@@ -93,14 +71,25 @@ export default function TanksCollapsibleTable({
 }: { client: UserData; tanks: UpdateTankMetaData[] }) {
   CURRENTCLIENT = client;
   return (
-    <TableContainer component={Paper} sx={{ maxHeight: 550 }}>
-      <Table size='small' stickyHeader>
+    <TableContainer component={Paper} sx={{ width: '100%' }}>
+      <Table stickyHeader size='small'>
         <TableHead>
           <TableRow>
-            <TableCell align='center'>Volume</TableCell>
-            <TableCell align='center'>Tank Type</TableCell>
-            <TableCell align='center'>Tanknicians' Sourced</TableCell>
-            <TableCell align='center'>Last Serviced</TableCell>
+            {/* <TableCell align="center" sx={{ flex: 1 }}>
+              Name
+            </TableCell> */}
+            <TableCell align='center' sx={{ flex: 1 }}>
+              Volume
+            </TableCell>
+            <TableCell align='center' sx={{ flex: 1 }}>
+              Tank Type
+            </TableCell>
+            <TableCell align='center' sx={{ flex: 1 }}>
+              Tanknicians' Sourced
+            </TableCell>
+            <TableCell align='center' sx={{ flex: 1 }}>
+              Last Serviced
+            </TableCell>
             <TableCell />
           </TableRow>
         </TableHead>
