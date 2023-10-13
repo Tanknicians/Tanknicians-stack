@@ -1,14 +1,14 @@
 import {
   UserData,
-  useGetClientsQuery
-} from '../../redux/slices/users/userManagementSlice';
-import CreateTankForm from '../../components/forms/CreateTank';
-import UserSearchBar from '../../components/UserSearchBar';
-import type {} from '@mui/x-data-grid/themeAugmentation';
-import { useMemo, useState } from 'react';
+  useGetClientsQuery,
+} from "../../redux/slices/users/userManagementSlice";
+import CreateTankForm from "../../components/forms/CreateTank";
+import UserSearchBar from "../../components/UserSearchBar";
+import type {} from "@mui/x-data-grid/themeAugmentation";
+import { useEffect, useMemo, useState } from "react";
 
-import CreateServiceCallModal from '../../components/forms/UpsertServiceCall';
-import { UpdateTankMetaData } from '../../zodTypes';
+import CreateServiceCallModal from "../../components/forms/UpsertServiceCall";
+import { UpdateTankMetaData } from "../../zodTypes";
 import {
   Divider,
   Button,
@@ -22,21 +22,27 @@ import {
   SelectChangeEvent,
   FormControl,
   Box,
-  Card
-} from '@mui/material';
-import SCDataGrid from '../../components/SCDataGrid';
-import TankGrid from '../../components/datagrid/TankGrid';
+  Card,
+} from "@mui/material";
+import SCDataGrid from "../../components/SCDataGrid";
+import TankGrid from "../../components/datagrid/TankGrid";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export function TankTabs({
   tanks,
-  employeeId
+  employeeId,
+  selectedTankId,
+  setSelectedTankId,
 }: {
   tanks: UpdateTankMetaData[];
   employeeId: number;
+  selectedTankId: number | null;
+  setSelectedTankId(tankId: number | null): void;
 }) {
-  const [selectedTank, setSelectedTank] = useState<
-    UpdateTankMetaData | undefined
-  >(tanks.at(0));
+  const selectedTank = useMemo(
+    () => tanks.find((tank) => tank.id === selectedTankId) ?? null,
+    [selectedTankId, tanks]
+  );
 
   const [createTankOpen, setCreateTankOpen] = useState(false);
   const [createServiceCallOpen, setCreateServiceCallOpen] = useState(false);
@@ -45,7 +51,7 @@ export function TankTabs({
     const selectedTank = tanks.find(
       ({ id }) => id === parseInt(event.target.value)
     );
-    setSelectedTank(selectedTank);
+    setSelectedTankId(selectedTank?.id ?? null);
   };
   const handleAddTank = () => {
     setCreateTankOpen(true);
@@ -62,29 +68,29 @@ export function TankTabs({
       {!selectedTank && (
         <Container
           sx={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            height: '100%'
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            height: "100%",
           }}
         >
           <Card
             elevation={3}
             sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
               maxWidth: 300,
               padding: 5,
               minHeight: 200,
-              marginTop: 10
+              marginTop: 10,
             }}
           >
-            <Typography variant='h6'>This user has no tanks.</Typography>
+            <Typography variant="h6">This user has no tanks.</Typography>
             <Button
               sx={{ maxHeight: 40, marginBottom: 1 }}
-              variant='outlined'
+              variant="outlined"
               onClick={handleAddTank}
             >
               Add Tank
@@ -97,24 +103,24 @@ export function TankTabs({
           <Box>
             <Box
               sx={{
-                display: 'flex',
-                alignItems: 'flex-end',
-                justifyContent: 'space-between'
+                display: "flex",
+                alignItems: "flex-end",
+                justifyContent: "space-between",
               }}
             >
-              <FormControl variant='standard' sx={{ m: 1, minWidth: 160 }}>
+              <FormControl variant="standard" sx={{ m: 1, minWidth: 160 }}>
                 <Select
                   autoWidth
-                  variant='standard'
-                  labelId='tank-id-selector-label'
-                  id='tank-id-selector'
+                  variant="standard"
+                  labelId="tank-id-selector-label"
+                  id="tank-id-selector"
                   displayEmpty={true}
                   renderValue={() => {
                     return selectedTank.description ?? selectedTank.id;
                   }}
                   onChange={handleTankSelection}
-                  label='Tanks'
-                  sx={{ textAlign: 'center' }}
+                  label="Tanks"
+                  sx={{ textAlign: "center" }}
                 >
                   {tanks.map((tank) => {
                     return (
@@ -127,7 +133,7 @@ export function TankTabs({
               </FormControl>
               <Button
                 sx={{ maxHeight: 40, marginBottom: 1 }}
-                variant='outlined'
+                variant="outlined"
                 onClick={handleAddTank}
               >
                 Add Tank
@@ -136,7 +142,7 @@ export function TankTabs({
           </Box>
           <Paper elevation={3}>
             <Container>
-              <Typography variant='h6'>Service Calls</Typography>
+              <Typography variant="h6">Service Calls</Typography>
             </Container>
             <SCDataGrid tank={selectedTank} employeeId={undefined} />
           </Paper>
@@ -156,13 +162,38 @@ export function TankTabs({
 export default function Tanks() {
   const { data: optionsList } = useGetClientsQuery({
     includeTanks: true,
-    isEmployee: false
+    isEmployee: false,
   });
+  const location = useLocation();
+  const urlTankId = useMemo(
+    () => new URLSearchParams(location.search).get("tankId"),
+    [location]
+  );
+  const [selectedTankId, setSelectedTankId] = useState<number | null>(
+    Number(urlTankId) ?? null
+  );
   const [selectedUserId, selectCurrentUserId] = useState<number | null>(null);
   const selectedUser = useMemo(
     () => optionsList?.find((user) => user.id === selectedUserId) ?? null,
     [optionsList, selectedUserId]
   );
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (!selectedTankId || selectedUserId || !optionsList) {
+      return;
+    }
+    const userId =
+      optionsList.find((user) =>
+        user.OwnedTanks?.some((tank) => tank.id === selectedTankId)
+      )?.id ?? null;
+    if (userId) {
+      selectCurrentUserId(userId);
+      console.log({ userId });
+    } else {
+      console.log("missing", { selectedTankId });
+      navigate("/Dashboard/tanks");
+    }
+  }, [selectedUserId, selectedTankId, optionsList]);
 
   const collapse = !!selectedUser;
 
@@ -177,9 +208,9 @@ export default function Tanks() {
 
   return (
     <Container>
-      <Grid container rowSpacing={1} alignItems='center' maxWidth={'100%'}>
+      <Grid container rowSpacing={1} alignItems="center" maxWidth={"100%"}>
         <Grid item xs={12} md={3}>
-          <Typography variant='h4' component='h1'>
+          <Typography variant="h4" component="h1">
             Tanks
           </Typography>
         </Grid>
@@ -188,7 +219,7 @@ export default function Tanks() {
             userList={optionsList}
             selectedUser={selectedUser}
             handleUserSelected={handleUserSelected}
-            label='Clients'
+            label="Clients"
           />
         </Grid>
         <Grid item xs={12} md={3} />
@@ -199,6 +230,8 @@ export default function Tanks() {
                 key={selectedUser.id}
                 tanks={selectedUser.OwnedTanks}
                 employeeId={selectedUser.id}
+                selectedTankId={selectedTankId}
+                setSelectedTankId={setSelectedTankId}
               />
             )}
           </Collapse>
