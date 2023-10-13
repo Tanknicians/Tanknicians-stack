@@ -3,31 +3,24 @@ import { View, TouchableOpacity, Platform, Keyboard } from "react-native";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { useLoginMutation } from "../redux/slices/auth/authApiSlice";
 import { setCredentials } from "../redux/slices/auth/authSlice";
+import { AuthLogin, errorSchema, authLogin } from "../types/zodTypes";
 import { SafeAreaView } from "react-native-safe-area-context";
 import LoadingSpinner from "../components/LoadingSpinner";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Text, TextInput } from "react-native-paper";
-import {
-  PRIMARY_COLOR,
-  SECONDARY_COLOR,
-  TERTIARY_COLOR,
-  ERROR_COLOR,
-} from "../types/Styling";
+import { PRIMARY_COLOR } from "../types/Styling";
 import { StatusBar } from "expo-status-bar";
 import { useDispatch } from "react-redux";
-import { StyleSheet } from "react-native";
 import React, { useState } from "react";
 import Logo from "../components/Logo";
-import { AuthLogin, errorSchema, authLogin } from "../zodTypes";
+import styles from "../styles/login";
 
 const LOGINERRORMESSAGE = "Incorrect email/password combination";
 
 const LoginScreen = () => {
   const [login, { isLoading }] = useLoginMutation();
-  const [loginError, setLoginError] = useState({
-    errorMessage: "",
-    isLoginError: false,
-  });
+  const [loginErrorMessage, setLoginErrorMessage] = useState("");
+
   const dispatch = useDispatch();
   const {
     control,
@@ -54,29 +47,21 @@ const LoginScreen = () => {
       const err = errorSchema.parse(unparsedError);
       if (!err?.status) {
         // isLoading: true until timeout occurs
-        setLoginError({
-          errorMessage: "No Server Response",
-          isLoginError: true,
-        });
+        setLoginErrorMessage("No Server Response");
       } else if (err?.status === 400) {
         console.log(`Login error ${err.status}: `, err.data?.message);
-        setLoginError({
-          errorMessage: LOGINERRORMESSAGE,
-          isLoginError: true,
-        });
+        setLoginErrorMessage(LOGINERRORMESSAGE);
       } else {
         console.log(`Login error ${err.status}: `, err.data?.message);
-        setLoginError({
-          errorMessage: err.data?.message,
-          isLoginError: true,
-        });
+        setLoginErrorMessage(err.data?.message);
       }
     }
   };
 
-  const onPressForgotPassword = () => {
-    console.log("onPressForgotPassword Function not implemented.");
-  };
+  // TODO: implement feature
+  // const onPressForgotPassword = () => {
+  //   console.log("onPressForgotPassword Function not implemented.");
+  // };
 
   return (
     <>
@@ -115,11 +100,12 @@ const LoginScreen = () => {
                   placeholder="Email Address"
                   onBlur={field.onBlur}
                   mode="outlined"
-                  error={!!fieldState.error || loginError?.isLoginError}
+                  error={!!fieldState.error || !!loginErrorMessage}
                   onChangeText={field.onChange}
                   activeOutlineColor={PRIMARY_COLOR}
                   autoCorrect={false}
                   value={field.value}
+                  autoCapitalize="none"
                   disabled={isLoading} // Disable input while loading
                 />
               </View>
@@ -138,27 +124,28 @@ const LoginScreen = () => {
                   placeholder="Password"
                   onBlur={field.onBlur}
                   mode="outlined"
-                  error={!!fieldState.error || loginError?.isLoginError}
+                  error={!!fieldState.error || !!loginErrorMessage}
                   onChangeText={field.onChange}
                   activeOutlineColor={PRIMARY_COLOR}
                   secureTextEntry={true}
                   autoCorrect={false}
                   value={field.value}
+                  autoCapitalize="none"
                   disabled={isLoading} // Disable input while loading
                 />
               </View>
             )}
           />
-          <View style={styles.forgotPasswordContainer}>
+          {/* <View style={styles.forgotPasswordContainer}>
             <TouchableOpacity
               onPress={onPressForgotPassword}
               disabled={isLoading}
             >
               <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
             </TouchableOpacity>
-          </View>
-          {loginError?.isLoginError && (
-            <Text style={styles.errorText}>{loginError.errorMessage}</Text>
+          </View> */}
+          {loginErrorMessage && (
+            <Text style={styles.errorText}>{loginErrorMessage}</Text>
           )}
           <TouchableOpacity
             style={styles.submitButton}
@@ -175,71 +162,5 @@ const LoginScreen = () => {
     </>
   );
 };
-
-export const styles = StyleSheet.create({
-  loginContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: SECONDARY_COLOR,
-  },
-  title: {
-    fontWeight: "bold",
-    fontSize: 50,
-    color: TERTIARY_COLOR,
-    marginTop: 14,
-    marginBottom: 18,
-    paddingBottom: 8,
-  },
-  errorInput: {
-    borderColor: ERROR_COLOR,
-    borderWidth: 3,
-  },
-  errorText: {
-    color: ERROR_COLOR,
-    fontSize: 16,
-  },
-  forgotPasswordContainer: {
-    width: "100%",
-    alignItems: "flex-end",
-    marginBottom: 20,
-  },
-  forgotPasswordText: {
-    color: TERTIARY_COLOR,
-    fontSize: 14,
-    textDecorationLine: "underline",
-  },
-  keyboardAwareContainer: {
-    flex: 1,
-  },
-  keyboardAwareContent: {
-    flexGrow: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  label: {
-    color: TERTIARY_COLOR,
-    fontSize: 16,
-  },
-  inputView: {
-    width: "100%",
-    marginVertical: 10,
-    justifyContent: "center",
-  },
-  submitButton: {
-    width: "80%",
-    backgroundColor: PRIMARY_COLOR,
-    borderRadius: 25,
-    height: 50,
-    alignItems: "center",
-    justifyContent: "center",
-    marginTop: 24,
-    marginBottom: 10,
-  },
-  submitButtonText: {
-    color: TERTIARY_COLOR,
-    fontSize: 20,
-  },
-});
 
 export default LoginScreen;

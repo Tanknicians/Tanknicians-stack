@@ -3,10 +3,9 @@ import {
   PRIMARY_COLOR,
   SECONDARY_COLOR,
   TERTIARY_COLOR,
-  ERROR_COLOR,
 } from "../types/Styling";
 
-const servicecallstyles = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
@@ -79,4 +78,4 @@ const servicecallstyles = StyleSheet.create({
   },
 });
 
-export default servicecallstyles;
+export default styles;

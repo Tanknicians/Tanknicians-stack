@@ -3,7 +3,7 @@ import {
   serviceFormFieldQuestionsNumeric,
   serviceFormFieldQuestionsBoolean,
   serviceFormFieldQuestionsText,
-} from "../zodTypes";
+} from "../types/zodTypes";
 import {
   PRIMARY_COLOR,
   QUARTERNARY_COLOR,

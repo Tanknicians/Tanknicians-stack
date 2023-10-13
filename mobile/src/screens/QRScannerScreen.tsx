@@ -4,7 +4,7 @@ import {
   PermissionStatus,
 } from "expo-barcode-scanner";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { Alert, View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { Alert, View, Text, TouchableOpacity } from "react-native";
 import { setTankId } from "../redux/slices/forms/servicecallTankSlice";
 import {
   QRSCANNERSCREEN,
@@ -13,14 +13,11 @@ import {
 } from "../types/Routes";
 import { SafeAreaView } from "react-native-safe-area-context";
 import BarcodeMask from "react-native-barcode-mask";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { useDispatch } from "react-redux";
-import {
-  SECONDARY_COLOR,
-  TERTIARY_COLOR,
-  getScreenDimensions,
-} from "../types/Styling";
+import { TERTIARY_COLOR, getScreenDimensions } from "../types/Styling";
+import styles from "../styles/qrscreen";
 
 // Allows to scan QR code only if in mask area
 const finderWidth: number = 280;
@@ -50,7 +47,7 @@ const QRScannerScreen = ({ navigation }: Props) => {
   if (hasPermission === null) {
     return (
       <View style={styles.permissionContainer}>
-        <Text style={styles.promptText}>Requesting for camera permission</Text>
+        <Text style={styles.promptText}>Requesting for camera permissions</Text>
       </View>
     );
   }
@@ -58,7 +55,7 @@ const QRScannerScreen = ({ navigation }: Props) => {
     return (
       <View style={styles.permissionContainer}>
         <Text style={styles.promptText}>
-          No access to camera. {"\n\n"}Please enable camera permission in phone
+          No access to camera. {"\n\n"}Please enable camera permissions in phone
           settings
         </Text>
       </View>
@@ -153,67 +150,3 @@ const QRScannerScreen = ({ navigation }: Props) => {
 };
 
 export default QRScannerScreen;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: SECONDARY_COLOR,
-    paddingTop: 20,
-    paddingBottom: 30,
-  },
-  permissionContainer: {
-    flex: 1,
-    backgroundColor: SECONDARY_COLOR,
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 16,
-  },
-  barcodeContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    position: "relative",
-  },
-  scanner: {
-    ...StyleSheet.absoluteFillObject,
-    flex: 1,
-  },
-  overlay: {
-    flex: 1,
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "flex-end",
-    marginTop: 60,
-    marginBottom: "10%",
-    padding: 16,
-  },
-  flipButton: {
-    backgroundColor: "transparent",
-    padding: 10,
-  },
-  flipButtonText: {
-    fontSize: 18,
-    margin: 5,
-    color: "white",
-  },
-  promptText: {
-    fontSize: 18,
-    color: TERTIARY_COLOR,
-    textAlign: "center",
-  },
-  headerContainer: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    width: "100%",
-    position: "absolute",
-    backgroundColor: SECONDARY_COLOR,
-  },
-  header: {
-    fontStyle: "italic",
-    fontWeight: "bold",
-    fontSize: 34,
-    color: "#F3FAFF",
-    paddingBottom: 15,
-  },
-});
