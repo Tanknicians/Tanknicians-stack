@@ -10,7 +10,6 @@ import { useMemo, useState } from 'react';
 import CreateServiceCallModal from '../../components/forms/UpsertServiceCall';
 import { UpdateTankMetaData } from '../../zodTypes';
 import {
-  Divider,
   Button,
   Collapse,
   Container,
@@ -26,6 +25,7 @@ import {
 } from '@mui/material';
 import SCDataGrid from '../../components/SCDataGrid';
 import TankGrid from '../../components/datagrid/TankGrid';
+import { Add } from '@mui/icons-material';
 
 export function TankTabs({
   tanks,
@@ -131,6 +131,14 @@ export function TankTabs({
                 onClick={handleAddTank}
               >
                 Add Tank
+              </Button>
+              <Button
+                size='small'
+                variant='contained'
+                onClick={() => setCreateServiceCallOpen(true)}
+                startIcon={<Add fontSize='inherit' />}
+              >
+                Add Service Form
               </Button>
             </Box>
           </Box>
