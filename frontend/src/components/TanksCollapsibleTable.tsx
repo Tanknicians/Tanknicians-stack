@@ -75,7 +75,7 @@ export default function TanksCollapsibleTable({
         <TableHead>
           <TableRow>
             <TableCell align='center' sx={{ flex: 1 }}>
-              Name
+              Nickname
             </TableCell>
             <TableCell align='center' sx={{ flex: 1 }}>
               Volume

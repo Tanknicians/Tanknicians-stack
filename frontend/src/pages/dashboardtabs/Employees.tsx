@@ -24,21 +24,21 @@ export default function Employees() {
 
   const [employeeModalOpen, setEmployeeModalOpen] = useState(false);
 
-  const [selectedEmplyeeId, setSelectedEmplyeeId] = useState<number | null>(
+  const [selectedEmployeeId, setSelectedEmployeeId] = useState<number | null>(
     null
   );
   const selectedEmployee = useMemo(
     () =>
-      optionsList?.find((user: UserData) => user.id === selectedEmplyeeId) ??
+      optionsList?.find((user: UserData) => user.id === selectedEmployeeId) ??
       null,
-    [optionsList, selectedEmplyeeId]
+    [optionsList, selectedEmployeeId]
   );
 
   const handleUserSelected = (
     _event: React.SyntheticEvent,
     employee: UserData | null
   ) => {
-    setSelectedEmplyeeId(employee?.id ?? null);
+    setSelectedEmployeeId(employee?.id ?? null);
   };
 
   const handleOpenUserModal = () => {
@@ -80,8 +80,10 @@ export default function Employees() {
         <Grid item xs={12} md={12}>
           <Collapse in={!!selectedEmployee} unmountOnExit>
             <UserCard user={selectedEmployee} />
-            {selectedEmplyeeId && (
-              <SCDataGrid employeeId={selectedEmplyeeId} tank={undefined} />
+            {selectedEmployeeId && (
+              <Paper elevation={3}>
+                <SCDataGrid employeeId={selectedEmployeeId} tank={undefined} />
+              </Paper>
             )}
           </Collapse>
           <Collapse in={!selectedEmployee} unmountOnExit>
@@ -89,7 +91,7 @@ export default function Employees() {
               <UserGrid
                 hideToolbar
                 isEmployee={true}
-                selectUserId={setSelectedEmplyeeId}
+                selectUserId={setSelectedEmployeeId}
               />
             </Paper>
           </Collapse>
