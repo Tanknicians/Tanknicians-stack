@@ -19,7 +19,7 @@ emailRouter.post(
           : 'Unknown Error: Failed to reset password';
       res.status(500).json({ error: errorMessage });
     }
-  },
+  }
 );
 
 export default emailRouter;

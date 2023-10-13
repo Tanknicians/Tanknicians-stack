@@ -7,7 +7,7 @@ import {
   RefreshToken,
   refreshTokenSchema,
   Token,
-  tokenSchema,
+  tokenSchema
 } from './../zodTypes';
 
 dotenv.config();
@@ -25,7 +25,7 @@ export function generateToken(login: Prisma.Login): string {
   const expiresIn = '24h';
   const payload: Token = {
     data: login,
-    isRefreshToken: false,
+    isRefreshToken: false
   };
   return jwt.sign(payload, jwtSecret, { expiresIn });
 }
@@ -36,7 +36,7 @@ export function generateRefreshToken(login: Prisma.Login): string {
   const expiresIn = '7d';
   const payload: RefreshToken = {
     data: login,
-    isRefreshToken: true,
+    isRefreshToken: true
   };
   return jwt.sign(payload, jwtRefreshSecret, { expiresIn });
 }

@@ -8,7 +8,7 @@ import {
   createUser,
   searchSchema,
   updateUser,
-  validateRequestBody,
+  validateRequestBody
 } from '../../zodTypes';
 import { z } from 'zod';
 
@@ -32,7 +32,7 @@ userRouter.post(
           : 'Unknown Error: Failed to create User';
       res.status(500).json({ error: errorMessage });
     }
-  },
+  }
 );
 
 // Read User
@@ -51,7 +51,7 @@ userRouter.get(
           : 'Unknown Error: Failed to read User';
       res.status(500).json({ error: errorMessage });
     }
-  },
+  }
 );
 
 // Read all Users and Tanks
@@ -62,7 +62,7 @@ userRouter.get(
     const requestData = z
       .object({
         includeTanks: z.boolean().optional().default(false),
-        isEmployee: z.boolean().optional(),
+        isEmployee: z.boolean().optional()
       })
       .safeParse(req.query);
     if (!requestData.success) {
@@ -81,7 +81,7 @@ userRouter.get(
           : 'Unknown Error: Failed to read all Users and Tanks';
       res.status(500).json({ error: errorMessage });
     }
-  },
+  }
 );
 
 // Update User
@@ -102,7 +102,7 @@ userRouter.put(
           : 'Unknown Error: Failed to update User';
       res.status(500).json({ error: errorMessage });
     }
-  },
+  }
 );
 
 // Delete User
@@ -121,7 +121,7 @@ userRouter.delete(
           : 'Unknown Error: Failed to delete User';
       res.status(500).json({ error: errorMessage });
     }
-  },
+  }
 );
 
 // Search User
@@ -145,7 +145,7 @@ userRouter.get(
           : 'Unknown Error: Failed to search User';
       res.status(500).json({ error: errorMessage });
     }
-  },
+  }
 );
 
 export default userRouter;

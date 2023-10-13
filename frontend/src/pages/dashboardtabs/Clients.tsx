@@ -49,26 +49,25 @@ export default function Clients() {
 
   return (
     <Container>
-      <Grid container spacing={1} maxWidth={'100%'}>
-        <Grid item xs={12} sm={12} md={3} xl={3}>
+      <Grid container rowSpacing={2} maxWidth={'100%'} alignItems='center'>
+        <Grid item xs={12} md={3}>
           <Typography variant='h4' component='h1'>
             Clients
           </Typography>
         </Grid>
-        <Grid item xs={12} sm={12} md={6} xl={6}>
+        <Grid item xs={12} md={6}>
           <UserSearchBar
             userList={optionsList}
             selectedUser={selectedClient}
             handleUserSelected={handleUserSelected}
+            label='Clients'
           />
         </Grid>
-        <Grid item xs={12} sm={12} md={3} xl={3}>
+        <Grid item xs={12} md={3}>
           <Box
             sx={{
               display: 'flex',
               justifyContent: {
-                xs: 'flex-start',
-                sm: 'flex-start',
                 md: 'flex-end'
               }
             }}
@@ -82,7 +81,7 @@ export default function Clients() {
             </Button>
           </Box>
         </Grid>
-        <Grid item xs={12} sm={12} md={12} xl={12}>
+        <Grid item xs={12} md={12}>
           <Collapse in={!!selectedClient} unmountOnExit>
             <UserCard user={selectedClient} />
             {selectedClient && (
@@ -94,7 +93,7 @@ export default function Clients() {
             )}
           </Collapse>
           <Collapse in={!selectedClient} unmountOnExit>
-            <Paper>
+            <Paper elevation={3}>
               <UserGrid
                 hideToolbar
                 isEmployee={false}
@@ -105,7 +104,7 @@ export default function Clients() {
         </Grid>
         {selectedClient?.OwnedTanks && (
           <>
-            <Grid item xs={12} sm={12} md={12} xl={12}>
+            <Grid item xs={12} md={12}>
               <Box display={'flex'} justifyContent={'space-between'}>
                 <Typography variant='h6' component='h1'>
                   {`${selectedClient.firstName} ${selectedClient.lastName}'s`}{' '}
@@ -121,7 +120,7 @@ export default function Clients() {
               </Box>
             </Grid>
 
-            <Grid item xs={12} sm={12} md={12} xl={12}>
+            <Grid item xs={12} md={12}>
               <TanksCollapsibleTable
                 client={selectedClient}
                 tanks={selectedClient.OwnedTanks}

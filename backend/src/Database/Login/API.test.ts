@@ -4,7 +4,7 @@ import {
   CreateLogin,
   CreateUser,
   SearchSchema,
-  UpdateLogin,
+  UpdateLogin
 } from '../../zodTypes';
 
 /* 
@@ -21,7 +21,7 @@ const testLogin: CreateLogin = {
   email: 'supertest@email.com',
   password: 'supertest',
   role: 'CUSTOMER',
-  userId: 0,
+  userId: 0
 };
 
 const testUser: CreateUser = {
@@ -30,7 +30,7 @@ const testUser: CreateUser = {
   lastName: 'LOGIN_TEST',
   address: 'LOGIN_TEST',
   phone: '1111111111',
-  isEmployee: false,
+  isEmployee: false
 };
 
 let createdLoginId: number;
@@ -65,7 +65,7 @@ describe('Login CRUD operations', () => {
         email: 'supertestupdate@email.com',
         password: 'supertest',
         role: 'CUSTOMER',
-        userId: 0,
+        userId: 0
       };
       const result = await update(createdLoginId, updateData);
       expect(result.message).toBe('Login updated successfully');
@@ -75,7 +75,7 @@ describe('Login CRUD operations', () => {
       const searchCriteria: SearchSchema = {
         page: 1,
         size: 5,
-        searchString: 'supertestupdate@email.com',
+        searchString: 'supertestupdate@email.com'
       };
       const result = await search(searchCriteria);
       expect(result).toBeDefined();

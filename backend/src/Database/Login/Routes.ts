@@ -7,7 +7,7 @@ import {
   createLogin,
   searchSchema,
   updateLogin,
-  validateRequestBody,
+  validateRequestBody
 } from '../../zodTypes';
 
 const loginRouter = express.Router();
@@ -30,7 +30,7 @@ loginRouter.post(
           : 'Unknown Error: Failed to create Login';
       res.status(500).json({ error: errorMessage });
     }
-  },
+  }
 );
 
 // Read Login
@@ -49,7 +49,7 @@ loginRouter.get(
           : 'Unknown Error: Failed to get Login';
       res.status(500).json({ error: errorMessage });
     }
-  },
+  }
 );
 
 // Update Login
@@ -70,7 +70,7 @@ loginRouter.put(
           : 'Unknown Error: Failed to update Login';
       res.status(500).json({ error: errorMessage });
     }
-  },
+  }
 );
 
 // Delete Login
@@ -89,7 +89,7 @@ loginRouter.delete(
           : 'Unknown Error: Failed to delete Login';
       res.status(500).json({ error: errorMessage });
     }
-  },
+  }
 );
 
 // Search Login
@@ -112,7 +112,7 @@ loginRouter.get(
           : 'Unknown Error: Failed to search Login';
       res.status(500).json({ error: errorMessage });
     }
-  },
+  }
 );
 
 export default loginRouter;

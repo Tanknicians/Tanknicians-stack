@@ -20,7 +20,7 @@ const config = process.env.NODE_ENV === 'production' ? production : development;
 // Set up cors options
 const corsOptions = {
   origin: config,
-  credentials: true,
+  credentials: true
 };
 
 // Allow for web-browser usage

@@ -6,8 +6,8 @@ const prisma = new PrismaClient();
 export async function create(user: Omit<User, 'id'>) {
   const createdUser = await prisma.user.create({
     data: {
-      ...user,
-    },
+      ...user
+    }
   });
   return createdUser.id;
 }
@@ -16,41 +16,41 @@ export async function create(user: Omit<User, 'id'>) {
 export async function read(id: number) {
   return await prisma.user.findUnique({
     where: {
-      id: id,
-    },
+      id: id
+    }
   });
 }
 
 export async function readLoginByUserId(id: number) {
   return await prisma.user.findUnique({
     where: {
-      id: id,
+      id: id
     },
     select: {
-      login: true,
-    },
+      login: true
+    }
   });
 }
 
 export async function readEmployeeServiceCallsByUserId(id: number) {
   return await prisma.user.findMany({
     where: {
-      id: id,
+      id: id
     },
     select: {
-      EmployeeServiceCalls: true,
-    },
+      EmployeeServiceCalls: true
+    }
   });
 }
 
 export async function readTankMetadataByUserId(id: number) {
   return await prisma.user.findMany({
     where: {
-      id: id,
+      id: id
     },
     select: {
-      OwnedTanks: true,
-    },
+      OwnedTanks: true
+    }
   });
 }
 
@@ -58,9 +58,9 @@ export async function readTankMetadataByUserId(id: number) {
 export async function update(user: User) {
   await prisma.user.update({
     where: {
-      id: user.id,
+      id: user.id
     },
-    data: user,
+    data: user
   });
 }
 
@@ -69,8 +69,8 @@ export async function update(user: User) {
 export async function deleteUser(id: number) {
   await prisma.user.delete({
     where: {
-      id: id,
-    },
+      id: id
+    }
   });
 }
 
@@ -86,9 +86,9 @@ export async function search(search: SearchSchema) {
         { lastName: { contains: String(search.searchString) } },
         { address: { contains: String(search.searchString) } },
         { phone: { contains: String(search.searchString) } },
-        { isEmployee: search.searchBoolean },
-      ],
-    },
+        { isEmployee: search.searchBoolean }
+      ]
+    }
   });
 }
 
@@ -96,11 +96,11 @@ export async function search(search: SearchSchema) {
 export async function getAll(includeTanks: boolean, isEmployee?: boolean) {
   return await prisma.user.findMany({
     where: {
-      isEmployee: isEmployee,
+      isEmployee: isEmployee
     },
     include: {
-      OwnedTanks: includeTanks,
-    },
+      OwnedTanks: includeTanks
+    }
   });
 }
 

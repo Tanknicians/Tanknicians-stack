@@ -9,10 +9,10 @@ jest.mock('nodemailer', () => ({
       _: unknown,
       cb: (
         err: Error | null,
-        info: Partial<SMTPTransport.SentMessageInfo>,
-      ) => void,
-    ) => cb(null, { response: 'Email sent:' }),
-  }),
+        info: Partial<SMTPTransport.SentMessageInfo>
+      ) => void
+    ) => cb(null, { response: 'Email sent:' })
+  })
 }));
 
 describe('email service', () => {
@@ -29,7 +29,7 @@ describe('email service', () => {
     const res = await sendEmail(
       testEmail,
       'Test Email',
-      'This is a test email.',
+      'This is a test email.'
     );
     expect(res.includes('Email sent:'));
   });

@@ -5,7 +5,7 @@ import {
   generateToken,
   verifyRefreshToken,
   generateRefreshToken,
-  verifyToken,
+  verifyToken
 } from '../Token/Generator';
 
 import { loginDB } from '../../prisma/db/Login';
@@ -41,7 +41,7 @@ export async function login(login: AuthLogin, res: Response) {
   if (!foundCredentials) {
     return res.status(401).json({
       code: 'UNAUTHORIZED',
-      message: 'Incorrect email/password combination',
+      message: 'Incorrect email/password combination'
       // message: `Login with email: ${login.email} not found.`
     });
   }
@@ -49,7 +49,7 @@ export async function login(login: AuthLogin, res: Response) {
   if (!(foundCredentials.email && foundCredentials.password)) {
     return res.status(401).json({
       code: 'UNAUTHORIZED',
-      message: 'User record incomplete',
+      message: 'User record incomplete'
     });
   }
 
@@ -57,12 +57,12 @@ export async function login(login: AuthLogin, res: Response) {
 
   const samePasswords = await bcrypt.compare(
     login.password,
-    foundCredentials.password,
+    foundCredentials.password
   );
   if (!samePasswords) {
     return res.status(401).json({
       code: 'UNAUTHORIZED',
-      message: 'Incorrect email/password combination',
+      message: 'Incorrect email/password combination'
       // message: 'passwords do not match'
     });
   }
@@ -74,7 +74,7 @@ export async function login(login: AuthLogin, res: Response) {
     res.cookie('jwt', refreshToken, {
       httpOnly: true,
       secure: true,
-      maxAge: 24 * 60 * 60 * 1000,
+      maxAge: 24 * 60 * 60 * 1000
     });
     res.status(200).json({ token, savedCredentials });
     return;
@@ -82,7 +82,7 @@ export async function login(login: AuthLogin, res: Response) {
     console.error('Error generating tokens:', error);
     return res.status(500).json({
       code: 'INTERNAL_SERVER_ERROR',
-      message: 'Failed to generate tokens',
+      message: 'Failed to generate tokens'
     });
   }
 }
@@ -92,13 +92,13 @@ export async function register(registration: AuthRegister, res: Response) {
   const generatedPassword = generateRandomPassword(DEFAULT_PASSWORD_LENGTH);
   const encryptedPassword = await bcrypt.hash(
     generatedPassword,
-    DEFAULT_SALT_LENGTH,
+    DEFAULT_SALT_LENGTH
   );
 
   // move the data to a format with the encrypted password to be sent to the DB
   const registerData = {
     ...registration,
-    password: encryptedPassword,
+    password: encryptedPassword
   };
 
   try {
@@ -113,7 +113,7 @@ export async function register(registration: AuthRegister, res: Response) {
     const confirmation = await sendEmail(
       registerData.email,
       'New Registration',
-      emailText,
+      emailText
     );
     console.log(confirmation);
     return res.status(200).json({ message: 'Registration successful' });
@@ -122,7 +122,7 @@ export async function register(registration: AuthRegister, res: Response) {
     return res.status(500).json({
       code: 'INTERNAL_SERVER_ERROR',
       message: 'An error occurred during registration',
-      cause: error,
+      cause: error
     });
   }
 }
@@ -157,7 +157,7 @@ export async function resetPassword(email: string) {
   const confirmation = await sendEmail(
     login.email,
     'Password Reset',
-    emailText,
+    emailText
   );
   console.log(confirmation);
   return confirmation;
@@ -174,7 +174,7 @@ export async function refresh(refreshToken: string, res: Response) {
     console.log('Invalid token.');
     return res.status(403).json({
       code: 'FORBIDDEN',
-      message: 'Refresh token not valid.',
+      message: 'Refresh token not valid.'
     });
   }
 
@@ -183,7 +183,7 @@ export async function refresh(refreshToken: string, res: Response) {
   if (!foundCredentials) {
     return res.status(404).json({
       code: 'NOT_FOUND',
-      message: 'Login does not exist.',
+      message: 'Login does not exist.'
     });
   }
 
@@ -198,7 +198,7 @@ export async function refresh(refreshToken: string, res: Response) {
     return res.status(500).json({
       code: 'INTERNAL_SERVER_ERROR',
       message: 'An error occurred while generating the access token.',
-      cause: error,
+      cause: error
     });
   }
 }

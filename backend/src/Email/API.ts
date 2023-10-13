@@ -9,8 +9,8 @@ const transporter = nodemailer.createTransport({
   secure: true,
   auth: {
     user: fromEmail,
-    pass: fromPassword,
-  },
+    pass: fromPassword
+  }
 });
 
 export async function sendEmail(to: string, subject: string, text: string) {
@@ -18,7 +18,7 @@ export async function sendEmail(to: string, subject: string, text: string) {
     from: fromEmail,
     to,
     subject,
-    text,
+    text
   };
 
   return new Promise<string>((resolve, reject) => {
@@ -37,6 +37,6 @@ export async function resetPassword(email: string) {
   return sendEmail(
     email,
     'Reset Password',
-    'You have requested to reset your password.',
+    'You have requested to reset your password.'
   );
 }

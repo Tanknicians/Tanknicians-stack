@@ -34,20 +34,13 @@ export default function DataExport() {
   };
   return (
     <Container>
-      <Grid container spacing={1} maxWidth={'100%'}>
-        <Grid item xs={12} sm={12} md={12} xl={12}>
+      <Grid container rowSpacing={1} alignItems='center' maxWidth={'100%'}>
+        <Grid item xs={12}>
           <Typography variant='h4' component='h1'>
             Data Export
           </Typography>
         </Grid>
-        <Grid
-          item
-          xs={12}
-          sm={12}
-          md={12}
-          xl={12}
-          sx={{ marginTop: 0, paddingTop: 0 }}
-        >
+        <Grid item xs={12} sx={{ marginTop: 0, paddingTop: 0 }}>
           <Tabs value={value} onChange={handleChange}>
             <Tab label='Clients' />
             <Tab label='Employees' />

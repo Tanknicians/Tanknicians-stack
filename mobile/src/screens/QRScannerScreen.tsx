@@ -63,7 +63,10 @@ const QRScannerScreen = ({ navigation }: Props) => {
 
   const handleBarCodeScanned = (scanningResult: BarCodeScannerResult) => {
     if (!scanned) {
-      const { data, bounds: { origin } = {} } = scanningResult;
+      const {
+        data,
+        bounds: { origin } = {}
+      } = scanningResult;
       // @ts-ignore
       const { x, y } = origin;
 

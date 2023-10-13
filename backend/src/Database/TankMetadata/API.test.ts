@@ -15,7 +15,7 @@ import {
   SearchSchema,
   CreateUser,
   CreateTankMetaData,
-  UpdateTankMetaData,
+  UpdateTankMetaData
 } from '../../zodTypes';
 
 // we need to keep track of the id of the creations to delete them later
@@ -27,7 +27,7 @@ const createTankMetadata: CreateTankMetaData = {
   volume: 0,
   type: 'FRESH',
   tanknicianSourcedOnly: false,
-  customerId: 0, // change this after setting up pre-test
+  customerId: 0 // change this after setting up pre-test
 };
 
 const createCustomer: CreateUser = {
@@ -36,7 +36,7 @@ const createCustomer: CreateUser = {
   lastName: 'TM_TEST',
   address: 'TM_TEST',
   phone: '11111111111',
-  isEmployee: false,
+  isEmployee: false
 };
 
 // ServiceCall CRUD testing suite can now be run:
@@ -74,7 +74,7 @@ describe('TankMetadata CRUD operations', () => {
         tanknicianSourcedOnly: true,
         ...data,
         qrSymbol: 1,
-        lastDateServiced: new Date(),
+        lastDateServiced: new Date()
       };
       const result = await update(createTankMetadataId, updateData);
       expect(result.message).toBe('TankMetadata updated successfully');
@@ -84,7 +84,7 @@ describe('TankMetadata CRUD operations', () => {
       const searchCriteria: SearchSchema = {
         page: 1,
         size: 5,
-        searchString: 'TM_TEST',
+        searchString: 'TM_TEST'
       };
       const result = await search(searchCriteria);
       expect(result).toBeDefined();

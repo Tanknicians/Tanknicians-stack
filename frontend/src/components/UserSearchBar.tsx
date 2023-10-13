@@ -12,11 +12,11 @@ type UserList = {
     _event: React.SyntheticEvent,
     value: UserData | null
   ) => void;
+  label: string;
 };
 
 const styles = {
   groupLabelContainer: {
-    backgroundColor: '#081627',
     width: '100%'
   },
   groupLabel: {
@@ -24,10 +24,12 @@ const styles = {
     width: '100%',
     display: 'flex',
     paddingLeft: 10,
-    color: 'white'
+    color: 'black',
+    borderBottom: '1px solid #343a40',
+    background: '#adb5bd'
   },
   optionLabel: {
-    backgroundColor: 'white',
+    backgroundColor: '#f8f9fa',
     width: '100%',
     display: 'flex',
     paddingLeft: 10
@@ -44,7 +46,8 @@ function getUsersName(user: UserData) {
 export default function UserSearchBar({
   userList,
   handleUserSelected,
-  selectedUser
+  selectedUser,
+  label
 }: UserList) {
   return (
     <Autocomplete
@@ -58,11 +61,11 @@ export default function UserSearchBar({
         )}
       groupBy={(user) => getUsersName(user).charAt(0).toUpperCase()}
       getOptionLabel={(option) =>
-        `${option.firstName} ${option.middleName} ${option.lastName} ${option.address}`
+        `${option.firstName} ${option.middleName} ${option.lastName}`
       }
       sx={{ width: '100%', backgroundColor: 'white', borderRadius: '10px' }}
       renderInput={(params) => (
-        <TextField autoFocus {...params} label='Search User' />
+        <TextField autoFocus {...params} label={`Search ${label}`} />
       )}
       renderGroup={(params) => (
         <div {...params} style={styles.groupLabelContainer}>

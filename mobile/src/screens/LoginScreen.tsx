@@ -58,7 +58,7 @@ const LoginScreen = () => {
 
   console.log(errors);
 
-  const onSubmit: SubmitHandler<LoginFormData> = async loginData => {
+  const onSubmit: SubmitHandler<LoginFormData> = async (loginData) => {
     console.log(loginData);
     try {
       const userData = await login(loginData).unwrap();
