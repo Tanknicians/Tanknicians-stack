@@ -30,6 +30,10 @@ import {
   useGetClientsQuery,
   useGetUserQuery,
 } from "../../redux/slices/users/userManagementSlice";
+import {
+  useGetAllTanksQuery,
+  useGetTankDataQuery,
+} from "../../redux/slices/tanks/tankDataSlice";
 
 type FormProps = {
   name: keyof CreateServiceCall;
@@ -38,6 +42,7 @@ type FormProps = {
   size?: number;
   multiline?: boolean;
   required?: boolean;
+  hidden?: boolean;
 };
 function getType(input: string) {}
 function getLabel(input: string) {
@@ -56,7 +61,11 @@ export function CreateForm({
   size,
   multiline,
   required,
+  hidden,
 }: FormProps) {
+  if (hidden) {
+    return null;
+  }
   const label = getLabel(name.toString());
   if (type === "boolean") {
     return (
@@ -122,10 +131,11 @@ export function CreateForm({
 }
 
 const createServiceCallFields: Record<
-  keyof Omit<CreateServiceCall, "employeeId">,
+  keyof CreateServiceCall,
   Omit<FormProps, "name" | "control">
 > = {
-  tankId: { type: "number", required: true, size: 4 },
+  employeeId: { type: "number", hidden: true },
+  tankId: { type: "number", hidden: true },
   createdOn: { type: "date", required: true, size: 4 },
   customerRequest: { type: "string", size: 12 },
   employeeNotes: { type: "string", size: 12 },
@@ -200,6 +210,7 @@ export default function CreateServiceCallModal({
     includeTanks: true,
     isEmployee: true,
   });
+  const { data: tank } = useGetTankDataQuery(tankId);
 
   if (previousServiceCall) {
     const { id: _id, ..._previousValues } = previousServiceCall;
@@ -284,6 +295,13 @@ export default function CreateServiceCallModal({
             ) : (
               <Box>Loading...</Box>
             )}
+          </Grid>
+          <Grid item xs={4}>
+            <TextField
+              value={tank?.description ?? "Loading..."}
+              disabled
+              fullWidth
+            />
           </Grid>
           {fields.map((field) => (
             <CreateForm key={field.name} control={control} {...field} />
