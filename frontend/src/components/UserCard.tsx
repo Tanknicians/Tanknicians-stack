@@ -6,6 +6,7 @@ import Box from '@mui/material/Box';
 import { UserData } from '../redux/slices/users/userManagementSlice';
 import { useState } from 'react';
 import EditUserModal from './forms/EditUser';
+import { Grid } from '@mui/material';
 
 export interface UserCardProps {
   user: UserData | null;
@@ -21,40 +22,55 @@ export default function UserCard(props: UserCardProps) {
   };
 
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        flexWrap: 'wrap',
-        '& > :not(style)': {
-          m: 1,
-          width: '100%',
-          height: 128
-        }
-      }}
-    >
-      <Paper elevation={2} sx={{ backgroundColor: 'white' }}>
-        <Box sx={{ margin: '2%' }}>
-          <Box sx={{ float: 'left', marginTop: 'auto', marginAuto: 'auto' }}>
-            {user && (
-              <>
-                <Typography variant='subtitle1' component='h2'>
-                  {`${user.firstName} ${user.lastName}`}
+    <>
+      <Paper elevation={3}>
+        <Grid container maxWidth={'100%'}>
+          {user && (
+            <>
+              <Grid item xs={10} md={3}>
+                <Typography
+                  sx={{ padding: 1 }}
+                  variant='subtitle1'
+                  component='h2'
+                >
+                  {`${user.firstName} ${user.middleName} ${user.lastName}`}
                 </Typography>
-                <Typography variant='subtitle1' component='h2'>
+              </Grid>
+              <Grid item xs={10} md={4}>
+                <Typography
+                  sx={{ padding: 1 }}
+                  variant='subtitle1'
+                  component='h2'
+                >
                   {user.address}
                 </Typography>
-                <Typography variant='subtitle1' component='h2'>
+              </Grid>
+              <Grid item xs={10} md={3}>
+                <Typography
+                  sx={{ padding: 1 }}
+                  variant='subtitle1'
+                  component='h2'
+                >
                   {user.phone}
                 </Typography>
-              </>
-            )}
-          </Box>
-          <Box sx={{ float: 'right' }}>
-            <Button variant='contained' onClick={handleOpenUserModal}>
-              <ModeEditOutlineOutlinedIcon />
-            </Button>
-          </Box>
-        </Box>
+              </Grid>
+              <Grid item xs={2} sx={{ height: '100%' }}>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    justifyContent: {
+                      md: 'flex-end',
+                    },
+                  }}
+                >
+                  <Button variant='contained' onClick={handleOpenUserModal}>
+                    <ModeEditOutlineOutlinedIcon />
+                  </Button>
+                </Box>
+              </Grid>
+            </>
+          )}
+        </Grid>
       </Paper>
       {userModalOpen && (
         <EditUserModal
@@ -64,6 +80,6 @@ export default function UserCard(props: UserCardProps) {
           key={user?.id}
         />
       )}
-    </Box>
+    </>
   );
 }

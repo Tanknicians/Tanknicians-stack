@@ -64,6 +64,7 @@ export default function UserGrid({
   });
   return (
     <DataGrid
+      rowBuffer={1}
       rows={users ?? []}
       columns={userColumns}
       getRowId={({ id }) => id}

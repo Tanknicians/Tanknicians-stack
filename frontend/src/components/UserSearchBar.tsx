@@ -10,32 +10,33 @@ type UserList = {
   selectedUser: UserData | null;
   handleUserSelected: (
     _event: React.SyntheticEvent,
-    value: UserData | null
+    value: UserData | null,
   ) => void;
   label: string;
 };
 
 const styles = {
   groupLabelContainer: {
-    backgroundColor: '#081627',
-    width: '100%'
+    width: '100%',
   },
   groupLabel: {
     fontWeight: 'bold',
     width: '100%',
     display: 'flex',
     paddingLeft: 10,
-    color: 'white'
+    color: 'black',
+    borderBottom: '1px solid #343a40',
+    background: '#adb5bd',
   },
   optionLabel: {
-    backgroundColor: 'white',
+    backgroundColor: '#f8f9fa',
     width: '100%',
     display: 'flex',
-    paddingLeft: 10
+    paddingLeft: 10,
   },
   customerNameandGroupLabel: {
-    width: '50%'
-  }
+    width: '50%',
+  },
 };
 
 function getUsersName(user: UserData) {
@@ -46,7 +47,7 @@ export default function UserSearchBar({
   userList,
   handleUserSelected,
   selectedUser,
-  label
+  label,
 }: UserList) {
   return (
     <Autocomplete
@@ -56,11 +57,11 @@ export default function UserSearchBar({
       options={userList
         .slice()
         .sort((userA, userB) =>
-          getUsersName(userA).localeCompare(getUsersName(userB))
+          getUsersName(userA).localeCompare(getUsersName(userB)),
         )}
       groupBy={(user) => getUsersName(user).charAt(0).toUpperCase()}
       getOptionLabel={(option) =>
-        `${option.firstName} ${option.middleName} ${option.lastName} ${option.address}`
+        `${option.firstName} ${option.middleName} ${option.lastName}`
       }
       sx={{ width: '100%', backgroundColor: 'white', borderRadius: '10px' }}
       renderInput={(params) => (
@@ -77,7 +78,7 @@ export default function UserSearchBar({
       )}
       renderOption={(props, option, { inputValue }) => {
         const matches = match(option.firstName ?? '', inputValue, {
-          insideWords: true
+          insideWords: true,
         });
         const parts = parse(option.firstName ?? '', matches);
 
@@ -91,7 +92,7 @@ export default function UserSearchBar({
                 <span
                   key={`e-${index}`}
                   style={{
-                    fontWeight: part.highlight ? 700 : 400
+                    fontWeight: part.highlight ? 700 : 400,
                   }}
                 >
                   {part.text}

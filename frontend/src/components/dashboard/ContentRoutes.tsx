@@ -8,22 +8,12 @@ import { Helmet } from 'react-helmet';
 
 export default function Content() {
   return (
-    <div className='content-wrapper'>
-      <Helmet>
-        {/* Define inline CSS for body tag */}
-        <style type='text/css'>{`
-        body {
-            background-color: #FAFAFA;
-        }
-    `}</style>
-      </Helmet>
-      <Routes>
-        <Route path='/Approve Forms' element={<ApproveForms />} />
-        <Route path='/Employees' element={<Employees />} />
-        <Route path='/Clients' element={<Clients />} />
-        <Route path='/Tanks' element={<Tanks />} />
-        <Route path='/Data Export' element={<DataExport />} />
-      </Routes>
-    </div>
+    <Routes>
+      <Route path='/Approve Forms' element={<ApproveForms />} />
+      <Route path='/Employees' element={<Employees />} />
+      <Route path='/Clients' element={<Clients />} />
+      <Route path='/Tanks' element={<Tanks />} />
+      <Route path='/Data Export' element={<DataExport />} />
+    </Routes>
   );
 }
