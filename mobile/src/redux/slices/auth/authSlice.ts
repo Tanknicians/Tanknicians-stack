@@ -1,16 +1,13 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from '../../store';
 
-type User = {
-  email: string;
-  id: string;
-  password: string;
-  role: string;
-  userId: string;
-};
-
 const initialState = {
-  user: null as User | null,
+  user: {
+    id: -1,
+    email: '',
+    role: '',
+    userId: -1
+  },
   token: null
 };
 
@@ -23,7 +20,7 @@ const authSlice = createSlice({
       state.token = action.payload.token;
     },
     logout: (state) => {
-      state.user = null;
+      state.user = initialState.user;
       state.token = null;
     }
   }
