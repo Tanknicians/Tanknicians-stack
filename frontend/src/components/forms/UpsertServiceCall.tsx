@@ -24,17 +24,16 @@ import {
 } from "../../zodTypes";
 import { useSelector } from "react-redux";
 import { selectCurrentUser } from "../../redux/slices/auth/authSlice";
-import { useMemo } from "react";
 
 type FormProps = {
   name: keyof CreateServiceCall;
-  type: "string" | "number" | "boolean" | "date" | "full";
+  type: "string" | "number" | "boolean" | "date" | "full" | "phone";
   control: Control<CreateServiceCall>;
   size?: number;
   multiline?: boolean;
   required?: boolean;
 };
-
+function getType(input: string) {}
 function getLabel(input: string) {
   if (!input) return "";
   let result = input.charAt(0).toUpperCase() + input.slice(1);
@@ -97,7 +96,9 @@ export function CreateForm({
               required={!!required}
               fullWidth
               multiline={!!multiline}
-              type={type === "full" ? "string" : type}
+              type={
+                type === "full" ? "string" : type === "phone" ? "tel" : type
+              }
               label={label}
               InputLabelProps={{ shrink: type === "date" ? true : undefined }}
               {...field}
@@ -165,6 +166,8 @@ const defaultValues: CreateServiceCall = Object.fromEntries(
       case "number":
         return [key, 0];
       case "full":
+        return [key, ""];
+      case "phone":
         return [key, ""];
     }
   })
