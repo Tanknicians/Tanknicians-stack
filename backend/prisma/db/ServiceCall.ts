@@ -9,12 +9,12 @@ export async function create(form: Omit<ServiceCall, 'id'>) {
     data: {
       ...formData,
       Employee: {
-        connect: { id: employeeId },
+        connect: { id: employeeId }
       },
       TankMetadata: {
-        connect: { id: tankId },
-      },
-    },
+        connect: { id: tankId }
+      }
+    }
   });
   return createdServiceCall.id;
 }
@@ -23,8 +23,8 @@ export async function create(form: Omit<ServiceCall, 'id'>) {
 export async function read(id: number) {
   return await prisma.serviceCall.findUnique({
     where: {
-      id: id,
-    },
+      id: id
+    }
   });
 }
 
@@ -33,8 +33,8 @@ export async function readAllByTankId(tankId: number, isApproved?: boolean) {
   return await prisma.serviceCall.findMany({
     where: {
       tankId: tankId,
-      isApproved: isApproved,
-    },
+      isApproved: isApproved
+    }
   });
 }
 
@@ -42,23 +42,23 @@ export async function readAllByTankId(tankId: number, isApproved?: boolean) {
 export async function readByDateTime(
   tankId: number,
   startDate?: Date,
-  endDate?: Date,
+  endDate?: Date
 ) {
   return await prisma.serviceCall.findMany({
     where: {
       tankId: tankId,
       createdOn: {
         gte: startDate,
-        lte: endDate,
-      },
+        lte: endDate
+      }
     },
     select: {
       createdOn: true,
       alkalinity: true,
       calcium: true,
       nitrate: true,
-      phosphate: true,
-    },
+      phosphate: true
+    }
   });
 }
 
@@ -66,9 +66,9 @@ export async function readByDateTime(
 export async function update(serviceCall: ServiceCall) {
   await prisma.serviceCall.update({
     where: {
-      id: serviceCall.id,
+      id: serviceCall.id
     },
-    data: serviceCall,
+    data: serviceCall
   });
 }
 
@@ -77,8 +77,8 @@ export async function update(serviceCall: ServiceCall) {
 export async function deleteServiceCall(id: number) {
   await prisma.serviceCall.delete({
     where: {
-      id: id,
-    },
+      id: id
+    }
   });
 }
 
@@ -119,7 +119,7 @@ export async function search(search: SearchSchema) {
 
     // Date search
     { createdOn: { gte: search.minDate, lte: search.maxDate } },
-    { notesUpdated: { gte: search.minDate, lte: search.maxDate } },
+    { notesUpdated: { gte: search.minDate, lte: search.maxDate } }
     // This removes any undefined values.
   ];
   // Return all values
@@ -127,8 +127,8 @@ export async function search(search: SearchSchema) {
     skip: (search.page - 1) * search.size,
     take: search.size,
     where: {
-      OR: where,
-    },
+      OR: where
+    }
   });
 }
 
@@ -136,8 +136,8 @@ export async function search(search: SearchSchema) {
 export async function getAll(isApproved?: boolean) {
   return await prisma.serviceCall.findMany({
     where: {
-      isApproved: isApproved,
-    },
+      isApproved: isApproved
+    }
   });
 }
 

@@ -1,6 +1,6 @@
 import {
   UserData,
-  useGetClientsQuery,
+  useGetClientsQuery
 } from '../../redux/slices/users/userManagementSlice';
 import CreateTankForm from '../../components/forms/CreateTank';
 import UserSearchBar from '../../components/UserSearchBar';
@@ -20,19 +20,19 @@ import { CircularProgress, Container, Paper } from '@mui/material';
 export default function Clients() {
   const { data: optionsList, error } = useGetClientsQuery({
     includeTanks: true,
-    isEmployee: false,
+    isEmployee: false
   });
   const [tankModalOpen, setTankModalOpen] = useState(false);
   const [clientModalOpen, setClientModalOpen] = useState(false);
   const [selectedClientId, setSelectedClientId] = useState<number | null>(null);
   const selectedClient = useMemo(
     () => optionsList?.find((client) => client.id === selectedClientId) ?? null,
-    [optionsList, selectedClientId],
+    [optionsList, selectedClientId]
   );
 
   const handleUserSelected = (
     _event: React.SyntheticEvent,
-    client: UserData | null,
+    client: UserData | null
   ) => {
     setSelectedClientId(client?.id ?? null);
   };
@@ -68,8 +68,8 @@ export default function Clients() {
             sx={{
               display: 'flex',
               justifyContent: {
-                md: 'flex-end',
-              },
+                md: 'flex-end'
+              }
             }}
           >
             <Button

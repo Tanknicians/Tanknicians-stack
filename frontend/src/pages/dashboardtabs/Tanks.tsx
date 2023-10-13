@@ -1,6 +1,6 @@
 import {
   UserData,
-  useGetClientsQuery,
+  useGetClientsQuery
 } from '../../redux/slices/users/userManagementSlice';
 import CreateTankForm from '../../components/forms/CreateTank';
 import UserSearchBar from '../../components/UserSearchBar';
@@ -22,14 +22,14 @@ import {
   SelectChangeEvent,
   FormControl,
   Box,
-  Card,
+  Card
 } from '@mui/material';
 import SCDataGrid from '../../components/SCDataGrid';
 import TankGrid from '../../components/datagrid/TankGrid';
 
 export function TankTabs({
   tanks,
-  employeeId,
+  employeeId
 }: {
   tanks: UpdateTankMetaData[];
   employeeId: number;
@@ -43,7 +43,7 @@ export function TankTabs({
 
   const handleTankSelection = (event: SelectChangeEvent) => {
     const selectedTank = tanks.find(
-      ({ id }) => id === parseInt(event.target.value),
+      ({ id }) => id === parseInt(event.target.value)
     );
     setSelectedTank(selectedTank);
   };
@@ -65,7 +65,7 @@ export function TankTabs({
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            height: '100%',
+            height: '100%'
           }}
         >
           <Card
@@ -78,7 +78,7 @@ export function TankTabs({
               maxWidth: 300,
               padding: 5,
               minHeight: 200,
-              marginTop: 10,
+              marginTop: 10
             }}
           >
             <Typography variant='h6'>This user has no tanks.</Typography>
@@ -99,7 +99,7 @@ export function TankTabs({
               sx={{
                 display: 'flex',
                 alignItems: 'flex-end',
-                justifyContent: 'space-between',
+                justifyContent: 'space-between'
               }}
             >
               <FormControl variant='standard' sx={{ m: 1, minWidth: 160 }}>
@@ -156,19 +156,19 @@ export function TankTabs({
 export default function Tanks() {
   const { data: optionsList } = useGetClientsQuery({
     includeTanks: true,
-    isEmployee: false,
+    isEmployee: false
   });
   const [selectedUserId, selectCurrentUserId] = useState<number | null>(null);
   const selectedUser = useMemo(
     () => optionsList?.find((user) => user.id === selectedUserId) ?? null,
-    [optionsList, selectedUserId],
+    [optionsList, selectedUserId]
   );
 
   const collapse = !!selectedUser;
 
   const handleUserSelected = (
     _event: React.SyntheticEvent,
-    customer: UserData | null,
+    customer: UserData | null
   ) => {
     selectCurrentUserId(customer?.id ?? null);
   };

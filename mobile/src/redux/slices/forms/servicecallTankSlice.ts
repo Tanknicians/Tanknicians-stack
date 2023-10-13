@@ -13,7 +13,7 @@ const servicecallTankSlice = createSlice({
       // DB expects a number, not a string
       state.tankId = parseInt(action.payload.tankId);
     },
-    clearTankId: state => {
+    clearTankId: (state) => {
       state.tankId = null;
     }
   }

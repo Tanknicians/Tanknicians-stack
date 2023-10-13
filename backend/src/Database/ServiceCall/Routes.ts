@@ -7,7 +7,7 @@ import {
   createServiceCall,
   searchSchema,
   updateServiceCall,
-  validateRequestBody,
+  validateRequestBody
 } from '../../zodTypes';
 import { z } from 'zod';
 
@@ -31,7 +31,7 @@ serviceCallRouter.post(
           : 'Unknown Error: Failed to create Service Call';
       res.status(500).json({ error: errorMessage });
     }
-  },
+  }
 );
 
 // Read All
@@ -41,7 +41,7 @@ serviceCallRouter.get(
   async (req, res) => {
     const result = z
       .object({
-        isApproved: z.boolean().optional(),
+        isApproved: z.boolean().optional()
       })
       .safeParse({ ...req.query });
 
@@ -59,7 +59,7 @@ serviceCallRouter.get(
           : 'Unknown Error: Failed to read all Service Calls';
       res.status(500).json({ error: errorMessage });
     }
-  },
+  }
 );
 
 // Read ServiceCall
@@ -78,7 +78,7 @@ serviceCallRouter.get(
           : 'Unknown Error: Failed to read Service Call';
       res.status(500).json({ error: errorMessage });
     }
-  },
+  }
 );
 
 // get all Service Calls from a tank ID and a start and end date
@@ -90,7 +90,7 @@ serviceCallRouter.get(
       .object({
         tankId: z.coerce.number(),
         start: z.coerce.date().optional(),
-        end: z.coerce.date().optional(),
+        end: z.coerce.date().optional()
       })
       .safeParse({ ...req.query, ...req.params });
     if (!result.success) {
@@ -108,7 +108,7 @@ serviceCallRouter.get(
           : 'Unknown Error: Failed to read Service Call(s) from tankId and date range.';
       res.status(500).json({ error: errorMessage });
     }
-  },
+  }
 );
 
 // get all Service Calls from a tank ID and isApproved boolean
@@ -119,7 +119,7 @@ serviceCallRouter.get(
     const result = z
       .object({
         tankId: z.coerce.number(),
-        isApproved: z.boolean().optional(),
+        isApproved: z.boolean().optional()
       })
       .safeParse({ ...req.query, ...req.params });
     if (!result.success) {
@@ -129,7 +129,7 @@ serviceCallRouter.get(
     try {
       const result = await ServiceCallService.readAllByTankId(
         tankId,
-        isApproved,
+        isApproved
       );
       res.json(result);
     } catch (error) {
@@ -139,7 +139,7 @@ serviceCallRouter.get(
           : 'Unknown Error: Failed to read Service Calls by tankID and given date range.';
       res.status(500).json({ error: errorMessage });
     }
-  },
+  }
 );
 
 // Update ServiceCall
@@ -160,7 +160,7 @@ serviceCallRouter.put(
           : 'Unknown Error: Failed to update Service Call';
       res.status(500).json({ error: errorMessage });
     }
-  },
+  }
 );
 
 // Delete ServiceCall
@@ -179,7 +179,7 @@ serviceCallRouter.delete(
           : 'Unknown Error: Failed to delete Service Call';
       res.status(500).json({ error: errorMessage });
     }
-  },
+  }
 );
 
 // Search ServiceCall
@@ -202,7 +202,7 @@ serviceCallRouter.get(
           : 'Unknown Error: Failed to search Service Call';
       res.status(500).json({ error: errorMessage });
     }
-  },
+  }
 );
 
 export default serviceCallRouter;

@@ -5,7 +5,7 @@ import { CreateUser, SearchSchema, UpdateUser } from '../../zodTypes';
 export async function create(data: CreateUser) {
   // convert from Zod to Prisma
   const createUser: Omit<CreateUser, 'id'> = {
-    ...data,
+    ...data
   };
 
   try {
@@ -47,7 +47,7 @@ export async function update(id: number, data: UpdateUser) {
   // Convert from Zod to Prisma
   const updateUser: User = {
     id,
-    ...data,
+    ...data
   };
   try {
     await userDB.update(updateUser);

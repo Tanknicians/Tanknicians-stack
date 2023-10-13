@@ -9,7 +9,7 @@ import {
   createTank,
   searchSchema,
   updateTank,
-  validateRequestBody,
+  validateRequestBody
 } from '../../zodTypes';
 
 /**
@@ -37,7 +37,7 @@ tankMetaDataRouter.post(
           : 'Unknown Error: Failed to create Tank Metadata';
       res.status(500).json({ error: errorMessage });
     }
-  },
+  }
 );
 
 // Read TankMetadata
@@ -55,7 +55,7 @@ tankMetaDataRouter.get(
           : 'Unknown Error: Failed to read Tank Metadata';
       res.status(500).json({ error: errorMessage });
     }
-  },
+  }
 );
 
 // Read TankMetadata
@@ -74,7 +74,7 @@ tankMetaDataRouter.get(
           : 'Unknown Error: Failed to read Tank Metadata';
       res.status(500).json({ error: errorMessage });
     }
-  },
+  }
 );
 
 // Update TankMetadata
@@ -95,7 +95,7 @@ tankMetaDataRouter.put(
           : 'Unknown Error: Failed to update Tank Metadata';
       res.status(500).json({ error: errorMessage });
     }
-  },
+  }
 );
 
 // Delete TankMetadata
@@ -114,7 +114,7 @@ tankMetaDataRouter.delete(
           : 'Unknown Error: Failed to delete Tank Metadata';
       res.status(500).json({ error: errorMessage });
     }
-  },
+  }
 );
 
 // Search TankMetadata
@@ -137,7 +137,7 @@ tankMetaDataRouter.get(
           : 'Unknown Error: Failed to search Tank Metadata';
       res.status(500).json({ error: errorMessage });
     }
-  },
+  }
 );
 
 export default tankMetaDataRouter;

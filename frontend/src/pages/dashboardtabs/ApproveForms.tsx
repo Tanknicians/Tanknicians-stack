@@ -23,13 +23,13 @@ export default function ApproveForms() {
   const [serviceCall, setServiceCall] = useState<ServiceCall | null>();
   //  Get Forms for table display
   const unapprovedForms = useGetUnapprovedServiceCallsQuery(undefined, {
-    pollingInterval: oneMinuteInMilliseconds,
+    pollingInterval: oneMinuteInMilliseconds
   }).data;
 
   // Get Clients list with tanks included to find Technician and Client name associated with the service record
   const { data: optionsList, error } = useGetClientsQuery({
     includeTanks: true,
-    isEmployee: undefined,
+    isEmployee: undefined
   });
 
   if (error) {
@@ -41,7 +41,7 @@ export default function ApproveForms() {
     let ret = 'EMPLOYEE NAME NOT FOUND';
     try {
       const matchedUserOption = optionsList?.find(
-        (element) => element.id === empId,
+        (element) => element.id === empId
       );
       if (matchedUserOption === undefined) {
       } else {
@@ -76,7 +76,7 @@ export default function ApproveForms() {
 
   return (
     <Container>
-      <Grid container rowSpacing={3} alignItems='center' maxWidth={'100%'}>
+      <Grid container rowSpacing={4} alignItems='center' maxWidth={'100%'}>
         <Grid item xs={12}>
           <Typography variant='h4' component='h1'>
             Approve Forms

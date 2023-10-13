@@ -10,10 +10,10 @@ export async function create(login: Omit<Login, 'id'>) {
       ...data,
       User: {
         connect: {
-          id: userId,
-        },
-      },
-    },
+          id: userId
+        }
+      }
+    }
   });
   return createdLogin.id;
 }
@@ -22,19 +22,19 @@ export async function create(login: Omit<Login, 'id'>) {
 export async function read(email: string) {
   return await prisma.login.findUnique({
     where: {
-      email: String(email),
-    },
+      email: String(email)
+    }
   });
 }
 
 export async function readUserByLoginId(id: number) {
   return await prisma.login.findUnique({
     where: {
-      id: id,
+      id: id
     },
     select: {
-      User: true,
-    },
+      User: true
+    }
   });
 }
 
@@ -42,9 +42,9 @@ export async function readUserByLoginId(id: number) {
 export async function update(login: Login) {
   await prisma.login.update({
     where: {
-      id: login.id,
+      id: login.id
     },
-    data: login,
+    data: login
   });
 }
 
@@ -53,8 +53,8 @@ export async function update(login: Login) {
 export async function deleteLogin(id: number) {
   await prisma.login.delete({
     where: {
-      id: id,
-    },
+      id: id
+    }
   });
 }
 
@@ -66,9 +66,9 @@ export async function search(search: SearchSchema) {
     where: {
       OR: [
         { email: { contains: search.searchString } },
-        { role: { equals: search.searchRole } },
-      ],
-    },
+        { role: { equals: search.searchRole } }
+      ]
+    }
   });
 }
 
@@ -76,7 +76,7 @@ export async function search(search: SearchSchema) {
 export async function getAll(page: number) {
   return await prisma.login.findMany({
     skip: (page - 1) * 25,
-    take: 25,
+    take: 25
   });
 }
 

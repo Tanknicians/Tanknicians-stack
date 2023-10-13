@@ -123,7 +123,7 @@ const ServiceCallForm = ({ navigation }: Props) => {
                 placeholder='0'
                 onBlur={onBlur}
                 value={value ? value.toString() : undefined}
-                onChangeText={nextValue => onChange(parseFloat(nextValue))}
+                onChangeText={(nextValue) => onChange(parseFloat(nextValue))}
                 style={[styles.input, errors?.[id] && styles.errorInput]}
               />
               <HelperText type='error' visible={!!errors[id]}>

@@ -3,7 +3,7 @@ import { tankDB } from '../../../prisma/db/TankMetadata';
 import {
   CreateTankMetaData,
   SearchSchema,
-  UpdateTankMetaData,
+  UpdateTankMetaData
 } from '../../zodTypes';
 import { userDB } from '../../../prisma/db/User';
 
@@ -35,13 +35,13 @@ export async function create(data: CreateTankMetaData) {
     const userTanks = await tankDB.readTanksByUserId(data.customerId);
     // map the pre-existing qrSymbols
     const qrSymbolsArray: number[] = userTanks.map(
-      (tankMetadata) => tankMetadata.qrSymbol,
+      (tankMetadata) => tankMetadata.qrSymbol
     );
     // Convert from Zod to Prisma
     const createTank: Omit<TankMetadata, 'id'> = {
       ...data,
       qrSymbol: findNextInteger(qrSymbolsArray),
-      lastDateServiced: tankEpoch,
+      lastDateServiced: tankEpoch
     };
     const createdId = await tankDB.create(createTank);
     return { message: 'TankMetadata created successfully', id: createdId };
@@ -95,7 +95,7 @@ export async function update(id: number, data: UpdateTankMetaData) {
   // Convert from Zod to Prisma
   const updateTank: TankMetadata = {
     id,
-    ...data,
+    ...data
   };
   try {
     await tankDB.update(updateTank);

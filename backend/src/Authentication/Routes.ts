@@ -7,7 +7,7 @@ import {
   AuthRegisterRequest,
   EmailRequest,
   emailSchema,
-  validateRequestBody,
+  validateRequestBody
 } from '../zodTypes';
 
 import { z } from 'zod';
@@ -30,7 +30,7 @@ authRouter.post(
         .status(500)
         .json({ error: 'An error occurred with the login function.' });
     }
-  },
+  }
 );
 
 // Register route
@@ -46,13 +46,13 @@ authRouter.post(
         .status(500)
         .json({ error: 'An error occurred with the register function.' });
     }
-  },
+  }
 );
 
 const validateRefreshToken = (
   req: Request,
   res: Response,
-  next: NextFunction,
+  next: NextFunction
 ) => {
   try {
     z.string().parse(req.cookies.jwt);

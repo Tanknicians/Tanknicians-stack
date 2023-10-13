@@ -10,10 +10,10 @@ export async function create(tank: Omit<TankMetadata, 'id'>) {
       ...tankData,
       Customer: {
         connect: {
-          id: customerId,
-        },
-      },
-    },
+          id: customerId
+        }
+      }
+    }
   });
   return createdTank.id;
 }
@@ -22,16 +22,16 @@ export async function create(tank: Omit<TankMetadata, 'id'>) {
 export async function read(id: number) {
   return await prisma.tankMetadata.findUnique({
     where: {
-      id: id,
-    },
+      id: id
+    }
   });
 }
 
 export async function readTanksByUserId(customerId: number) {
   return await prisma.tankMetadata.findMany({
     where: {
-      customerId: customerId,
-    },
+      customerId: customerId
+    }
   });
 }
 
@@ -39,9 +39,9 @@ export async function readTanksByUserId(customerId: number) {
 export async function update(tank: TankMetadata) {
   await prisma.tankMetadata.update({
     where: {
-      id: tank.id,
+      id: tank.id
     },
-    data: tank,
+    data: tank
   });
 }
 
@@ -50,8 +50,8 @@ export async function update(tank: TankMetadata) {
 export async function deleteTankMetadata(id: number) {
   await prisma.tankMetadata.delete({
     where: {
-      id: id,
-    },
+      id: id
+    }
   });
 }
 
@@ -64,9 +64,9 @@ export async function search(search: SearchSchema) {
       OR: [
         { description: { contains: search.searchString } },
         { volume: { gte: search.minNum, lte: search.maxNum } },
-        { type: search.searchType },
-      ],
-    },
+        { type: search.searchType }
+      ]
+    }
   });
 }
 
@@ -76,9 +76,9 @@ export async function searchByDateTime(startDate: Date, endDate: Date) {
     where: {
       lastDateServiced: {
         gte: startDate,
-        lte: endDate,
-      },
-    },
+        lte: endDate
+      }
+    }
   });
 }
 

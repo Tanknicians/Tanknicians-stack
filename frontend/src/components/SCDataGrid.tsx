@@ -3,12 +3,12 @@ import {
   GridRenderCellParams,
   GridColDef,
   GridRowsProp,
-  DataGrid,
+  DataGrid
 } from '@mui/x-data-grid';
 import { useState } from 'react';
 import {
   useGetAllServiceCallsQuery,
-  useGetServiceCallByTankIdQuery,
+  useGetServiceCallByTankIdQuery
 } from '../redux/slices/forms/servicecallApiSlice';
 import { UpdateTankMetaData, ServiceCall } from '../zodTypes';
 import CreateServiceCallModal from './forms/UpsertServiceCall';
@@ -18,7 +18,7 @@ import { useGetClientsQuery } from '../redux/slices/users/userManagementSlice';
 
 export default function SCDataGrid({
   employeeId,
-  tank,
+  tank
 }: {
   employeeId: number | undefined;
   tank: UpdateTankMetaData | undefined;
@@ -32,7 +32,7 @@ export default function SCDataGrid({
 
   const { data: clients, isLoading: isLoadingClients } = useGetClientsQuery({
     includeTanks: true,
-    isEmployee: undefined,
+    isEmployee: undefined
   });
 
   const editButton = (params: GridRenderCellParams) => {
@@ -60,7 +60,7 @@ export default function SCDataGrid({
     let ret = 'EMPLOYEE NAME NOT FOUND';
     try {
       const matchedUserOption = clients?.find(
-        (element) => element.id === empId,
+        (element) => element.id === empId
       );
       if (matchedUserOption === undefined) {
       } else {
@@ -97,9 +97,9 @@ export default function SCDataGrid({
     const {
       data: allServiceCalls,
       isLoading: isLoadingServiceCalls,
-      error: scError,
+      error: scError
     } = useGetAllServiceCallsQuery({
-      isApproved: undefined,
+      isApproved: undefined
     });
 
     if (isLoadingServiceCalls) {
@@ -109,7 +109,7 @@ export default function SCDataGrid({
       return <div>Not loading service calls</div>;
     }
     const serviceCallsForEmployee: ServiceCall[] = allServiceCalls?.filter(
-      (o) => o.employeeId === employeeId,
+      (o) => o.employeeId === employeeId
     );
 
     // TODO does not go to <Link /Tanks?tankId=id> or something...
@@ -131,203 +131,203 @@ export default function SCDataGrid({
         headerName: 'ID',
         minWidth: 110,
         align: 'center',
-        headerAlign: 'center',
+        headerAlign: 'center'
       },
       {
         field: 'tankId',
         headerName: 'Tank ID',
         minWidth: 110,
         align: 'center',
-        headerAlign: 'center',
+        headerAlign: 'center'
       },
       {
         field: 'clientName',
         headerName: 'Client Name',
         minWidth: 110,
         align: 'center',
-        headerAlign: 'center',
+        headerAlign: 'center'
       },
       {
         field: 'date',
         headerName: 'Date',
         minWidth: 110,
         align: 'center',
-        headerAlign: 'center',
+        headerAlign: 'center'
       },
       {
         field: 'edit',
         headerName: 'Edit',
         minWidth: 110,
         sortable: false,
-        renderCell: editButton,
+        renderCell: editButton
       },
       {
         field: 'alkalinity',
         headerName: 'Alkalinity',
         minWidth: 110,
         align: 'center',
-        headerAlign: 'center',
+        headerAlign: 'center'
       },
       {
         field: 'calcium',
         headerName: 'Calcium',
         minWidth: 110,
         align: 'center',
-        headerAlign: 'center',
+        headerAlign: 'center'
       },
       {
         field: 'nitrate',
         headerName: 'Nitrate',
         minWidth: 110,
         align: 'center',
-        headerAlign: 'center',
+        headerAlign: 'center'
       },
       {
         field: 'phosphate',
         headerName: 'Phosphate',
         minWidth: 110,
         align: 'center',
-        headerAlign: 'center',
+        headerAlign: 'center'
       },
       {
         field: 'customerNotes',
         headerName: 'Customer Notes',
         minWidth: 110,
         align: 'center',
-        headerAlign: 'center',
+        headerAlign: 'center'
       },
       {
         field: 'employeeNotes',
         headerName: 'Employee Notes',
         minWidth: 110,
         align: 'center',
-        headerAlign: 'center',
+        headerAlign: 'center'
       },
       {
         field: 'unapprovedNotes',
         headerName: 'Unapproved Notes',
         minWidth: 110,
         align: 'center',
-        headerAlign: 'center',
+        headerAlign: 'center'
       },
       {
         field: 'ATOOperational',
         headerName: 'ATO Operational',
         minWidth: 110,
         align: 'center',
-        headerAlign: 'center',
+        headerAlign: 'center'
       },
       {
         field: 'ATOReservoirFilled',
         headerName: 'ATO Reservoir Filled',
         minWidth: 110,
         align: 'center',
-        headerAlign: 'center',
+        headerAlign: 'center'
       },
       {
         field: 'chemFilterAdjusted',
         headerName: 'Chem Filter Adjusted',
         minWidth: 110,
         align: 'center',
-        headerAlign: 'center',
+        headerAlign: 'center'
       },
       {
         field: 'doserAdjustementOrManualDosing',
         headerName: 'Doser Adjustment Or Manual Dosing',
         minWidth: 110,
         align: 'center',
-        headerAlign: 'center',
+        headerAlign: 'center'
       },
       {
         field: 'dosingReservoirsFull',
         headerName: 'Dosing Reservoirs Full',
         minWidth: 110,
         align: 'center',
-        headerAlign: 'center',
+        headerAlign: 'center'
       },
       {
         field: 'floorsCheckedForSpillsOrDirt',
         headerName: 'Floors Checked For Spills Or Dirt',
         minWidth: 110,
         align: 'center',
-        headerAlign: 'center',
+        headerAlign: 'center'
       },
       {
         field: 'glassCleanedInside',
         headerName: 'Glass Cleaned Inside',
         minWidth: 110,
         align: 'center',
-        headerAlign: 'center',
+        headerAlign: 'center'
       },
       {
         field: 'glassCleanedOutside',
         headerName: 'Glass Cleaned Outside',
         minWidth: 110,
         align: 'center',
-        headerAlign: 'center',
+        headerAlign: 'center'
       },
       {
         field: 'mechFilterChanged',
         headerName: 'Mech Filter Changed',
         minWidth: 110,
         align: 'center',
-        headerAlign: 'center',
+        headerAlign: 'center'
       },
       {
         field: 'pumpsClearedOfDebris',
         headerName: 'Pumps Cleared Of Debris',
         minWidth: 110,
         align: 'center',
-        headerAlign: 'center',
+        headerAlign: 'center'
       },
       {
         field: 'saltCreepCleaned',
         headerName: 'Salt Creep Cleaned',
         minWidth: 110,
         align: 'center',
-        headerAlign: 'center',
+        headerAlign: 'center'
       },
       {
         field: 'skimmerCleanedAndOperational',
         headerName: 'Skimmer Cleaned And Operational',
         minWidth: 110,
         align: 'center',
-        headerAlign: 'center',
+        headerAlign: 'center'
       },
       {
         field: 'waterChanged',
         headerName: 'Water Changed',
         minWidth: 110,
         align: 'center',
-        headerAlign: 'center',
+        headerAlign: 'center'
       },
       {
         field: 'pestAPresent',
         headerName: 'Pest A Present',
         minWidth: 110,
         align: 'center',
-        headerAlign: 'center',
+        headerAlign: 'center'
       },
       {
         field: 'pestBPresent',
         headerName: 'Pest B Present',
         minWidth: 110,
         align: 'center',
-        headerAlign: 'center',
+        headerAlign: 'center'
       },
       {
         field: 'pestCPresent',
         headerName: 'Pest C Present',
         minWidth: 110,
         align: 'center',
-        headerAlign: 'center',
+        headerAlign: 'center'
       },
       {
         field: 'pestDPresent',
         headerName: 'Pest D Present',
         minWidth: 110,
         align: 'center',
-        headerAlign: 'center',
+        headerAlign: 'center'
       },
       {
         field: 'linkToTank',
@@ -335,8 +335,8 @@ export default function SCDataGrid({
         minWidth: 110,
         align: 'center',
         headerAlign: 'center',
-        renderCell: goToTankButton,
-      },
+        renderCell: goToTankButton
+      }
     ];
 
     rows = serviceCallsForEmployee.map((s: ServiceCall) => {
@@ -346,7 +346,7 @@ export default function SCDataGrid({
         date: new Date(s.createdOn).toLocaleDateString(),
         customerNotes: s.customerRequest,
         employeeNotes: s.employeeNotes,
-        unapprovedNotes: s.notApprovedNotes,
+        unapprovedNotes: s.notApprovedNotes
       };
     });
   }
@@ -356,7 +356,7 @@ export default function SCDataGrid({
   //
   else if (tank) {
     const { data: serviceCallsForTankID } = useGetServiceCallByTankIdQuery({
-      tankId: tank.id,
+      tankId: tank.id
     });
 
     if (!serviceCallsForTankID) return <div>no serviceCallsForTankID</div>;
@@ -367,28 +367,28 @@ export default function SCDataGrid({
         headerName: 'ID',
         minWidth: 110,
         align: 'center',
-        headerAlign: 'center',
+        headerAlign: 'center'
       },
       {
         field: 'tankId',
         headerName: 'Tank ID',
         minWidth: 110,
         align: 'center',
-        headerAlign: 'center',
+        headerAlign: 'center'
       },
       {
         field: 'employeeName',
         headerName: 'Employee Name',
         minWidth: 110,
         align: 'center',
-        headerAlign: 'center',
+        headerAlign: 'center'
       },
       {
         field: 'date',
         headerName: 'Date',
         minWidth: 110,
         align: 'center',
-        headerAlign: 'center',
+        headerAlign: 'center'
       },
       {
         field: 'edit',
@@ -397,176 +397,176 @@ export default function SCDataGrid({
         sortable: false,
         renderCell: editButton,
         align: 'center',
-        headerAlign: 'center',
+        headerAlign: 'center'
       },
       {
         field: 'alkalinity',
         headerName: 'Alkalinity',
         minWidth: 110,
         align: 'center',
-        headerAlign: 'center',
+        headerAlign: 'center'
       },
       {
         field: 'calcium',
         headerName: 'Calcium',
         minWidth: 110,
         align: 'center',
-        headerAlign: 'center',
+        headerAlign: 'center'
       },
       {
         field: 'nitrate',
         headerName: 'Nitrate',
         minWidth: 110,
         align: 'center',
-        headerAlign: 'center',
+        headerAlign: 'center'
       },
       {
         field: 'phosphate',
         headerName: 'Phosphate',
         minWidth: 110,
         align: 'center',
-        headerAlign: 'center',
+        headerAlign: 'center'
       },
       {
         field: 'customerNotes',
         headerName: 'Customer Notes',
         minWidth: 110,
         align: 'center',
-        headerAlign: 'center',
+        headerAlign: 'center'
       },
       {
         field: 'employeeNotes',
         headerName: 'Employee Notes',
         minWidth: 110,
         align: 'center',
-        headerAlign: 'center',
+        headerAlign: 'center'
       },
       {
         field: 'unapprovedNotes',
         headerName: 'Unapproved Notes',
         minWidth: 110,
         align: 'center',
-        headerAlign: 'center',
+        headerAlign: 'center'
       },
       {
         field: 'ATOOperational',
         headerName: 'ATO Operational',
         minWidth: 110,
         align: 'center',
-        headerAlign: 'center',
+        headerAlign: 'center'
       },
       {
         field: 'ATOReservoirFilled',
         headerName: 'ATO Reservoir Filled',
         minWidth: 110,
         align: 'center',
-        headerAlign: 'center',
+        headerAlign: 'center'
       },
       {
         field: 'chemFilterAdjusted',
         headerName: 'Chem Filter Adjusted',
         minWidth: 110,
         align: 'center',
-        headerAlign: 'center',
+        headerAlign: 'center'
       },
       {
         field: 'doserAdjustementOrManualDosing',
         headerName: 'Doser Adjustment Or Manual Dosing',
         minWidth: 110,
         align: 'center',
-        headerAlign: 'center',
+        headerAlign: 'center'
       },
       {
         field: 'dosingReservoirsFull',
         headerName: 'Dosing Reservoirs Full',
         minWidth: 110,
         align: 'center',
-        headerAlign: 'center',
+        headerAlign: 'center'
       },
       {
         field: 'floorsCheckedForSpillsOrDirt',
         headerName: 'Floors Checked For Spills Or Dirt',
         minWidth: 110,
         align: 'center',
-        headerAlign: 'center',
+        headerAlign: 'center'
       },
       {
         field: 'glassCleanedInside',
         headerName: 'Glass Cleaned Inside',
         minWidth: 110,
         align: 'center',
-        headerAlign: 'center',
+        headerAlign: 'center'
       },
       {
         field: 'glassCleanedOutside',
         headerName: 'Glass Cleaned Outside',
         minWidth: 110,
         align: 'center',
-        headerAlign: 'center',
+        headerAlign: 'center'
       },
       {
         field: 'mechFilterChanged',
         headerName: 'Mech Filter Changed',
         minWidth: 110,
         align: 'center',
-        headerAlign: 'center',
+        headerAlign: 'center'
       },
       {
         field: 'pumpsClearedOfDebris',
         headerName: 'Pumps Cleared Of Debris',
         minWidth: 110,
         align: 'center',
-        headerAlign: 'center',
+        headerAlign: 'center'
       },
       {
         field: 'saltCreepCleaned',
         headerName: 'Salt Creep Cleaned',
         minWidth: 110,
         align: 'center',
-        headerAlign: 'center',
+        headerAlign: 'center'
       },
       {
         field: 'skimmerCleanedAndOperational',
         headerName: 'Skimmer Cleaned And Operational',
         minWidth: 110,
         align: 'center',
-        headerAlign: 'center',
+        headerAlign: 'center'
       },
       {
         field: 'waterChanged',
         headerName: 'Water Changed',
         minWidth: 110,
         align: 'center',
-        headerAlign: 'center',
+        headerAlign: 'center'
       },
       {
         field: 'pestAPresent',
         headerName: 'Pest A Present',
         minWidth: 110,
         align: 'center',
-        headerAlign: 'center',
+        headerAlign: 'center'
       },
       {
         field: 'pestBPresent',
         headerName: 'Pest B Present',
         minWidth: 110,
         align: 'center',
-        headerAlign: 'center',
+        headerAlign: 'center'
       },
       {
         field: 'pestCPresent',
         headerName: 'Pest C Present',
         minWidth: 110,
         align: 'center',
-        headerAlign: 'center',
+        headerAlign: 'center'
       },
       {
         field: 'pestDPresent',
         headerName: 'Pest D Present',
         minWidth: 110,
         align: 'center',
-        headerAlign: 'center',
-      },
+        headerAlign: 'center'
+      }
     ];
 
     rows = serviceCallsForTankID.map((s: ServiceCall) => ({
@@ -575,7 +575,7 @@ export default function SCDataGrid({
       date: new Date(s.createdOn).toLocaleDateString(),
       customerNotes: s.customerRequest,
       employeeNotes: s.employeeNotes,
-      unapprovedNotes: s.notApprovedNotes,
+      unapprovedNotes: s.notApprovedNotes
     }));
   } else {
     return <div>error</div>;
@@ -591,9 +591,9 @@ export default function SCDataGrid({
               // Hiding leading `id` column as it provides low value to user.
               // Hidden columns can still be turned on from in the UI.
               id: false,
-              tankId: false,
-            },
-          },
+              tankId: false
+            }
+          }
         }}
         columns={columns}
         rows={rows}

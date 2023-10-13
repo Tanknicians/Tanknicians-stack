@@ -59,8 +59,8 @@ export default function UserCard(props: UserCardProps) {
                   sx={{
                     display: 'flex',
                     justifyContent: {
-                      md: 'flex-end',
-                    },
+                      md: 'flex-end'
+                    }
                   }}
                 >
                   <Button variant='contained' onClick={handleOpenUserModal}>

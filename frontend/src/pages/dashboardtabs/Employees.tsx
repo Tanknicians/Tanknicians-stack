@@ -1,6 +1,6 @@
 import {
   UserData,
-  useGetClientsQuery,
+  useGetClientsQuery
 } from '../../redux/slices/users/userManagementSlice';
 import UserSearchBar from '../../components/UserSearchBar';
 import Typography from '@mui/material/Typography';
@@ -19,24 +19,24 @@ import SCDataGrid from '../../components/SCDataGrid';
 export default function Employees() {
   const { data: optionsList, error: clientsError } = useGetClientsQuery({
     includeTanks: false,
-    isEmployee: true,
+    isEmployee: true
   });
 
   const [employeeModalOpen, setEmployeeModalOpen] = useState(false);
 
   const [selectedEmplyeeId, setSelectedEmplyeeId] = useState<number | null>(
-    null,
+    null
   );
   const selectedEmployee = useMemo(
     () =>
       optionsList?.find((user: UserData) => user.id === selectedEmplyeeId) ??
       null,
-    [optionsList, selectedEmplyeeId],
+    [optionsList, selectedEmplyeeId]
   );
 
   const handleUserSelected = (
     _event: React.SyntheticEvent,
-    employee: UserData | null,
+    employee: UserData | null
   ) => {
     setSelectedEmplyeeId(employee?.id ?? null);
   };
@@ -67,8 +67,8 @@ export default function Employees() {
             sx={{
               display: 'flex',
               justifyContent: {
-                md: 'flex-end',
-              },
+                md: 'flex-end'
+              }
             }}
           >
             <Button variant='contained' onClick={handleOpenUserModal}>

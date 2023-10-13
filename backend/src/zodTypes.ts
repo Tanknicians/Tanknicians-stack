@@ -13,7 +13,7 @@ export const validateRequestBody =
       return res.status(400).json({
         message:
           'Request body does not fit expected Zod Schema. Check error for specifics.',
-        error: e,
+        error: e
       });
     }
   };
@@ -24,10 +24,10 @@ const userNameRefine = [
   ({
     firstName,
     middleName,
-    lastName,
+    lastName
   }: { firstName?: string; middleName?: string; lastName?: string }) =>
     firstName || middleName || lastName,
-  { message: 'You need to have firstName, middleName, or lastName' },
+  { message: 'You need to have firstName, middleName, or lastName' }
 ] as const;
 
 export const userSchemaBase = z.object({
@@ -38,7 +38,7 @@ export const userSchemaBase = z.object({
   address: z.string().optional().default(''),
   phone: z.string().optional().default(''),
 
-  isEmployee: z.boolean(),
+  isEmployee: z.boolean()
 });
 
 export const createUser = userSchemaBase
@@ -63,12 +63,12 @@ export const loginSchema = z
     password: z.string({ required_error: 'Password is required' }),
     role: z.enum(['ADMIN', 'EMPLOYEE', 'CUSTOMER'], {
       errorMap: () => ({
-        message: 'Role must be ADMIN, EMPLOYEE, or CUSTOMER',
-      }),
+        message: 'Role must be ADMIN, EMPLOYEE, or CUSTOMER'
+      })
     }),
     userId: z
       .number({ required_error: 'Must be a positive integer.' })
-      .positive(),
+      .positive()
   })
   .strict();
 
@@ -92,13 +92,13 @@ export const tankMetaDataSchema = z.object({
   tanknicianSourcedOnly: z.boolean(),
   lastDateServiced: z.coerce.date(),
 
-  customerId: z.number().int(),
+  customerId: z.number().int()
 });
 
 export const createTank = tankMetaDataSchema.omit({
   id: true,
   qrSymbol: true,
-  lastDateServiced: true,
+  lastDateServiced: true
 });
 export const updateTank = tankMetaDataSchema.omit({ id: true });
 export type CreateTankMetaData = z.infer<typeof createTank>;
@@ -145,7 +145,7 @@ export const serviceCallSchema = z.object({
   pestDPresent: z.boolean(),
 
   employeeId: z.number().int(),
-  tankId: z.number().int(),
+  tankId: z.number().int()
 });
 
 export type ServiceCall = z.infer<typeof serviceCallSchema>;
@@ -155,7 +155,7 @@ export const updateServiceCall = serviceCallSchema.omit({ id: true });
 export const mobileServiceCall = serviceCallSchema.omit({
   id: true,
   isApproved: true,
-  notApprovedNotes: true,
+  notApprovedNotes: true
 });
 
 export type CreateServiceCall = z.infer<typeof createServiceCall>;
@@ -171,7 +171,7 @@ export type ServiceCallMobileRequest = ValidatedRequest<MobileServiceCall>;
 export const authLogin = loginSchema.omit({
   id: true,
   role: true,
-  userId: true,
+  userId: true
 });
 export type AuthLogin = z.infer<typeof authLogin>;
 export type AuthLoginRequest = ValidatedRequest<AuthLogin>;
@@ -193,14 +193,14 @@ const tokenData = loginSchema.extend({ id: z.number(), userId: z.number() });
 
 export const tokenSchema = z.object({
   data: tokenData,
-  isRefreshToken: z.literal(false),
+  isRefreshToken: z.literal(false)
 });
 
 export type Token = z.infer<typeof tokenSchema>;
 
 export const refreshTokenSchema = z.object({
   data: tokenData,
-  isRefreshToken: z.literal(true),
+  isRefreshToken: z.literal(true)
 });
 export type RefreshToken = z.infer<typeof refreshTokenSchema>;
 
@@ -229,15 +229,15 @@ export const searchSchema = z
 
     // defined enums, most searches may opt to not use
     searchRole: z.enum(['ADMIN', 'EMPLOYEE', 'CUSTOMER']).optional(),
-    searchType: z.enum(['FRESH', 'SALT', 'BRACKISH']).optional(),
+    searchType: z.enum(['FRESH', 'SALT', 'BRACKISH']).optional()
   })
   .refine(
     ({ searchString, searchBoolean, searchNum }) =>
       (searchString ?? searchBoolean ?? searchNum) !== undefined,
     {
       message:
-        'You need at least one of: searchString, searchBoolean, searchNum',
-    },
+        'You need at least one of: searchString, searchBoolean, searchNum'
+    }
   );
 
 export type SearchSchema = z.infer<typeof searchSchema>;

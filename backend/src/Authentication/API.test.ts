@@ -18,7 +18,7 @@ describe('authentication api', () => {
       role: 'ADMIN',
       email: 'test@email.com',
       password: 'testtesttest',
-      userId: 0,
+      userId: 0
     });
     // Act
     // Assert
