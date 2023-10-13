@@ -1,23 +1,23 @@
 import {
   BarCodeScanner,
   BarCodeScannerResult,
-  PermissionStatus,
-} from "expo-barcode-scanner";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { Alert, View, Text, TouchableOpacity } from "react-native";
-import { setTankId } from "../redux/slices/forms/servicecallTankSlice";
+  PermissionStatus
+} from 'expo-barcode-scanner';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { Alert, View, Text, TouchableOpacity } from 'react-native';
+import { setTankId } from '../redux/slices/forms/servicecallTankSlice';
 import {
   QRSCANNERSCREEN,
   Routes,
-  SERVICECALLFORMSCREEN,
-} from "../types/Routes";
-import { SafeAreaView } from "react-native-safe-area-context";
-import BarcodeMask from "react-native-barcode-mask";
-import { useEffect, useState } from "react";
-import { Ionicons } from "@expo/vector-icons";
-import { useDispatch } from "react-redux";
-import { TERTIARY_COLOR, getScreenDimensions } from "../types/Styling";
-import styles from "../styles/qrscreen";
+  SERVICECALLFORMSCREEN
+} from '../types/Routes';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import BarcodeMask from 'react-native-barcode-mask';
+import { useEffect, useState } from 'react';
+import { Ionicons } from '@expo/vector-icons';
+import { useDispatch } from 'react-redux';
+import { TERTIARY_COLOR, getScreenDimensions } from '../types/Styling';
+import styles from '../styles/qrscreen';
 
 // Allows to scan QR code only if in mask area
 const finderWidth: number = 280;
@@ -55,7 +55,7 @@ const QRScannerScreen = ({ navigation }: Props) => {
     return (
       <View style={styles.permissionContainer}>
         <Text style={styles.promptText}>
-          No access to camera. {"\n\n"}Please enable camera permissions in phone
+          No access to camera. {'\n\n'}Please enable camera permissions in phone
           settings
         </Text>
       </View>
@@ -66,7 +66,7 @@ const QRScannerScreen = ({ navigation }: Props) => {
     if (!scanned) {
       const {
         data,
-        bounds: { origin } = {},
+        bounds: { origin } = {}
       } = scanningResult;
       // @ts-ignore
       const { x, y } = origin;
@@ -91,17 +91,17 @@ const QRScannerScreen = ({ navigation }: Props) => {
         } else if (!invalidQR) {
           setInvalidQR(true);
           Alert.alert(
-            "Invalid QR Code",
-            "Please scan a valid Tanknicians QR code",
+            'Invalid QR Code',
+            'Please scan a valid Tanknicians QR code',
             [
               {
-                text: "OK",
+                text: 'OK',
                 onPress: () => {
                   setScanned(false);
                   setInvalidQR(false);
-                },
-              },
-            ],
+                }
+              }
+            ]
           );
         }
       }
@@ -113,7 +113,7 @@ const QRScannerScreen = ({ navigation }: Props) => {
     setType((current: BarCodeScanner) =>
       current === BarCodeScanner.Constants.Type.back
         ? BarCodeScanner.Constants.Type.front
-        : BarCodeScanner.Constants.Type.back,
+        : BarCodeScanner.Constants.Type.back
     );
   }
 
@@ -137,7 +137,7 @@ const QRScannerScreen = ({ navigation }: Props) => {
           <View style={styles.overlay}>
             <TouchableOpacity onPress={toggleCameraType}>
               <Ionicons
-                name="camera-reverse-outline"
+                name='camera-reverse-outline'
                 size={70}
                 color={TERTIARY_COLOR}
               />

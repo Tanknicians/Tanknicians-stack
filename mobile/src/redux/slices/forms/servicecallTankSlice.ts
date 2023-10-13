@@ -1,12 +1,12 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { RootState } from "../../store";
+import { createSlice } from '@reduxjs/toolkit';
+import { RootState } from '../../store';
 
 const initialState = {
-  tankId: null as number | null,
+  tankId: null as number | null
 };
 
 const servicecallTankSlice = createSlice({
-  name: "servicecallClientTank",
+  name: 'servicecallClientTank',
   initialState,
   reducers: {
     setTankId: (state, action) => {
@@ -15,8 +15,8 @@ const servicecallTankSlice = createSlice({
     },
     clearTankId: (state) => {
       state.tankId = null;
-    },
-  },
+    }
+  }
 });
 
 export const { setTankId, clearTankId } = servicecallTankSlice.actions;

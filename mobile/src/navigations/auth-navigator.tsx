@@ -1,31 +1,31 @@
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import ServiceCallFormScreen from "../screens/ServiceCallFormScreen";
-import { selectCurrentToken } from "../redux/slices/auth/authSlice";
-import { NavigationContainer } from "@react-navigation/native";
-import QRScannerScreen from "../screens/QRScannerScreen";
-import LoginScreen, { styles } from "../screens/LoginScreen";
-import { useSelector } from "react-redux";
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import ServiceCallFormScreen from '../screens/ServiceCallFormScreen';
+import { selectCurrentToken } from '../redux/slices/auth/authSlice';
+import { NavigationContainer } from '@react-navigation/native';
+import QRScannerScreen from '../screens/QRScannerScreen';
+import LoginScreen, { styles } from '../screens/LoginScreen';
+import { useSelector } from 'react-redux';
 import {
   LOGINSCREEN,
   QRSCANNERSCREEN,
   Routes,
-  SERVICECALLFORMSCREEN,
-} from "../types/Routes";
-import * as React from "react";
+  SERVICECALLFORMSCREEN
+} from '../types/Routes';
+import * as React from 'react';
 
 const Stack = createNativeStackNavigator<Routes>();
 
 const AuthNavigator = () => {
   const isSignedIn = !!useSelector(selectCurrentToken);
   const initialRouteName = isSignedIn ? QRSCANNERSCREEN : LOGINSCREEN;
-  console.log("isSignedIn: ", isSignedIn);
+  console.log('isSignedIn: ', isSignedIn);
 
   return (
     <NavigationContainer>
       <Stack.Navigator
         screenOptions={{
           headerShown: false,
-          animationTypeForReplace: "push",
+          animationTypeForReplace: 'push'
         }}
         initialRouteName={initialRouteName}
       >
@@ -38,7 +38,7 @@ const AuthNavigator = () => {
             />
           </>
         ) : (
-          <Stack.Screen name="LoginScreen" component={LoginScreen} />
+          <Stack.Screen name='LoginScreen' component={LoginScreen} />
         )}
       </Stack.Navigator>
     </NavigationContainer>

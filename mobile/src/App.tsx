@@ -1,7 +1,7 @@
-import { Provider as PaperProvider } from "react-native-paper";
-import { PersistGate } from "redux-persist/integration/react";
-import AuthNavigator from "./navigations/auth-navigator";
-import { persistor } from "./redux/store";
+import { Provider as PaperProvider } from 'react-native-paper';
+import { PersistGate } from 'redux-persist/integration/react';
+import AuthNavigator from './navigations/auth-navigator';
+import { persistor } from './redux/store';
 
 const App = () => {
   return (
