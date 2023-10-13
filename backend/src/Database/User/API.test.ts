@@ -10,7 +10,7 @@ const createUser: CreateUser = {
   lastName: 'USER_TEST',
   address: 'USER_TEST',
   phone: '11111111111',
-  isEmployee: false,
+  isEmployee: false
 };
 
 describe('User CRUD operations', () => {
@@ -31,7 +31,7 @@ describe('User CRUD operations', () => {
       const { isEmployee, ...data } = createUser;
       const updateData: UpdateUser = {
         ...data,
-        isEmployee: true,
+        isEmployee: true
       };
       const result = await update(createUserId, updateData);
       expect(result.message).toBe('User updated successfully');
@@ -41,7 +41,7 @@ describe('User CRUD operations', () => {
       const searchCriteria: SearchSchema = {
         page: 1,
         size: 5,
-        searchString: 'USER_TEST',
+        searchString: 'USER_TEST'
       };
       const result = await search(searchCriteria);
       expect(result).toBeDefined();

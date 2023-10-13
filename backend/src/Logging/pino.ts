@@ -8,9 +8,9 @@ export const logger = pino({
     options: {
       destination: '../backend.log',
       minLength: 4096,
-      sync: false,
-    },
-  },
+      sync: false
+    }
+  }
 });
 
 // front-end usage
@@ -20,9 +20,9 @@ export const httpLogger = pinoHttp({
     options: {
       destination: '../frontend.log',
       minLength: 4096,
-      sync: false,
-    },
-  },
+      sync: false
+    }
+  }
 });
 
 // NOTE: need to have a log rotation service on the Ubuntu server

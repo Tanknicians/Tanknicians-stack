@@ -6,7 +6,7 @@ import { Login } from '@prisma/client';
 export async function create(login: CreateLogin) {
   // Convert from Zod to Prisma
   const createLogin: Omit<Login, 'id'> = {
-    ...login,
+    ...login
   };
 
   try {
@@ -37,7 +37,7 @@ export async function update(id: number, data: UpdateLogin) {
   // Convert from Zod to Prisma
   const updateLogin: Login = {
     id,
-    ...data,
+    ...data
   };
 
   try {

@@ -32,6 +32,10 @@ export default function ApproveForms() {
     isEmployee: undefined
   });
 
+  if (error) {
+    return <div>{JSON.stringify(error)}</div>;
+  }
+
   function getEmployeeName(empId: number) {
     // get the name of the technician associated with the passed employee id
     let ret = 'EMPLOYEE NAME NOT FOUND';
@@ -72,21 +76,26 @@ export default function ApproveForms() {
 
   return (
     <Container>
-      <Grid container spacing={1} maxWidth={'100%'}>
-        <Grid item xs={12} sm={12} md={12} xl={12}>
+      <Grid container rowSpacing={4} alignItems='center' maxWidth={'100%'}>
+        <Grid item xs={12}>
           <Typography variant='h4' component='h1'>
             Approve Forms
           </Typography>
         </Grid>
-        <Grid item xs={12} sm={12} md={12} xl={12}>
-          <TableContainer component={Paper}>
+        <Grid item xs={12}>
+          <TableContainer elevation={3} component={Paper}>
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell />
-                  <TableCell>Technician</TableCell>
-                  <TableCell>Client</TableCell>
-                  <TableCell>Tank ID</TableCell>
+                  <TableCell align='center' sx={{ textAlign: 'center' }}>
+                    Technician
+                  </TableCell>
+                  <TableCell align='center' sx={{ textAlign: 'center' }}>
+                    Client
+                  </TableCell>
+                  <TableCell align='center' sx={{ textAlign: 'center' }}>
+                    Tank ID
+                  </TableCell>
                   <TableCell />
                 </TableRow>
               </TableHead>
@@ -96,15 +105,21 @@ export default function ApproveForms() {
                     key={object.id}
                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                   >
-                    <TableCell component='th' scope='row'>
-                      {index + 1}
-                    </TableCell>
-                    <TableCell component='th' scope='row'>
+                    <TableCell
+                      align='center'
+                      sx={{ textAlign: 'center' }}
+                      component='th'
+                      scope='row'
+                    >
                       {getEmployeeName(object.employeeId)}
                     </TableCell>
-                    <TableCell>{getClientName(object.tankId)}</TableCell>
-                    <TableCell>{object.tankId}</TableCell>
-                    <TableCell>
+                    <TableCell align='center' sx={{ textAlign: 'center' }}>
+                      {getClientName(object.tankId)}
+                    </TableCell>
+                    <TableCell align='center' sx={{ textAlign: 'center' }}>
+                      {object.tankId}
+                    </TableCell>
+                    <TableCell align='center' sx={{ textAlign: 'center' }}>
                       <Button onClick={() => handleModalOpen(object)}>
                         <BorderColorIcon />
                       </Button>

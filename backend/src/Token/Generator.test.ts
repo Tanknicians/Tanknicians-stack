@@ -8,7 +8,7 @@ describe('token generator', () => {
       email: 'email',
       password: 'pw',
       role: 'CUSTOMER',
-      userId: 1,
+      userId: 1
     };
 
     expect(generateToken(userLogin)).not.toBe(null);

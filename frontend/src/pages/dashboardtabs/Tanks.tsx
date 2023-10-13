@@ -51,6 +51,7 @@ export function TankTabs({
     setCreateTankOpen(true);
   };
 
+  // Switch to grid
   return (
     <>
       <CreateTankForm
@@ -132,8 +133,13 @@ export function TankTabs({
                 Add Tank
               </Button>
             </Box>
-            <Typography variant='h6'>Service Calls</Typography>
           </Box>
+          <Paper elevation={3}>
+            <Container>
+              <Typography variant='h6'>Service Calls</Typography>
+            </Container>
+            <SCDataGrid tank={selectedTank} employeeId={undefined} />
+          </Paper>
           <CreateServiceCallModal
             key={selectedTank.id}
             open={createServiceCallOpen}
@@ -141,7 +147,6 @@ export function TankTabs({
             tankId={selectedTank.id}
             employeeId={employeeId}
           />
-          <SCDataGrid tank={selectedTank} employeeId={undefined} />
         </>
       )}
     </>
@@ -171,43 +176,39 @@ export default function Tanks() {
   if (!optionsList) return <div>Loading...</div>;
 
   return (
-    <>
-      <Container>
-        <Grid container spacing={1} maxWidth={'100%'}>
-          <Grid item xs={12} sm={12} md={3} xl={3}>
-            <Typography variant='h4' component='h1'>
-              Tanks
-            </Typography>
-          </Grid>
-          <Grid item xs={12} sm={12} md={6} xl={6}>
-            <UserSearchBar
-              userList={optionsList}
-              selectedUser={selectedUser}
-              handleUserSelected={handleUserSelected}
-            />
-          </Grid>
-          <Grid item xs={12} sm={12} md={3} xl={3} />
-          <Grid item xs={12} sm={12} md={12} xl={12}>
-            <Collapse in={collapse}>
-              <Typography variant='h4' gutterBottom>
-                Service Calls
-              </Typography>
-              {selectedUser?.OwnedTanks && (
-                <TankTabs
-                  key={selectedUser.id}
-                  tanks={selectedUser.OwnedTanks}
-                  employeeId={selectedUser.id}
-                />
-              )}
-            </Collapse>
-            <Collapse in={!collapse}>
-              <Paper>
-                <TankGrid hideToolbar selectTankId={selectCurrentUserId} />
-              </Paper>
-            </Collapse>
-          </Grid>
+    <Container>
+      <Grid container rowSpacing={1} alignItems='center' maxWidth={'100%'}>
+        <Grid item xs={12} md={3}>
+          <Typography variant='h4' component='h1'>
+            Tanks
+          </Typography>
         </Grid>
-      </Container>
-    </>
+        <Grid item xs={12} md={6}>
+          <UserSearchBar
+            userList={optionsList}
+            selectedUser={selectedUser}
+            handleUserSelected={handleUserSelected}
+            label='Clients'
+          />
+        </Grid>
+        <Grid item xs={12} md={3} />
+        <Grid item xs={12}>
+          <Collapse in={collapse}>
+            {selectedUser?.OwnedTanks && (
+              <TankTabs
+                key={selectedUser.id}
+                tanks={selectedUser.OwnedTanks}
+                employeeId={selectedUser.id}
+              />
+            )}
+          </Collapse>
+          <Collapse in={!collapse}>
+            <Paper elevation={3}>
+              <TankGrid hideToolbar selectTankId={selectCurrentUserId} />
+            </Paper>
+          </Collapse>
+        </Grid>
+      </Grid>
+    </Container>
   );
 }

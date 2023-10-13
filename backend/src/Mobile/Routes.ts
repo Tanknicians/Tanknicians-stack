@@ -5,7 +5,7 @@ import {
   createServiceCall,
   mobileServiceCall,
   ServiceCallMobileRequest,
-  validateRequestBody,
+  validateRequestBody
 } from '../zodTypes';
 
 const mobileRouter = express.Router();
@@ -28,7 +28,7 @@ mobileRouter.post(
           : 'Unknown Error: Failed to upload Service Call from mobile.';
       res.status(500).json({ error: errorMessage });
     }
-  },
+  }
 );
 
 export default mobileRouter;

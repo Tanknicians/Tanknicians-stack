@@ -22,7 +22,7 @@ import { create as createUser, deleteOne as deleteUser } from './../User/API';
 
 import {
   create as createTank,
-  deleteOne as deleteTank,
+  deleteOne as deleteTank
 } from './../TankMetadata/API';
 
 import {
@@ -30,7 +30,7 @@ import {
   CreateUser,
   CreateTankMetaData,
   CreateServiceCall,
-  UpdateServiceCall,
+  UpdateServiceCall
 } from '../../zodTypes';
 
 // we need to keep track of the id of the creations to delete them later
@@ -69,7 +69,7 @@ const createServiceCall: CreateServiceCall = {
   pestCPresent: false,
   pestDPresent: false,
   employeeId: 0, // update on pre-test setup
-  tankId: 0, // update on pre-test setup
+  tankId: 0 // update on pre-test setup
 };
 
 const createTankMetadata: CreateTankMetaData = {
@@ -77,7 +77,7 @@ const createTankMetadata: CreateTankMetaData = {
   description: 'SC_TEST',
   volume: 0,
   tanknicianSourcedOnly: false,
-  customerId: 0,
+  customerId: 0
 };
 
 const commonUserData: Omit<CreateUser, 'isEmployee'> = {
@@ -85,7 +85,7 @@ const commonUserData: Omit<CreateUser, 'isEmployee'> = {
   middleName: 'SC_TEST',
   lastName: 'SC_TEST',
   address: 'SC_TEST',
-  phone: '11111111111',
+  phone: '11111111111'
 };
 
 // ServiceCall CRUD testing suite can now be run:
@@ -94,7 +94,7 @@ describe('ServiceCall CRUD operations', () => {
     it('create a customer and set the global id', async () => {
       const customerResponse = await createUser({
         ...commonUserData,
-        isEmployee: false,
+        isEmployee: false
       });
       createCustomerId = customerResponse.id;
     });
@@ -102,7 +102,7 @@ describe('ServiceCall CRUD operations', () => {
     it('create an employee and set the global id', async () => {
       const employeeResponse = await createUser({
         ...commonUserData,
-        isEmployee: true,
+        isEmployee: true
       });
       createEmployeeId = employeeResponse.id;
     });
@@ -141,7 +141,7 @@ describe('ServiceCall CRUD operations', () => {
       const updateData: UpdateServiceCall = {
         ...serviceCallData,
         employeeNotes: 'SC_TEST',
-        isApproved: true,
+        isApproved: true
       };
       const result = await update(createServiceCallId, updateData);
       expect(result.message).toBe('Service Call updated successfully');
@@ -151,7 +151,7 @@ describe('ServiceCall CRUD operations', () => {
       const searchCriteria: SearchSchema = {
         page: 1,
         size: 5,
-        searchString: 'SC_TEST',
+        searchString: 'SC_TEST'
       };
       const result = await search(searchCriteria);
       expect(result).toBeDefined();

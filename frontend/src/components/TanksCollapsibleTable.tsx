@@ -1,4 +1,3 @@
-import Box from '@mui/material/Box';
 import Collapse from '@mui/material/Collapse';
 import IconButton from '@mui/material/IconButton';
 import Table from '@mui/material/Table';
@@ -12,7 +11,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { UpdateTankMetaData } from '../zodTypes';
 import { useState } from 'react';
-import { Grid, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import QRCodeCard from './QRCodeCard';
 import { UserData } from '../redux/slices/users/userManagementSlice';
 
@@ -23,9 +22,9 @@ function Row(props: { row: UpdateTankMetaData }) {
   return (
     <>
       <TableRow onClick={() => setOpen(!open)}>
-        {/* <TableCell align="center" sx={{ flex: 1 }}>
+        <TableCell align='center' sx={{ flex: 1 }}>
           {row.description}
-        </TableCell> */}
+        </TableCell>
         <TableCell align='center' sx={{ flex: 1 }}>
           {row.volume}
         </TableCell>
@@ -75,9 +74,9 @@ export default function TanksCollapsibleTable({
       <Table stickyHeader size='small'>
         <TableHead>
           <TableRow>
-            {/* <TableCell align="center" sx={{ flex: 1 }}>
+            <TableCell align='center' sx={{ flex: 1 }}>
               Name
-            </TableCell> */}
+            </TableCell>
             <TableCell align='center' sx={{ flex: 1 }}>
               Volume
             </TableCell>
@@ -85,7 +84,7 @@ export default function TanksCollapsibleTable({
               Tank Type
             </TableCell>
             <TableCell align='center' sx={{ flex: 1 }}>
-              Tanknicians' Sourced
+              Tanknicians-Sourced
             </TableCell>
             <TableCell align='center' sx={{ flex: 1 }}>
               Last Serviced

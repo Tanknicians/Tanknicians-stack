@@ -48,26 +48,25 @@ export default function Employees() {
   if (!optionsList) return <CircularProgress />;
   return (
     <Container>
-      <Grid container spacing={1} maxWidth={'100%'}>
-        <Grid item xs={12} sm={12} md={3} xl={3}>
+      <Grid container rowSpacing={1} alignItems='center' maxWidth={'100%'}>
+        <Grid item xs={12} md={3}>
           <Typography variant='h4' component='h1'>
             Employees
           </Typography>
         </Grid>
-        <Grid item xs={12} sm={12} md={6} xl={6}>
+        <Grid item xs={12} md={6}>
           <UserSearchBar
             userList={optionsList}
             selectedUser={selectedEmployee}
             handleUserSelected={handleUserSelected}
+            label='Employees'
           />
         </Grid>
-        <Grid item xs={12} sm={12} md={3} xl={3}>
+        <Grid item xs={12} md={3}>
           <Box
             sx={{
               display: 'flex',
               justifyContent: {
-                xs: 'flex-start',
-                sm: 'flex-start',
                 md: 'flex-end'
               }
             }}
@@ -78,7 +77,7 @@ export default function Employees() {
             </Button>
           </Box>
         </Grid>
-        <Grid item xs={12} sm={12} md={12} xl={12}>
+        <Grid item xs={12} md={12}>
           <Collapse in={!!selectedEmployee} unmountOnExit>
             <UserCard user={selectedEmployee} />
             {selectedEmplyeeId && (

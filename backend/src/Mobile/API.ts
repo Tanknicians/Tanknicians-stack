@@ -3,7 +3,7 @@ import { serviceCallDB } from '../../prisma/db/ServiceCall';
 import {
   CreateServiceCall,
   MobileServiceCall,
-  tankMetaDataSchema,
+  tankMetaDataSchema
 } from '../zodTypes';
 import { ServiceCall, TankMetadata } from '@prisma/client';
 
@@ -21,14 +21,14 @@ const paramLimits = {
   nitrateMin: 1,
   nitrateMax: 20,
   phosphateMin: 0.03,
-  phosphateMax: 0.24,
+  phosphateMax: 0.24
 };
 
 export async function uploadServiceCall(data: MobileServiceCall) {
   const createServiceCall: Omit<ServiceCall, 'id'> = {
     ...data,
     notApprovedNotes: '',
-    isApproved: true,
+    isApproved: true
   };
 
   checkTankId(createServiceCall);
