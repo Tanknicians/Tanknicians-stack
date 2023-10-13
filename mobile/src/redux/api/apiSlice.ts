@@ -12,7 +12,7 @@ import { RefreshTokenData } from '../../types/zodTypes';
 // const BASE_URL = 'http://10.0.2.2:5000';
 // This URL works for physical device when "npm start" is executed
 // ! The url will be given by ngrok after running the command ngrok http 5000
-const BASE_URL = 'https://3153-132-170-212-30.ngrok.io';
+const BASE_URL = 'https://tanknicians.xyz';
 
 const baseQuery = fetchBaseQuery({
   baseUrl: BASE_URL,
