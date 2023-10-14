@@ -265,7 +265,7 @@ export default function CreateServiceCallModal({
     .map(([key, value]) => ({ name: key as keyof CreateServiceCall, ...value }))
     .filter((field) => field.name !== 'isApproved');
 
-  function checkAllCeckboxes(value: boolean) {
+  function checkAllCheckboxes(value: boolean) {
     fields.forEach((field) => {
       if (field.type === 'boolean') {
         setValue(field.name, value);
@@ -308,7 +308,7 @@ export default function CreateServiceCallModal({
           ))}
           <Grid item xs={4}>
             <Button
-              onClick={(e) => checkAllCeckboxes(true)}
+              onClick={(e) => checkAllCheckboxes(true)}
               size='small'
               variant='contained'
             >
