@@ -19,7 +19,7 @@ export default function UserCard(props: UserCardProps) {
 
   const handleOpenUserModal = () => {
     console.log(user);
-    handleClose()
+    handleClose();
     setUserModalOpen((prevState) => !prevState);
   };
 
@@ -66,7 +66,15 @@ export default function UserCard(props: UserCardProps) {
                   {user.phone}
                 </Typography>
               </Grid>
-              <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'center', height: '100%' }}>
+              <Grid
+                item
+                xs={2}
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  height: '100%'
+                }}
+              >
                 <IconButton
                   aria-label='more'
                   id='long-button'
@@ -77,18 +85,9 @@ export default function UserCard(props: UserCardProps) {
                 >
                   <MoreVertIcon />
                 </IconButton>
-                <Menu
-                  anchorEl={anchorEl}
-                  open={open}
-                  onClose={handleClose}
-                >
-                  <MenuItem
-                    onClick={handleOpenUserModal}
-                  >
-                    Edit
-                  </MenuItem>
+                <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
+                  <MenuItem onClick={handleOpenUserModal}>Edit</MenuItem>
                 </Menu>
-
               </Grid>
             </>
           )}
