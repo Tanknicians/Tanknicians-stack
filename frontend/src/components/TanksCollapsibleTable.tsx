@@ -11,13 +11,20 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { UpdateTankMetaData } from '../zodTypes';
 import { useState } from 'react';
-import { Typography } from '@mui/material';
+import { Button, Stack, Typography } from '@mui/material';
 import QRCodeCard from './QRCodeCard';
 import { UserData } from '../redux/slices/users/userManagementSlice';
+import { ArrowCircleRight } from '@mui/icons-material';
+import { useNavigate } from 'react-router-dom';
 
 function Row(props: { row: UpdateTankMetaData }) {
   const { row } = props;
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
+
+  function gotoTank(tankId: number) {
+    navigate(`/dashboard/Tanks?tankId=${tankId}`);
+  }
 
   return (
     <>
@@ -45,16 +52,47 @@ function Row(props: { row: UpdateTankMetaData }) {
         </TableCell>
       </TableRow>
       <TableRow>
-        <TableCell sx={{ py: 0, flex: 1 }} colSpan={6}>
+        <TableCell colSpan={12}>
           <Collapse in={open} timeout='auto' unmountOnExit>
-            <Typography textAlign='center' variant='h6' gutterBottom>
-              QR Code
-            </Typography>
-            <QRCodeCard
-              client={CURRENTCLIENT}
-              tankId={row.id}
-              qrSymbol={row.qrSymbol}
-            />
+            <Stack
+              alignItems='center'
+              spacing={2}
+              direction='row'
+              justifyContent='space-around'
+            >
+              <Stack
+                direction='column'
+                justifyContent='space-evenly'
+                alignItems='center'
+                spacing={2}
+              >
+                <Typography variant='h6' gutterBottom>
+                  QR Code
+                </Typography>
+                <QRCodeCard
+                  client={CURRENTCLIENT}
+                  tankId={row.id}
+                  qrSymbol={row.qrSymbol}
+                />
+              </Stack>
+              <Stack
+                direction='column'
+                justifyContent='center'
+                alignItems='center'
+                spacing={2}
+              >
+                <Typography variant='h6' gutterBottom>
+                  QR Code
+                </Typography>
+                <Button
+                  variant='outlined'
+                  endIcon={<ArrowCircleRight />}
+                  onClick={() => gotoTank(row.id)}
+                >
+                  Go to tank view
+                </Button>
+              </Stack>
+            </Stack>
           </Collapse>
         </TableCell>
       </TableRow>
@@ -67,7 +105,10 @@ let CURRENTCLIENT = {} as UserData;
 export default function TanksCollapsibleTable({
   client,
   tanks
-}: { client: UserData; tanks: UpdateTankMetaData[] }) {
+}: {
+  client: UserData;
+  tanks: UpdateTankMetaData[];
+}) {
   CURRENTCLIENT = client;
   return (
     <TableContainer component={Paper} sx={{ width: '100%' }}>

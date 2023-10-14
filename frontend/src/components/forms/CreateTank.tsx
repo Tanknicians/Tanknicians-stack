@@ -38,8 +38,11 @@ function CreateTankForm({ userId, open, setOpen }: CreateTankFormProps) {
     resolver: zodResolver(createTank),
     defaultValues: {
       tanknicianSourcedOnly: false,
-      customerId: userId
-    }
+      customerId: userId,
+      type: 'BRACKISH',
+      volume: 0,
+      description: ''
+    } as CreateTankMetaData
   });
 
   // console.log('Create Tank Form RHF Errors: ', errors);

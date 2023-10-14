@@ -11,6 +11,7 @@ import {
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { useAddUserMutation } from '../../redux/slices/users/userManagementSlice';
 import { createUserSchema, CreateUser } from '../../zodTypes';
+import { MuiTelInput } from 'mui-tel-input';
 
 export default function CreateUserModal({
   open,
@@ -25,8 +26,13 @@ export default function CreateUserModal({
   const { handleSubmit, control, reset, formState } = useForm<CreateUser>({
     resolver: zodResolver(createUserSchema),
     defaultValues: {
-      isEmployee: isEmployee
-    }
+      isEmployee: isEmployee,
+      firstName: '',
+      middleName: '',
+      lastName: '',
+      address: '',
+      phone: ''
+    } as CreateUser
   });
   console.log({ formState });
 
@@ -94,7 +100,7 @@ export default function CreateUserModal({
               name='phone'
               control={control}
               render={({ field }) => (
-                <TextField fullWidth label='Phone Number' {...field} />
+                <MuiTelInput fullWidth label='Phone Number' {...field} />
               )}
             />
           </Grid>

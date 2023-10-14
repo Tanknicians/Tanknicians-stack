@@ -1,6 +1,7 @@
 import { format } from 'date-fns';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
+  Box,
   Button,
   Checkbox,
   CircularProgress,
@@ -24,16 +25,26 @@ import {
 } from '../../zodTypes';
 import { useSelector } from 'react-redux';
 import { selectCurrentUser } from '../../redux/slices/auth/authSlice';
+import UserSearchBar from '../UserSearchBar';
+import {
+  useGetClientsQuery,
+  useGetUserQuery
+} from '../../redux/slices/users/userManagementSlice';
+import {
+  useGetAllTanksQuery,
+  useGetTankDataQuery
+} from '../../redux/slices/tanks/tankDataSlice';
 
 type FormProps = {
   name: keyof CreateServiceCall;
-  type: 'string' | 'number' | 'boolean' | 'date' | 'full';
+  type: 'string' | 'number' | 'boolean' | 'date' | 'full' | 'phone';
   control: Control<CreateServiceCall>;
   size?: number;
   multiline?: boolean;
   required?: boolean;
+  hidden?: boolean;
 };
-
+function getType(input: string) {}
 function getLabel(input: string) {
   if (!input) return '';
   let result = input.charAt(0).toUpperCase() + input.slice(1);
@@ -49,10 +60,13 @@ export function CreateForm({
   control,
   size,
   multiline,
-  required
+  required,
+  hidden
 }: FormProps) {
+  if (hidden) {
+    return null;
+  }
   const label = getLabel(name.toString());
-
   if (type === 'boolean') {
     return (
       <Grid item xs={size ?? 4}>
@@ -97,7 +111,9 @@ export function CreateForm({
               required={!!required}
               fullWidth
               multiline={!!multiline}
-              type={type === 'full' ? 'string' : type}
+              type={
+                type === 'full' ? 'string' : type === 'phone' ? 'tel' : type
+              }
               label={label}
               InputLabelProps={{ shrink: type === 'date' ? true : undefined }}
               {...field}
@@ -118,8 +134,8 @@ const createServiceCallFields: Record<
   keyof CreateServiceCall,
   Omit<FormProps, 'name' | 'control'>
 > = {
-  employeeId: { type: 'number', required: true, size: 4 },
-  tankId: { type: 'number', required: true, size: 4 },
+  employeeId: { type: 'number', hidden: true },
+  tankId: { type: 'number', hidden: true },
   createdOn: { type: 'date', required: true, size: 4 },
   customerRequest: { type: 'string', size: 12 },
   employeeNotes: { type: 'string', size: 12 },
@@ -166,6 +182,8 @@ const defaultValues: CreateServiceCall = Object.fromEntries(
         return [key, 0];
       case 'full':
         return [key, ''];
+      case 'phone':
+        return [key, ''];
     }
   })
 );
@@ -175,7 +193,7 @@ export default function CreateServiceCallModal({
   open,
   setOpen,
   tankId,
-  employeeId,
+  employeeId: prevEmployeeId,
   previousServiceCall
 }: {
   open: boolean;
@@ -188,6 +206,12 @@ export default function CreateServiceCallModal({
   let previousValues: undefined | CreateServiceCall;
   const loggedInUser = useSelector(selectCurrentUser);
 
+  const { data: employees } = useGetClientsQuery({
+    includeTanks: true,
+    isEmployee: true
+  });
+  const { data: tank } = useGetTankDataQuery(tankId);
+
   if (previousServiceCall) {
     const { id: _id, ..._previousValues } = previousServiceCall;
     id = _id;
@@ -195,17 +219,20 @@ export default function CreateServiceCallModal({
   }
 
   const isEdit = !!previousServiceCall && !!id && !!previousValues;
-  // console.log(previousValues);
 
-  const { handleSubmit, control, reset } = useForm<CreateServiceCall>({
-    resolver: zodResolver(createServiceCallSchema),
-    defaultValues: {
-      ...defaultValues,
-      ...previousValues,
-      tankId,
-      employeeId: isEdit ? employeeId : loggedInUser.userId
-    }
-  });
+  const { handleSubmit, control, reset, setValue, watch } =
+    useForm<CreateServiceCall>({
+      resolver: zodResolver(createServiceCallSchema),
+      defaultValues: {
+        ...defaultValues,
+        ...previousValues,
+        tankId,
+        employeeId: isEdit ? prevEmployeeId : loggedInUser.userId
+      }
+    });
+  const employeeId = watch('employeeId');
+  const employee =
+    employees?.find((employee) => employee.id === employeeId) ?? null;
 
   function handleClose() {
     setOpen(false);
@@ -228,7 +255,6 @@ export default function CreateServiceCallModal({
     const allData = id ? { ...data, id } : data;
     try {
       const response = await uploadServiceCall(allData);
-      console.log({ response });
       handleClose();
     } catch (e) {
       console.error(e);
@@ -239,6 +265,14 @@ export default function CreateServiceCallModal({
     .map(([key, value]) => ({ name: key as keyof CreateServiceCall, ...value }))
     .filter((field) => field.name !== 'isApproved');
 
+  function checkAllCheckboxes(value: boolean) {
+    fields.forEach((field) => {
+      if (field.type === 'boolean') {
+        setValue(field.name, value);
+      }
+    });
+  }
+
   return (
     <Dialog open={open} onClose={handleClose} maxWidth='lg'>
       <DialogTitle>
@@ -248,9 +282,39 @@ export default function CreateServiceCallModal({
       </DialogTitle>
       <DialogContent>
         <Grid container spacing={2} paddingTop={1}>
+          <Grid item xs={4}>
+            {employees ? (
+              <UserSearchBar
+                userList={employees ?? []}
+                selectedUser={employee}
+                handleUserSelected={(_, user) =>
+                  user?.id && setValue('employeeId', user.id)
+                }
+                label='Employee'
+              />
+            ) : (
+              <Box>Loading...</Box>
+            )}
+          </Grid>
+          <Grid item xs={4}>
+            <TextField
+              value={tank?.description ?? 'Loading...'}
+              disabled
+              fullWidth
+            />
+          </Grid>
           {fields.map((field) => (
             <CreateForm key={field.name} control={control} {...field} />
           ))}
+          <Grid item xs={4}>
+            <Button
+              onClick={(e) => checkAllCheckboxes(true)}
+              size='small'
+              variant='contained'
+            >
+              Check All Checkboxes
+            </Button>
+          </Grid>
         </Grid>
       </DialogContent>
       <DialogActions>

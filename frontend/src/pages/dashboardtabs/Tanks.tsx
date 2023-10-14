@@ -5,7 +5,7 @@ import {
 import CreateTankForm from '../../components/forms/CreateTank';
 import UserSearchBar from '../../components/UserSearchBar';
 import type {} from '@mui/x-data-grid/themeAugmentation';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import CreateServiceCallModal from '../../components/forms/UpsertServiceCall';
 import { UpdateTankMetaData } from '../../zodTypes';
@@ -25,18 +25,24 @@ import {
 } from '@mui/material';
 import SCDataGrid from '../../components/SCDataGrid';
 import TankGrid from '../../components/datagrid/TankGrid';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Add } from '@mui/icons-material';
 
 export function TankTabs({
   tanks,
-  employeeId
+  employeeId,
+  selectedTankId,
+  setSelectedTankId
 }: {
   tanks: UpdateTankMetaData[];
   employeeId: number;
+  selectedTankId: number | null;
+  setSelectedTankId(tankId: number | null): void;
 }) {
-  const [selectedTank, setSelectedTank] = useState<
-    UpdateTankMetaData | undefined
-  >(tanks.at(0));
+  const selectedTank = useMemo(
+    () => tanks.find((tank) => tank.id === selectedTankId) ?? null,
+    [selectedTankId, tanks]
+  );
 
   const [createTankOpen, setCreateTankOpen] = useState(false);
   const [createServiceCallOpen, setCreateServiceCallOpen] = useState(false);
@@ -45,7 +51,7 @@ export function TankTabs({
     const selectedTank = tanks.find(
       ({ id }) => id === parseInt(event.target.value)
     );
-    setSelectedTank(selectedTank);
+    setSelectedTankId(selectedTank?.id ?? null);
   };
   const handleAddTank = () => {
     setCreateTankOpen(true);
@@ -166,11 +172,41 @@ export default function Tanks() {
     includeTanks: true,
     isEmployee: false
   });
+  const location = useLocation();
+  const urlTankId = useMemo(
+    () => new URLSearchParams(location.search).get('tankId'),
+    [location]
+  );
+  const [selectedTankId, setSelectedTankId] = useState<number | null>(
+    Number(urlTankId) ?? null
+  );
   const [selectedUserId, selectCurrentUserId] = useState<number | null>(null);
   const selectedUser = useMemo(
     () => optionsList?.find((user) => user.id === selectedUserId) ?? null,
     [optionsList, selectedUserId]
   );
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (!selectedTankId || selectedUserId || !optionsList) {
+      return;
+    }
+    const userId =
+      optionsList.find((user) =>
+        user.OwnedTanks?.some((tank) => tank.id === selectedTankId)
+      )?.id ?? null;
+    if (userId) {
+      selectCurrentUserId(userId);
+    } else {
+      navigate('/Dashboard/tanks');
+    }
+  }, [selectedUserId, selectedTankId, optionsList]);
+
+  useEffect(() => {
+    const isSelectedUserAndNoSelectedTank = selectedUser && !selectedTankId;
+    if (isSelectedUserAndNoSelectedTank) {
+      setSelectedTankId(selectedUser.OwnedTanks?.at(-1)?.id ?? null);
+    }
+  }, [selectedUser, selectedTankId]);
 
   const collapse = !!selectedUser;
 
@@ -207,6 +243,8 @@ export default function Tanks() {
                 key={selectedUser.id}
                 tanks={selectedUser.OwnedTanks}
                 employeeId={selectedUser.id}
+                selectedTankId={selectedTankId}
+                setSelectedTankId={setSelectedTankId}
               />
             )}
           </Collapse>

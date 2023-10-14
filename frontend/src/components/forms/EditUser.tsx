@@ -12,6 +12,7 @@ import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { useEditUserMutation } from '../../redux/slices/users/userManagementSlice';
 import { UserData } from '../../redux/slices/users/userManagementSlice';
 import { userSchema } from '../../zodTypes';
+import { MuiTelInput } from 'mui-tel-input';
 
 export default function EditUserModal({
   open,
@@ -105,7 +106,7 @@ export default function EditUserModal({
               name='phone'
               control={control}
               render={({ field }) => (
-                <TextField fullWidth label='Phone Number' {...field} />
+                <MuiTelInput fullWidth label='Phone Number' {...field} />
               )}
             />
           </Grid>

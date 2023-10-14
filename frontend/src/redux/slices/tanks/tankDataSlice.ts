@@ -9,16 +9,15 @@ export const tankDataSlice = apiSlice.injectEndpoints({
         method: 'GET'
       })
     }),
-    getTankData: builder.query<unknown, number>({
+    getTankData: builder.query<UpdateTankMetaData, number>({
       query: (tankID) => {
         return {
-          url: '/api/database/tankMetaData/TankMetadataService',
-          method: 'GET',
-          params: { tankID: tankID }
+          url: `/api/database/tank/${tankID}`,
+          method: 'GET'
         };
       }
     })
   })
 });
 
-export const { useGetAllTanksQuery } = tankDataSlice;
+export const { useGetAllTanksQuery, useGetTankDataQuery } = tankDataSlice;
