@@ -6,7 +6,8 @@ import Box from '@mui/material/Box';
 import { UserData } from '../redux/slices/users/userManagementSlice';
 import { useState } from 'react';
 import EditUserModal from './forms/EditUser';
-import { Grid } from '@mui/material';
+import { Grid, IconButton, Menu, MenuItem } from '@mui/material';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 export interface UserCardProps {
   user: UserData | null;
@@ -18,7 +19,18 @@ export default function UserCard(props: UserCardProps) {
 
   const handleOpenUserModal = () => {
     console.log(user);
+    handleClose()
     setUserModalOpen((prevState) => !prevState);
+  };
+
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
   };
 
   return (
@@ -54,19 +66,29 @@ export default function UserCard(props: UserCardProps) {
                   {user.phone}
                 </Typography>
               </Grid>
-              <Grid item xs={2} sx={{ height: '100%' }}>
-                <Box
-                  sx={{
-                    display: 'flex',
-                    justifyContent: {
-                      md: 'flex-end'
-                    }
-                  }}
+              <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'center', height: '100%' }}>
+                <IconButton
+                  aria-label='more'
+                  id='long-button'
+                  aria-controls={open ? 'long-menu' : undefined}
+                  aria-expanded={open ? 'true' : undefined}
+                  aria-haspopup='true'
+                  onClick={handleClick}
                 >
-                  <Button variant='contained' onClick={handleOpenUserModal}>
-                    <ModeEditOutlineOutlinedIcon />
-                  </Button>
-                </Box>
+                  <MoreVertIcon />
+                </IconButton>
+                <Menu
+                  anchorEl={anchorEl}
+                  open={open}
+                  onClose={handleClose}
+                >
+                  <MenuItem
+                    onClick={handleOpenUserModal}
+                  >
+                    Edit
+                  </MenuItem>
+                </Menu>
+
               </Grid>
             </>
           )}
