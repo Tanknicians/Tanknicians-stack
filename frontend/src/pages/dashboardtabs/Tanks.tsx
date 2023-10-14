@@ -215,6 +215,10 @@ export default function Tanks() {
     customer: UserData | null
   ) => {
     selectCurrentUserId(customer?.id ?? null);
+    setSelectedTankId(null);
+    if (!customer?.id) {
+      navigate('/dashboard/Tanks');
+    }
   };
 
   if (!optionsList) return <div>Loading...</div>;
