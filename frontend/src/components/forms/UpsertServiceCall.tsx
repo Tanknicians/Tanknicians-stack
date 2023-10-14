@@ -261,9 +261,9 @@ export default function CreateServiceCallModal({
     }
   };
 
-  const fields = Object.entries(createServiceCallFields)
-    .map(([key, value]) => ({ name: key as keyof CreateServiceCall, ...value }))
-    .filter((field) => field.name !== 'isApproved');
+  const fields = Object.entries(createServiceCallFields).map(
+    ([key, value]) => ({ name: key as keyof CreateServiceCall, ...value })
+  );
 
   function checkAllCheckboxes(value: boolean) {
     fields.forEach((field) => {
@@ -278,7 +278,7 @@ export default function CreateServiceCallModal({
       <DialogTitle>
         {previousServiceCall
           ? `Update Service Call ${previousServiceCall.id}`
-          : 'Create Service Call'}{' '}
+          : 'Create Service Call'}
       </DialogTitle>
       <DialogContent>
         <Grid container spacing={2} paddingTop={1}>
