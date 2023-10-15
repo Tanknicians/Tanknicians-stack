@@ -4,7 +4,6 @@ import {
   Box,
   Button,
   Checkbox,
-  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
@@ -26,14 +25,9 @@ import {
 import { useSelector } from 'react-redux';
 import { selectCurrentUser } from '../../redux/slices/auth/authSlice';
 import UserSearchBar from '../UserSearchBar';
-import {
-  useGetClientsQuery,
-  useGetUserQuery
-} from '../../redux/slices/users/userManagementSlice';
-import {
-  useGetAllTanksQuery,
-  useGetTankDataQuery
-} from '../../redux/slices/tanks/tankDataSlice';
+import { useGetClientsQuery } from '../../redux/slices/users/userManagementSlice';
+import { useGetTankDataQuery } from '../../redux/slices/tanks/tankDataSlice';
+import LoadingOverlay from '../LoadingOverlay';
 
 type FormProps = {
   name: keyof CreateServiceCall;
@@ -235,6 +229,7 @@ export default function CreateServiceCallModal({
     employees?.find((employee) => employee.id === employeeId) ?? null;
 
   function handleClose() {
+    if (isLoading) return;
     setOpen(false);
     reset();
   }
@@ -275,6 +270,7 @@ export default function CreateServiceCallModal({
 
   return (
     <Dialog open={open} onClose={handleClose} maxWidth='lg'>
+      {isLoading && <LoadingOverlay />}
       <DialogTitle>
         {previousServiceCall
           ? `Update Service Call ${previousServiceCall.id}`
@@ -322,7 +318,7 @@ export default function CreateServiceCallModal({
         <Button
           type='button'
           onClick={handleSubmit(onValid)}
-          startIcon={isLoading ? <CircularProgress /> : null}
+          variant='contained'
           disabled={isLoading}
         >
           Submit
