@@ -12,6 +12,7 @@ import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { useAddUserMutation } from '../../redux/slices/users/userManagementSlice';
 import { createUserSchema, CreateUser } from '../../zodTypes';
 import { MuiTelInput } from 'mui-tel-input';
+import LoadingOverlay from '../LoadingOverlay';
 
 export default function CreateUserModal({
   open,
@@ -37,6 +38,7 @@ export default function CreateUserModal({
   console.log({ formState });
 
   function handleClose() {
+    if (isLoading) return;
     setOpen(false);
     reset();
   }
@@ -55,6 +57,7 @@ export default function CreateUserModal({
 
   return (
     <Dialog open={open} onClose={handleClose} maxWidth='lg'>
+      {isLoading && <LoadingOverlay />}
       <DialogTitle>Add {isEmployee ? 'Employee' : 'Client'}</DialogTitle>
       <DialogContent>
         <Grid container spacing={2} paddingTop={1}>
@@ -108,7 +111,12 @@ export default function CreateUserModal({
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose}>Cancel</Button>
-        <Button type='button' onClick={handleSubmit(onValid)}>
+        <Button
+          type='button'
+          onClick={handleSubmit(onValid)}
+          variant='contained'
+          disabled={isLoading}
+        >
           Submit
         </Button>
       </DialogActions>

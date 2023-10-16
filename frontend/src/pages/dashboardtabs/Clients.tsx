@@ -7,7 +7,7 @@ import UserSearchBar from '../../components/UserSearchBar';
 import Typography from '@mui/material/Typography';
 import UserCard from '../../components/UserCard';
 import Collapse from '@mui/material/Collapse';
-import AddIcon from '@mui/icons-material/Add';
+import { Add } from '@mui/icons-material';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -75,7 +75,7 @@ export default function Clients() {
             <Button
               variant='contained'
               onClick={handleOpenUserModal}
-              startIcon={<AddIcon />}
+              startIcon={<Add fontSize='inherit' />}
             >
               Add Client
             </Button>
@@ -113,7 +113,7 @@ export default function Clients() {
                 <Button
                   variant='contained'
                   onClick={handleOpenTankModal}
-                  startIcon={<AddIcon />}
+                  startIcon={<Add fontSize='inherit' />}
                 >
                   Add Tank
                 </Button>

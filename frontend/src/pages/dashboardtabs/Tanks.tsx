@@ -87,11 +87,12 @@ export function TankTabs({
               marginTop: 10
             }}
           >
-            <Typography variant='h6'>This user has no tanks.</Typography>
+            <Typography variant='h6'>Client has no tanks.</Typography>
             <Button
               sx={{ maxHeight: 40, marginBottom: 1 }}
-              variant='outlined'
+              variant='contained'
               onClick={handleAddTank}
+              startIcon={<Add fontSize='inherit' />}
             >
               Add Tank
             </Button>
