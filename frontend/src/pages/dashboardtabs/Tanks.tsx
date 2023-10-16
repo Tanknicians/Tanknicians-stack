@@ -87,15 +87,17 @@ export function TankTabs({
               marginTop: 10
             }}
           >
-            <Typography variant='h6' sx={{marginBottom: 1}}>Client has no tanks.</Typography>
+            <Typography variant='h6' sx={{ marginBottom: 1 }}>
+              Client has no tanks.
+            </Typography>
             <Button
-                  size='small'
-                  variant='contained'
-                  onClick={handleAddTank}
-                  startIcon={<Add fontSize='inherit' />}
-                >
-                  Add Tank
-                </Button>
+              size='small'
+              variant='contained'
+              onClick={handleAddTank}
+              startIcon={<Add fontSize='inherit' />}
+            >
+              Add Tank
+            </Button>
           </Card>
         </Container>
       )}
@@ -133,22 +135,22 @@ export function TankTabs({
                 </Select>
               </FormControl>
               <Box>
-              <Button
+                <Button
                   variant='contained'
                   onClick={handleAddTank}
                   startIcon={<Add fontSize='inherit' />}
-                  sx={{marginRight: 1, marginBottom: 1}}
+                  sx={{ marginRight: 1, marginBottom: 1 }}
                 >
                   Add Tank
                 </Button>
-              <Button
-                variant='contained'
-                onClick={() => setCreateServiceCallOpen(true)}
-                startIcon={<Add fontSize='inherit' />}
-                sx={{marginRight: 1, marginBottom: 1}}
-              >
-                Add Service Form
-              </Button>
+                <Button
+                  variant='contained'
+                  onClick={() => setCreateServiceCallOpen(true)}
+                  startIcon={<Add fontSize='inherit' />}
+                  sx={{ marginRight: 1, marginBottom: 1 }}
+                >
+                  Add Service Form
+                </Button>
               </Box>
             </Box>
           </Box>
