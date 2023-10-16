@@ -107,8 +107,8 @@ export function TankTabs({
             <Box
               sx={{
                 display: 'flex',
-                alignItems: 'flex-end',
-                justifyContent: 'space-between'
+                justifyContent: 'space-between',
+                padding: '0 16'
               }}
             >
               <FormControl variant='standard' sx={{ m: 1, minWidth: 160 }}>
@@ -134,29 +134,33 @@ export function TankTabs({
                   })}
                 </Select>
               </FormControl>
-              <Box>
-                <Button
-                  variant='contained'
-                  onClick={handleAddTank}
-                  startIcon={<Add fontSize='inherit' />}
-                  sx={{ marginRight: 1, marginBottom: 1 }}
-                >
-                  Add Tank
-                </Button>
-                <Button
-                  variant='contained'
-                  onClick={() => setCreateServiceCallOpen(true)}
-                  startIcon={<Add fontSize='inherit' />}
-                  sx={{ marginRight: 1, marginBottom: 1 }}
-                >
-                  Add Service Form
-                </Button>
-              </Box>
+              <Button
+                variant='contained'
+                onClick={handleAddTank}
+                startIcon={<Add fontSize='inherit' />}
+                sx={{ m: 1 }}
+              >
+                Add Tank
+              </Button>
             </Box>
           </Box>
           <Paper elevation={3}>
-            <Container>
-              <Typography variant='h6'>Service Calls</Typography>
+            <Container
+              sx={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center'
+              }}
+            >
+              <Typography variant='h5'>Service Calls</Typography>
+              <Button
+                variant='contained'
+                onClick={() => setCreateServiceCallOpen(true)}
+                startIcon={<Add fontSize='inherit' />}
+                sx={{ margin: '8 0' }}
+              >
+                Add Service Form
+              </Button>
             </Container>
             <SCDataGrid tank={selectedTank} employeeId={undefined} />
           </Paper>
