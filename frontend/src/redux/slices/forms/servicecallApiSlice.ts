@@ -33,7 +33,7 @@ export const servicecallApiSlice = apiSlice.injectEndpoints({
       invalidatesTags: ({ id }) => {
         return [
           { type: 'SERVICECALL', id },
-          { type: 'UNAPPROVEDSERVICECALL', id: 'LIST' }
+          { type: 'UNAPPROVEDSERVICECALL', id }
         ];
       }
     }),
@@ -52,7 +52,8 @@ export const servicecallApiSlice = apiSlice.injectEndpoints({
               ...result.map(({ id }) => ({
                 type: 'SERVICECALL' as const,
                 id
-              }))
+              })),
+              { type: 'SERVICECALL', id: 'LIST' }
             ]
           : [{ type: 'SERVICECALL', id: 'LIST' }]
     }),
@@ -62,7 +63,16 @@ export const servicecallApiSlice = apiSlice.injectEndpoints({
         method: 'GET',
         params: { isApproved: false }
       }),
-      providesTags: () => [{ type: 'UNAPPROVEDSERVICECALL', id: 'LIST' }]
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.map(({ id }) => ({
+                type: 'UNAPPROVEDSERVICECALL' as const,
+                id
+              })),
+              { type: 'UNAPPROVEDSERVICECALL', id: 'LIST' }
+            ]
+          : [{ type: 'UNAPPROVEDSERVICECALL', id: 'LIST' }]
     })
   })
 });

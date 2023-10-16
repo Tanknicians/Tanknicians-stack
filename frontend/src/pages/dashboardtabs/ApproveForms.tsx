@@ -26,6 +26,11 @@ export default function ApproveForms() {
     pollingInterval: oneMinuteInMilliseconds
   }).data;
 
+  // FIXME:
+  // On edit new list is returned with updated service call
+  // Component is not rerendered with new list
+  console.log(unapprovedForms);
+
   // Get Clients list with tanks included to find Technician and Client name associated with the service record
   const { data: optionsList, error } = useGetClientsQuery({
     includeTanks: true,
