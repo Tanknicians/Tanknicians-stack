@@ -1,4 +1,4 @@
-import { ServiceCall } from '../../../zodTypes';
+import { ServiceCall, UpdateServiceCall } from '../../../zodTypes';
 import { apiSlice } from '../../api/apiSlice';
 
 export const servicecallApiSlice = apiSlice.injectEndpoints({
@@ -16,7 +16,7 @@ export const servicecallApiSlice = apiSlice.injectEndpoints({
             ]
           : [{ type: 'SERVICECALL', id: 'LIST' }]
     }),
-    createServiceCall: builder.mutation({
+    createServiceCall: builder.mutation<void, ServiceCall>({
       query: (serviceCall) => ({
         url: '/api/database/servicecall',
         method: 'POST',
@@ -30,10 +30,11 @@ export const servicecallApiSlice = apiSlice.injectEndpoints({
         method: 'PUT',
         body: serviceCall
       }),
-      invalidatesTags: ({ id }) => {
+      invalidatesTags: (_result, _error, serviceCall) => {
         return [
-          { type: 'SERVICECALL', id },
-          { type: 'UNAPPROVEDSERVICECALL', id }
+          { type: 'SERVICECALL', id: serviceCall.id },
+          { type: 'UNAPPROVEDSERVICECALL', id: serviceCall.id },
+          { type: 'TANKS', id: serviceCall.tankId }
         ];
       }
     }),
