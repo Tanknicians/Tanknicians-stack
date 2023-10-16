@@ -28,7 +28,7 @@ export const servicecallApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: () => [{ type: 'SERVICECALL', id: 'LIST' }]
     }),
-    updateServiceCall: builder.mutation({
+    updateServiceCall: builder.mutation<void, UpdateServiceCall>({
       query: ({ id, ...serviceCall }) => ({
         url: `/api/database/servicecall/${id}`,
         method: 'PUT',
