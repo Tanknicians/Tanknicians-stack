@@ -15,8 +15,8 @@ import CreateServiceCallModal from './forms/UpsertServiceCall';
 import { Edit as EditIcon, GavelSharp } from '@mui/icons-material';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { useGetClientsQuery } from '../redux/slices/users/userManagementSlice';
-import { checkPrime } from 'crypto';
-import { canHaveModifiers } from 'typescript';
+import { useNavigate } from 'react-router-dom';
+
 
 export default function SCDataGrid({
   employeeId,
@@ -28,6 +28,9 @@ export default function SCDataGrid({
   // STATIC
   //
   //
+
+  const navigate = useNavigate();
+
   const [editServiceCallId, setEditServiceCallId] = useState<
     number | undefined
   >();
@@ -114,13 +117,10 @@ export default function SCDataGrid({
       (o) => o.employeeId === employeeId
     );
 
-    // TODO does not go to <Link /Tanks?tankId=id> or something...
-    // Also should code some way to navigate back from link...Breadcrumbs?
-    // (unless desired state is saved through normal page navigation)
     const goToTankButton = (params: GridRenderCellParams) => {
       return (
         <>
-          <IconButton size='small'>
+          <IconButton size='small' onClick={() => {navigate(`/dashboard/Tanks?tankId=${params.row.tankId}`)}}>
             <ArrowForwardIcon fontSize='inherit' />
           </IconButton>
         </>
@@ -161,9 +161,9 @@ export default function SCDataGrid({
         headerName: 'Edit',
         minWidth: 110,
         sortable: false,
-        headerAlign: 'center',
+        renderCell: editButton,
         align: 'center',
-        renderCell: editButton
+        headerAlign: 'center',
       },
       {
         field: 'alkalinity',
@@ -196,28 +196,28 @@ export default function SCDataGrid({
       {
         field: 'customerNotes',
         headerName: 'Customer Notes',
-        minWidth: 150,
+        minWidth: 130,
         align: 'center',
         headerAlign: 'center'
       },
       {
         field: 'employeeNotes',
         headerName: 'Employee Notes',
-        minWidth: 150,
+        minWidth: 130,
         align: 'center',
         headerAlign: 'center'
       },
       {
         field: 'unapprovedNotes',
         headerName: 'Unapproved Notes',
-        minWidth: 150,
+        minWidth: 140,
         align: 'center',
         headerAlign: 'center'
       },
       {
         field: 'ATOOperational',
         headerName: 'ATO Operational',
-        minWidth: 150,
+        minWidth: 130,
         align: 'center',
         headerAlign: 'center'
       },
@@ -237,7 +237,7 @@ export default function SCDataGrid({
       },
       {
         field: 'doserAdjustementOrManualDosing',
-        headerName: 'Doser Adjusted',
+        headerName: 'Dose-adjusted',
         minWidth: 130,
         align: 'center',
         headerAlign: 'center'
@@ -280,7 +280,7 @@ export default function SCDataGrid({
       {
         field: 'pumpsClearedOfDebris',
         headerName: 'Pumps Cleared',
-        minWidth: 150,
+        minWidth: 130,
         align: 'center',
         headerAlign: 'center'
       },
@@ -294,7 +294,7 @@ export default function SCDataGrid({
       {
         field: 'skimmerCleanedAndOperational',
         headerName: 'Skimmer Cleaned',
-        minWidth: 150,
+        minWidth: 130,
         align: 'center',
         headerAlign: 'center'
       },
@@ -406,56 +406,56 @@ export default function SCDataGrid({
       {
         field: 'alkalinity',
         headerName: 'Alkalinity',
-        minWidth: 90,
+        minWidth: 70,
         align: 'center',
         headerAlign: 'center'
       },
       {
         field: 'calcium',
         headerName: 'Calcium',
-        minWidth: 90,
+        minWidth: 70,
         align: 'center',
         headerAlign: 'center'
       },
       {
         field: 'nitrate',
         headerName: 'Nitrate',
-        minWidth: 90,
+        minWidth: 70,
         align: 'center',
         headerAlign: 'center'
       },
       {
         field: 'phosphate',
         headerName: 'Phosphate',
-        minWidth: 90,
+        minWidth: 70,
         align: 'center',
         headerAlign: 'center'
       },      
       {
         field: 'customerNotes',
         headerName: 'Customer Notes',
-        minWidth: 150,
+        minWidth: 130,
         align: 'center',
         headerAlign: 'center'
       },
       {
         field: 'employeeNotes',
         headerName: 'Employee Notes',
-        minWidth: 150,
+        minWidth: 130,
         align: 'center',
         headerAlign: 'center'
       },
       {
         field: 'unapprovedNotes',
         headerName: 'Unapproved Notes',
-        minWidth: 150,
+        minWidth: 140,
         align: 'center',
         headerAlign: 'center'
       },
       {
         field: 'ATOOperational',
         headerName: 'ATO Operational',
-        minWidth: 150,
+        minWidth: 130,
         align: 'center',
         headerAlign: 'center'
       },
@@ -475,7 +475,7 @@ export default function SCDataGrid({
       },
       {
         field: 'doserAdjustementOrManualDosing',
-        headerName: 'Doser Adjusted',
+        headerName: 'Doser-adjusted',
         minWidth: 130,
         align: 'center',
         headerAlign: 'center'
@@ -518,7 +518,7 @@ export default function SCDataGrid({
       {
         field: 'pumpsClearedOfDebris',
         headerName: 'Pumps Cleared',
-        minWidth: 150,
+        minWidth: 130,
         align: 'center',
         headerAlign: 'center'
       },
@@ -532,7 +532,7 @@ export default function SCDataGrid({
       {
         field: 'skimmerCleanedAndOperational',
         headerName: 'Skimmer Cleaned',
-        minWidth: 150,
+        minWidth: 130,
         align: 'center',
         headerAlign: 'center'
       },

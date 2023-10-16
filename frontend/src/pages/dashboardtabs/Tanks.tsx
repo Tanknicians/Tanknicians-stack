@@ -205,7 +205,7 @@ export default function Tanks() {
   useEffect(() => {
     const isSelectedUserAndNoSelectedTank = selectedUser && !selectedTankId;
     if (isSelectedUserAndNoSelectedTank) {
-      setSelectedTankId(selectedUser.OwnedTanks?.at(0)?.id ?? null);
+      setSelectedTankId(selectedUser.OwnedTanks?.[0]?.id ?? null);
     }
   }, [selectedUser, selectedTankId]);
 
@@ -216,6 +216,10 @@ export default function Tanks() {
     customer: UserData | null
   ) => {
     selectCurrentUserId(customer?.id ?? null);
+    setSelectedTankId(null);
+    if (!customer?.id) {
+      navigate('/dashboard/Tanks');
+    }
   };
 
   if (!optionsList) return <div>Loading...</div>;
