@@ -1,4 +1,8 @@
-import { ServiceCall, UpdateServiceCall } from '../../../zodTypes';
+import {
+  CreateServiceCall,
+  ServiceCall,
+  UpdateServiceCall
+} from '../../../zodTypes';
 import { apiSlice } from '../../api/apiSlice';
 
 export const servicecallApiSlice = apiSlice.injectEndpoints({
@@ -16,7 +20,7 @@ export const servicecallApiSlice = apiSlice.injectEndpoints({
             ]
           : [{ type: 'SERVICECALL', id: 'LIST' }]
     }),
-    createServiceCall: builder.mutation<void, ServiceCall>({
+    createServiceCall: builder.mutation<void, CreateServiceCall>({
       query: (serviceCall) => ({
         url: '/api/database/servicecall',
         method: 'POST',
