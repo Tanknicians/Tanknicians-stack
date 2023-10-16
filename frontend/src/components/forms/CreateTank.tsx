@@ -15,9 +15,9 @@ import {
 } from '@mui/material';
 import { useAddTankToUserMutation } from '../../redux/slices/users/userManagementSlice';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
-import LoadingProgressButton from '../LoadingProgressButton';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CreateTankMetaData, createTank } from '../../zodTypes';
+import LoadingOverlay from '../LoadingOverlay';
 
 type CreateTankFormProps = {
   userId: number;
@@ -48,6 +48,7 @@ function CreateTankForm({ userId, open, setOpen }: CreateTankFormProps) {
   // console.log('Create Tank Form RHF Errors: ', errors);
 
   const handleClose = () => {
+    if (isLoading) return;
     reset();
     setOpen(false);
   };
@@ -66,6 +67,7 @@ function CreateTankForm({ userId, open, setOpen }: CreateTankFormProps) {
   return (
     <>
       <Dialog open={open} onClose={handleClose} maxWidth='lg'>
+        {isLoading && <LoadingOverlay />}
         <DialogTitle>Add Tank</DialogTitle>
         <DialogContent>
           <Grid
@@ -148,14 +150,14 @@ function CreateTankForm({ userId, open, setOpen }: CreateTankFormProps) {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <LoadingProgressButton
+          <Button
             type='button'
-            variant='contained'
-            isLoading={isLoading}
             onClick={handleSubmit(onValid)}
+            variant='contained'
+            disabled={isLoading}
           >
             Submit
-          </LoadingProgressButton>
+          </Button>
         </DialogActions>
       </Dialog>
     </>

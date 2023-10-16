@@ -42,7 +42,7 @@ export default function UserCard(props: UserCardProps) {
           padding={1}
           alignItems={{ lg: 'center' }}
         >
-          <Grid container xs={10}>
+          <Grid container item xs={10}>
             <Grid item xs={12} md={4}>
               <Typography padding={1} variant='subtitle1' component='h2'>
                 {`${user.firstName} ${user.middleName} ${user.lastName}`}

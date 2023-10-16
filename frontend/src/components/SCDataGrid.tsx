@@ -1,4 +1,5 @@
-import { IconButton, Box, CircularProgress } from '@mui/material';
+import { IconButton, Box, CircularProgress, Button } from '@mui/material';
+import ShowChartIcon from '@mui/icons-material/ShowChart';
 import {
   GridRenderCellParams,
   GridColDef,
@@ -13,7 +14,7 @@ import {
 import { UpdateTankMetaData, ServiceCall } from '../zodTypes';
 import CreateServiceCallModal from './forms/UpsertServiceCall';
 import { Edit as EditIcon } from '@mui/icons-material';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+// import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { useGetClientsQuery } from '../redux/slices/users/userManagementSlice';
 import { useNavigate } from 'react-router-dom';
 
@@ -118,16 +119,14 @@ export default function SCDataGrid({
 
     const goToTankButton = (params: GridRenderCellParams) => {
       return (
-        <>
-          <IconButton
-            size='small'
-            onClick={() => {
+        <Button 
+          size='small'
+          variant='contained'
+          onClick={() => {
               navigate(`/dashboard/Tanks?tankId=${params.row.tankId}`);
-            }}
-          >
-            <ArrowForwardIcon fontSize='inherit' />
-          </IconButton>
-        </>
+          }}>
+          <ShowChartIcon />
+        </Button>
       );
     };
 

@@ -13,6 +13,7 @@ import { useEditUserMutation } from '../../redux/slices/users/userManagementSlic
 import { UserData } from '../../redux/slices/users/userManagementSlice';
 import { userSchema } from '../../zodTypes';
 import { MuiTelInput } from 'mui-tel-input';
+import LoadingOverlay from '../LoadingOverlay';
 
 export default function EditUserModal({
   open,
@@ -43,6 +44,7 @@ export default function EditUserModal({
   console.log({ formState });
 
   function handleClose() {
+    if (isLoading) return;
     setOpen(false);
     reset();
   }
@@ -59,6 +61,7 @@ export default function EditUserModal({
 
   return (
     <Dialog open={open} onClose={handleClose} maxWidth='lg'>
+      {isLoading && <LoadingOverlay />}
       <DialogTitle>
         Edit {userData?.isEmployee ? 'Employee' : 'Client'}'s Information
       </DialogTitle>
@@ -114,7 +117,12 @@ export default function EditUserModal({
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose}>Cancel</Button>
-        <Button type='button' onClick={handleSubmit(onValid)}>
+        <Button
+          type='button'
+          onClick={handleSubmit(onValid)}
+          variant='contained'
+          disabled={isLoading}
+        >
           Submit
         </Button>
       </DialogActions>
