@@ -87,15 +87,15 @@ export function TankTabs({
               marginTop: 10
             }}
           >
-            <Typography variant='h6'>Client has no tanks.</Typography>
+            <Typography variant='h6' sx={{marginBottom: 1}}>Client has no tanks.</Typography>
             <Button
-              sx={{ maxHeight: 40, marginBottom: 1 }}
-              variant='contained'
-              onClick={handleAddTank}
-              startIcon={<Add fontSize='inherit' />}
-            >
-              Add Tank
-            </Button>
+                  size='small'
+                  variant='contained'
+                  onClick={handleAddTank}
+                  startIcon={<Add fontSize='inherit' />}
+                >
+                  Add Tank
+                </Button>
           </Card>
         </Container>
       )}
@@ -132,21 +132,24 @@ export function TankTabs({
                   })}
                 </Select>
               </FormControl>
+              <Box>
               <Button
-                sx={{ maxHeight: 40, marginBottom: 1 }}
-                variant='outlined'
-                onClick={handleAddTank}
-              >
-                Add Tank
-              </Button>
+                  variant='contained'
+                  onClick={handleAddTank}
+                  startIcon={<Add fontSize='inherit' />}
+                  sx={{marginRight: 1, marginBottom: 1}}
+                >
+                  Add Tank
+                </Button>
               <Button
-                size='small'
                 variant='contained'
                 onClick={() => setCreateServiceCallOpen(true)}
                 startIcon={<Add fontSize='inherit' />}
+                sx={{marginRight: 1, marginBottom: 1}}
               >
                 Add Service Form
               </Button>
+              </Box>
             </Box>
           </Box>
           <Paper elevation={3}>
