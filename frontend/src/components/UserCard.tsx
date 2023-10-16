@@ -47,20 +47,38 @@ export default function UserCard(props: UserCardProps) {
         >
           <Grid container xs={10}>
             <Grid item xs={12} md={4}>
-              <Typography padding={1} variant='subtitle1' component='h2' sx={{display: 'flex'}} alignItems='center'>
-                <PersonIcon sx={{ marginRight: '5'}} />
+              <Typography
+                padding={1}
+                variant='subtitle1'
+                component='h2'
+                sx={{ display: 'flex' }}
+                alignItems='center'
+              >
+                <PersonIcon sx={{ marginRight: '5' }} />
                 {`${user.firstName} ${user.middleName} ${user.lastName}`}
               </Typography>
             </Grid>
             <Grid item xs={12} md={4}>
-              <Typography padding={1} variant='subtitle1' component='h2' sx={{display: 'flex'}} alignItems='center'>
-              <AddressIcon sx={{ marginRight: '5'}} />
+              <Typography
+                padding={1}
+                variant='subtitle1'
+                component='h2'
+                sx={{ display: 'flex' }}
+                alignItems='center'
+              >
+                <AddressIcon sx={{ marginRight: '5' }} />
                 {user.address}
               </Typography>
             </Grid>
             <Grid item xs={12} md={4}>
-              <Typography padding={1} variant='subtitle1' component='h2' sx={{display: 'flex'}} alignItems='center'>
-              <PhoneIcon sx={{ marginRight: '5'}} />
+              <Typography
+                padding={1}
+                variant='subtitle1'
+                component='h2'
+                sx={{ display: 'flex' }}
+                alignItems='center'
+              >
+                <PhoneIcon sx={{ marginRight: '5' }} />
 
                 {user.phone}
               </Typography>
