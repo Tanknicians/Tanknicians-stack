@@ -6,6 +6,9 @@ import { useState } from 'react';
 import EditUserModal from './forms/EditUser';
 import { Grid, IconButton, Menu, MenuItem } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import PersonIcon from '@mui/icons-material/Person';
+import PhoneIcon from '@mui/icons-material/Phone';
+import AddressIcon from '@mui/icons-material/Home';
 
 export interface UserCardProps {
   user: UserData | null;
@@ -44,17 +47,39 @@ export default function UserCard(props: UserCardProps) {
         >
           <Grid container item xs={10}>
             <Grid item xs={12} md={4}>
-              <Typography padding={1} variant='subtitle1' component='h2'>
+              <Typography
+                padding={1}
+                variant='subtitle1'
+                component='h2'
+                sx={{ display: 'flex' }}
+                alignItems='center'
+              >
+                <PersonIcon sx={{ marginRight: '5' }} />
                 {`${user.firstName} ${user.middleName} ${user.lastName}`}
               </Typography>
             </Grid>
             <Grid item xs={12} md={4}>
-              <Typography padding={1} variant='subtitle1' component='h2'>
+              <Typography
+                padding={1}
+                variant='subtitle1'
+                component='h2'
+                sx={{ display: 'flex' }}
+                alignItems='center'
+              >
+                <AddressIcon sx={{ marginRight: '5' }} />
                 {user.address}
               </Typography>
             </Grid>
             <Grid item xs={12} md={4}>
-              <Typography padding={1} variant='subtitle1' component='h2'>
+              <Typography
+                padding={1}
+                variant='subtitle1'
+                component='h2'
+                sx={{ display: 'flex' }}
+                alignItems='center'
+              >
+                <PhoneIcon sx={{ marginRight: '5' }} />
+
                 {user.phone}
               </Typography>
             </Grid>

@@ -48,7 +48,7 @@ export default function Employees() {
   if (!optionsList) return <CircularProgress />;
   return (
     <Container>
-      <Grid container rowSpacing={1} alignItems='center' maxWidth={'100%'}>
+      <Grid container rowSpacing={2} alignItems='center' maxWidth={'100%'}>
         <Grid item xs={12} md={3}>
           <Typography variant='h4' component='h1'>
             Employees
@@ -83,11 +83,6 @@ export default function Employees() {
         <Grid item xs={12} md={12}>
           <Collapse in={!!selectedEmployee} unmountOnExit>
             <UserCard user={selectedEmployee} />
-            {selectedEmployeeId && (
-              <Paper elevation={3}>
-                <SCDataGrid employeeId={selectedEmployeeId} tank={undefined} />
-              </Paper>
-            )}
           </Collapse>
           <Collapse in={!selectedEmployee} unmountOnExit>
             <Paper>
@@ -99,12 +94,31 @@ export default function Employees() {
             </Paper>
           </Collapse>
         </Grid>
+
+        {selectedEmployeeId && (
+          <>
+            <Grid item xs={12} md={12}>
+              <Box display={'flex'} justifyContent={'space-between'}>
+                <Typography variant='h6' component='h1'>
+                  {`${selectedEmployee?.firstName} ${selectedEmployee?.lastName}'s`}{' '}
+                  Service Calls
+                </Typography>
+              </Box>
+            </Grid>
+            <Grid item xs={12} md={12}>
+              <Paper>
+                <SCDataGrid employeeId={selectedEmployeeId} tank={undefined} />
+              </Paper>
+            </Grid>
+          </>
+        )}
+
+        <CreateUserModal
+          open={employeeModalOpen}
+          setOpen={setEmployeeModalOpen}
+          isEmployee={true}
+        />
       </Grid>
-      <CreateUserModal
-        open={employeeModalOpen}
-        setOpen={setEmployeeModalOpen}
-        isEmployee={true}
-      />
     </Container>
   );
 }
