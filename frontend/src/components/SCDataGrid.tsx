@@ -17,7 +17,6 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { useGetClientsQuery } from '../redux/slices/users/userManagementSlice';
 import { useNavigate } from 'react-router-dom';
 
-
 export default function SCDataGrid({
   employeeId,
   tank
@@ -120,7 +119,12 @@ export default function SCDataGrid({
     const goToTankButton = (params: GridRenderCellParams) => {
       return (
         <>
-          <IconButton size='small' onClick={() => {navigate(`/dashboard/Tanks?tankId=${params.row.tankId}`)}}>
+          <IconButton
+            size='small'
+            onClick={() => {
+              navigate(`/dashboard/Tanks?tankId=${params.row.tankId}`);
+            }}
+          >
             <ArrowForwardIcon fontSize='inherit' />
           </IconButton>
         </>
@@ -163,7 +167,7 @@ export default function SCDataGrid({
         sortable: false,
         renderCell: editButton,
         align: 'center',
-        headerAlign: 'center',
+        headerAlign: 'center'
       },
       {
         field: 'alkalinity',
@@ -430,7 +434,7 @@ export default function SCDataGrid({
         minWidth: 70,
         align: 'center',
         headerAlign: 'center'
-      },      
+      },
       {
         field: 'customerNotes',
         headerName: 'Customer Notes',
@@ -573,8 +577,7 @@ export default function SCDataGrid({
       }
     ];
 
-    rows = serviceCallsForTankID.map((s: ServiceCall) => (
-      {
+    rows = serviceCallsForTankID.map((s: ServiceCall) => ({
       employeeName: getEmployeeName(s.employeeId),
       ...s,
       date: new Date(s.createdOn).toLocaleDateString(),
@@ -597,10 +600,8 @@ export default function SCDataGrid({
       pestAPresent: toEmoji(s.pestAPresent),
       pestBPresent: toEmoji(s.pestBPresent),
       pestCPresent: toEmoji(s.pestCPresent),
-      pestDPresent: toEmoji(s.pestDPresent),
-
+      pestDPresent: toEmoji(s.pestDPresent)
     }));
-
   } else {
     return <div>error</div>;
   }
@@ -626,6 +627,6 @@ export default function SCDataGrid({
   );
 }
 
-function toEmoji(b: boolean):string {
-  return b ? '\u2713' : '\u0078'
+function toEmoji(b: boolean): string {
+  return b ? '\u2713' : '\u0078';
 }
