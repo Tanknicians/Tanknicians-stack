@@ -17,7 +17,6 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { useGetClientsQuery } from '../redux/slices/users/userManagementSlice';
 import { useNavigate } from 'react-router-dom';
 
-
 export default function SCDataGrid({
   employeeId,
   tank
@@ -120,7 +119,12 @@ export default function SCDataGrid({
     const goToTankButton = (params: GridRenderCellParams) => {
       return (
         <>
-          <IconButton size='small' onClick={() => {navigate(`/dashboard/Tanks?tankId=${params.row.tankId}`)}}>
+          <IconButton
+            size='small'
+            onClick={() => {
+              navigate(`/dashboard/Tanks?tankId=${params.row.tankId}`);
+            }}
+          >
             <ArrowForwardIcon fontSize='inherit' />
           </IconButton>
         </>
@@ -163,7 +167,7 @@ export default function SCDataGrid({
         sortable: false,
         renderCell: editButton,
         align: 'center',
-        headerAlign: 'center',
+        headerAlign: 'center'
       },
       {
         field: 'alkalinity',
