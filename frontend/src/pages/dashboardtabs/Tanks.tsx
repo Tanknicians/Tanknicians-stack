@@ -186,6 +186,7 @@ export default function Tanks() {
     [optionsList, selectedUserId]
   );
   const navigate = useNavigate();
+  
   useEffect(() => {
     if (!selectedTankId || selectedUserId || !optionsList) {
       return;
@@ -204,7 +205,7 @@ export default function Tanks() {
   useEffect(() => {
     const isSelectedUserAndNoSelectedTank = selectedUser && !selectedTankId;
     if (isSelectedUserAndNoSelectedTank) {
-      setSelectedTankId(selectedUser.OwnedTanks?.at(-1)?.id ?? null);
+      setSelectedTankId(selectedUser.OwnedTanks?.at(0)?.id ?? null);
     }
   }, [selectedUser, selectedTankId]);
 
