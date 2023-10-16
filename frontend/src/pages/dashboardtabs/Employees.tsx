@@ -6,7 +6,6 @@ import UserSearchBar from '../../components/UserSearchBar';
 import Typography from '@mui/material/Typography';
 import UserCard from '../../components/UserCard';
 import Collapse from '@mui/material/Collapse';
-import AddIcon from '@mui/icons-material/Add';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -15,6 +14,7 @@ import CreateUserModal from '../../components/forms/CreateUser';
 import UserGrid from '../../components/datagrid/UserGrid';
 import { CircularProgress, Container, Paper } from '@mui/material';
 import SCDataGrid from '../../components/SCDataGrid';
+import { Add } from '@mui/icons-material';
 
 export default function Employees() {
   const { data: optionsList, error: clientsError } = useGetClientsQuery({
@@ -74,7 +74,7 @@ export default function Employees() {
             <Button
               variant='contained'
               onClick={handleOpenUserModal}
-              startIcon={<AddIcon />}
+              startIcon={<Add fontSize='inherit' />}
             >
               Add Employee
             </Button>
