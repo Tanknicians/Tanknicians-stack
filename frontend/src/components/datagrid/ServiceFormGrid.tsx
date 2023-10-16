@@ -20,25 +20,29 @@ const serviceFormColumns: GridColDef<ServiceCall>[] = [
     field: 'customerRequest',
     headerName: 'Customer Request',
     headerAlign: 'center',
-    align: 'center'
+    align: 'center',
+    minWidth: 150
   },
   {
     field: 'employeeNotes',
     headerName: 'Employee Notes',
     headerAlign: 'center',
-    align: 'center'
+    align: 'center',
+    minWidth: 150
   },
   {
     field: 'notApprovedNotes',
     headerName: 'Not Approved Notes',
     headerAlign: 'center',
-    align: 'center'
+    align: 'center',
+    minWidth: 150
   },
   {
     field: 'notesUpdated',
     headerName: 'Notes Updated',
     headerAlign: 'center',
-    align: 'center'
+    align: 'center',
+    minWidth: 200
   },
   {
     field: 'alkalinity',
@@ -62,123 +66,148 @@ const serviceFormColumns: GridColDef<ServiceCall>[] = [
     field: 'phosphate',
     headerName: 'Phosphate',
     headerAlign: 'center',
-    align: 'center'
+    align: 'center',
+    minWidth: 130
   },
   {
     field: 'ATOOperational',
     headerName: 'ATO Operational',
     headerAlign: 'center',
-    align: 'center'
+    align: 'center',
+    minWidth: 130
   },
   {
     field: 'ATOReservoirFilled',
     headerName: 'ATO Reservoir Filled',
     headerAlign: 'center',
-    align: 'center'
+    align: 'center',
+    minWidth: 150
   },
   {
     field: 'chemFilterAdjusted',
     headerName: 'Chem. Filter Adjusted',
     headerAlign: 'center',
-    align: 'center'
+    align: 'center',
+    minWidth: 170
   },
   {
     field: 'doserAdjustementOrManualDosing',
-    headerName: 'Doser Adjustment or Manual Dosing',
+    headerName: 'Dose-adjusted',
     headerAlign: 'center',
-    align: 'center'
+    align: 'center',
+    minWidth: 130
   },
   {
     field: 'dosingReservoirsFull',
     headerName: 'Dosing Reservoirs Full',
     headerAlign: 'center',
-    align: 'center'
+    align: 'center',
+    minWidth: 170
   },
   {
     field: 'floorsCheckedForSpillsOrDirt',
-    headerName: 'Floors Checked for Spills or Dirt',
+    headerName: 'Floors Checked',
     headerAlign: 'center',
-    align: 'center'
+    align: 'center',
+    minWidth: 130
   },
   {
     field: 'glassCleanedInside',
     headerName: 'Glass Cleaned Inside',
     headerAlign: 'center',
-    align: 'center'
+    align: 'center',
+    minWidth: 170
   },
   {
     field: 'glassCleanedOutside',
     headerName: 'Glass Cleaned Outside',
     headerAlign: 'center',
-    align: 'center'
+    align: 'center',
+    minWidth: 170
   },
   {
     field: 'mechFilterChanged',
     headerName: 'Mech. Filter Changed',
     headerAlign: 'center',
-    align: 'center'
+    align: 'center',
+    minWidth: 170
   },
   {
     field: 'pumpsClearedOfDebris',
-    headerName: 'Pumps Cleared of Debris',
+    headerName: 'Pumps Cleared',
     headerAlign: 'center',
-    align: 'center'
+    align: 'center',
+    minWidth: 130
   },
   {
     field: 'saltCreepCleaned',
     headerName: 'Salt Creep Cleaned',
     headerAlign: 'center',
-    align: 'center'
+    align: 'center',
+    minWidth: 150
   },
   {
     field: 'skimmerCleanedAndOperational',
-    headerName: 'Skimmer Cleaned and Operational',
+    headerName: 'Skimmer Cleaned',
     headerAlign: 'center',
-    align: 'center'
+    align: 'center',
+    minWidth: 130
   },
   {
     field: 'waterChanged',
     headerName: 'Water Changed',
     headerAlign: 'center',
-    align: 'center'
+    align: 'center',
+    minWidth: 130
   },
   {
     field: 'waterTestedRecordedDated',
-    headerName: 'Water Test and Recorded Date',
+    headerName: 'Water Test/Record Date',
     headerAlign: 'center',
-    align: 'center'
+    align: 'center',
+    minWidth: 170
   },
   {
     field: 'pestAPresent',
     headerName: 'Pest A Present',
     headerAlign: 'center',
-    align: 'center'
+    align: 'center',
+    minWidth: 130
   },
   {
     field: 'pestBPresent',
     headerName: 'Pest B Present',
     headerAlign: 'center',
-    align: 'center'
+    align: 'center',
+    minWidth: 130
   },
   {
     field: 'pestCPresent',
     headerName: 'Pest C Present',
     headerAlign: 'center',
-    align: 'center'
+    align: 'center',
+    minWidth: 130
   },
   {
     field: 'pestDPresent',
     headerName: 'Pest D Present',
     headerAlign: 'center',
-    align: 'center'
+    align: 'center',
+    minWidth: 130
   },
   {
     field: 'employeeId',
     headerName: 'Employee ID',
     headerAlign: 'center',
-    align: 'center'
+    align: 'center',
+    minWidth: 110
   },
-  { field: 'tankId', headerName: 'Tank ID' }
+  {
+    field: 'tankId',
+    headerName: 'Tank ID',
+    headerAlign: 'center',
+    align: 'center'
+  }
 ];
 
 export default function ServiceFormGrid({
@@ -191,6 +220,7 @@ export default function ServiceFormGrid({
 
   return (
     <DataGrid
+      autoHeight
       rows={serviceForms ?? []}
       columns={serviceFormColumns}
       loading={isLoadingServiceForms}

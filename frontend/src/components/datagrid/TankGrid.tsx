@@ -6,48 +6,48 @@ const tankColumns: GridColDef<UpdateTankMetaData>[] = [
   {
     field: 'id',
     headerName: 'ID',
-    flex: 1,
+    flex: 2,
     headerAlign: 'center',
     align: 'center'
   },
   {
     field: 'description',
     headerName: 'Nickname',
-    flex: 2,
+    flex: 4,
     headerAlign: 'center',
     align: 'center'
   },
   {
     field: 'type',
     headerName: 'Type',
-    flex: 2,
+    flex: 4,
     headerAlign: 'center',
     align: 'center'
   },
   {
     field: 'volume',
     headerName: 'Volume',
-    flex: 1,
+    flex: 2,
     headerAlign: 'center',
     align: 'center'
   },
   {
     field: 'qrSymbol',
     headerName: 'QR Symbol',
-    flex: 1,
+    flex: 2,
     headerAlign: 'center',
     align: 'center'
   },
   {
     field: 'tanknicianSourcedOnly',
     headerName: 'Tanknician-sourced Only',
-    flex: 2,
+    flex: 4,
     headerAlign: 'center',
     align: 'center'
   },
   {
     field: 'lastDateServiced',
-    flex: 2,
+    flex: 4,
     headerAlign: 'center',
     align: 'center',
     headerName: 'Last Date Serviced',
@@ -58,7 +58,7 @@ const tankColumns: GridColDef<UpdateTankMetaData>[] = [
   {
     field: 'customerId',
     headerName: 'Customer ID',
-    flex: 1,
+    flex: 3,
     headerAlign: 'center',
     align: 'center'
   }
@@ -75,6 +75,7 @@ export default function TankGrid({
 
   return (
     <DataGrid
+      autoHeight
       rows={tanks ?? []}
       columns={tankColumns}
       loading={isLoadingTanks}
