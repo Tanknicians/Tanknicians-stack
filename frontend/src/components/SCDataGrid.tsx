@@ -119,12 +119,13 @@ export default function SCDataGrid({
 
     const goToTankButton = (params: GridRenderCellParams) => {
       return (
-        <Button 
+        <Button
           size='small'
           variant='contained'
           onClick={() => {
-              navigate(`/dashboard/Tanks?tankId=${params.row.tankId}`);
-          }}>
+            navigate(`/dashboard/Tanks?tankId=${params.row.tankId}`);
+          }}
+        >
           <ShowChartIcon />
         </Button>
       );
