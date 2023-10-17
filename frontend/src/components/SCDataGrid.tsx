@@ -1,4 +1,13 @@
-import { IconButton, Box, CircularProgress, Button } from '@mui/material';
+import {
+  IconButton,
+  Box,
+  CircularProgress,
+  Button,
+  Container,
+  Card,
+  Typography,
+  Stack
+} from '@mui/material';
 import ShowChartIcon from '@mui/icons-material/ShowChart';
 import {
   GridRenderCellParams,
@@ -13,10 +22,11 @@ import {
 } from '../redux/slices/forms/servicecallApiSlice';
 import { UpdateTankMetaData, ServiceCall } from '../zodTypes';
 import CreateServiceCallModal from './forms/UpsertServiceCall';
-import { Edit as EditIcon } from '@mui/icons-material';
-// import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import { Add, Edit as EditIcon } from '@mui/icons-material';
 import { useGetClientsQuery } from '../redux/slices/users/userManagementSlice';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { selectCurrentUser } from '../redux/slices/auth/authSlice';
 
 export default function SCDataGrid({
   employeeId,
@@ -368,7 +378,27 @@ export default function SCDataGrid({
       tankId: tank.id
     });
 
-    if (!serviceCallsForTankID) return <div>no serviceCallsForTankID</div>;
+    if (serviceCallsForTankID?.length === 0 || !serviceCallsForTankID)
+      return (
+        <Stack alignItems='center' justifyContent='center' height='100%'>
+          <Card
+            elevation={3}
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              maxWidth: 300,
+              padding: 5,
+              minHeight: 200
+            }}
+          >
+            <Typography variant='h6' sx={{ marginBottom: 1 }}>
+              No Service Calls Found.
+            </Typography>
+          </Card>
+        </Stack>
+      );
 
     columns = [
       {
