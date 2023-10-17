@@ -5,8 +5,6 @@ import {
   AuthLoginRequest,
   authRegister,
   AuthRegisterRequest,
-  EmailRequest,
-  emailSchema,
   validateRequestBody
 } from '../zodTypes';
 
