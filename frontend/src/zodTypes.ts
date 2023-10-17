@@ -90,6 +90,7 @@ export const createTank = tankMetaDataSchema.omit({
   qrSymbol: true,
   lastDateServiced: true
 });
+export type Tank = z.infer<typeof tankMetaDataSchema>;
 export type CreateTankMetaData = z.infer<typeof createTank>;
 export type UpdateTankMetaData = z.infer<typeof tankMetaDataSchema>;
 export type TankMetaDataRequest = ValidatedRequest<CreateTankMetaData>;

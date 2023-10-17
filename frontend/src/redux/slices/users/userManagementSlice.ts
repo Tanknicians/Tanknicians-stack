@@ -1,10 +1,5 @@
 import { apiSlice } from '../../api/apiSlice';
-import {
-  CreateTankMetaData,
-  CreateUser,
-  UpdateTankMetaData,
-  UpdateUser
-} from '../../../zodTypes';
+import { CreateUser, UpdateTankMetaData, UpdateUser } from '../../../zodTypes';
 
 export type UserData = {
   OwnedTanks?: UpdateTankMetaData[];
@@ -53,17 +48,6 @@ export const userManagementSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: () => [{ type: 'USERLIST', id: 'LIST' }]
     }),
-    // Mutation adds a tank to a user
-    addTankToUser: builder.mutation<number, CreateTankMetaData>({
-      query: (tankData) => ({
-        url: '/api/database/tank',
-        method: 'POST',
-        body: { ...tankData }
-      }),
-      invalidatesTags: (_result, _error, tankData) => [
-        { type: 'USERLIST', id: tankData.customerId }
-      ]
-    }),
     // Mutation edits user in database
     editUser: builder.mutation<void, UpdateUser>({
       query: ({ id, ...userData }) => ({
@@ -81,7 +65,6 @@ export const userManagementSlice = apiSlice.injectEndpoints({
 export const {
   useGetClientsQuery,
   useAddUserMutation,
-  useAddTankToUserMutation,
   useEditUserMutation,
   useGetUserQuery
 } = userManagementSlice;
