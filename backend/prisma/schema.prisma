@@ -106,7 +106,7 @@ model ServiceCall {
 
 model TankMetadata {
   id          Int      @id @default(autoincrement())
-  description String?
+  nickname    String
   volume      Int // gallons/liters of water
   type        TankType
   
