@@ -265,7 +265,11 @@ export default function Tanks() {
           </Collapse>
           <Collapse in={!collapse}>
             <Paper elevation={3}>
-              <TankGrid hideToolbar selectTankId={selectCurrentUserId} />
+              <TankGrid
+                hideToolbar
+                selectUserId={selectCurrentUserId}
+                selectTankId={setSelectedTankId}
+              />
             </Paper>
           </Collapse>
         </Grid>

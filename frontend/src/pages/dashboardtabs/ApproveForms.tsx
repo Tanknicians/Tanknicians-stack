@@ -13,18 +13,22 @@ import Table from '@mui/material/Table';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import BorderColorIcon from '@mui/icons-material/BorderColor';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { ServiceCall } from '../../zodTypes';
 
 const oneMinuteInMilliseconds = 60000;
 
 export default function ApproveForms() {
-  const [createServiceCallOpen, setCreateServiceCallOpen] = useState(false);
-  const [serviceCall, setServiceCall] = useState<ServiceCall | null>();
   //  Get Forms for table display
   const unapprovedForms = useGetUnapprovedServiceCallsQuery(undefined, {
     pollingInterval: oneMinuteInMilliseconds
   }).data;
+
+  const [serviceCallId, setServiceCallId] = useState<number | null>();
+  const serviceCall = useMemo(
+    () => unapprovedForms?.find((form) => form.id === serviceCallId),
+    [serviceCallId, unapprovedForms]
+  );
 
   // Get Clients list with tanks included to find Technician and Client name associated with the service record
   const { data: optionsList, error } = useGetClientsQuery({
@@ -70,8 +74,7 @@ export default function ApproveForms() {
   }
 
   function handleModalOpen(serviceCall: ServiceCall) {
-    setCreateServiceCallOpen(true);
-    setServiceCall(serviceCall);
+    setServiceCallId(serviceCall.id);
   }
 
   return (
@@ -134,8 +137,14 @@ export default function ApproveForms() {
       {!!serviceCall && (
         <CreateServiceCallModal
           key={serviceCall.id}
-          open={createServiceCallOpen}
-          setOpen={setCreateServiceCallOpen}
+          open={!!serviceCall.id}
+          setOpen={
+            (open: boolean) =>
+              !open &&
+              setServiceCallId(
+                null
+              ) /*FIX: This is a hack to get the modal to close*/
+          }
           tankId={serviceCall?.tankId}
           employeeId={serviceCall?.employeeId}
           previousServiceCall={serviceCall}
