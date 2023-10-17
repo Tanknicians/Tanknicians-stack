@@ -27,6 +27,7 @@ import SCDataGrid from '../../components/SCDataGrid';
 import TankGrid from '../../components/datagrid/TankGrid';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Add } from '@mui/icons-material';
+import DefaultCharts from '../../components/chartjs/DefaultCharts';
 
 export function TankTabs({
   tanks,
@@ -127,7 +128,7 @@ export function TankTabs({
                 >
                   {tanks.map((tank) => {
                     return (
-                      <MenuItem value={tank.id}>
+                      <MenuItem key={tank.id} value={tank.id}>
                         {tank.description ?? tank.id}
                       </MenuItem>
                     );
@@ -143,6 +144,9 @@ export function TankTabs({
                 Add Tank
               </Button>
             </Box>
+            <Paper>
+              <DefaultCharts tankId={selectedTank?.id} />
+            </Paper>
           </Box>
           <Paper elevation={3}>
             <Container

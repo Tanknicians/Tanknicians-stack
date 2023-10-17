@@ -1,10 +1,28 @@
 import { ServiceCall } from '../../../zodTypes';
 import { apiSlice } from '../../api/apiSlice';
 
+interface ReturnDataSchema {
+  tankId: number;
+  alkalinity: [number, Date][];
+  calcium: [number, Date][];
+  nitrate: [number, Date][];
+  phosphate: [number, Date][];
+}
+
 export const servicecallApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getAllServiceCalls: builder.query<ServiceCall[], { isApproved?: boolean }>({
       query: () => ({ url: '/api/database/servicecall', method: 'GET' })
+    }),
+    getAllServiceCallsByTankIdAndDateRange: builder.query<
+      ReturnDataSchema,
+      { tankId: number; start?: Date; end?: Date }
+    >({
+      query: ({ tankId, start, end }) => ({
+        url: `/api/database/servicecall/range/${tankId}`,
+        method: 'GET',
+        params: { start, end }
+      })
     }),
     createServiceCall: builder.mutation({
       query: (serviceCall) => ({
@@ -45,5 +63,6 @@ export const {
   useGetServiceCallByTankIdQuery,
   useCreateServiceCallMutation,
   useUpdateServiceCallMutation,
-  useGetUnapprovedServiceCallsQuery
+  useGetUnapprovedServiceCallsQuery,
+  useGetAllServiceCallsByTankIdAndDateRangeQuery
 } = servicecallApiSlice;
