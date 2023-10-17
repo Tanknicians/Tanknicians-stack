@@ -4,8 +4,8 @@ import { authenticateRoleMiddleWare } from '../Authentication/API';
 import {
   createServiceCall,
   mobileServiceCall,
-  ServiceCallRequest,
-  validateRequestBody,
+  ServiceCallMobileRequest,
+  validateRequestBody
 } from '../zodTypes';
 
 const mobileRouter = express.Router();
@@ -16,10 +16,10 @@ mobileRouter.post(
   '/uploadForm',
   authenticateRoleMiddleWare(['ADMIN', 'EMPLOYEE']),
   validateRequestBody(mobileServiceCall),
-  async (req: ServiceCallRequest, res) => {
+  async (req: ServiceCallMobileRequest, res) => {
     try {
-      const input = createServiceCall.parse(req.body);
-      const message = await uploadServiceCall(input);
+      const data = req.body;
+      const message = await uploadServiceCall(data);
       res.status(200).json({ success: `Form uploaded. Form ${message}.` });
     } catch (error) {
       const errorMessage =
@@ -28,7 +28,7 @@ mobileRouter.post(
           : 'Unknown Error: Failed to upload Service Call from mobile.';
       res.status(500).json({ error: errorMessage });
     }
-  },
+  }
 );
 
 export default mobileRouter;

@@ -1,23 +1,29 @@
+import { ServiceCall } from '@prisma/client';
 import { serviceCallDB } from '../../../prisma/db/ServiceCall';
 import { tankDB } from '../../../prisma/db/TankMetadata';
 import {
   CreateServiceCall,
+  SearchSchema,
   UpdateServiceCall,
-  UpdateTankMetaData,
-  tankMetaDataSchema,
+  tankMetaDataSchema
 } from '../../zodTypes';
 
-export async function create(serviceCall: CreateServiceCall) {
+export async function create(data: CreateServiceCall) {
   // Update Tank's "lastDateServiced" to serviceCall's "createdOn" and upload ServiceCall
+
+  // Convert from Zod to Prisma
+  const createServiceCall: Omit<ServiceCall, 'id'> = {
+    ...data
+  };
+
   try {
-    const readTank = await tankDB.read(serviceCall.tankId);
-    if (!readTank) {
-      throw new Error(`No tankId of ${serviceCall.tankId} found.`);
+    const updateTank = await tankDB.read(createServiceCall.tankId);
+    if (!updateTank) {
+      throw new Error(`No tankId of ${createServiceCall.tankId} found.`);
     }
-    const updateTank: UpdateTankMetaData = tankMetaDataSchema.parse(readTank);
-    updateTank.lastDateServiced = serviceCall.createdOn;
-    await serviceCallDB.create(serviceCall);
-    const createdId = await tankDB.update(updateTank);
+    updateTank.lastDateServiced = createServiceCall.createdOn;
+    const createdId = await serviceCallDB.create(createServiceCall);
+    await tankDB.update(updateTank);
     return { message: 'Service Call created successfully', id: createdId };
   } catch (e) {
     const errorMessage = e instanceof Error ? e.message : 'Unknown error.';
@@ -40,7 +46,7 @@ export async function read(id: number) {
   }
 }
 
-export async function readAll(isApproved: boolean) {
+export async function readAll(isApproved?: boolean) {
   try {
     const serviceCalls = await serviceCallDB.getAll(isApproved);
     if (!serviceCalls) {
@@ -56,8 +62,8 @@ export async function readAll(isApproved: boolean) {
 
 export async function readAllByDate(
   tankId: number,
-  startDate: Date,
-  endDate: Date,
+  startDate?: Date,
+  endDate?: Date
 ) {
   interface ReturnDataSchema {
     tankId: number;
@@ -71,7 +77,7 @@ export async function readAllByDate(
     const serviceCalls = await serviceCallDB.readByDateTime(
       tankId,
       startDate,
-      endDate,
+      endDate
     );
     if (serviceCalls === null) {
       throw new Error(`Service Calls for id: ${tankId} not found.`);
@@ -82,13 +88,13 @@ export async function readAllByDate(
       alkalinity: [],
       calcium: [],
       nitrate: [],
-      phosphate: [],
+      phosphate: []
     };
 
     serviceCalls.forEach((serviceCall) => {
       returnData.alkalinity.push([
         serviceCall.alkalinity,
-        serviceCall.createdOn,
+        serviceCall.createdOn
       ]);
       returnData.calcium.push([serviceCall.calcium, serviceCall.createdOn]);
       returnData.nitrate.push([serviceCall.nitrate, serviceCall.createdOn]);
@@ -103,15 +109,15 @@ export async function readAllByDate(
   }
 }
 
-export async function readAllByTankId(tankId: number, isApproved: boolean) {
+export async function readAllByTankId(tankId: number, isApproved?: boolean) {
   try {
     const serviceCalls = await serviceCallDB.readAllByTankId(
       tankId,
-      isApproved,
+      isApproved
     );
     if (!serviceCalls) {
       throw new Error(
-        `Service Calls for id: ${tankId} and isApproved: ${isApproved} not found.`,
+        `Service Calls for id: ${tankId} and isApproved: ${isApproved} not found.`
       );
     }
 
@@ -127,14 +133,20 @@ export async function readAllByTankId(tankId: number, isApproved: boolean) {
     const errorMessage = e instanceof Error ? e.message : 'Unknown error.';
     console.error(errorMessage);
     throw new Error(
-      `An error occurred during readAllByTankId: ${errorMessage}`,
+      `An error occurred during readAllByTankId: ${errorMessage}`
     );
   }
 }
 
-export async function update(serviceCall: UpdateServiceCall) {
+export async function update(id: number, data: UpdateServiceCall) {
+  // Convert from Zod to Prisma
+  const updateServiceCall: ServiceCall = {
+    id,
+    ...data
+  };
+
   try {
-    await serviceCallDB.update(serviceCall);
+    await serviceCallDB.update(updateServiceCall);
     return { message: 'Service Call updated successfully' };
   } catch (e) {
     const errorMessage = e instanceof Error ? e.message : 'Unknown error.';
@@ -154,9 +166,9 @@ export async function deleteOne(id: number) {
   }
 }
 
-export async function search(search: string, page: number) {
+export async function search(searchBody: SearchSchema) {
   try {
-    const searchData = serviceCallDB.searchByString(search, page);
+    const searchData = serviceCallDB.search(searchBody);
     if (!searchData) {
       throw new Error('No Service Call from search found.');
     }

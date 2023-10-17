@@ -5,14 +5,14 @@ import {
 } from '@reduxjs/toolkit/query/react';
 import { setCredentials, logout } from '../slices/auth/authSlice';
 import { RootState } from '../store';
+import { RefreshTokenData } from '../../types/zodTypes';
 
 // ! CHANGE THIS FOR PRODUCTION
 // This URL works for android emulator when "npm start" is executed
 // const BASE_URL = 'http://10.0.2.2:5000';
 // This URL works for physical device when "npm start" is executed
 // ! The url will be given by ngrok after running the command ngrok http 5000
-const BASE_URL =
-  'https://1ad7-2603-9001-2e00-1465-a9b1-3715-e80e-5b46.ngrok.io';
+const BASE_URL = 'https://3153-132-170-212-30.ngrok.io';
 
 const baseQuery = fetchBaseQuery({
   baseUrl: BASE_URL,
@@ -36,11 +36,11 @@ const baseQueryWithReauth: BaseQueryFn = async (args, api, extraOptions) => {
       api,
       extraOptions
     );
-    console.log('refresh result: ', refreshResult);
     if (refreshResult?.data) {
-      const user = (api.getState() as RootState).auth.user;
+      const { token, savedCredentials: user } =
+        refreshResult.data as RefreshTokenData;
       // store the new token
-      api.dispatch(setCredentials({ ...refreshResult.data, user }));
+      api.dispatch(setCredentials({ token, user }));
       // retry the original query with new access token
       result = await baseQuery(args, api, extraOptions);
     } else {
@@ -53,5 +53,5 @@ const baseQueryWithReauth: BaseQueryFn = async (args, api, extraOptions) => {
 
 export const apiSlice = createApi({
   baseQuery: baseQueryWithReauth,
-  endpoints: builder => ({})
+  endpoints: (builder) => ({})
 });

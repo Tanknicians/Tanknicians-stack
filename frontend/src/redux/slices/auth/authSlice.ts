@@ -2,7 +2,12 @@ import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from '../../store';
 
 const initialState = {
-  user: null,
+  user: {
+    id: -1,
+    email: '',
+    role: '',
+    userId: -1
+  },
   token: null
 };
 
@@ -15,7 +20,7 @@ const authSlice = createSlice({
       state.token = action.payload.token;
     },
     logout: (state) => {
-      state.user = null;
+      state.user = initialState.user;
       state.token = null;
     }
   }

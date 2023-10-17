@@ -1,21 +1,22 @@
-import { UserOption } from '../redux/slices/users/userManagementSlice';
+import { UserData } from '../redux/slices/users/userManagementSlice';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 import parse from 'autosuggest-highlight/parse';
 import match from 'autosuggest-highlight/match';
 import React from 'react';
 
-type OptionsList = {
-  optionsList: UserOption[];
+type UserList = {
+  userList: UserData[];
+  selectedUser: UserData | null;
   handleUserSelected: (
     _event: React.SyntheticEvent,
-    value: UserOption | null
+    value: UserData | null
   ) => void;
+  label: string;
 };
 
 const styles = {
   groupLabelContainer: {
-    backgroundColor: '#081627',
     width: '100%'
   },
   groupLabel: {
@@ -23,10 +24,12 @@ const styles = {
     width: '100%',
     display: 'flex',
     paddingLeft: 10,
-    color: 'white'
+    color: 'black',
+    borderBottom: '1px solid #343a40',
+    background: '#adb5bd'
   },
   optionLabel: {
-    backgroundColor: 'white',
+    backgroundColor: '#f8f9fa',
     width: '100%',
     display: 'flex',
     paddingLeft: 10
@@ -36,25 +39,33 @@ const styles = {
   }
 };
 
+function getUsersName(user: UserData) {
+  return user?.firstName ?? user?.lastName ?? user?.middleName ?? '';
+}
+
 export default function UserSearchBar({
-  optionsList,
-  handleUserSelected
-}: OptionsList) {
-  if (!optionsList) return <div>Loading...</div>;
+  userList,
+  handleUserSelected,
+  selectedUser,
+  label
+}: UserList) {
   return (
     <Autocomplete
       id='grouped-users-tanks'
       onChange={handleUserSelected}
-      options={optionsList
+      value={selectedUser}
+      options={userList
         .slice()
-        .sort((a, b) => a.firstName.localeCompare(b.firstName))}
-      groupBy={(option) => option.firstName.charAt(0).toUpperCase()}
+        .sort((userA, userB) =>
+          getUsersName(userA).localeCompare(getUsersName(userB))
+        )}
+      groupBy={(user) => getUsersName(user).charAt(0).toUpperCase()}
       getOptionLabel={(option) =>
-        `${option.firstName} ${option.middleName} ${option.lastName} ${option.address}`
+        `${option.firstName} ${option.middleName} ${option.lastName}`
       }
       sx={{ width: '100%', backgroundColor: 'white', borderRadius: '10px' }}
       renderInput={(params) => (
-        <TextField autoFocus {...params} label='Search User' />
+        <TextField autoFocus {...params} label={`Search ${label}`} />
       )}
       renderGroup={(params) => (
         <div {...params} style={styles.groupLabelContainer}>
@@ -66,10 +77,10 @@ export default function UserSearchBar({
         </div>
       )}
       renderOption={(props, option, { inputValue }) => {
-        const matches = match(option.firstName, inputValue, {
+        const matches = match(option.firstName ?? '', inputValue, {
           insideWords: true
         });
-        const parts = parse(option.firstName, matches);
+        const parts = parse(option.firstName ?? '', matches);
 
         return (
           <li {...props} style={styles.optionLabel}>

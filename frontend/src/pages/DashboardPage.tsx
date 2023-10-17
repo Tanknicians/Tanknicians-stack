@@ -1,3 +1,5 @@
+import { useGetUserQuery } from '../redux/slices/users/userManagementSlice';
+import { selectCurrentUser } from '../redux/slices/auth/authSlice';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Content from '../components/dashboard/ContentRoutes';
@@ -11,11 +13,13 @@ import MenuIcon from '@mui/icons-material/Menu';
 import { useLocation } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import Toolbar from '@mui/material/Toolbar';
+import { useSelector } from 'react-redux';
 import AppBar from '@mui/material/AppBar';
 import { Link } from 'react-router-dom';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import * as React from 'react';
+import { useGetUnapprovedServiceCallsQuery } from '../redux/slices/forms/servicecallApiSlice';
 
 let theme = createTheme({
   palette: {
@@ -185,18 +189,12 @@ const item = {
 const StyledBadge = styled(Badge)<BadgeProps>(({ theme }) => ({
   '& .MuiBadge-badge': {
     right: 8,
-    // left: -5,
     top: 13
-
-    // border: `2px solid ${theme.palette.background.paper}`,
-    //padding: '0 4px',
   }
 }));
 
 const drawerWidth = 256;
-
-// figure out how to get User's name from store and put it here
-const username = 'Will Mitchell';
+const oneMinuteInMilliseconds = 60000;
 
 export default function Paperbase() {
   // Get URL on render
@@ -210,13 +208,23 @@ export default function Paperbase() {
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const isSmUp = useMediaQuery(theme.breakpoints.up('sm'));
 
+  const numberOfUnapprovedForms = useGetUnapprovedServiceCallsQuery(undefined, {
+    pollingInterval: oneMinuteInMilliseconds
+  }).data?.length;
+
+  // Get user info from redux store
+  const loggedInUser = useSelector(selectCurrentUser);
+  const { data } = useGetUserQuery(loggedInUser.userId);
+  const username = data ? `${data.firstName} ${data.lastName}` : '...';
+
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
 
   return (
     <ThemeProvider theme={theme}>
-      <Box sx={{ display: 'flex', minHeight: '100vh' }}>
+      {/* the 100 vh is part of the MUI boilerplate code, pls dont remove without a good reason */}
+      <Box sx={{ display: 'flex', height: '100vh' }}>
         <CssBaseline />
         <Box
           component='nav'
@@ -243,8 +251,7 @@ export default function Paperbase() {
           sx={{
             flex: 1,
             display: 'flex',
-            flexDirection: 'column',
-            height: '1000px'
+            flexDirection: 'column'
           }}
         >
           <AppBar color='primary' position='sticky' elevation={0}>
@@ -262,19 +269,23 @@ export default function Paperbase() {
                 </Grid>
                 <Grid item xs />
                 <Grid item>
-                  <IconButton color='inherit' sx={{ p: 0.5 }}>
-                    <Link
-                      to='Approve Forms'
-                      style={{ textDecoration: 'none', color: 'white' }}
+                  <Link
+                    to='Approve Forms'
+                    style={{ textDecoration: 'none', color: 'white' }}
+                  >
+                    <IconButton
+                      color='inherit'
+                      sx={{ p: 0.5 }}
+                      onClick={() => setActiveNavItem('Approve Forms')}
                     >
-                      <StyledBadge badgeContent={3} color='secondary'>
-                        <NotificationsIcon
-                          sx={item}
-                          onClick={() => setActiveNavItem('Approve Forms')}
-                        />
+                      <StyledBadge
+                        badgeContent={numberOfUnapprovedForms}
+                        color='secondary'
+                      >
+                        <NotificationsIcon sx={item} />
                       </StyledBadge>
-                    </Link>
-                  </IconButton>
+                    </IconButton>
+                  </Link>
                 </Grid>
                 <Grid item>
                   <Typography color='inherit' variant='h6' component='h1'>
@@ -284,7 +295,12 @@ export default function Paperbase() {
               </Grid>
             </Toolbar>
           </AppBar>
-          <Content />
+          <Box
+            component='main'
+            sx={{ flex: 1, py: 6, px: 4, bgcolor: '#eaeff1' }}
+          >
+            <Content />
+          </Box>
         </Box>
       </Box>
     </ThemeProvider>

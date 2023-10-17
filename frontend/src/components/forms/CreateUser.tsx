@@ -1,32 +1,18 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Button,
-  Checkbox,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
-  FormControlLabel,
   Grid,
   TextField
 } from '@mui/material';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
-import { z } from 'zod';
-import { useAddUserMutation } from '../redux/slices/users/userManagementSlice';
-
-export const userSchema = z.object({
-  id: z.number().int(),
-  firstName: z.string().optional(),
-  middleName: z.string().optional(),
-  lastName: z.string().optional(),
-  address: z.string().optional(),
-  phone: z.string().optional(),
-
-  isEmployee: z.boolean().default(false)
-});
-
-export const createUserSchema = userSchema.omit({ id: true });
-export type CreateUser = z.infer<typeof createUserSchema>;
+import { useAddUserMutation } from '../../redux/slices/users/userManagementSlice';
+import { createUserSchema, CreateUser } from '../../zodTypes';
+import { MuiTelInput } from 'mui-tel-input';
+import LoadingOverlay from '../LoadingOverlay';
 
 export default function CreateUserModal({
   open,
@@ -39,16 +25,25 @@ export default function CreateUserModal({
 }) {
   const [addUser, { isLoading }] = useAddUserMutation();
   const { handleSubmit, control, reset, formState } = useForm<CreateUser>({
-    resolver: zodResolver(createUserSchema)
+    resolver: zodResolver(createUserSchema),
+    defaultValues: {
+      isEmployee: isEmployee,
+      firstName: '',
+      middleName: '',
+      lastName: '',
+      address: '',
+      phone: ''
+    } as CreateUser
   });
   console.log({ formState });
 
   function handleClose() {
+    if (isLoading) return;
     setOpen(false);
     reset();
   }
 
-  const onSubmit: SubmitHandler<CreateUser> = async (data) => {
+  const onValid: SubmitHandler<CreateUser> = async (data) => {
     console.log(data);
 
     try {
@@ -62,6 +57,7 @@ export default function CreateUserModal({
 
   return (
     <Dialog open={open} onClose={handleClose} maxWidth='lg'>
+      {isLoading && <LoadingOverlay />}
       <DialogTitle>Add {isEmployee ? 'Employee' : 'Client'}</DialogTitle>
       <DialogContent>
         <Grid container spacing={2} paddingTop={1}>
@@ -107,7 +103,7 @@ export default function CreateUserModal({
               name='phone'
               control={control}
               render={({ field }) => (
-                <TextField fullWidth label='Phone Number' {...field} />
+                <MuiTelInput fullWidth label='Phone Number' {...field} />
               )}
             />
           </Grid>
@@ -115,7 +111,12 @@ export default function CreateUserModal({
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose}>Cancel</Button>
-        <Button type='button' onClick={handleSubmit(onSubmit)}>
+        <Button
+          type='button'
+          onClick={handleSubmit(onValid)}
+          variant='contained'
+          disabled={isLoading}
+        >
           Submit
         </Button>
       </DialogActions>

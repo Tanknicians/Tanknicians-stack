@@ -1,134 +1,130 @@
-import ListSubheader from '@mui/material/ListSubheader';
-import List from '@mui/material/List';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemText from '@mui/material/ListItemText';
-import Collapse from '@mui/material/Collapse';
-import ExpandLess from '@mui/icons-material/ExpandLess';
-import ExpandMore from '@mui/icons-material/ExpandMore';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import { useState } from 'react';
-import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
-import { useGetClientsQuery } from '../../redux/slices/users/userManagementSlice';
-import { useGetTankDataQuery } from '../../redux/slices/tanks/tankDataSlice';
-import LineChart from '../chartjs/LineChart';
-import { TankData } from './DUMMYDATA';
+import { Container, Grid } from '@mui/material';
+import { useGetAllServiceCallsByTankIdAndDateRangeQuery } from '../../redux/slices/forms/servicecallApiSlice';
+import { ChartData } from 'chart.js';
+import LineChart from './LineChart';
 
-interface OwnedTanks {
-  id: number;
-}
-export interface UserData {
-  OwnedTanks: OwnedTanks[];
-  firstName: string;
-  lastName: string;
-  id: number;
-}
-
-export default function DefaultCharts() {
-  // interfaces to appease sadistict TS kink enjoyers
-
-  interface UseQuery {
-    data: UserData[] | null;
-    error: Error | undefined;
-    isLoading: boolean;
-  }
-
-  // List toggle controls
-  const [toggleShowCharts, setToggleShowCharts] = useState(false);
-  const [openItemId, setOpenItemId] = useState<number | null>(null);
-  const [listToggle, setListToggle] = useState(true);
-  const { data, error, isLoading } = useGetClientsQuery<UseQuery>(true);
-  console.log(data, error, isLoading);
-  // const { data, error, isLoading } = useGetTankDataQuery<UseQuery>(tankID);
-
-  // Temporary hack to get users and their tanks from DB
-  let myUserData: UserData[] | null = null;
-  myUserData = data;
-
-  // List menu/submenu toggle handlers
-  const handleListToggle = () => {
-    setListToggle(!listToggle);
-  };
-
-  const toggleSubMenu = (itemId: number) => {
-    if (openItemId === itemId) {
-      setOpenItemId(null);
-    } else {
-      setOpenItemId(itemId);
+export default function DefaultCharts({
+  tankId,
+  start,
+  end
+}: { tankId: number; start?: Date; end?: Date }) {
+  const { data: serviceCalls } = useGetAllServiceCallsByTankIdAndDateRangeQuery(
+    {
+      tankId: tankId
     }
+  );
+
+  // ALKALINITY
+  const alkDates: string[] = [];
+  const alkVals: number[] = [];
+
+  serviceCalls?.alkalinity.forEach((datapoint) => {
+    const date = new Date(datapoint[1]);
+    alkVals.push(datapoint[0]);
+    alkDates.push(`${date.getMonth()}/${date.getDate()}/${date.getFullYear()}`);
+  });
+
+  const alk = {
+    labels: alkDates,
+    datasets: [
+      {
+        label: 'Alkalinity',
+        data: alkVals,
+        borderColor: 'blue'
+      }
+    ]
   };
 
-  // on selection of users tankID, generate charts
-  const handleRequestChart = (tankID: number) => {
-    console.log(`TankID:·${tankID}`);
-    setListToggle(false);
-    setToggleShowCharts(true);
+  // CALCIUM
+  const calDates: string[] = [];
+  const calVals: number[] = [];
+
+  serviceCalls?.calcium.forEach((datapoint) => {
+    const date = new Date(datapoint[1]);
+
+    calVals.push(datapoint[0]);
+    calDates.push(`${date.getMonth()}/${date.getDate()}/${date.getFullYear()}`);
+  });
+
+  const cal = {
+    labels: calDates,
+    datasets: [
+      {
+        label: 'Calcium',
+        data: calVals,
+        borderColor: 'red'
+      }
+    ]
   };
 
-  if (myUserData != null) {
-    return (
-      <div>
-        <List
-          sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}
-          component='nav'
-          aria-labelledby='nested-list-subheader'
-          subheader={
-            <ListSubheader component='div' id='nested-list-subheader'>
-              Clients{' '}
-              <IconButton onClick={handleListToggle}>
-                <MenuIcon />
-              </IconButton>
-            </ListSubheader>
-          }
-        >
-          <Collapse in={listToggle}>
-            {myUserData?.map(({ id, firstName, lastName, OwnedTanks }) => (
-              <div>
-                <ListItemButton onClick={() => toggleSubMenu(id)} key={id}>
-                  <ListItemText primary={`${firstName}·${lastName}`} />
-                  {id === openItemId ? <ExpandLess /> : <ExpandMore />}
-                </ListItemButton>
+  // NITRATE
+  const nitDates: string[] = [];
+  const nitVals: number[] = [];
 
-                <Collapse in={id === openItemId} timeout='auto' unmountOnExit>
-                  <List component='div' disablePadding>
-                    {OwnedTanks.map(({ id }) => (
-                      <ListItemButton
-                        sx={{ pl: 4 }}
-                        onClick={() => handleRequestChart(id)}
-                        key={id}
-                      >
-                        <ListItemText primary={`Select·Tank·${id}`} />
-                      </ListItemButton>
-                    ))}
-                  </List>
-                </Collapse>
-              </div>
-            ))}
-          </Collapse>
-        </List>
-        <h2>One Chart Demo</h2>
-        <div
-          style={{ alignContent: 'center', width: '50%', position: 'relative' }}
-        >
-          {toggleShowCharts &&
-            TankData.map((d) => (
-              <div>
-                <h3>{d.datasets[0].label}</h3>
-                <Card
-                  variant='outlined'
-                  sx={{ maxWidth: '80%', minWidth: '50%' }}
-                >
-                  <CardContent>
-                    <LineChart data={d} />
-                  </CardContent>
-                </Card>
-              </div>
-            ))}
-        </div>
-      </div>
-    );
-  } else {
-    return <div>error</div>;
-  }
+  serviceCalls?.nitrate.forEach((datapoint) => {
+    const date = new Date(datapoint[1]);
+
+    nitVals.push(datapoint[0]);
+    nitDates.push(`${date.getMonth()}/${date.getDate()}/${date.getFullYear()}`);
+  });
+
+  const nit = {
+    labels: nitDates,
+    datasets: [
+      {
+        label: 'Nitrate',
+        data: nitVals,
+        borderColor: 'orange'
+      }
+    ]
+  };
+
+  // PHOSPHATE
+  const phoDates: string[] = [];
+  const phoVals: number[] = [];
+
+  serviceCalls?.phosphate.forEach((datapoint) => {
+    const date = new Date(datapoint[1]);
+
+    phoVals.push(datapoint[0]);
+    phoDates.push(`${date.getMonth()}/${date.getDate()}/${date.getFullYear()}`);
+  });
+
+  const pho = {
+    labels: phoDates,
+    datasets: [
+      {
+        label: 'Phosphate',
+        data: phoVals,
+        borderColor: 'green'
+      }
+    ]
+  };
+
+  return (
+    <>
+      <Grid container maxWidth={'100%'} alignItems='center'>
+        <Grid item xs={12} md={6}>
+          <Container sx={{ alignItems: 'center' }}>
+            <LineChart data={alk} title={'Alkalinity'} />
+          </Container>
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <Container sx={{ alignItems: 'center' }}>
+            <LineChart data={cal} title={'Calcium'} />
+          </Container>
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <Container sx={{ alignItems: 'center' }}>
+            <LineChart data={nit} title={'Nitrate'} />
+          </Container>
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <Container sx={{ alignItems: 'center' }}>
+            <LineChart data={pho} title={'Phosphate'} />
+          </Container>
+        </Grid>
+      </Grid>
+    </>
+  );
 }

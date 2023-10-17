@@ -1,99 +1,302 @@
 import {
-  UserOption,
+  UserData,
   useGetClientsQuery
 } from '../../redux/slices/users/userManagementSlice';
-import CreateTankForm from '../../components/CreateTankForm';
+import CreateTankForm from '../../components/forms/CreateTank';
 import UserSearchBar from '../../components/UserSearchBar';
-import Typography from '@mui/material/Typography';
-import UserCard from '../../components/UserCard';
-import Container from '@mui/material/Container';
-import Collapse from '@mui/material/Collapse';
-import AddIcon from '@mui/icons-material/Add';
-import Button from '@mui/material/Button';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import { useState } from 'react';
+import type {} from '@mui/x-data-grid/themeAugmentation';
+import { useEffect, useMemo, useState } from 'react';
 
-const headerGridStyle = {
-  flex: 1,
-  alignContent: 'center'
-};
+import CreateServiceCallModal from '../../components/forms/UpsertServiceCall';
+import { UpdateTankMetaData } from '../../zodTypes';
+import {
+  Button,
+  Collapse,
+  Container,
+  Grid,
+  Typography,
+  Paper,
+  Select,
+  MenuItem,
+  SelectChangeEvent,
+  FormControl,
+  Box,
+  Card,
+  IconButton
+} from '@mui/material';
+import SCDataGrid from '../../components/SCDataGrid';
+import TankGrid from '../../components/datagrid/TankGrid';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { Add } from '@mui/icons-material';
+import DefaultCharts from '../../components/chartjs/DefaultCharts';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+
+export function TankTabs({
+  tanks,
+  employeeId,
+  selectedTankId,
+  setSelectedTankId
+}: {
+  tanks: UpdateTankMetaData[];
+  employeeId: number;
+  selectedTankId: number | null;
+  setSelectedTankId(tankId: number | null): void;
+}) {
+  const selectedTank = useMemo(
+    () => tanks.find((tank) => tank.id === selectedTankId) ?? null,
+    [selectedTankId, tanks]
+  );
+
+  const [createTankOpen, setCreateTankOpen] = useState(false);
+  const [createServiceCallOpen, setCreateServiceCallOpen] = useState(false);
+  const [showCharts, setShowCharts] = useState<boolean>(true);
+
+  const handleChartCollapse = () => {
+    setShowCharts(!showCharts);
+  };
+
+  const handleTankSelection = (event: SelectChangeEvent) => {
+    const selectedTank = tanks.find(
+      ({ id }) => id === parseInt(event.target.value)
+    );
+    setSelectedTankId(selectedTank?.id ?? null);
+  };
+  const handleAddTank = () => {
+    setCreateTankOpen(true);
+  };
+
+  // Switch to grid
+  return (
+    <>
+      <CreateTankForm
+        userId={employeeId}
+        open={createTankOpen}
+        setOpen={setCreateTankOpen}
+      />
+      {!selectedTank && (
+        <Container
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            height: '100%'
+          }}
+        >
+          <Card
+            elevation={3}
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              maxWidth: 300,
+              padding: 5,
+              minHeight: 200,
+              marginTop: 10
+            }}
+          >
+            <Typography variant='h6' sx={{ marginBottom: 1 }}>
+              Client has no tanks.
+            </Typography>
+            <Button
+              size='small'
+              variant='contained'
+              onClick={handleAddTank}
+              startIcon={<Add fontSize='inherit' />}
+            >
+              Add Tank
+            </Button>
+          </Card>
+        </Container>
+      )}
+      {selectedTank && (
+        <>
+          <Box>
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                padding: '0 16'
+              }}
+            >
+              <FormControl variant='standard' sx={{ m: 1, minWidth: 160 }}>
+                <Select
+                  autoWidth
+                  variant='standard'
+                  labelId='tank-id-selector-label'
+                  id='tank-id-selector'
+                  displayEmpty={true}
+                  renderValue={() => {
+                    return selectedTank.description ?? selectedTank.id;
+                  }}
+                  onChange={handleTankSelection}
+                  label='Tanks'
+                  sx={{ textAlign: 'center' }}
+                >
+                  {tanks.map((tank) => {
+                    return (
+                      <MenuItem key={tank.id} value={tank.id}>
+                        {tank.description ?? tank.id}
+                      </MenuItem>
+                    );
+                  })}
+                </Select>
+              </FormControl>
+              <Button
+                variant='contained'
+                onClick={handleAddTank}
+                startIcon={<Add fontSize='inherit' />}
+                sx={{ m: 1 }}
+              >
+                Add Tank
+              </Button>
+            </Box>
+            <Paper>
+              <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                <IconButton size='small' onClick={handleChartCollapse}>
+                  {showCharts ? (
+                    <KeyboardArrowUpIcon />
+                  ) : (
+                    <KeyboardArrowDownIcon />
+                  )}
+                </IconButton>
+              </Box>
+              <Collapse in={showCharts} unmountOnExit>
+                <DefaultCharts tankId={selectedTank?.id} />
+              </Collapse>
+            </Paper>
+          </Box>
+          <Paper elevation={3} sx={{ marginTop: 2 }}>
+            <Container
+              sx={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center'
+              }}
+            >
+              <Typography variant='h5'>Service Calls</Typography>
+              <Button
+                variant='contained'
+                onClick={() => setCreateServiceCallOpen(true)}
+                startIcon={<Add fontSize='inherit' />}
+                sx={{ margin: '8 0' }}
+              >
+                Add Service Form
+              </Button>
+            </Container>
+            <SCDataGrid tank={selectedTank} employeeId={undefined} />
+          </Paper>
+          <CreateServiceCallModal
+            key={selectedTank.id}
+            open={createServiceCallOpen}
+            setOpen={setCreateServiceCallOpen}
+            tankId={selectedTank.id}
+            employeeId={employeeId}
+          />
+        </>
+      )}
+    </>
+  );
+}
 
 export default function Tanks() {
-  const userId = 1;
-  const { data: optionsList, error } = useGetClientsQuery(true);
-  console.log('OptionsList: ', optionsList);
-  console.log('OptionsList error: ', error);
-  const [collapse, setCollapse] = useState(false);
-  const [selectedUser, selectCurrentUser] = useState<UserOption | null>(null);
-  const [open, setOpen] = useState(false);
+  const { data: optionsList } = useGetClientsQuery({
+    includeTanks: true,
+    isEmployee: false
+  });
+  const location = useLocation();
+  const urlTankId = useMemo(
+    () => new URLSearchParams(location.search).get('tankId'),
+    [location]
+  );
+  const [selectedTankId, setSelectedTankId] = useState<number | null>(
+    Number(urlTankId) ?? null
+  );
+  const [selectedUserId, selectCurrentUserId] = useState<number | null>(null);
+  const selectedUser = useMemo(
+    () => optionsList?.find((user) => user.id === selectedUserId) ?? null,
+    [optionsList, selectedUserId]
+  );
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!selectedTankId || selectedUserId || !optionsList) {
+      return;
+    }
+    const userId =
+      optionsList.find((user) =>
+        user.OwnedTanks?.some((tank) => tank.id === selectedTankId)
+      )?.id ?? null;
+    if (userId) {
+      selectCurrentUserId(userId);
+    } else {
+      navigate('/Dashboard/tanks');
+    }
+  }, [selectedUserId, selectedTankId, optionsList]);
+
+  useEffect(() => {
+    const isSelectedUserAndNoSelectedTank = selectedUser && !selectedTankId;
+    if (isSelectedUserAndNoSelectedTank) {
+      setSelectedTankId(selectedUser.OwnedTanks?.[0]?.id ?? null);
+    }
+  }, [selectedUser, selectedTankId]);
+
+  const collapse = !!selectedUser;
 
   const handleUserSelected = (
     _event: React.SyntheticEvent,
-    customer: UserOption | null
+    customer: UserData | null
   ) => {
-    setCollapse(true);
-    selectCurrentUser(customer);
-    console.log('customer: ', customer);
+    selectCurrentUserId(customer?.id ?? null);
+    setSelectedTankId(null);
+    if (!customer?.id) {
+      navigate('/dashboard/Tanks');
+    }
   };
 
   if (!optionsList) return <div>Loading...</div>;
 
   return (
-    <div
-      style={{ marginLeft: 'auto', marginRight: 'auto', maxWidth: '1000px' }}
-    >
-      {/* This box has a grid with the page title in one cell, a section to put a search bar in the middle cell, and a container for a button in the far right cell */}
-      <Box sx={{ flexGrow: 1, display: 'flex', padding: '20px' }}>
-        <Grid container spacing={1}>
-          <Grid
-            item
-            xs={12}
-            sm={3}
-            sx={{ ...headerGridStyle, backgroundColor: 'inherit' }}
-          >
-            <Typography
-              color='inherit'
-              variant='h4'
-              component='h1'
-              sx={{ float: 'left', minWidth: 'fit-content' }}
-            >
-              Tanks
-            </Typography>
-          </Grid>
-          <Grid
-            item
-            xs={6}
-            sm={7}
-            sx={{ ...headerGridStyle, backgroundColor: 'inherit' }}
-          >
-            <Container maxWidth='sm'>
-              <UserSearchBar
-                optionsList={optionsList}
-                handleUserSelected={handleUserSelected}
-              />
-            </Container>
-          </Grid>
-          <Grid
-            item
-            xs={6}
-            sm={2}
-            sx={{ ...headerGridStyle, backgroundColor: 'inherit' }}
+    <Container>
+      <Grid container rowSpacing={1} alignItems='center' maxWidth={'100%'}>
+        <Grid item xs={12} md={3}>
+          <Typography variant='h4' component='h1'>
+            Tanks
+          </Typography>
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <UserSearchBar
+            userList={optionsList}
+            selectedUser={selectedUser}
+            handleUserSelected={handleUserSelected}
+            label='Clients'
           />
         </Grid>
-      </Box>
-      <Collapse in={collapse}>
-        <UserCard user={selectedUser} />
-        <Button
-          variant='contained'
-          sx={{ float: 'right' }}
-          onClick={() => setOpen(true)}
-        >
-          <AddIcon />
-          Add Tank
-        </Button>
-        <CreateTankForm userId={userId} open={open} setOpen={setOpen} />
-      </Collapse>
-    </div>
+        <Grid item xs={12} md={3} />
+        <Grid item xs={12}>
+          <Collapse in={collapse}>
+            {selectedUser?.OwnedTanks && (
+              <TankTabs
+                key={selectedUser.id}
+                tanks={selectedUser.OwnedTanks}
+                employeeId={selectedUser.id}
+                selectedTankId={selectedTankId}
+                setSelectedTankId={setSelectedTankId}
+              />
+            )}
+          </Collapse>
+          <Collapse in={!collapse}>
+            <Paper elevation={3}>
+              <TankGrid
+                hideToolbar
+                selectUserId={selectCurrentUserId}
+                selectTankId={setSelectedTankId}
+              />
+            </Paper>
+          </Collapse>
+        </Grid>
+      </Grid>
+    </Container>
   );
 }

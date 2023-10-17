@@ -5,12 +5,12 @@ import {
   generateToken,
   verifyRefreshToken,
   generateRefreshToken,
-  verifyToken,
+  verifyToken
 } from '../Token/Generator';
 
 import { loginDB } from '../../prisma/db/Login';
 import { Request, Response, NextFunction } from 'express';
-import { AuthLogin, AuthRegister } from '../zodTypes';
+import { AuthLogin, AuthRegister, RefreshToken } from '../zodTypes';
 import { randomBytes } from 'crypto';
 import { sendEmail } from '../Email/API';
 
@@ -35,21 +35,21 @@ export function generateRandomPassword(length: number): string {
 }
 
 export async function login(login: AuthLogin, res: Response) {
-  const savedCredentials = await loginDB.read(login.email);
+  const foundCredentials = await loginDB.read(login.email);
 
   // Confirm login credentials existed in full in DB
-  if (!savedCredentials) {
+  if (!foundCredentials) {
     return res.status(401).json({
       code: 'UNAUTHORIZED',
-      message: 'Incorrect email/password combination',
+      message: 'Incorrect email/password combination'
       // message: `Login with email: ${login.email} not found.`
     });
   }
 
-  if (!(savedCredentials.email && savedCredentials.password)) {
+  if (!(foundCredentials.email && foundCredentials.password)) {
     return res.status(401).json({
       code: 'UNAUTHORIZED',
-      message: 'User record incomplete',
+      message: 'User record incomplete'
     });
   }
 
@@ -57,23 +57,24 @@ export async function login(login: AuthLogin, res: Response) {
 
   const samePasswords = await bcrypt.compare(
     login.password,
-    savedCredentials.password,
+    foundCredentials.password
   );
   if (!samePasswords) {
     return res.status(401).json({
       code: 'UNAUTHORIZED',
-      message: 'Incorrect email/password combination',
+      message: 'Incorrect email/password combination'
       // message: 'passwords do not match'
     });
   }
 
   try {
-    const token = generateToken(savedCredentials);
-    const refreshToken = generateRefreshToken(savedCredentials);
+    const { password: _, ...savedCredentials } = foundCredentials;
+    const token = generateToken(foundCredentials);
+    const refreshToken = generateRefreshToken(foundCredentials);
     res.cookie('jwt', refreshToken, {
       httpOnly: true,
       secure: true,
-      maxAge: 24 * 60 * 60 * 1000,
+      maxAge: 24 * 60 * 60 * 1000
     });
     res.status(200).json({ token, savedCredentials });
     return;
@@ -81,7 +82,7 @@ export async function login(login: AuthLogin, res: Response) {
     console.error('Error generating tokens:', error);
     return res.status(500).json({
       code: 'INTERNAL_SERVER_ERROR',
-      message: 'Failed to generate tokens',
+      message: 'Failed to generate tokens'
     });
   }
 }
@@ -91,13 +92,13 @@ export async function register(registration: AuthRegister, res: Response) {
   const generatedPassword = generateRandomPassword(DEFAULT_PASSWORD_LENGTH);
   const encryptedPassword = await bcrypt.hash(
     generatedPassword,
-    DEFAULT_SALT_LENGTH,
+    DEFAULT_SALT_LENGTH
   );
 
   // move the data to a format with the encrypted password to be sent to the DB
   const registerData = {
     ...registration,
-    password: encryptedPassword,
+    password: encryptedPassword
   };
 
   try {
@@ -112,7 +113,7 @@ export async function register(registration: AuthRegister, res: Response) {
     const confirmation = await sendEmail(
       registerData.email,
       'New Registration',
-      emailText,
+      emailText
     );
     console.log(confirmation);
     return res.status(200).json({ message: 'Registration successful' });
@@ -121,7 +122,7 @@ export async function register(registration: AuthRegister, res: Response) {
     return res.status(500).json({
       code: 'INTERNAL_SERVER_ERROR',
       message: 'An error occurred during registration',
-      cause: error,
+      cause: error
     });
   }
 }
@@ -156,47 +157,48 @@ export async function resetPassword(email: string) {
   const confirmation = await sendEmail(
     login.email,
     'Password Reset',
-    emailText,
+    emailText
   );
   console.log(confirmation);
   return confirmation;
 }
 
 // Generate a new access token using a refresh token
-export async function refresh(
-  email: string,
-  refreshToken: string,
-  res: Response,
-) {
+export async function refresh(refreshToken: string, res: Response) {
+  let decryptToken: RefreshToken;
+
   console.log('refreshing token');
   try {
-    verifyRefreshToken(refreshToken);
+    decryptToken = verifyRefreshToken(refreshToken);
   } catch (error) {
     console.log('Invalid token.');
     return res.status(403).json({
       code: 'FORBIDDEN',
-      message: 'Refresh token not valid.',
+      message: 'Refresh token not valid.'
     });
   }
 
-  const savedCredentials = await loginDB.read(email);
+  const foundCredentials = await loginDB.read(decryptToken.data.email);
 
-  if (!savedCredentials) {
+  if (!foundCredentials) {
     return res.status(404).json({
       code: 'NOT_FOUND',
-      message: 'Login does not exist.',
+      message: 'Login does not exist.'
     });
   }
 
+  // Remove sending hashed password since it's not necessary for frontend.
+  const { password: _, ...savedCredentials } = foundCredentials;
+
   try {
-    const token = generateToken(savedCredentials);
+    const token = generateToken(foundCredentials);
     return res.json({ token, savedCredentials });
   } catch (error) {
     console.error(error);
     return res.status(500).json({
       code: 'INTERNAL_SERVER_ERROR',
       message: 'An error occurred while generating the access token.',
-      cause: error,
+      cause: error
     });
   }
 }
@@ -212,7 +214,7 @@ export function authenticateRoleMiddleWare(roles: string[]) {
     try {
       verifyToken(token);
     } catch (error) {
-      return res.status(401).send({ message: 'Invalid token' });
+      return res.status(403).send({ message: 'Invalid token' });
     }
     const decodedToken = verifyToken(token);
     if (!roles.includes(decodedToken.data.role)) {

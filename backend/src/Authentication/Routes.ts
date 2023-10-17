@@ -7,7 +7,7 @@ import {
   AuthRegisterRequest,
   EmailRequest,
   emailSchema,
-  validateRequestBody,
+  validateRequestBody
 } from '../zodTypes';
 
 import { z } from 'zod';
@@ -22,14 +22,15 @@ authRouter.post(
   '/login',
   validateRequestBody(authLogin),
   async (req: AuthLoginRequest, res) => {
+    const data = req.body;
     try {
-      await AuthService.login(req.body, res);
+      await AuthService.login(data, res);
     } catch (error) {
       res
         .status(500)
         .json({ error: 'An error occurred with the login function.' });
     }
-  },
+  }
 );
 
 // Register route
@@ -37,18 +38,22 @@ authRouter.post(
   '/register',
   validateRequestBody(authRegister),
   async (req: AuthRegisterRequest, res) => {
-    const register = req.body;
+    const data = req.body;
     try {
-      await AuthService.register(register, res);
+      await AuthService.register(data, res);
     } catch (error) {
       res
         .status(500)
         .json({ error: 'An error occurred with the register function.' });
     }
-  },
+  }
 );
 
-const validateJwtToken = (req: Request, res: Response, next: NextFunction) => {
+const validateRefreshToken = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     z.string().parse(req.cookies.jwt);
     next();
@@ -58,19 +63,15 @@ const validateJwtToken = (req: Request, res: Response, next: NextFunction) => {
 };
 
 // Refresh route
-authRouter.post(
-  '/refresh',
-  validateRequestBody(emailSchema),
-  validateJwtToken,
-  async (req: EmailRequest, res) => {
-    try {
-      await AuthService.refresh(req.body.email, req.cookies.jwt, res);
-    } catch (error) {
-      res
-        .status(500)
-        .json({ error: 'An error occurred with the refresh function.' });
-    }
-  },
-);
+authRouter.get('/refresh', validateRefreshToken, async (req, res) => {
+  const refreshToken = req.cookies.jwt;
+  try {
+    await AuthService.refresh(refreshToken, res);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ error: 'An error occurred with the refresh function.' });
+  }
+});
 
 export default authRouter;

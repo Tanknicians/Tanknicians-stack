@@ -1,9 +1,15 @@
+import { User } from '@prisma/client';
 import { userDB } from '../../../prisma/db/User';
-import { CreateUser, UpdateUser } from '../../zodTypes';
+import { CreateUser, SearchSchema, UpdateUser } from '../../zodTypes';
 
-export async function create(user: CreateUser) {
+export async function create(data: CreateUser) {
+  // convert from Zod to Prisma
+  const createUser: Omit<CreateUser, 'id'> = {
+    ...data
+  };
+
   try {
-    const createdId = await userDB.create(user);
+    const createdId = await userDB.create(createUser);
     return { message: 'User created successfully', id: createdId };
   } catch (e) {
     const errorMessage = e instanceof Error ? e.message : 'Unknown error.';
@@ -26,9 +32,9 @@ export async function read(id: number) {
   }
 }
 
-export async function readAll(includeTanks?: boolean, isEmployee?: boolean) {
+export async function readAll(includeTanks: boolean, isEmployee?: boolean) {
   try {
-    const users = await userDB.getAll(!!includeTanks, !!isEmployee);
+    const users = await userDB.getAll(includeTanks, isEmployee);
     return users;
   } catch (e) {
     const errorMessage = e instanceof Error ? e.message : 'Unknown error.';
@@ -37,9 +43,14 @@ export async function readAll(includeTanks?: boolean, isEmployee?: boolean) {
   }
 }
 
-export async function update(user: UpdateUser) {
+export async function update(id: number, data: UpdateUser) {
+  // Convert from Zod to Prisma
+  const updateUser: User = {
+    id,
+    ...data
+  };
   try {
-    await userDB.update(user);
+    await userDB.update(updateUser);
     return { message: 'User updated successfully' };
   } catch (e) {
     const errorMessage = e instanceof Error ? e.message : 'Unknown error.';
@@ -59,11 +70,9 @@ export async function deleteOne(id: number) {
   }
 }
 
-// This looks to be an expensive search, might be worth
-// monitoring for slowdown once db grows.
-export async function search(search: string, page: number) {
+export async function search(searchBody: SearchSchema) {
   try {
-    const searchData = userDB.searchByString(search, page);
+    const searchData = userDB.search(searchBody);
     if (!searchData) {
       throw new Error('No User from search found.');
     }

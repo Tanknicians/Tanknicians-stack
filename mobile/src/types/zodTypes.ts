@@ -1,47 +1,115 @@
 import { z } from 'zod';
 
+// USER
+
+export const userSchema = z.object({
+  id: z.number().int(),
+  firstName: z.string().optional(),
+  middleName: z.string().optional(),
+  lastName: z.string().optional(),
+  address: z.string().optional(),
+  phone: z.string().optional(),
+
+  isEmployee: z.boolean()
+});
+
+// AUTH
+
+export const loginSchema = z.object({
+  id: z.number().int(),
+  email: z.string(),
+  password: z.string(),
+  role: z.enum(['ADMIN', 'EMPLOYEE', 'CUSTOMER']),
+  userId: z.number()
+});
+
+export const authLogin = loginSchema.omit({
+  id: true,
+  role: true,
+  userId: true
+});
+
+export const RefreshTokenData = z.object({
+  token: z.string(),
+  savedCredentials: loginSchema.omit({
+    password: true
+  })
+});
+
+export type AuthLogin = z.infer<typeof authLogin>;
+export type RefreshTokenData = z.infer<typeof RefreshTokenData>;
+
+// ERROR RESPONSE
+
+export const errorSchema = z.object({
+  status: z.coerce.number().optional(),
+  data: z.object({ message: z.string().default('') })
+});
+
+// SERVICE CALL FORM
+
+// Invalid type error for now
+// FIXME: required_error is not working for some reason
+// invalid_type_error is executed due to possible improper coercion
+// within the value passed to the textinput
+const numericQuestions = z.object({
+  alkalinity: z.coerce.number({
+    // required_error: "Alkalinity reading is required*",
+    invalid_type_error: 'Alkalinity reading is required*'
+  }),
+  calcium: z.coerce.number({
+    // required_error: "Calcium reading is required*",
+    invalid_type_error: 'Calcium reading is required*'
+  }),
+  nitrate: z.coerce.number({
+    // required_error: "Nitrate reading is required*",
+    invalid_type_error: 'Nitrate reading is required*'
+  }),
+  phosphate: z.coerce.number({
+    // required_error: "Phosphate reading is required*",
+    invalid_type_error: 'Phosphate reading is required*'
+  })
+});
+
+const booleanQuestions = z.object({
+  ATOOperational: z.boolean(),
+  ATOReservoirFilled: z.boolean(),
+  chemFilterAdjusted: z.boolean(),
+  doserAdjustementOrManualDosing: z.boolean(),
+  dosingReservoirsFull: z.boolean(),
+  floorsCheckedForSpillsOrDirt: z.boolean(),
+  glassCleanedInside: z.boolean(),
+  glassCleanedOutside: z.boolean(),
+  mechFilterChanged: z.boolean(),
+  pumpsClearedOfDebris: z.boolean(),
+  saltCreepCleaned: z.boolean(),
+  skimmerCleanedAndOperational: z.boolean(),
+  waterChanged: z.boolean(),
+  waterTestedRecordedDated: z.boolean(),
+  pestAPresent: z.boolean(),
+  pestBPresent: z.boolean(),
+  pestCPresent: z.boolean(),
+  pestDPresent: z.boolean()
+});
+
+const textQuestions = z.object({
+  customerRequest: z.string(),
+  employeeNotes: z.string()
+});
+
+export const serviceFormSchema = numericQuestions.merge(
+  booleanQuestions.merge(textQuestions)
+);
+
+type NumericQuestions = z.infer<typeof numericQuestions>;
+type BooleanQuestions = z.infer<typeof booleanQuestions>;
+type TextQuestions = z.infer<typeof textQuestions>;
+
 export type ServiceFormData = NumericQuestions &
   BooleanQuestions &
   TextQuestions;
 
-type NumericQuestions = {
-  alkalinity: number;
-  calcium: number;
-  nitrate: number;
-  phosphate: number;
-};
-
-type BooleanQuestions = {
-  ATOOperational: boolean;
-  ATOReservoirFilled: boolean;
-  chemFilterAdjusted: boolean;
-  doserAdjustementOrManualDosing: boolean;
-  dosingReservoirsFull: boolean;
-  floorsCheckedForSpillsOrDirt: boolean;
-  glassCleanedInside: boolean;
-  glassCleanedOutside: boolean;
-  mechFilterChanged: boolean;
-  pumpsClearedOfDebris: boolean;
-  saltCreepCleaned: boolean;
-  skimmerCleanedAndOperational: boolean;
-  waterChanged: boolean;
-  waterTestedRecordedDated: boolean;
-  pestAPresent: boolean;
-  pestBPresent: boolean;
-  pestCPresent: boolean;
-  pestDPresent: boolean;
-};
-
-type TextQuestions = {
-  customerRequest: string;
-  employeeNotes: string;
-};
-
 export const defaultServiceFormValues: Partial<ServiceFormData> = {
-  alkalinity: undefined,
-  calcium: undefined,
-  nitrate: undefined,
-  phosphate: undefined,
   ATOOperational: false,
   ATOReservoirFilled: false,
   chemFilterAdjusted: false,
@@ -63,43 +131,6 @@ export const defaultServiceFormValues: Partial<ServiceFormData> = {
   customerRequest: '',
   employeeNotes: ''
 };
-
-// First 4 fields are transformed to numbers
-// after having input
-export const serviceFormSchema = z.object({
-  alkalinity: z.number({
-    required_error: 'Alkalinity reading is required*'
-  }),
-  calcium: z.number({
-    required_error: 'Calcium reading is required*'
-  }),
-  nitrate: z.number({
-    required_error: 'Nitrate reading is required*'
-  }),
-  phosphate: z.number({
-    required_error: 'Phosphate reading is required*'
-  }),
-  ATOOperational: z.boolean(),
-  ATOReservoirFilled: z.boolean(),
-  chemFilterAdjusted: z.boolean(),
-  doserAdjustementOrManualDosing: z.boolean(),
-  dosingReservoirsFull: z.boolean(),
-  floorsCheckedForSpillsOrDirt: z.boolean(),
-  glassCleanedInside: z.boolean(),
-  glassCleanedOutside: z.boolean(),
-  mechFilterChanged: z.boolean(),
-  pumpsClearedOfDebris: z.boolean(),
-  saltCreepCleaned: z.boolean(),
-  skimmerCleanedAndOperational: z.boolean(),
-  waterChanged: z.boolean(),
-  waterTestedRecordedDated: z.boolean(),
-  pestAPresent: z.boolean(),
-  pestBPresent: z.boolean(),
-  pestCPresent: z.boolean(),
-  pestDPresent: z.boolean(),
-  customerRequest: z.string(),
-  employeeNotes: z.string()
-});
 
 type ServiceFormFieldId =
   | 'alkalinity'
@@ -127,10 +158,10 @@ type ServiceFormFieldId =
   | 'customerRequest'
   | 'employeeNotes';
 
-interface ServiceFormFieldQuestion {
+export type ServiceFormFieldQuestion = {
   id: ServiceFormFieldId;
   label: string;
-}
+};
 
 export const serviceFormFieldQuestionsText: ServiceFormFieldQuestion[] = [
   {

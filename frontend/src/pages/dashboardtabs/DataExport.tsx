@@ -1,52 +1,86 @@
 import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
+import { Grid, Container, Paper, Stack, Tab, Tabs, Box } from '@mui/material';
+import UserGrid from '../../components/datagrid/UserGrid';
+import TankGrid from '../../components/datagrid/TankGrid';
+import ServiceFormGrid from '../../components/datagrid/ServiceFormGrid';
+import { useState } from 'react';
+interface TabPanelProps {
+  children?: React.ReactNode;
+  index: number;
+  value: number;
+}
 
-const headerGridStyle = {
-  flex: 1,
-  alignContent: 'center'
-};
+function CustomTabPanel(props: TabPanelProps) {
+  const { children, value, index, ...other } = props;
 
-export default function DataExport() {
   return (
     <div
-      style={{ marginLeft: 'auto', marginRight: 'auto', maxWidth: '1000px' }}
+      role='tabpanel'
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
     >
-      {/* This box has a grid with the page title in one cell, a section to put a search bar in the middle cell, and a container for a button in the far right cell */}
-      <Box sx={{ flexGrow: 1, display: 'flex', padding: '20px' }}>
-        <Grid container spacing={1}>
-          <Grid
-            item
-            xs={12}
-            sm={3}
-            sx={{ ...headerGridStyle, backgroundColor: 'inherit' }}
-          >
-            <Typography
-              color='inherit'
-              variant='h4'
-              component='h1'
-              sx={{ float: 'left', minWidth: 'fit-content' }}
-            >
-              Data Export
-            </Typography>
-          </Grid>
-          <Grid
-            item
-            xs={6}
-            sm={7}
-            sx={{ ...headerGridStyle, backgroundColor: 'inherit' }}
-          >
-            <Container maxWidth='sm' />
-          </Grid>
-          <Grid
-            item
-            xs={6}
-            sm={2}
-            sx={{ ...headerGridStyle, backgroundColor: 'inherit' }}
-          />
-        </Grid>
-      </Box>
+      {value === index && <Box>{children}</Box>}
     </div>
+  );
+}
+
+export default function DataExport() {
+  const [value, setValue] = useState(0);
+
+  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+    setValue(newValue);
+  };
+  return (
+    <Container>
+      <Grid container rowSpacing={1} alignItems='center' maxWidth={'100%'}>
+        <Grid item xs={12}>
+          <Typography variant='h4' component='h1'>
+            Data Export
+          </Typography>
+        </Grid>
+        <Grid item xs={12} sx={{ marginTop: 0, paddingTop: 0 }}>
+          <Tabs value={value} onChange={handleChange}>
+            <Tab label='Clients' />
+            <Tab label='Employees' />
+            <Tab label='Tanks' />
+            <Tab label='Service Calls' />
+          </Tabs>
+          <CustomTabPanel value={value} index={0}>
+            <Stack height={'100vh'} spacing={2} component={Paper} padding={2}>
+              <Typography variant='h6' component='h1'>
+                All Clients
+              </Typography>
+              <UserGrid isEmployee={false} />
+            </Stack>
+          </CustomTabPanel>
+          <CustomTabPanel value={value} index={1}>
+            <Stack height={'100vh'} spacing={2} component={Paper} padding={2}>
+              <Typography variant='h6' component='h1'>
+                All Employees
+              </Typography>
+              <UserGrid isEmployee={true} />
+            </Stack>
+          </CustomTabPanel>
+          <CustomTabPanel value={value} index={2}>
+            <Stack height={'100vh'} spacing={2} component={Paper} padding={2}>
+              <Typography variant='h6' component='h1'>
+                All Tanks
+              </Typography>
+              <TankGrid />
+            </Stack>
+          </CustomTabPanel>
+          <CustomTabPanel value={value} index={3}>
+            <Stack height={'100vh'} spacing={2} component={Paper} padding={2}>
+              <Typography variant='h6' component='h1'>
+                All Service Calls
+              </Typography>
+              <ServiceFormGrid />
+            </Stack>
+          </CustomTabPanel>
+        </Grid>
+      </Grid>
+    </Container>
   );
 }

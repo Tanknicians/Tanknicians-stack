@@ -1,13 +1,13 @@
-import { PrismaClient } from '@prisma/client';
-import { CreateUser, UpdateUser } from '../../src/zodTypes';
+import { PrismaClient, User } from '@prisma/client';
+import { SearchSchema } from '../../src/zodTypes';
 const prisma = new PrismaClient();
 
 // CREATE
-export async function create(user: CreateUser) {
+export async function create(user: Omit<User, 'id'>) {
   const createdUser = await prisma.user.create({
     data: {
-      ...user,
-    },
+      ...user
+    }
   });
   return createdUser.id;
 }
@@ -16,51 +16,51 @@ export async function create(user: CreateUser) {
 export async function read(id: number) {
   return await prisma.user.findUnique({
     where: {
-      id: id,
-    },
+      id: id
+    }
   });
 }
 
 export async function readLoginByUserId(id: number) {
   return await prisma.user.findUnique({
     where: {
-      id: id,
+      id: id
     },
     select: {
-      login: true,
-    },
+      login: true
+    }
   });
 }
 
 export async function readEmployeeServiceCallsByUserId(id: number) {
   return await prisma.user.findMany({
     where: {
-      id: id,
+      id: id
     },
     select: {
-      EmployeeServiceCalls: true,
-    },
+      EmployeeServiceCalls: true
+    }
   });
 }
 
 export async function readTankMetadataByUserId(id: number) {
   return await prisma.user.findMany({
     where: {
-      id: id,
+      id: id
     },
     select: {
-      OwnedTanks: true,
-    },
+      OwnedTanks: true
+    }
   });
 }
 
 // UPDATE
-export async function update(user: UpdateUser) {
+export async function update(user: User) {
   await prisma.user.update({
     where: {
-      id: user.id,
+      id: user.id
     },
-    data: user,
+    data: user
   });
 }
 
@@ -69,37 +69,38 @@ export async function update(user: UpdateUser) {
 export async function deleteUser(id: number) {
   await prisma.user.delete({
     where: {
-      id: id,
-    },
+      id: id
+    }
   });
 }
 
 // SEARCH
-export async function searchByString(search: String, page: number) {
+export async function search(search: SearchSchema) {
   return await prisma.user.findMany({
-    skip: (page - 1) * 25,
-    take: 25,
+    skip: (search.page - 1) * search.size,
+    take: search.size,
     where: {
       OR: [
-        { firstName: { contains: String(search) } },
-        { middleName: { contains: String(search) } },
-        { lastName: { contains: String(search) } },
-        { address: { contains: String(search) } },
-        { phone: { contains: String(search) } },
-      ],
-    },
+        { firstName: { contains: String(search.searchString) } },
+        { middleName: { contains: String(search.searchString) } },
+        { lastName: { contains: String(search.searchString) } },
+        { address: { contains: String(search.searchString) } },
+        { phone: { contains: String(search.searchString) } },
+        { isEmployee: search.searchBoolean }
+      ]
+    }
   });
 }
 
 // ALL + OwnedTanks
-export async function getAll(includeTanks: boolean, isEmployee: boolean) {
+export async function getAll(includeTanks: boolean, isEmployee?: boolean) {
   return await prisma.user.findMany({
     where: {
-      isEmployee: isEmployee,
+      isEmployee: isEmployee
     },
     include: {
-      OwnedTanks: includeTanks,
-    },
+      OwnedTanks: includeTanks
+    }
   });
 }
 

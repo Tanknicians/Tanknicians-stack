@@ -3,11 +3,13 @@ import * as TankMetadataService from './API';
 import { authenticateRoleMiddleWare } from '../../Authentication/API';
 import {
   CreateTankMetaData,
-  TankMetaDataRequest,
+  TankMetaDataCreateRequest,
+  TankMetaDataUpdateRequest,
   UpdateTankMetaData,
   createTank,
+  searchSchema,
   updateTank,
-  validateRequestBody,
+  validateRequestBody
 } from '../../zodTypes';
 
 /**
@@ -18,25 +20,15 @@ import {
 const tankMetaDataRouter = express.Router();
 tankMetaDataRouter.use(express.json());
 
-// brand new tank has epoch of 2010
-const tankEpoch = new Date('2010-01-01');
-
 // Create TankMetadata
 tankMetaDataRouter.post(
   '/',
   authenticateRoleMiddleWare(['ADMIN']),
-  validateRequestBody(
-    createTank.omit({ qrSymbol: true, lastDateServiced: true }),
-  ),
-  async (req: TankMetaDataRequest, res) => {
+  validateRequestBody(createTank),
+  async (req: TankMetaDataCreateRequest, res) => {
     try {
-      const input = req.body;
-      const newTank: CreateTankMetaData = {
-        ...input,
-        qrSymbol: 0,
-        lastDateServiced: tankEpoch,
-      };
-      const result = await TankMetadataService.create(newTank);
+      const data = req.body;
+      const result = await TankMetadataService.create(data);
       res.json(result);
     } catch (error) {
       const errorMessage =
@@ -45,7 +37,25 @@ tankMetaDataRouter.post(
           : 'Unknown Error: Failed to create Tank Metadata';
       res.status(500).json({ error: errorMessage });
     }
-  },
+  }
+);
+
+// Read TankMetadata
+tankMetaDataRouter.get(
+  '/',
+  authenticateRoleMiddleWare(['ADMIN', 'EMPLOYEE']),
+  async (_, res) => {
+    try {
+      const result = await TankMetadataService.readAll();
+      res.json(result);
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : 'Unknown Error: Failed to read Tank Metadata';
+      res.status(500).json({ error: errorMessage });
+    }
+  }
 );
 
 // Read TankMetadata
@@ -64,7 +74,7 @@ tankMetaDataRouter.get(
           : 'Unknown Error: Failed to read Tank Metadata';
       res.status(500).json({ error: errorMessage });
     }
-  },
+  }
 );
 
 // Update TankMetadata
@@ -72,15 +82,11 @@ tankMetaDataRouter.put(
   '/:id',
   authenticateRoleMiddleWare(['ADMIN']),
   validateRequestBody(updateTank),
-  async (req: TankMetaDataRequest, res) => {
+  async (req: TankMetaDataUpdateRequest, res) => {
     try {
       const id = Number(req.params.id);
-      const input = req.body;
-      const tankData: UpdateTankMetaData = {
-        id,
-        ...input,
-      };
-      const result = await TankMetadataService.update(tankData);
+      const data = req.body;
+      const result = await TankMetadataService.update(id, data);
       res.json(result);
     } catch (error) {
       const errorMessage =
@@ -89,7 +95,7 @@ tankMetaDataRouter.put(
           : 'Unknown Error: Failed to update Tank Metadata';
       res.status(500).json({ error: errorMessage });
     }
-  },
+  }
 );
 
 // Delete TankMetadata
@@ -108,19 +114,22 @@ tankMetaDataRouter.delete(
           : 'Unknown Error: Failed to delete Tank Metadata';
       res.status(500).json({ error: errorMessage });
     }
-  },
+  }
 );
 
 // Search TankMetadata
 tankMetaDataRouter.get(
-  '/search/:searchString',
+  '/search',
   authenticateRoleMiddleWare(['ADMIN']),
   async (req, res) => {
     try {
-      const searchString = req.params.searchString;
-      const pageNumber = req.body.page;
-      const result = await TankMetadataService.search(searchString, pageNumber);
-      res.json(result);
+      const searchQuery = searchSchema.safeParse(req.query);
+      if (!searchQuery.success) {
+        return res.status(400).json({ error: searchQuery.error.errors });
+      } else {
+        const result = await TankMetadataService.search(searchQuery.data);
+        res.json(result);
+      }
     } catch (error) {
       const errorMessage =
         error instanceof Error
@@ -128,7 +137,7 @@ tankMetaDataRouter.get(
           : 'Unknown Error: Failed to search Tank Metadata';
       res.status(500).json({ error: errorMessage });
     }
-  },
+  }
 );
 
 export default tankMetaDataRouter;

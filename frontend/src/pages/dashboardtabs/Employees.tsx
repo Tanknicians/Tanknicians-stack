@@ -1,99 +1,124 @@
-import { UserOption } from '../../redux/slices/users/userManagementSlice';
+import {
+  UserData,
+  useGetClientsQuery
+} from '../../redux/slices/users/userManagementSlice';
 import UserSearchBar from '../../components/UserSearchBar';
 import Typography from '@mui/material/Typography';
 import UserCard from '../../components/UserCard';
-import Container from '@mui/material/Container';
 import Collapse from '@mui/material/Collapse';
-import AddIcon from '@mui/icons-material/Add';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
-import { useState } from 'react';
-
-const headerGridStyle = {
-  flex: 1,
-  alignContent: 'center'
-};
-
-const client: UserOption[] = [
-  {
-    id: 1234,
-    firstName: 'John',
-    middleName: 'C',
-    lastName: 'EmployeeMan',
-    address: '1234 Woodpecher Drive, Springfliend, Illinois, 32567',
-    phone: '555-555-1234',
-    isEmployee: true
-  }
-];
+import { useMemo, useState } from 'react';
+import CreateUserModal from '../../components/forms/CreateUser';
+import UserGrid from '../../components/datagrid/UserGrid';
+import { CircularProgress, Container, Paper } from '@mui/material';
+import SCDataGrid from '../../components/SCDataGrid';
+import { Add } from '@mui/icons-material';
 
 export default function Employees() {
-  const [collapse, setCollapse] = useState(false);
-  const [selectedUser, selectCurrentUser] = useState<UserOption | null>(null);
+  const { data: optionsList, error: clientsError } = useGetClientsQuery({
+    includeTanks: false,
+    isEmployee: true
+  });
+
+  const [employeeModalOpen, setEmployeeModalOpen] = useState(false);
+
+  const [selectedEmployeeId, setSelectedEmployeeId] = useState<number | null>(
+    null
+  );
+  const selectedEmployee = useMemo(
+    () =>
+      optionsList?.find((user: UserData) => user.id === selectedEmployeeId) ??
+      null,
+    [optionsList, selectedEmployeeId]
+  );
 
   const handleUserSelected = (
     _event: React.SyntheticEvent,
-    customer: UserOption | null
+    employee: UserData | null
   ) => {
-    setCollapse(!collapse);
-    selectCurrentUser(customer);
-    console.log('customer: ', customer);
+    setSelectedEmployeeId(employee?.id ?? null);
   };
+
+  const handleOpenUserModal = () => {
+    setEmployeeModalOpen((prevState) => !prevState);
+  };
+
+  if (!optionsList) return <CircularProgress />;
   return (
-    <div
-      style={{ marginLeft: 'auto', marginRight: 'auto', maxWidth: '1000px' }}
-    >
-      {/* This box has a grid with the page title in one cell, a section to put a search bar in the middle cell, and a container for a button in the far right cell */}
-      <Box sx={{ flexGrow: 1, display: 'flex', padding: '20px' }}>
-        <Grid container spacing={1}>
-          <Grid
-            item
-            xs={12}
-            sm={3}
-            sx={{ ...headerGridStyle, backgroundColor: 'inherit' }}
-          >
-            <Typography
-              color='inherit'
-              variant='h4'
-              component='h1'
-              sx={{ float: 'left', minWidth: 'fit-content' }}
-            >
-              Employees
-            </Typography>
-          </Grid>
-          <Grid
-            item
-            xs={6}
-            sm={7}
+    <Container>
+      <Grid container rowSpacing={2} alignItems='center' maxWidth={'100%'}>
+        <Grid item xs={12} md={3}>
+          <Typography variant='h4' component='h1'>
+            Employees
+          </Typography>
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <UserSearchBar
+            userList={optionsList}
+            selectedUser={selectedEmployee}
+            handleUserSelected={handleUserSelected}
+            label='Employees'
+          />
+        </Grid>
+        <Grid item xs={12} md={3}>
+          <Box
             sx={{
-              ...headerGridStyle,
-              backgroundColor: 'inherit',
-              alignContent: 'center'
+              display: 'flex',
+              justifyContent: {
+                md: 'flex-end'
+              }
             }}
           >
-            <Container maxWidth='sm'>
-              <UserSearchBar
-                optionsList={client}
-                handleUserSelected={handleUserSelected}
-              />
-            </Container>
-          </Grid>
-          <Grid
-            item
-            xs={6}
-            sm={2}
-            sx={{ ...headerGridStyle, backgroundColor: 'inherit' }}
-          >
-            <Button variant='contained' sx={{ float: 'right' }}>
-              <AddIcon />
+            <Button
+              variant='contained'
+              onClick={handleOpenUserModal}
+              startIcon={<Add fontSize='inherit' />}
+            >
               Add Employee
             </Button>
-          </Grid>
+          </Box>
         </Grid>
-      </Box>
-      <Collapse in={collapse}>
-        <UserCard user={selectedUser} />
-      </Collapse>
-    </div>
+        <Grid item xs={12} md={12}>
+          <Collapse in={!!selectedEmployee} unmountOnExit>
+            <UserCard user={selectedEmployee} />
+          </Collapse>
+          <Collapse in={!selectedEmployee} unmountOnExit>
+            <Paper>
+              <UserGrid
+                hideToolbar
+                isEmployee={true}
+                selectUserId={setSelectedEmployeeId}
+              />
+            </Paper>
+          </Collapse>
+        </Grid>
+
+        {selectedEmployeeId && (
+          <>
+            <Grid item xs={12} md={12}>
+              <Box display={'flex'} justifyContent={'space-between'}>
+                <Typography variant='h6' component='h1'>
+                  {`${selectedEmployee?.firstName} ${selectedEmployee?.lastName}'s`}{' '}
+                  Service Calls
+                </Typography>
+              </Box>
+            </Grid>
+            <Grid item xs={12} md={12}>
+              <Paper>
+                <SCDataGrid employeeId={selectedEmployeeId} tank={undefined} />
+              </Paper>
+            </Grid>
+          </>
+        )}
+
+        <CreateUserModal
+          open={employeeModalOpen}
+          setOpen={setEmployeeModalOpen}
+          isEmployee={true}
+        />
+      </Grid>
+    </Container>
   );
 }

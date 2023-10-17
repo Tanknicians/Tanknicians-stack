@@ -13,92 +13,94 @@ import {
   Select,
   TextField
 } from '@mui/material';
-import React from 'react';
-import { useAddTankToUserMutation } from '../redux/slices/users/userManagementSlice';
+import { useAddTankToUserMutation } from '../../redux/slices/tanks/tankDataSlice';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
-import LoadingProgressButton from './LoadingProgressButton';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
+import {
+  CreateTankMetaData,
+  UpdateTankMetaData,
+  createTank
+} from '../../zodTypes';
+import LoadingOverlay from '../LoadingOverlay';
+import { useUpdateTankMutation } from '../../redux/slices/tanks/tankDataSlice';
 
-type CreateTankFormProps = {
+function CreateTankForm({
+  userId,
+  open,
+  setOpen,
+  previousTank
+}: {
   userId: number;
   open: boolean;
   setOpen: (open: boolean) => void;
-};
+  previousTank?: UpdateTankMetaData;
+}) {
+  //API call to create/update tank
+  const [addTankToUser, { isLoading: isCreateLoading }] =
+    useAddTankToUserMutation();
+  const [updateTank, { isLoading: isUpdateLoading }] = useUpdateTankMutation();
 
-export const tankMetaDataSchema = z.object({
-  id: z.number().int(),
-  description: z.string().optional(),
-  volume: z.coerce.number().int().positive(),
-  type: z.enum(['FRESH', 'SALT', 'BRACKISH']),
+  // defaultValues for create tank form
+  const defaultValues: CreateTankMetaData = {
+    customerId: userId,
+    tanknicianSourcedOnly: false,
+    type: 'BRACKISH',
+    volume: 0,
+    description: ''
+  };
 
-  qrSymbol: z.number().int().positive(),
-
-  tanknicianSourcedOnly: z.boolean(),
-  lastDateServiced: z.date(),
-
-  customerId: z.number().int()
-});
-
-export const createTank = tankMetaDataSchema.omit({
-  id: true,
-  qrSymbol: true,
-  lastDateServiced: true
-});
-
-type CreateTankFormData = z.infer<typeof createTank>;
-
-function CreateTankForm({ userId, open, setOpen }: CreateTankFormProps) {
-  //API call to create tank
-  const [addTankToUser, { isLoading }] = useAddTankToUserMutation();
+  // If previous tank is passed in, use it as default values for edit tank
+  if (previousTank) {
+    defaultValues.volume = previousTank.volume;
+    defaultValues.type = previousTank.type;
+    defaultValues.tanknicianSourcedOnly = previousTank.tanknicianSourcedOnly;
+    defaultValues.description = previousTank.description;
+  }
 
   const {
     control,
     reset,
     handleSubmit,
     formState: { errors }
-  } = useForm<CreateTankFormData>({
+  } = useForm<CreateTankMetaData>({
     resolver: zodResolver(createTank),
     defaultValues: {
-      tanknicianSourcedOnly: false,
+      ...defaultValues,
       customerId: userId
-    }
+    } as CreateTankMetaData
   });
 
-  console.log('Create Tank Form RHF Errors: ', errors);
+  // console.log('Create Tank Form RHF Errors: ', errors);
+
+  const isLoading = isCreateLoading || isUpdateLoading;
 
   const handleClose = () => {
+    if (isLoading) return;
     reset();
     setOpen(false);
   };
 
-  const onSubmit: SubmitHandler<CreateTankFormData> = async (data) => {
-    console.log(data);
+  const onValid: SubmitHandler<CreateTankMetaData> = async (data) => {
     try {
-      const response = await addTankToUser(data).unwrap();
-      console.log('Response: ', response);
+      const response = previousTank
+        ? await updateTank({
+            id: previousTank.id,
+            qrSymbol: previousTank.qrSymbol,
+            lastDateServiced: previousTank.lastDateServiced,
+            ...data
+          }).unwrap()
+        : await addTankToUser(data).unwrap();
       handleClose();
-    } catch (unparsedError) {
-      const errorSchema = z.object({
-        status: z.coerce.number().optional(),
-        data: z.object({ error: z.object({ issues: z.any() }) })
-      });
-      const err = errorSchema.parse(unparsedError);
-      if (!err?.status) {
-        console.log('No Server Response');
-      } else {
-        console.log(
-          `Submitting create tank form error ${err.status}: `,
-          err.data?.error.issues
-        );
-      }
+    } catch (err) {
+      console.log('Submitting create tank form error: ', err);
     }
   };
 
   return (
     <>
       <Dialog open={open} onClose={handleClose} maxWidth='lg'>
-        <DialogTitle>Add Tank</DialogTitle>
+        {isLoading && <LoadingOverlay />}
+        <DialogTitle>{previousTank ? 'Edit Tank' : 'Add Tank'}</DialogTitle>
         <DialogContent>
           <Grid
             container
@@ -116,6 +118,7 @@ function CreateTankForm({ userId, open, setOpen }: CreateTankFormProps) {
                   <TextField
                     error={!!errors.volume}
                     fullWidth
+                    type='number'
                     label='Volume'
                     value={value ?? ''}
                     onChange={onChange}
@@ -153,7 +156,7 @@ function CreateTankForm({ userId, open, setOpen }: CreateTankFormProps) {
                 rules={{ required: true }}
                 render={({ field }) => (
                   <FormControlLabel
-                    control={<Checkbox {...field} />}
+                    control={<Checkbox {...field} checked={field.value} />}
                     label='Tanknician Sourced'
                     labelPlacement='start'
                   />
@@ -179,14 +182,14 @@ function CreateTankForm({ userId, open, setOpen }: CreateTankFormProps) {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <LoadingProgressButton
+          <Button
             type='button'
+            onClick={handleSubmit(onValid)}
             variant='contained'
-            isLoading={isLoading}
-            onClick={handleSubmit(onSubmit)}
+            disabled={isLoading}
           >
             Submit
-          </LoadingProgressButton>
+          </Button>
         </DialogActions>
       </Dialog>
     </>

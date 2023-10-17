@@ -1,19 +1,19 @@
-import { PrismaClient, TankType } from '@prisma/client';
-import { CreateTankMetaData, UpdateTankMetaData } from '../../src/zodTypes';
+import { PrismaClient, TankMetadata } from '@prisma/client';
+import { SearchSchema } from '../../src/zodTypes';
 const prisma = new PrismaClient();
 
 // CREATE
-export async function create(tank: CreateTankMetaData) {
+export async function create(tank: Omit<TankMetadata, 'id'>) {
   const { customerId, ...tankData } = tank;
   const createdTank = await prisma.tankMetadata.create({
     data: {
       ...tankData,
       Customer: {
         connect: {
-          id: customerId,
-        },
-      },
-    },
+          id: customerId
+        }
+      }
+    }
   });
   return createdTank.id;
 }
@@ -22,34 +22,26 @@ export async function create(tank: CreateTankMetaData) {
 export async function read(id: number) {
   return await prisma.tankMetadata.findUnique({
     where: {
-      id: id,
-    },
+      id: id
+    }
   });
 }
 
 export async function readTanksByUserId(customerId: number) {
   return await prisma.tankMetadata.findMany({
     where: {
-      customerId: customerId,
-    },
-  });
-}
-
-export async function readNumberOfTanksByUserId(customerId: number) {
-  return await prisma.tankMetadata.count({
-    where: {
-      customerId: customerId,
-    },
+      customerId: customerId
+    }
   });
 }
 
 // UPDATE
-export async function update(tank: UpdateTankMetaData) {
+export async function update(tank: TankMetadata) {
   await prisma.tankMetadata.update({
     where: {
-      id: tank.id,
+      id: tank.id
     },
-    data: tank,
+    data: tank
   });
 }
 
@@ -58,22 +50,23 @@ export async function update(tank: UpdateTankMetaData) {
 export async function deleteTankMetadata(id: number) {
   await prisma.tankMetadata.delete({
     where: {
-      id: id,
-    },
+      id: id
+    }
   });
 }
 
 // SEARCH
-export async function searchByString(search: string, page: number) {
+export async function search(search: SearchSchema) {
   return await prisma.tankMetadata.findMany({
-    skip: (page - 1) * 25,
-    take: 25,
+    skip: (search.page - 1) * search.size,
+    take: search.size,
     where: {
       OR: [
-        { description: { contains: search } },
-        { type: { equals: search.toUpperCase() as TankType } },
-      ],
-    },
+        { description: { contains: search.searchString } },
+        { volume: { gte: search.minNum, lte: search.maxNum } },
+        { type: search.searchType }
+      ]
+    }
   });
 }
 
@@ -83,14 +76,14 @@ export async function searchByDateTime(startDate: Date, endDate: Date) {
     where: {
       lastDateServiced: {
         gte: startDate,
-        lte: endDate,
-      },
-    },
+        lte: endDate
+      }
+    }
   });
 }
 
 // ALL
-export async function getAll() {
+export async function readAll() {
   return await prisma.tankMetadata.findMany();
 }
 
