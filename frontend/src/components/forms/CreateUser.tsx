@@ -35,7 +35,7 @@ export default function CreateUserModal({
       phone: ''
     } as CreateUser
   });
-  console.log({ formState });
+  // console.log({ formState });
 
   function handleClose() {
     if (isLoading) return;
@@ -44,11 +44,11 @@ export default function CreateUserModal({
   }
 
   const onValid: SubmitHandler<CreateUser> = async (data) => {
-    console.log(data);
+    // console.log(data);
 
     try {
       const response = await addUser({ ...data });
-      console.log(response);
+      // console.log(response);
       handleClose();
     } catch (err) {
       console.log(err);

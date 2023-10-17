@@ -41,7 +41,7 @@ export default function EditUserModal({
       isEmployee: userData?.isEmployee
     }
   });
-  console.log({ formState });
+  // console.log({ formState });
 
   function handleClose() {
     if (isLoading) return;
@@ -52,7 +52,7 @@ export default function EditUserModal({
   const onValid: SubmitHandler<UserData> = async (data: UserData) => {
     try {
       const response = await editUser({ ...data });
-      console.log('response', response);
+      // console.log("response", response);
       handleClose();
     } catch (err) {
       console.log(err);
