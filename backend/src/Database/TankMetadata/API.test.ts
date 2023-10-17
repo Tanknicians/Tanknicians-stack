@@ -23,7 +23,7 @@ let createCustomerId: number;
 let createTankMetadataId: number;
 
 const createTankMetadata: CreateTankMetaData = {
-  description: 'TM_TEST',
+  nickname: 'TM_TEST',
   volume: 0,
   type: 'FRESH',
   tanknicianSourcedOnly: false,
