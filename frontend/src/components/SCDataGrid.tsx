@@ -584,24 +584,7 @@ export default function SCDataGrid({
       date: new Date(s.createdOn).toLocaleDateString(),
       customerNotes: s.customerRequest,
       employeeNotes: s.employeeNotes,
-      unapprovedNotes: s.notApprovedNotes,
-      ATOOperational: toEmoji(s.ATOOperational),
-      ATOReservoirFilled: toEmoji(s.ATOReservoirFilled),
-      chemFilterAdjusted: toEmoji(s.chemFilterAdjusted),
-      doserAdjustementOrManualDosing: toEmoji(s.doserAdjustementOrManualDosing),
-      dosingReservoirsFull: toEmoji(s.dosingReservoirsFull),
-      floorsCheckedForSpillsOrDirt: toEmoji(s.floorsCheckedForSpillsOrDirt),
-      glassCleanedInside: toEmoji(s.glassCleanedInside),
-      glassCleanedOutside: toEmoji(s.glassCleanedOutside),
-      mechFilterChanged: toEmoji(s.mechFilterChanged),
-      pumpsClearedOfDebris: toEmoji(s.pumpsClearedOfDebris),
-      saltCreepCleaned: toEmoji(s.saltCreepCleaned),
-      skimmerCleanedAndOperational: toEmoji(s.skimmerCleanedAndOperational),
-      waterChanged: toEmoji(s.waterChanged),
-      pestAPresent: toEmoji(s.pestAPresent),
-      pestBPresent: toEmoji(s.pestBPresent),
-      pestCPresent: toEmoji(s.pestCPresent),
-      pestDPresent: toEmoji(s.pestDPresent)
+      unapprovedNotes: s.notApprovedNotes
     }));
   } else {
     return <div>error</div>;
@@ -626,8 +609,4 @@ export default function SCDataGrid({
       />
     </div>
   );
-}
-
-function toEmoji(b: boolean): string {
-  return b ? '\u2713' : '\u0078';
 }
