@@ -8,7 +8,14 @@ export const tankDataSlice = apiSlice.injectEndpoints({
       query: () => ({
         url: '/api/database/tank',
         method: 'GET'
-      })
+      }),
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.map(({ id }) => ({ type: 'TANKS' as const, id })),
+              { type: 'TANKS', id: 'LIST' }
+            ]
+          : [{ type: 'TANKS', id: 'LIST' }]
     }),
     // Query returns tank data for a specific tank
     getTankData: builder.query<UpdateTankMetaData, number>({
