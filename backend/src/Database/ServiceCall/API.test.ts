@@ -74,7 +74,7 @@ const createServiceCall: CreateServiceCall = {
 
 const createTankMetadata: CreateTankMetaData = {
   type: 'FRESH',
-  description: 'SC_TEST',
+  nickname: 'SC_TEST',
   volume: 0,
   tanknicianSourcedOnly: false,
   customerId: 0
