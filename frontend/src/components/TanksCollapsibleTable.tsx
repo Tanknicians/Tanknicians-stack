@@ -11,24 +11,42 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { UpdateTankMetaData } from '../zodTypes';
 import { useState } from 'react';
-import { Button, Stack, Typography } from '@mui/material';
+import { Button, Menu, MenuItem, Stack, Typography } from '@mui/material';
 import QRCodeCard from './QRCodeCard';
 import { UserData } from '../redux/slices/users/userManagementSlice';
 import { ArrowCircleRight } from '@mui/icons-material';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { useNavigate } from 'react-router-dom';
+import UpdateTankModal from './forms/CreateTank';
 
-function Row(props: { row: UpdateTankMetaData }) {
-  const { row } = props;
-  const [open, setOpen] = useState(false);
+function Row(props: { row: UpdateTankMetaData; client: UserData }) {
+  const { row, client } = props;
+  const [isShowTankData, setIsShowTankData] = useState(false);
+  const [updateTankModalOpen, setUpdateTankModalOpen] = useState(false);
   const navigate = useNavigate();
 
   function gotoTank(tankId: number) {
     navigate(`/dashboard/Tanks?tankId=${tankId}`);
   }
 
+  const handleOpenUpdateTankModal = () => {
+    setUpdateTankModalOpen((prevState) => !prevState);
+    handleClose();
+  };
+
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const openMenu = Boolean(anchorEl);
+
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
   return (
     <>
-      <TableRow onClick={() => setOpen(!open)}>
+      <TableRow onClick={() => setIsShowTankData(!isShowTankData)}>
         <TableCell align='center' sx={{ flex: 1 }}>
           {row.description}
         </TableCell>
@@ -47,42 +65,48 @@ function Row(props: { row: UpdateTankMetaData }) {
 
         <TableCell align='center' sx={{ flex: 1 }}>
           <IconButton size='small'>
-            {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+            {isShowTankData ? (
+              <KeyboardArrowUpIcon />
+            ) : (
+              <KeyboardArrowDownIcon />
+            )}
           </IconButton>
         </TableCell>
       </TableRow>
       <TableRow>
         <TableCell colSpan={12}>
-          <Collapse in={open} timeout='auto' unmountOnExit>
+          <Collapse in={isShowTankData} timeout='auto' unmountOnExit>
             <Stack
               alignItems='center'
               spacing={2}
               direction='row'
               justifyContent='space-around'
+              height='100%'
             >
               <Stack
                 direction='column'
                 justifyContent='space-evenly'
                 alignItems='center'
                 spacing={2}
+                width='100%'
               >
                 <Typography variant='h6' gutterBottom>
                   QR Code
                 </Typography>
                 <QRCodeCard
-                  client={CURRENTCLIENT}
+                  client={client}
                   tankId={row.id}
                   qrSymbol={row.qrSymbol}
                 />
               </Stack>
               <Stack
                 direction='column'
-                justifyContent='center'
                 alignItems='center'
                 spacing={2}
+                width='100%'
               >
                 <Typography variant='h6' gutterBottom>
-                  QR Code
+                  Analytics
                 </Typography>
                 <Button
                   variant='outlined'
@@ -92,6 +116,32 @@ function Row(props: { row: UpdateTankMetaData }) {
                   Go to tank view
                 </Button>
               </Stack>
+              <Stack
+                direction='row'
+                justifyContent='flex-end'
+                alignItems='flex-start'
+                height='100%'
+              >
+                <IconButton
+                  aria-label='more'
+                  id='long-button'
+                  aria-controls={openMenu ? 'long-menu' : undefined}
+                  aria-expanded={openMenu ? 'true' : undefined}
+                  aria-haspopup='true'
+                  onClick={handleClick}
+                >
+                  <MoreVertIcon />
+                </IconButton>
+                <Menu anchorEl={anchorEl} open={openMenu} onClose={handleClose}>
+                  <MenuItem onClick={handleOpenUpdateTankModal}>Edit</MenuItem>
+                </Menu>
+                <UpdateTankModal
+                  userId={client.id}
+                  open={updateTankModalOpen}
+                  setOpen={setUpdateTankModalOpen}
+                  previousTank={row}
+                />
+              </Stack>
             </Stack>
           </Collapse>
         </TableCell>
@@ -100,8 +150,6 @@ function Row(props: { row: UpdateTankMetaData }) {
   );
 }
 
-let CURRENTCLIENT = {} as UserData;
-
 export default function TanksCollapsibleTable({
   client,
   tanks
@@ -109,7 +157,6 @@ export default function TanksCollapsibleTable({
   client: UserData;
   tanks: UpdateTankMetaData[];
 }) {
-  CURRENTCLIENT = client;
   return (
     <TableContainer component={Paper} sx={{ width: '100%' }}>
       <Table stickyHeader size='small'>
@@ -135,7 +182,7 @@ export default function TanksCollapsibleTable({
         </TableHead>
         <TableBody>
           {tanks.map((tank) => (
-            <Row key={tank.id} row={tank} />
+            <Row key={tank.id} row={tank} client={client} />
           ))}
         </TableBody>
       </Table>

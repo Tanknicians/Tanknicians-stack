@@ -13,21 +13,52 @@ import {
   Select,
   TextField
 } from '@mui/material';
-import { useAddTankToUserMutation } from '../../redux/slices/users/userManagementSlice';
+import { useAddTankToUserMutation } from '../../redux/slices/tanks/tankDataSlice';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { CreateTankMetaData, createTank } from '../../zodTypes';
+import {
+  CreateTankMetaData,
+  UpdateTankMetaData,
+  createTank
+} from '../../zodTypes';
 import LoadingOverlay from '../LoadingOverlay';
+import { useUpdateTankMutation } from '../../redux/slices/tanks/tankDataSlice';
 
-type CreateTankFormProps = {
+function CreateTankForm({
+  userId,
+  open,
+  setOpen,
+  previousTank
+}: {
   userId: number;
   open: boolean;
   setOpen: (open: boolean) => void;
-};
+  previousTank?: UpdateTankMetaData;
+}) {
+  //API call to create/update tank
+  const [addTankToUser, { isLoading: isCreateLoading }] =
+    useAddTankToUserMutation();
+  const [updateTank, { isLoading: isUpdateLoading }] = useUpdateTankMutation();
 
-function CreateTankForm({ userId, open, setOpen }: CreateTankFormProps) {
-  //API call to create tank
-  const [addTankToUser, { isLoading }] = useAddTankToUserMutation();
+  // defaultValues for create tank form
+  const defaultValues: CreateTankMetaData = {
+    customerId: userId,
+    tanknicianSourcedOnly: false,
+    type: 'BRACKISH',
+    volume: 0,
+    description: ''
+  };
+
+  // If previous tank is passed in, use it as default values for edit tank
+  if (previousTank) {
+    console.log('Previous Tank: ', previousTank);
+    defaultValues.volume = previousTank.volume;
+    defaultValues.type = previousTank.type;
+    defaultValues.tanknicianSourcedOnly = previousTank.tanknicianSourcedOnly;
+    defaultValues.description = previousTank.description;
+  }
+
+  console.log('Default Values: ', defaultValues);
 
   const {
     control,
@@ -37,15 +68,14 @@ function CreateTankForm({ userId, open, setOpen }: CreateTankFormProps) {
   } = useForm<CreateTankMetaData>({
     resolver: zodResolver(createTank),
     defaultValues: {
-      tanknicianSourcedOnly: false,
-      customerId: userId,
-      type: 'BRACKISH',
-      volume: 0,
-      description: ''
+      ...defaultValues,
+      customerId: userId
     } as CreateTankMetaData
   });
 
   // console.log('Create Tank Form RHF Errors: ', errors);
+
+  const isLoading = isCreateLoading || isUpdateLoading;
 
   const handleClose = () => {
     if (isLoading) return;
@@ -56,7 +86,14 @@ function CreateTankForm({ userId, open, setOpen }: CreateTankFormProps) {
   const onValid: SubmitHandler<CreateTankMetaData> = async (data) => {
     console.log(data);
     try {
-      const response = await addTankToUser(data).unwrap();
+      const response = previousTank
+        ? await updateTank({
+            id: previousTank.id,
+            qrSymbol: previousTank.qrSymbol,
+            lastDateServiced: previousTank.lastDateServiced,
+            ...data
+          }).unwrap()
+        : await addTankToUser(data).unwrap();
       console.log('Response: ', response);
       handleClose();
     } catch (err) {
@@ -68,7 +105,7 @@ function CreateTankForm({ userId, open, setOpen }: CreateTankFormProps) {
     <>
       <Dialog open={open} onClose={handleClose} maxWidth='lg'>
         {isLoading && <LoadingOverlay />}
-        <DialogTitle>Add Tank</DialogTitle>
+        <DialogTitle>{previousTank ? 'Edit Tank' : 'Add Tank'}</DialogTitle>
         <DialogContent>
           <Grid
             container
@@ -124,7 +161,7 @@ function CreateTankForm({ userId, open, setOpen }: CreateTankFormProps) {
                 rules={{ required: true }}
                 render={({ field }) => (
                   <FormControlLabel
-                    control={<Checkbox {...field} />}
+                    control={<Checkbox {...field} checked={field.value} />}
                     label='Tanknician Sourced'
                     labelPlacement='start'
                   />
