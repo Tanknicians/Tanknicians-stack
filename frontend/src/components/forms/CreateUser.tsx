@@ -10,7 +10,7 @@ import {
 } from '@mui/material';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { useAddUserMutation } from '../../redux/slices/users/userManagementSlice';
-import { createUserSchema, CreateUser } from '../../zodTypes';
+import { createUser, CreateUser } from '../../zodTypes';
 import { MuiTelInput } from 'mui-tel-input';
 import LoadingOverlay from '../LoadingOverlay';
 
@@ -25,7 +25,7 @@ export default function CreateUserModal({
 }) {
   const [addUser, { isLoading }] = useAddUserMutation();
   const { handleSubmit, control, reset, formState } = useForm<CreateUser>({
-    resolver: zodResolver(createUserSchema),
+    resolver: zodResolver(createUser),
     defaultValues: {
       isEmployee: isEmployee,
       firstName: '',
@@ -35,7 +35,6 @@ export default function CreateUserModal({
       phone: ''
     } as CreateUser
   });
-  console.log({ formState });
 
   function handleClose() {
     if (isLoading) return;
@@ -65,8 +64,13 @@ export default function CreateUserModal({
             <Controller
               name='firstName'
               control={control}
-              render={({ field }) => (
-                <TextField fullWidth label='First Name' {...field} />
+              render={({ field, fieldState: { error } }) => (
+                <TextField
+                  fullWidth
+                  label='First Name'
+                  error={!!error}
+                  {...field}
+                />
               )}
             />
           </Grid>
