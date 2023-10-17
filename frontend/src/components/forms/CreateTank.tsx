@@ -51,14 +51,11 @@ function CreateTankForm({
 
   // If previous tank is passed in, use it as default values for edit tank
   if (previousTank) {
-    console.log('Previous Tank: ', previousTank);
     defaultValues.volume = previousTank.volume;
     defaultValues.type = previousTank.type;
     defaultValues.tanknicianSourcedOnly = previousTank.tanknicianSourcedOnly;
     defaultValues.description = previousTank.description;
   }
-
-  console.log('Default Values: ', defaultValues);
 
   const {
     control,
@@ -84,7 +81,6 @@ function CreateTankForm({
   };
 
   const onValid: SubmitHandler<CreateTankMetaData> = async (data) => {
-    console.log(data);
     try {
       const response = previousTank
         ? await updateTank({
@@ -94,7 +90,6 @@ function CreateTankForm({
             ...data
           }).unwrap()
         : await addTankToUser(data).unwrap();
-      console.log('Response: ', response);
       handleClose();
     } catch (err) {
       console.log('Submitting create tank form error: ', err);

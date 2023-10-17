@@ -9,8 +9,8 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import { UpdateTankMetaData } from '../zodTypes';
-import { useState } from 'react';
+import { Tank, UpdateTankMetaData } from '../zodTypes';
+import { useMemo, useState } from 'react';
 import { Button, Menu, MenuItem, Stack, Typography } from '@mui/material';
 import QRCodeCard from './QRCodeCard';
 import { UserData } from '../redux/slices/users/userManagementSlice';
@@ -22,17 +22,19 @@ import UpdateTankModal from './forms/CreateTank';
 function Row(props: { row: UpdateTankMetaData; client: UserData }) {
   const { row, client } = props;
   const [isShowTankData, setIsShowTankData] = useState(false);
-  const [updateTankModalOpen, setUpdateTankModalOpen] = useState(false);
+  const [tankId, setTankId] = useState<number | null>();
   const navigate = useNavigate();
 
   function gotoTank(tankId: number) {
     navigate(`/dashboard/Tanks?tankId=${tankId}`);
   }
 
-  const handleOpenUpdateTankModal = () => {
-    setUpdateTankModalOpen((prevState) => !prevState);
+  const handleOpenUpdateTankModal = (tank: Tank) => {
+    setTankId(tank.id);
     handleClose();
   };
+
+  const tank = useMemo(() => row.id === tankId, [tankId]);
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const openMenu = Boolean(anchorEl);
@@ -133,14 +135,24 @@ function Row(props: { row: UpdateTankMetaData; client: UserData }) {
                   <MoreVertIcon />
                 </IconButton>
                 <Menu anchorEl={anchorEl} open={openMenu} onClose={handleClose}>
-                  <MenuItem onClick={handleOpenUpdateTankModal}>Edit</MenuItem>
+                  <MenuItem onClick={() => handleOpenUpdateTankModal(row)}>
+                    Edit
+                  </MenuItem>
                 </Menu>
-                <UpdateTankModal
-                  userId={client.id}
-                  open={updateTankModalOpen}
-                  setOpen={setUpdateTankModalOpen}
-                  previousTank={row}
-                />
+                {!!tank && (
+                  <UpdateTankModal
+                    userId={client.id}
+                    open={!!tank}
+                    setOpen={
+                      (open: boolean) =>
+                        !open &&
+                        setTankId(
+                          null
+                        ) /*FIX: This is a hack to get the modal to close*/
+                    }
+                    previousTank={row}
+                  />
+                )}
               </Stack>
             </Stack>
           </Collapse>
