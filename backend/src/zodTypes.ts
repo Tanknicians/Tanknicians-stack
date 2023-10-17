@@ -83,7 +83,7 @@ export type LoginUpdateRequest = ValidatedRequest<UpdateLogin>;
 
 export const tankMetaDataSchema = z.object({
   id: z.number().int(),
-  description: z.string().nullable().default(null),
+  nickname: z.string().default("nickname"),
   volume: z.number().int().positive(),
   type: z.enum(['FRESH', 'SALT', 'BRACKISH']),
 
