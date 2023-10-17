@@ -1,4 +1,4 @@
-import { zodResolver } from '@hookform/resolvers/zod';
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Button,
   Dialog,
@@ -6,19 +6,19 @@ import {
   DialogContent,
   DialogTitle,
   Grid,
-  TextField
-} from '@mui/material';
-import { Controller, SubmitHandler, useForm } from 'react-hook-form';
-import { useEditUserMutation } from '../../redux/slices/users/userManagementSlice';
-import { UserData } from '../../redux/slices/users/userManagementSlice';
-import { userSchema } from '../../zodTypes';
-import { MuiTelInput } from 'mui-tel-input';
-import LoadingOverlay from '../LoadingOverlay';
+  TextField,
+} from "@mui/material";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
+import { useEditUserMutation } from "../../redux/slices/users/userManagementSlice";
+import { UserData } from "../../redux/slices/users/userManagementSlice";
+import { userSchema } from "../../zodTypes";
+import { MuiTelInput } from "mui-tel-input";
+import LoadingOverlay from "../LoadingOverlay";
 
 export default function EditUserModal({
   open,
   setOpen,
-  userData
+  userData,
 }: {
   open: boolean;
   setOpen: (open: boolean) => void;
@@ -38,10 +38,10 @@ export default function EditUserModal({
       lastName: userData?.lastName,
       address: userData?.address,
       phone: userData?.phone,
-      isEmployee: userData?.isEmployee
-    }
+      isEmployee: userData?.isEmployee,
+    },
   });
-  console.log({ formState });
+  // console.log({ formState });
 
   function handleClose() {
     if (isLoading) return;
@@ -52,7 +52,7 @@ export default function EditUserModal({
   const onValid: SubmitHandler<UserData> = async (data: UserData) => {
     try {
       const response = await editUser({ ...data });
-      console.log('response', response);
+      // console.log("response", response);
       handleClose();
     } catch (err) {
       console.log(err);
@@ -60,56 +60,56 @@ export default function EditUserModal({
   };
 
   return (
-    <Dialog open={open} onClose={handleClose} maxWidth='lg'>
+    <Dialog open={open} onClose={handleClose} maxWidth="lg">
       {isLoading && <LoadingOverlay />}
       <DialogTitle>
-        Edit {userData?.isEmployee ? 'Employee' : 'Client'}'s Information
+        Edit {userData?.isEmployee ? "Employee" : "Client"}'s Information
       </DialogTitle>
       <DialogContent>
         <Grid container spacing={2} paddingTop={1}>
           <Grid item xs={4}>
             <Controller
-              name='firstName'
+              name="firstName"
               control={control}
               render={({ field }) => (
-                <TextField fullWidth label='First Name' {...field} />
+                <TextField fullWidth label="First Name" {...field} />
               )}
             />
           </Grid>
 
           <Grid item xs={4}>
             <Controller
-              name='middleName'
+              name="middleName"
               control={control}
               render={({ field }) => (
-                <TextField fullWidth label='Middle Name' {...field} />
+                <TextField fullWidth label="Middle Name" {...field} />
               )}
             />
           </Grid>
           <Grid item xs={4}>
             <Controller
-              name='lastName'
+              name="lastName"
               control={control}
               render={({ field }) => (
-                <TextField fullWidth label='Last Name' {...field} />
+                <TextField fullWidth label="Last Name" {...field} />
               )}
             />
           </Grid>
           <Grid item xs={4}>
             <Controller
-              name='address'
+              name="address"
               control={control}
               render={({ field }) => (
-                <TextField fullWidth label='Address' {...field} />
+                <TextField fullWidth label="Address" {...field} />
               )}
             />
           </Grid>
           <Grid item xs={4}>
             <Controller
-              name='phone'
+              name="phone"
               control={control}
               render={({ field }) => (
-                <MuiTelInput fullWidth label='Phone Number' {...field} />
+                <MuiTelInput fullWidth label="Phone Number" {...field} />
               )}
             />
           </Grid>
@@ -118,9 +118,9 @@ export default function EditUserModal({
       <DialogActions>
         <Button onClick={handleClose}>Cancel</Button>
         <Button
-          type='button'
+          type="button"
           onClick={handleSubmit(onValid)}
-          variant='contained'
+          variant="contained"
           disabled={isLoading}
         >
           Submit

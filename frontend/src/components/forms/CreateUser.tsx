@@ -1,4 +1,4 @@
-import { zodResolver } from '@hookform/resolvers/zod';
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Button,
   Dialog,
@@ -6,18 +6,18 @@ import {
   DialogContent,
   DialogTitle,
   Grid,
-  TextField
-} from '@mui/material';
-import { Controller, SubmitHandler, useForm } from 'react-hook-form';
-import { useAddUserMutation } from '../../redux/slices/users/userManagementSlice';
-import { createUserSchema, CreateUser } from '../../zodTypes';
-import { MuiTelInput } from 'mui-tel-input';
-import LoadingOverlay from '../LoadingOverlay';
+  TextField,
+} from "@mui/material";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
+import { useAddUserMutation } from "../../redux/slices/users/userManagementSlice";
+import { createUserSchema, CreateUser } from "../../zodTypes";
+import { MuiTelInput } from "mui-tel-input";
+import LoadingOverlay from "../LoadingOverlay";
 
 export default function CreateUserModal({
   open,
   setOpen,
-  isEmployee
+  isEmployee,
 }: {
   open: boolean;
   setOpen: (open: boolean) => void;
@@ -28,14 +28,14 @@ export default function CreateUserModal({
     resolver: zodResolver(createUserSchema),
     defaultValues: {
       isEmployee: isEmployee,
-      firstName: '',
-      middleName: '',
-      lastName: '',
-      address: '',
-      phone: ''
-    } as CreateUser
+      firstName: "",
+      middleName: "",
+      lastName: "",
+      address: "",
+      phone: "",
+    } as CreateUser,
   });
-  console.log({ formState });
+  // console.log({ formState });
 
   function handleClose() {
     if (isLoading) return;
@@ -44,11 +44,11 @@ export default function CreateUserModal({
   }
 
   const onValid: SubmitHandler<CreateUser> = async (data) => {
-    console.log(data);
+    // console.log(data);
 
     try {
       const response = await addUser({ ...data });
-      console.log(response);
+      // console.log(response);
       handleClose();
     } catch (err) {
       console.log(err);
@@ -56,54 +56,54 @@ export default function CreateUserModal({
   };
 
   return (
-    <Dialog open={open} onClose={handleClose} maxWidth='lg'>
+    <Dialog open={open} onClose={handleClose} maxWidth="lg">
       {isLoading && <LoadingOverlay />}
-      <DialogTitle>Add {isEmployee ? 'Employee' : 'Client'}</DialogTitle>
+      <DialogTitle>Add {isEmployee ? "Employee" : "Client"}</DialogTitle>
       <DialogContent>
         <Grid container spacing={2} paddingTop={1}>
           <Grid item xs={4}>
             <Controller
-              name='firstName'
+              name="firstName"
               control={control}
               render={({ field }) => (
-                <TextField fullWidth label='First Name' {...field} />
+                <TextField fullWidth label="First Name" {...field} />
               )}
             />
           </Grid>
 
           <Grid item xs={4}>
             <Controller
-              name='middleName'
+              name="middleName"
               control={control}
               render={({ field }) => (
-                <TextField fullWidth label='Middle Name' {...field} />
+                <TextField fullWidth label="Middle Name" {...field} />
               )}
             />
           </Grid>
           <Grid item xs={4}>
             <Controller
-              name='lastName'
+              name="lastName"
               control={control}
               render={({ field }) => (
-                <TextField fullWidth label='Last Name' {...field} />
+                <TextField fullWidth label="Last Name" {...field} />
               )}
             />
           </Grid>
           <Grid item xs={4}>
             <Controller
-              name='address'
+              name="address"
               control={control}
               render={({ field }) => (
-                <TextField fullWidth label='Address' {...field} />
+                <TextField fullWidth label="Address" {...field} />
               )}
             />
           </Grid>
           <Grid item xs={4}>
             <Controller
-              name='phone'
+              name="phone"
               control={control}
               render={({ field }) => (
-                <MuiTelInput fullWidth label='Phone Number' {...field} />
+                <MuiTelInput fullWidth label="Phone Number" {...field} />
               )}
             />
           </Grid>
@@ -112,9 +112,9 @@ export default function CreateUserModal({
       <DialogActions>
         <Button onClick={handleClose}>Cancel</Button>
         <Button
-          type='button'
+          type="button"
           onClick={handleSubmit(onValid)}
-          variant='contained'
+          variant="contained"
           disabled={isLoading}
         >
           Submit
