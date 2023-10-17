@@ -63,7 +63,7 @@ CREATE TABLE `ServiceCall` (
 -- Create the TankMetadata table
 CREATE TABLE `TankMetadata` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `description` VARCHAR(191),
+    `nickname` VARCHAR(191) NOT NULL,
     `volume` INTEGER NOT NULL,
     `type` ENUM('FRESH', 'SALT', 'BRACKISH') NOT NULL,
     `qrSymbol` INTEGER NOT NULL,
