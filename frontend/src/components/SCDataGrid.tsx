@@ -44,6 +44,7 @@ export default function SCDataGrid({
     return (
       <>
         <CreateServiceCallModal
+          key={editServiceCallId}
           setOpen={(_) => setEditServiceCallId(undefined)}
           open={editServiceCallId === params.row.id}
           tankId={params.row.tankId}

@@ -240,16 +240,16 @@ export default function CreateServiceCallModal({
   const [updateServiceCall, { isLoading: isUpdateLoading }] =
     useUpdateServiceCallMutation();
 
-  const uploadServiceCall = isEdit ? updateServiceCall : createServiceCall;
-
   const isLoading = isCreateLoading || isUpdateLoading;
 
   const onValid: SubmitHandler<CreateServiceCall> = async (
     data: CreateServiceCall
   ) => {
-    const allData = id ? { ...data, id } : data;
     try {
-      const response = await uploadServiceCall(allData);
+      const response =
+        isEdit && id
+          ? await updateServiceCall({ id, ...data })
+          : await createServiceCall(data);
       handleClose();
     } catch (e) {
       console.error(e);
