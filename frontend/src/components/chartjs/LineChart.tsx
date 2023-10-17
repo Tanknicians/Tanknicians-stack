@@ -9,7 +9,7 @@ import {
   CategoryScale, // x axis
   LinearScale, // y axis
   PointElement,
-  Title,
+  Title
 } from 'chart.js';
 
 ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement, Title);

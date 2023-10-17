@@ -21,13 +21,16 @@ import {
   SelectChangeEvent,
   FormControl,
   Box,
-  Card
+  Card,
+  IconButton
 } from '@mui/material';
 import SCDataGrid from '../../components/SCDataGrid';
 import TankGrid from '../../components/datagrid/TankGrid';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Add } from '@mui/icons-material';
 import DefaultCharts from '../../components/chartjs/DefaultCharts';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 
 export function TankTabs({
   tanks,
@@ -47,6 +50,11 @@ export function TankTabs({
 
   const [createTankOpen, setCreateTankOpen] = useState(false);
   const [createServiceCallOpen, setCreateServiceCallOpen] = useState(false);
+  const [showCharts, setShowCharts] = useState<boolean>(true);
+
+  const handleChartCollapse = () => {
+    setShowCharts(!showCharts);
+  };
 
   const handleTankSelection = (event: SelectChangeEvent) => {
     const selectedTank = tanks.find(
@@ -145,10 +153,21 @@ export function TankTabs({
               </Button>
             </Box>
             <Paper>
-              <DefaultCharts tankId={selectedTank?.id} />
+              <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                <IconButton size='small' onClick={handleChartCollapse}>
+                  {showCharts ? (
+                    <KeyboardArrowUpIcon />
+                  ) : (
+                    <KeyboardArrowDownIcon />
+                  )}
+                </IconButton>
+              </Box>
+              <Collapse in={showCharts} unmountOnExit>
+                <DefaultCharts tankId={selectedTank?.id} />
+              </Collapse>
             </Paper>
           </Box>
-          <Paper elevation={3}>
+          <Paper elevation={3} sx={{ marginTop: 2 }}>
             <Container
               sx={{
                 display: 'flex',
