@@ -25,20 +25,15 @@ export async function create(data: CreateUser) {
       };
 
       try {
-        const createdLogin = await register(createEmployeeLogin);
-        return {
-          message: 'User and Employee Login created successfully',
-          id: createdId,
-          loginId: createdLogin
-        };
+        await register(createEmployeeLogin);
       } catch (e) {
         const errorMessage = e instanceof Error ? e.message : 'Unknown error.';
         console.error(errorMessage);
         throw new Error(`An error occurred during create: ${errorMessage}`);
       }
-    } else {
-      return { message: 'User created successfully', id: createdId };
-    }
+    } 
+    return { message: 'User created successfully', id: createdId };
+
   } catch (e) {
     const errorMessage = e instanceof Error ? e.message : 'Unknown error.';
     console.error(errorMessage);
