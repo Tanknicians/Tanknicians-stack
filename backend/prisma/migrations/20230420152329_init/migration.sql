@@ -13,12 +13,12 @@ CREATE TABLE `Login` (
 -- Create the User table
 CREATE TABLE `User` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `firstName` VARCHAR(191) NOT NULL DEFAULT(""),
-    `middleName` VARCHAR(191) NOT NULL DEFAULT(""),
-    `lastName` VARCHAR(191) NOT NULL DEFAULT(""),
-    `address` VARCHAR(191) NOT NULL DEFAULT(""),
-    `phone` VARCHAR(191) NOT NULL DEFAULT(""),
-    'email' VARCHAR(191) NOT NULL DEFAULT(""),
+    `firstName` VARCHAR(191) NOT NULL DEFAULT '',
+    `middleName` VARCHAR(191) NOT NULL DEFAULT '',
+    `lastName` VARCHAR(191) NOT NULL DEFAULT '',
+    `address` VARCHAR(191) NOT NULL DEFAULT '',
+    `phone` VARCHAR(191) NOT NULL DEFAULT '',
+    `email` VARCHAR(191) NOT NULL DEFAULT ''
     `isEmployee` BOOLEAN NOT NULL DEFAULT false,
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -28,9 +28,9 @@ CREATE TABLE `ServiceCall` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `isApproved` BOOLEAN NOT NULL,
     `createdOn` DATETIME NOT NULL,
-    `customerRequest` VARCHAR(191) NOT NULL DEFAULT(""),
-    `employeeNotes` VARCHAR(191) NOT NULL DEFAULT(""),,
-    `notApprovedNotes` VARCHAR(191) NOT NULL DEFAULT(""),,
+    `customerRequest` VARCHAR(191) NOT NULL DEFAULT '',
+    `employeeNotes` VARCHAR(191) NOT NULL DEFAULT '',
+    `notApprovedNotes` VARCHAR(191) NOT NULL DEFAULT '',
     `notesUpdated` DATETIME,
     `alkalinity` DOUBLE NOT NULL,
     `calcium` DOUBLE NOT NULL,
@@ -64,7 +64,7 @@ CREATE TABLE `ServiceCall` (
 -- Create the TankMetadata table
 CREATE TABLE `TankMetadata` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `nickname` VARCHAR(191)  NOT NULL DEFAULT("nickname"),
+    `nickname` VARCHAR(191) NOT NULL DEFAULT 'nickname',
     `volume` INTEGER NOT NULL,
     `type` ENUM('FRESH', 'SALT', 'BRACKISH') NOT NULL,
     `qrSymbol` INTEGER NOT NULL,
