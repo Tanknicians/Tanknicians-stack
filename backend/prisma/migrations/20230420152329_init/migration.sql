@@ -19,7 +19,7 @@ CREATE TABLE `User` (
     `address` VARCHAR(191) NOT NULL DEFAULT '',
     `phone` VARCHAR(191) NOT NULL DEFAULT '',
     `email` VARCHAR(191) NOT NULL DEFAULT ''
-    `isEmployee` BOOLEAN NOT NULL DEFAULT false,
+    `isEmployee` BOOLEAN NOT NULL DEFAULT 0,
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
