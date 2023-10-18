@@ -20,6 +20,8 @@ import { create, read, update, deleteOne, search } from './API';
 
 import { create as createUser, deleteOne as deleteUser } from './../User/API';
 
+import { read as readLogin, deleteOne as deleteLogin } from './../Login/API'
+
 import {
   create as createTank,
   deleteOne as deleteTank
@@ -36,6 +38,8 @@ import {
 // we need to keep track of the id of the creations to delete them later
 let createCustomerId: number;
 let createEmployeeId: number;
+let createEmployeeLoginId: number;
+
 let createTankId: number;
 let createServiceCallId: number;
 
@@ -108,6 +112,11 @@ describe('ServiceCall CRUD operations', () => {
       createEmployeeId = employeeResponse.id;
     });
 
+    it('reads employee login and sets the employee login id', async() => {
+      const readEmployee = await readLogin(commonUserData.email);
+      createEmployeeLoginId = readEmployee.id;
+    })
+
     it('set the tankMetaData customerId and create the tank; set tank global id', async () => {
       createTankMetadata.customerId = createCustomerId;
       const tankMetadataResponse = await createTank(createTankMetadata);
@@ -166,6 +175,7 @@ describe('ServiceCall CRUD operations', () => {
     describe('Post-test cleanup:', () => {
       it('delete extraneous testing data', async () => {
         await deleteTank(createTankId);
+        await deleteLogin(createEmployeeLoginId);
         await deleteUser(createEmployeeId);
         await deleteUser(createCustomerId);
       });
