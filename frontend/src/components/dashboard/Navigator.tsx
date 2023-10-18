@@ -118,15 +118,16 @@ export default function Navigator(props: NavProps) {
               key={id}
               sx={{
                 bgcolor: '#101F33',
-                borderTop: 2,
-                borderBottom: 2,
+                borderTop: 1,
+                borderBottom: 1,
                 borderColor: 'gray',
-                paddingBottom: 0.5
+                paddingTop: 5.5,
+                paddingBottom: 1
               }}
             >
-              <ListItem sx={{ py: 2, px: 3 }}>
+              {/* <ListItem sx={{ py: 2, px: 3 }}>
                 <ListItemText sx={{ color: '#fff' }}>{id}</ListItemText>
-              </ListItem>
+              </ListItem> */}
               {children.map(({ id: childId, icon, onClick }) => (
                 <ListItem disablePadding key={childId} sx={{ px: 0, py: 0.3 }}>
                   <Link
@@ -146,11 +147,10 @@ export default function Navigator(props: NavProps) {
                   </Link>
                 </ListItem>
               ))}
-              {/* <Divider sx={{ mt: 2 }} /> */}
             </Box>
           ))}
         </List>
-        <List sx={{ paddingBottom: 2, borderTop: 2, borderColor: 'gray' }}>
+        <List sx={{ paddingBottom: 2, borderTop: 1, borderColor: 'gray' }}>
           {dashboardSettings.map(({ id, icon, onClick }) => (
             <ListItem disablePadding key={id}>
               <ListItemButton sx={item} onClick={() => onClick()}>
