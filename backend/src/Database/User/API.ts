@@ -31,9 +31,8 @@ export async function create(data: CreateUser) {
         console.error(errorMessage);
         throw new Error(`An error occurred during create: ${errorMessage}`);
       }
-    } 
+    }
     return { message: 'User created successfully', id: createdId };
-
   } catch (e) {
     const errorMessage = e instanceof Error ? e.message : 'Unknown error.';
     console.error(errorMessage);

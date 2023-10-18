@@ -20,7 +20,7 @@ import { create, read, update, deleteOne, search } from './API';
 
 import { create as createUser, deleteOne as deleteUser } from './../User/API';
 
-import { read as readLogin, deleteOne as deleteLogin } from './../Login/API'
+import { read as readLogin, deleteOne as deleteLogin } from './../Login/API';
 
 import {
   create as createTank,
@@ -112,10 +112,10 @@ describe('ServiceCall CRUD operations', () => {
       createEmployeeId = employeeResponse.id;
     });
 
-    it('reads employee login and sets the employee login id', async() => {
+    it('reads employee login and sets the employee login id', async () => {
       const readEmployee = await readLogin(commonUserData.email);
       createEmployeeLoginId = readEmployee.id;
-    })
+    });
 
     it('set the tankMetaData customerId and create the tank; set tank global id', async () => {
       createTankMetadata.customerId = createCustomerId;
