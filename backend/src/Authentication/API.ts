@@ -133,7 +133,10 @@ export async function register(registration: AuthRegister) {
 }
 
 // Wrapper function that takes care of the response for registration
-export async function handleRegistration(registration: AuthRegister, res: Response) {
+export async function handleRegistration(
+  registration: AuthRegister,
+  res: Response
+) {
   const result = await register(registration);
 
   return res.status(result.status).json(result.data);

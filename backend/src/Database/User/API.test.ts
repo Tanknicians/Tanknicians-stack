@@ -11,7 +11,7 @@ const createUser: CreateUser = {
   address: 'USER_TEST',
   phone: '11111111111',
   email: 'USER_TEST@email.com',
-  
+
   isEmployee: false
 };
 
