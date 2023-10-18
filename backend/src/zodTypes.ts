@@ -113,10 +113,10 @@ export const serviceCallSchema = z.object({
   isApproved: z.boolean(),
   createdOn: z.coerce.date(),
 
-  customerRequest: z.string().optional().nullable().default(null),
-  employeeNotes: z.string().optional().nullable().default(null),
+  customerRequest: z.string().optional().default(''),
+  employeeNotes: z.string().optional().default(''),
   // server use only for not-approved notes
-  notApprovedNotes: z.string().optional().nullable().default(null),
+  notApprovedNotes: z.string().optional().default(''),
   notesUpdated: z.coerce.date().optional().nullable().default(null),
 
   alkalinity: z.number(),
