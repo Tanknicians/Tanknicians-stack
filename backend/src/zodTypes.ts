@@ -37,6 +37,7 @@ export const userSchemaBase = z.object({
   lastName: z.string().optional().default(''),
   address: z.string().optional().default(''),
   phone: z.string().optional().default(''),
+  email: z.string().optional().default(''),
 
   isEmployee: z.boolean()
 });
