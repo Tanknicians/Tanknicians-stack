@@ -37,6 +37,7 @@ export const userSchemaBase = z.object({
   lastName: z.string().optional().default(''),
   address: z.string().optional().default(''),
   phone: z.string().optional().default(''),
+  email: z.string().optional().default(''),
 
   isEmployee: z.boolean()
 });
@@ -113,10 +114,10 @@ export const serviceCallSchema = z.object({
   isApproved: z.boolean(),
   createdOn: z.coerce.date(),
 
-  customerRequest: z.string().optional().nullable().default(null),
-  employeeNotes: z.string().optional().nullable().default(null),
+  customerRequest: z.string().optional().default(''),
+  employeeNotes: z.string().optional().default(''),
   // server use only for not-approved notes
-  notApprovedNotes: z.string().optional().nullable().default(null),
+  notApprovedNotes: z.string().optional().default(''),
   notesUpdated: z.coerce.date().optional().nullable().default(null),
 
   alkalinity: z.number(),

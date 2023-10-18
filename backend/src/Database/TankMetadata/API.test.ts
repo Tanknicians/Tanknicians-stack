@@ -36,6 +36,7 @@ const createCustomer: CreateUser = {
   lastName: 'TM_TEST',
   address: 'TM_TEST',
   phone: '11111111111',
+  email: 'email@email.com',
   isEmployee: false
 };
 
