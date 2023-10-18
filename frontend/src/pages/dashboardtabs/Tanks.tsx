@@ -5,12 +5,11 @@ import {
 import CreateTankForm from '../../components/forms/CreateTank';
 import UserSearchBar from '../../components/UserSearchBar';
 import type {} from '@mui/x-data-grid/themeAugmentation';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import CreateServiceCallModal from '../../components/forms/UpsertServiceCall';
 import { UpdateTankMetaData } from '../../zodTypes';
 import {
-  Divider,
   Button,
   Collapse,
   Container,
@@ -22,30 +21,46 @@ import {
   SelectChangeEvent,
   FormControl,
   Box,
-  Card
+  Card,
+  IconButton
 } from '@mui/material';
 import SCDataGrid from '../../components/SCDataGrid';
 import TankGrid from '../../components/datagrid/TankGrid';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { Add } from '@mui/icons-material';
+import DefaultCharts from '../../components/chartjs/DefaultCharts';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 
 export function TankTabs({
   tanks,
-  employeeId
+  employeeId,
+  selectedTankId,
+  setSelectedTankId
 }: {
   tanks: UpdateTankMetaData[];
   employeeId: number;
+  selectedTankId: number | null;
+  setSelectedTankId(tankId: number | null): void;
 }) {
-  const [selectedTank, setSelectedTank] = useState<
-    UpdateTankMetaData | undefined
-  >(tanks.at(0));
+  const selectedTank = useMemo(
+    () => tanks.find((tank) => tank.id === selectedTankId) ?? null,
+    [selectedTankId, tanks]
+  );
 
   const [createTankOpen, setCreateTankOpen] = useState(false);
   const [createServiceCallOpen, setCreateServiceCallOpen] = useState(false);
+  const [showCharts, setShowCharts] = useState<boolean>(true);
+
+  const handleChartCollapse = () => {
+    setShowCharts(!showCharts);
+  };
 
   const handleTankSelection = (event: SelectChangeEvent) => {
     const selectedTank = tanks.find(
       ({ id }) => id === parseInt(event.target.value)
     );
-    setSelectedTank(selectedTank);
+    setSelectedTankId(selectedTank?.id ?? null);
   };
   const handleAddTank = () => {
     setCreateTankOpen(true);
@@ -81,11 +96,14 @@ export function TankTabs({
               marginTop: 10
             }}
           >
-            <Typography variant='h6'>This user has no tanks.</Typography>
+            <Typography variant='h6' sx={{ marginBottom: 1 }}>
+              Client has no tanks.
+            </Typography>
             <Button
-              sx={{ maxHeight: 40, marginBottom: 1 }}
-              variant='outlined'
+              size='small'
+              variant='contained'
               onClick={handleAddTank}
+              startIcon={<Add fontSize='inherit' />}
             >
               Add Tank
             </Button>
@@ -98,8 +116,8 @@ export function TankTabs({
             <Box
               sx={{
                 display: 'flex',
-                alignItems: 'flex-end',
-                justifyContent: 'space-between'
+                justifyContent: 'space-between',
+                padding: '0 16'
               }}
             >
               <FormControl variant='standard' sx={{ m: 1, minWidth: 160 }}>
@@ -118,7 +136,7 @@ export function TankTabs({
                 >
                   {tanks.map((tank) => {
                     return (
-                      <MenuItem value={tank.id}>
+                      <MenuItem key={tank.id} value={tank.id}>
                         {tank.description ?? tank.id}
                       </MenuItem>
                     );
@@ -126,17 +144,46 @@ export function TankTabs({
                 </Select>
               </FormControl>
               <Button
-                sx={{ maxHeight: 40, marginBottom: 1 }}
-                variant='outlined'
+                variant='contained'
                 onClick={handleAddTank}
+                startIcon={<Add fontSize='inherit' />}
+                sx={{ m: 1 }}
               >
                 Add Tank
               </Button>
             </Box>
+            <Paper>
+              <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                <IconButton size='small' onClick={handleChartCollapse}>
+                  {showCharts ? (
+                    <KeyboardArrowUpIcon />
+                  ) : (
+                    <KeyboardArrowDownIcon />
+                  )}
+                </IconButton>
+              </Box>
+              <Collapse in={showCharts} unmountOnExit>
+                <DefaultCharts tankId={selectedTank?.id} />
+              </Collapse>
+            </Paper>
           </Box>
-          <Paper elevation={3}>
-            <Container>
-              <Typography variant='h6'>Service Calls</Typography>
+          <Paper elevation={3} sx={{ marginTop: 2 }}>
+            <Container
+              sx={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center'
+              }}
+            >
+              <Typography variant='h5'>Service Calls</Typography>
+              <Button
+                variant='contained'
+                onClick={() => setCreateServiceCallOpen(true)}
+                startIcon={<Add fontSize='inherit' />}
+                sx={{ margin: '8 0' }}
+              >
+                Add Service Form
+              </Button>
             </Container>
             <SCDataGrid tank={selectedTank} employeeId={undefined} />
           </Paper>
@@ -158,11 +205,42 @@ export default function Tanks() {
     includeTanks: true,
     isEmployee: false
   });
+  const location = useLocation();
+  const urlTankId = useMemo(
+    () => new URLSearchParams(location.search).get('tankId'),
+    [location]
+  );
+  const [selectedTankId, setSelectedTankId] = useState<number | null>(
+    Number(urlTankId) ?? null
+  );
   const [selectedUserId, selectCurrentUserId] = useState<number | null>(null);
   const selectedUser = useMemo(
     () => optionsList?.find((user) => user.id === selectedUserId) ?? null,
     [optionsList, selectedUserId]
   );
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!selectedTankId || selectedUserId || !optionsList) {
+      return;
+    }
+    const userId =
+      optionsList.find((user) =>
+        user.OwnedTanks?.some((tank) => tank.id === selectedTankId)
+      )?.id ?? null;
+    if (userId) {
+      selectCurrentUserId(userId);
+    } else {
+      navigate('/Dashboard/tanks');
+    }
+  }, [selectedUserId, selectedTankId, optionsList]);
+
+  useEffect(() => {
+    const isSelectedUserAndNoSelectedTank = selectedUser && !selectedTankId;
+    if (isSelectedUserAndNoSelectedTank) {
+      setSelectedTankId(selectedUser.OwnedTanks?.[0]?.id ?? null);
+    }
+  }, [selectedUser, selectedTankId]);
 
   const collapse = !!selectedUser;
 
@@ -171,6 +249,10 @@ export default function Tanks() {
     customer: UserData | null
   ) => {
     selectCurrentUserId(customer?.id ?? null);
+    setSelectedTankId(null);
+    if (!customer?.id) {
+      navigate('/dashboard/Tanks');
+    }
   };
 
   if (!optionsList) return <div>Loading...</div>;
@@ -199,12 +281,18 @@ export default function Tanks() {
                 key={selectedUser.id}
                 tanks={selectedUser.OwnedTanks}
                 employeeId={selectedUser.id}
+                selectedTankId={selectedTankId}
+                setSelectedTankId={setSelectedTankId}
               />
             )}
           </Collapse>
           <Collapse in={!collapse}>
             <Paper elevation={3}>
-              <TankGrid hideToolbar selectTankId={selectCurrentUserId} />
+              <TankGrid
+                hideToolbar
+                selectUserId={selectCurrentUserId}
+                selectTankId={setSelectedTankId}
+              />
             </Paper>
           </Collapse>
         </Grid>

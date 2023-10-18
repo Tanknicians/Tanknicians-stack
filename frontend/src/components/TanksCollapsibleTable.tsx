@@ -9,19 +9,46 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import { UpdateTankMetaData } from '../zodTypes';
-import { useState } from 'react';
-import { Typography } from '@mui/material';
+import { Tank, UpdateTankMetaData } from '../zodTypes';
+import { useMemo, useState } from 'react';
+import { Button, Menu, MenuItem, Stack, Typography } from '@mui/material';
 import QRCodeCard from './QRCodeCard';
 import { UserData } from '../redux/slices/users/userManagementSlice';
+import { ArrowCircleRight } from '@mui/icons-material';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import { useNavigate } from 'react-router-dom';
+import UpdateTankModal from './forms/CreateTank';
 
-function Row(props: { row: UpdateTankMetaData }) {
-  const { row } = props;
-  const [open, setOpen] = useState(false);
+function Row(props: { row: UpdateTankMetaData; client: UserData }) {
+  const { row, client } = props;
+  const [isShowTankData, setIsShowTankData] = useState(false);
+  const [tankId, setTankId] = useState<number | null>();
+  const navigate = useNavigate();
+
+  function gotoTank(tankId: number) {
+    navigate(`/dashboard/Tanks?tankId=${tankId}`);
+  }
+
+  const handleOpenUpdateTankModal = (tank: Tank) => {
+    setTankId(tank.id);
+    handleClose();
+  };
+
+  const tank = useMemo(() => row.id === tankId, [tankId]);
+
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const openMenu = Boolean(anchorEl);
+
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   return (
     <>
-      <TableRow onClick={() => setOpen(!open)}>
+      <TableRow onClick={() => setIsShowTankData(!isShowTankData)}>
         <TableCell align='center' sx={{ flex: 1 }}>
           {row.description}
         </TableCell>
@@ -40,21 +67,94 @@ function Row(props: { row: UpdateTankMetaData }) {
 
         <TableCell align='center' sx={{ flex: 1 }}>
           <IconButton size='small'>
-            {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+            {isShowTankData ? (
+              <KeyboardArrowUpIcon />
+            ) : (
+              <KeyboardArrowDownIcon />
+            )}
           </IconButton>
         </TableCell>
       </TableRow>
       <TableRow>
-        <TableCell sx={{ py: 0, flex: 1 }} colSpan={6}>
-          <Collapse in={open} timeout='auto' unmountOnExit>
-            <Typography textAlign='center' variant='h6' gutterBottom>
-              QR Code
-            </Typography>
-            <QRCodeCard
-              client={CURRENTCLIENT}
-              tankId={row.id}
-              qrSymbol={row.qrSymbol}
-            />
+        <TableCell colSpan={12}>
+          <Collapse in={isShowTankData} timeout='auto' unmountOnExit>
+            <Stack
+              alignItems='center'
+              spacing={2}
+              direction='row'
+              justifyContent='space-around'
+              height='100%'
+            >
+              <Stack
+                direction='column'
+                justifyContent='space-evenly'
+                alignItems='center'
+                spacing={2}
+                width='100%'
+              >
+                <Typography variant='h6' gutterBottom>
+                  QR Code
+                </Typography>
+                <QRCodeCard
+                  client={client}
+                  tankId={row.id}
+                  qrSymbol={row.qrSymbol}
+                />
+              </Stack>
+              <Stack
+                direction='column'
+                alignItems='center'
+                spacing={2}
+                width='100%'
+              >
+                <Typography variant='h6' gutterBottom>
+                  Analytics
+                </Typography>
+                <Button
+                  variant='outlined'
+                  endIcon={<ArrowCircleRight />}
+                  onClick={() => gotoTank(row.id)}
+                >
+                  Go to tank view
+                </Button>
+              </Stack>
+              <Stack
+                direction='row'
+                justifyContent='flex-end'
+                alignItems='flex-start'
+                height='100%'
+              >
+                <IconButton
+                  aria-label='more'
+                  id='long-button'
+                  aria-controls={openMenu ? 'long-menu' : undefined}
+                  aria-expanded={openMenu ? 'true' : undefined}
+                  aria-haspopup='true'
+                  onClick={handleClick}
+                >
+                  <MoreVertIcon />
+                </IconButton>
+                <Menu anchorEl={anchorEl} open={openMenu} onClose={handleClose}>
+                  <MenuItem onClick={() => handleOpenUpdateTankModal(row)}>
+                    Edit
+                  </MenuItem>
+                </Menu>
+                {!!tank && (
+                  <UpdateTankModal
+                    userId={client.id}
+                    open={!!tank}
+                    setOpen={
+                      (open: boolean) =>
+                        !open &&
+                        setTankId(
+                          null
+                        ) /*FIX: This is a hack to get the modal to close*/
+                    }
+                    previousTank={row}
+                  />
+                )}
+              </Stack>
+            </Stack>
           </Collapse>
         </TableCell>
       </TableRow>
@@ -62,20 +162,20 @@ function Row(props: { row: UpdateTankMetaData }) {
   );
 }
 
-let CURRENTCLIENT = {} as UserData;
-
 export default function TanksCollapsibleTable({
   client,
   tanks
-}: { client: UserData; tanks: UpdateTankMetaData[] }) {
-  CURRENTCLIENT = client;
+}: {
+  client: UserData;
+  tanks: UpdateTankMetaData[];
+}) {
   return (
     <TableContainer component={Paper} sx={{ width: '100%' }}>
       <Table stickyHeader size='small'>
         <TableHead>
           <TableRow>
             <TableCell align='center' sx={{ flex: 1 }}>
-              Name
+              Nickname
             </TableCell>
             <TableCell align='center' sx={{ flex: 1 }}>
               Volume
@@ -94,7 +194,7 @@ export default function TanksCollapsibleTable({
         </TableHead>
         <TableBody>
           {tanks.map((tank) => (
-            <Row key={tank.id} row={tank} />
+            <Row key={tank.id} row={tank} client={client} />
           ))}
         </TableBody>
       </Table>

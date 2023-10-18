@@ -11,7 +11,9 @@ import {
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { useEditUserMutation } from '../../redux/slices/users/userManagementSlice';
 import { UserData } from '../../redux/slices/users/userManagementSlice';
-import { userSchema } from '../../zodTypes';
+import { updateUser } from '../../zodTypes';
+import { MuiTelInput } from 'mui-tel-input';
+import LoadingOverlay from '../LoadingOverlay';
 
 export default function EditUserModal({
   open,
@@ -28,9 +30,8 @@ export default function EditUserModal({
 
   const [editUser, { isLoading }] = useEditUserMutation();
   const { handleSubmit, control, reset, formState } = useForm<UserData>({
-    resolver: zodResolver(userSchema),
+    resolver: zodResolver(updateUser),
     defaultValues: {
-      id: userData?.id,
       firstName: userData?.firstName,
       middleName: userData?.middleName,
       lastName: userData?.lastName,
@@ -39,9 +40,10 @@ export default function EditUserModal({
       isEmployee: userData?.isEmployee
     }
   });
-  console.log({ formState });
+  // console.log({ formState });
 
   function handleClose() {
+    if (isLoading) return;
     setOpen(false);
     reset();
   }
@@ -49,7 +51,8 @@ export default function EditUserModal({
   const onValid: SubmitHandler<UserData> = async (data: UserData) => {
     try {
       const response = await editUser({ ...data });
-      console.log('response', response);
+      // console.log("response", response);
+
       handleClose();
     } catch (err) {
       console.log(err);
@@ -58,6 +61,7 @@ export default function EditUserModal({
 
   return (
     <Dialog open={open} onClose={handleClose} maxWidth='lg'>
+      {isLoading && <LoadingOverlay />}
       <DialogTitle>
         Edit {userData?.isEmployee ? 'Employee' : 'Client'}'s Information
       </DialogTitle>
@@ -67,8 +71,13 @@ export default function EditUserModal({
             <Controller
               name='firstName'
               control={control}
-              render={({ field }) => (
-                <TextField fullWidth label='First Name' {...field} />
+              render={({ field, fieldState: { error } }) => (
+                <TextField
+                  fullWidth
+                  label='First Name'
+                  error={!!error}
+                  {...field}
+                />
               )}
             />
           </Grid>
@@ -105,7 +114,7 @@ export default function EditUserModal({
               name='phone'
               control={control}
               render={({ field }) => (
-                <TextField fullWidth label='Phone Number' {...field} />
+                <MuiTelInput fullWidth label='Phone Number' {...field} />
               )}
             />
           </Grid>
@@ -113,7 +122,12 @@ export default function EditUserModal({
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose}>Cancel</Button>
-        <Button type='button' onClick={handleSubmit(onValid)}>
+        <Button
+          type='button'
+          onClick={handleSubmit(onValid)}
+          variant='contained'
+          disabled={isLoading}
+        >
           Submit
         </Button>
       </DialogActions>

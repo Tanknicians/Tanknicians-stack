@@ -64,6 +64,7 @@ export default function UserGrid({
   });
   return (
     <DataGrid
+      autoHeight
       rowBuffer={1}
       rows={users ?? []}
       columns={userColumns}

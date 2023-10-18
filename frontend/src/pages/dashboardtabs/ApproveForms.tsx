@@ -8,23 +8,36 @@ import Container from '@mui/material/Container';
 import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
+import CreateIcon from '@mui/icons-material/Create';
 import Button from '@mui/material/Button';
 import Table from '@mui/material/Table';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import BorderColorIcon from '@mui/icons-material/BorderColor';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { ServiceCall } from '../../zodTypes';
+import TankName from '../../components/TankName';
+import { GridRenderCellParams } from '@mui/x-data-grid';
+import { useNavigate } from 'react-router-dom';
+import ShowChartIcon from '@mui/icons-material/ShowChart';
+import { IconButton, Tooltip } from '@mui/material';
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 
 const oneMinuteInMilliseconds = 60000;
 
 export default function ApproveForms() {
-  const [createServiceCallOpen, setCreateServiceCallOpen] = useState(false);
-  const [serviceCall, setServiceCall] = useState<ServiceCall | null>();
+  const navigate = useNavigate();
   //  Get Forms for table display
   const unapprovedForms = useGetUnapprovedServiceCallsQuery(undefined, {
     pollingInterval: oneMinuteInMilliseconds
   }).data;
+
+  const [serviceCallId, setServiceCallId] = useState<number | null>();
+  const serviceCall = useMemo(
+    () => unapprovedForms?.find((form) => form.id === serviceCallId),
+    [serviceCallId, unapprovedForms]
+  );
 
   // Get Clients list with tanks included to find Technician and Client name associated with the service record
   const { data: optionsList, error } = useGetClientsQuery({
@@ -69,9 +82,23 @@ export default function ApproveForms() {
     return ret;
   }
 
+  function goToTankButton(tankId: number) {
+    return (
+      <Tooltip title='Navigate to Tank'>
+        <Button
+          size='small'
+          onClick={() => {
+            navigate(`/dashboard/Tanks?tankId=${tankId}`);
+          }}
+        >
+          <OpenInNewIcon />
+        </Button>
+      </Tooltip>
+    );
+  }
+
   function handleModalOpen(serviceCall: ServiceCall) {
-    setCreateServiceCallOpen(true);
-    setServiceCall(serviceCall);
+    setServiceCallId(serviceCall.id);
   }
 
   return (
@@ -94,7 +121,10 @@ export default function ApproveForms() {
                     Client
                   </TableCell>
                   <TableCell align='center' sx={{ textAlign: 'center' }}>
-                    Tank ID
+                    Tank
+                  </TableCell>
+                  <TableCell align='center' sx={{ textAlign: 'center' }}>
+                    Service Date
                   </TableCell>
                   <TableCell />
                 </TableRow>
@@ -117,12 +147,25 @@ export default function ApproveForms() {
                       {getClientName(object.tankId)}
                     </TableCell>
                     <TableCell align='center' sx={{ textAlign: 'center' }}>
-                      {object.tankId}
+                      <TankName tankId={object.tankId} />
                     </TableCell>
                     <TableCell align='center' sx={{ textAlign: 'center' }}>
-                      <Button onClick={() => handleModalOpen(object)}>
-                        <BorderColorIcon />
-                      </Button>
+                      {`${new Date(object.createdOn).getMonth()}/${new Date(
+                        object.createdOn
+                      ).getDate()}/${new Date(object.createdOn).getFullYear()}`}
+                    </TableCell>
+                    <TableCell align='center' sx={{ textAlign: 'center' }}>
+                      {/* </TableCell>
+                    <TableCell align="center" sx={{ textAlign: "center" }}> */}
+                      <Tooltip title='Review Form'>
+                        <Button
+                          onClick={() => handleModalOpen(object)}
+                          size={'small'}
+                        >
+                          <CreateIcon />
+                        </Button>
+                      </Tooltip>
+                      {goToTankButton(object.tankId)}
                     </TableCell>
                   </TableRow>
                 ))}
@@ -134,8 +177,14 @@ export default function ApproveForms() {
       {!!serviceCall && (
         <CreateServiceCallModal
           key={serviceCall.id}
-          open={createServiceCallOpen}
-          setOpen={setCreateServiceCallOpen}
+          open={!!serviceCall.id}
+          setOpen={
+            (open: boolean) =>
+              !open &&
+              setServiceCallId(
+                null
+              ) /*FIX: This is a hack to get the modal to close*/
+          }
           tankId={serviceCall?.tankId}
           employeeId={serviceCall?.employeeId}
           previousServiceCall={serviceCall}
