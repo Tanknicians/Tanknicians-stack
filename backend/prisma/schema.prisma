@@ -39,6 +39,7 @@ model Login {
 model User {
   id Int @id @default(autoincrement())
 
+  // October 18th: remove nullables
   firstName  String @default("")
   middleName String @default("")
   lastName   String @default("")
