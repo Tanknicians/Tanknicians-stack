@@ -85,7 +85,8 @@ const commonUserData: Omit<CreateUser, 'isEmployee'> = {
   middleName: 'SC_TEST',
   lastName: 'SC_TEST',
   address: 'SC_TEST',
-  phone: '11111111111'
+  phone: '11111111111',
+  email: 'SC_TEST@email.com',
 };
 
 // ServiceCall CRUD testing suite can now be run:
