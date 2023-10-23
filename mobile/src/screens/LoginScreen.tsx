@@ -1,37 +1,38 @@
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { View, TouchableOpacity, Platform, Keyboard } from "react-native";
-import { useForm, SubmitHandler, Controller } from "react-hook-form";
-import { useLoginMutation } from "../redux/slices/auth/authApiSlice";
-import { setCredentials } from "../redux/slices/auth/authSlice";
-import { AuthLogin, errorSchema, authLogin } from "../types/zodTypes";
-import { SafeAreaView } from "react-native-safe-area-context";
-import LoadingSpinner from "../components/LoadingSpinner";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Text, TextInput } from "react-native-paper";
-import { PRIMARY_COLOR } from "../types/Styling";
-import { StatusBar } from "expo-status-bar";
-import { useDispatch } from "react-redux";
-import React, { useState } from "react";
-import Logo from "../components/Logo";
-import styles from "../styles/login";
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { View, TouchableOpacity, Platform, Keyboard } from 'react-native';
+import { useForm, SubmitHandler, Controller } from 'react-hook-form';
+import { useLoginMutation } from '../redux/slices/auth/authApiSlice';
+import { setCredentials } from '../redux/slices/auth/authSlice';
+import { AuthLogin, errorSchema, authLogin } from '../types/zodTypes';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import LoadingSpinner from '../components/LoadingSpinner';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Text, TextInput } from 'react-native-paper';
+import { PRIMARY_COLOR, getScreenDimensions } from '../types/Styling';
+import { StatusBar } from 'expo-status-bar';
+import { useDispatch } from 'react-redux';
+import React, { useState } from 'react';
+import Logo from '../components/Logo';
+import styles from '../styles/login';
 
-const LOGINERRORMESSAGE = "Incorrect email/password combination";
+const LOGINERRORMESSAGE = 'Incorrect email/password combination';
 
 const LoginScreen = () => {
+  const { SCREEN_HEIGHT, SCREEN_WIDTH } = getScreenDimensions();
   const [login, { isLoading }] = useLoginMutation();
-  const [loginErrorMessage, setLoginErrorMessage] = useState("");
+  const [loginErrorMessage, setLoginErrorMessage] = useState('');
 
   const dispatch = useDispatch();
   const {
     control,
     handleSubmit,
-    formState: { errors },
+    formState: { errors }
   } = useForm<AuthLogin>({
     defaultValues: {
-      email: "",
-      password: "",
+      email: '',
+      password: ''
     },
-    resolver: zodResolver(authLogin),
+    resolver: zodResolver(authLogin)
   });
 
   console.log(errors);
@@ -47,7 +48,7 @@ const LoginScreen = () => {
       const err = errorSchema.parse(unparsedError);
       if (!err?.status) {
         // isLoading: true until timeout occurs
-        setLoginErrorMessage("No Server Response");
+        setLoginErrorMessage('No Server Response');
       } else if (err?.status === 400) {
         console.log(`Login error ${err.status}: `, err.data?.message);
         setLoginErrorMessage(LOGINERRORMESSAGE);
@@ -67,70 +68,70 @@ const LoginScreen = () => {
     <>
       {isLoading && <LoadingSpinner />}
       <SafeAreaView style={styles.loginContainer}>
-        <StatusBar style="light" />
+        <StatusBar style='light' />
         <KeyboardAwareScrollView
           style={styles.keyboardAwareContainer}
           contentContainerStyle={styles.keyboardAwareContent}
-          keyboardDismissMode="on-drag"
+          keyboardDismissMode='on-drag'
           keyboardOpeningTime={0}
-          keyboardShouldPersistTaps={"handled"}
+          keyboardShouldPersistTaps={'handled'}
           enableOnAndroid={true}
           scrollEnabled={false}
           enableAutomaticScroll={true}
           // Values below are not finalized
           extraScrollHeight={Platform.select({
             ios: 100,
-            android: 120,
+            android: 120
           })}
         >
           <Logo />
-          <Text style={styles.title} variant="displayLarge">
+          <Text style={styles.title} variant='displayLarge'>
             Tanknicians
           </Text>
           <Controller
-            name="email"
+            name='email'
             control={control}
             rules={{
-              required: true,
+              required: true
             }}
             render={({ field, fieldState }) => (
               <View style={styles.inputView}>
                 <Text style={styles.label}>Email Address</Text>
                 <TextInput
-                  placeholder="Email Address"
+                  placeholder='Email Address'
                   onBlur={field.onBlur}
-                  mode="outlined"
+                  mode='outlined'
                   error={!!fieldState.error || !!loginErrorMessage}
                   onChangeText={field.onChange}
                   activeOutlineColor={PRIMARY_COLOR}
                   autoCorrect={false}
                   value={field.value}
-                  autoCapitalize="none"
+                  autoCapitalize='none'
                   disabled={isLoading} // Disable input while loading
                 />
               </View>
             )}
           />
           <Controller
-            name="password"
+            name='password'
             control={control}
             rules={{
-              required: true,
+              required: true
             }}
             render={({ field, fieldState }) => (
               <View style={styles.inputView}>
                 <Text style={styles.label}>Password</Text>
                 <TextInput
-                  placeholder="Password"
+                  placeholder='Password'
                   onBlur={field.onBlur}
-                  mode="outlined"
+                  mode='outlined'
                   error={!!fieldState.error || !!loginErrorMessage}
                   onChangeText={field.onChange}
                   activeOutlineColor={PRIMARY_COLOR}
                   secureTextEntry={true}
                   autoCorrect={false}
                   value={field.value}
-                  autoCapitalize="none"
+                  autoCapitalize='none'
                   disabled={isLoading} // Disable input while loading
                 />
               </View>

@@ -2,11 +2,15 @@ import { SECONDARY_COLOR, TERTIARY_COLOR } from '../types/Styling';
 import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
-  container: {
+  ioscontainer: {
     flex: 1,
     backgroundColor: SECONDARY_COLOR,
     paddingTop: 20,
     paddingBottom: 30
+  },
+  androidcontainer: {
+    flex: 1,
+    backgroundColor: SECONDARY_COLOR
   },
   permissionContainer: {
     flex: 1,
@@ -18,21 +22,26 @@ const styles = StyleSheet.create({
   barcodeContainer: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
-    position: 'relative'
+    alignItems: 'center'
   },
   scanner: {
-    ...StyleSheet.absoluteFillObject,
-    flex: 1
+    ...StyleSheet.absoluteFillObject
   },
-  overlay: {
+  iosoverlay: {
     flex: 1,
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'flex-end',
-    marginTop: 60,
-    marginBottom: '10%',
-    padding: 16
+    paddingBottom: 80,
+    zIndex: 5
+  },
+  androidoverlay: {
+    flex: 1,
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    paddingBottom: 40,
+    zIndex: 5
   },
   flipButton: {
     backgroundColor: 'transparent',
@@ -48,13 +57,22 @@ const styles = StyleSheet.create({
     color: TERTIARY_COLOR,
     textAlign: 'center'
   },
-  headerContainer: {
+  iosHeaderContainer: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     width: '100%',
     position: 'absolute',
     backgroundColor: SECONDARY_COLOR
+  },
+  androidHeaderContainer: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
+    position: 'absolute',
+    backgroundColor: 'transparent',
+    marginTop: 45
   },
   header: {
     fontStyle: 'italic',

@@ -4,7 +4,7 @@ import {
   PermissionStatus
 } from 'expo-barcode-scanner';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { Alert, View, Text, TouchableOpacity } from 'react-native';
+import { Alert, View, Text, TouchableOpacity, Platform } from 'react-native';
 import { setTankId } from '../redux/slices/forms/servicecallTankSlice';
 import {
   QRSCANNERSCREEN,
@@ -18,6 +18,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useDispatch } from 'react-redux';
 import { TERTIARY_COLOR, getScreenDimensions } from '../types/Styling';
 import styles from '../styles/qrscreen';
+import { StatusBar } from 'expo-status-bar';
 
 // Allows to scan QR code only if in mask area
 const finderWidth: number = 280;
@@ -117,9 +118,23 @@ const QRScannerScreen = ({ navigation }: Props) => {
     );
   }
 
+  const android = Platform.OS === 'android';
+
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView
+      style={android ? styles.androidcontainer : styles.ioscontainer}
+    >
+      <StatusBar style='light' />
       <View style={styles.barcodeContainer}>
+        <View style={android ? styles.androidoverlay : styles.iosoverlay}>
+          <TouchableOpacity onPress={toggleCameraType}>
+            <Ionicons
+              name='camera-reverse-outline'
+              size={70}
+              color={TERTIARY_COLOR}
+            />
+          </TouchableOpacity>
+        </View>
         <BarCodeScanner
           onBarCodeScanned={handleBarCodeScanned}
           type={type}
@@ -130,18 +145,16 @@ const QRScannerScreen = ({ navigation }: Props) => {
             edgeColor={TERTIARY_COLOR}
             showAnimatedLine
             animatedLineColor={TERTIARY_COLOR}
+            outerMaskOpacity={android ? 0 : 0.55}
           />
-          <View style={styles.headerContainer}>
+          <View
+            style={
+              android
+                ? styles.androidHeaderContainer
+                : styles.iosHeaderContainer
+            }
+          >
             <Text style={styles.header}>Scan Tank QR Code</Text>
-          </View>
-          <View style={styles.overlay}>
-            <TouchableOpacity onPress={toggleCameraType}>
-              <Ionicons
-                name='camera-reverse-outline'
-                size={70}
-                color={TERTIARY_COLOR}
-              />
-            </TouchableOpacity>
           </View>
         </BarCodeScanner>
       </View>
