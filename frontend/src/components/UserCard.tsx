@@ -19,7 +19,6 @@ export default function UserCard(props: UserCardProps) {
   const [userModalOpen, setUserModalOpen] = useState(false);
 
   const handleOpenUserModal = () => {
-    console.log(user);
     handleClose();
     setUserModalOpen((prevState) => !prevState);
   };

@@ -6,12 +6,16 @@ import ShowChartIcon from '@mui/icons-material/ShowChart';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import PeopleIcon from '@mui/icons-material/People';
+import LogoutIcon from '@mui/icons-material/Logout';
 import BadgeIcon from '@mui/icons-material/Badge';
 import ListItem from '@mui/material/ListItem';
 import Divider from '@mui/material/Divider';
+import LogoutDialog from '../LogoutDialog';
 import { Link } from 'react-router-dom';
+import Stack from '@mui/material/Stack';
 import List from '@mui/material/List';
 import Box from '@mui/material/Box';
+import { useState } from 'react';
 
 const item = {
   py: '2px',
@@ -35,6 +39,7 @@ interface NavProps extends Omit<DrawerProps, 'onClose'> {
 }
 export default function Navigator(props: NavProps) {
   const { onClose, setSelection, selected, ...drawerProps } = props;
+  const [openDialog, setOpenDialog] = useState(false);
 
   const dashboardFeatures = [
     {
@@ -79,45 +84,84 @@ export default function Navigator(props: NavProps) {
     }
   ];
 
+  const dashboardSettings = [
+    {
+      id: 'Logout',
+      icon: <LogoutIcon sx={{ transform: 'rotate(-180deg)' }} />,
+      onClick: () => {
+        setOpenDialog(true);
+      }
+    }
+  ];
+
   return (
     <Drawer variant='permanent' {...drawerProps} onClose={onClose}>
-      <List disablePadding>
-        <ListItem
-          sx={{ ...item, ...itemCategory, fontSize: 22, color: '#fff' }}
-        >
-          Tanknicians
-        </ListItem>
-        {dashboardFeatures.map(({ id, children }) => (
-          <Box key={id} sx={{ bgcolor: '#101F33' }}>
-            <ListItem sx={{ py: 2, px: 3 }}>
-              <ListItemText sx={{ color: '#fff' }}>{id}</ListItemText>
-            </ListItem>
-            {children.map(({ id: childId, icon, onClick }) => (
-              <ListItem disablePadding key={childId}>
-                <Link
-                  to={childId}
-                  style={{ textDecoration: 'none', minWidth: '100%' }}
-                >
-                  <ListItemButton
-                    selected={childId === selected}
-                    sx={item}
-                    onClick={() => {
-                      onClick();
-                      if (onClose) {
-                        onClose({}, 'backdropClick');
-                      }
-                    }}
+      <Stack
+        sx={{ height: '100%' }}
+        flexDirection='column'
+        justifyContent='space-between'
+      >
+        <List disablePadding>
+          <ListItem
+            sx={{
+              ...item,
+              ...itemCategory,
+              fontSize: 22,
+              color: '#fff',
+              '&:hover': 'none'
+            }}
+          >
+            Tanknicians
+          </ListItem>
+          {dashboardFeatures.map(({ id, children }) => (
+            <Box
+              key={id}
+              sx={{
+                bgcolor: '#101F33',
+                borderTop: 1,
+                borderBottom: 1,
+                borderColor: 'gray',
+                paddingTop: 5.5,
+                paddingBottom: 1
+              }}
+            >
+              {/* <ListItem sx={{ py: 2, px: 3 }}>
+                <ListItemText sx={{ color: '#fff' }}>{id}</ListItemText>
+              </ListItem> */}
+              {children.map(({ id: childId, icon, onClick }) => (
+                <ListItem disablePadding key={childId} sx={{ px: 0, py: 0.3 }}>
+                  <Link
+                    to={childId}
+                    style={{ textDecoration: 'none', minWidth: '100%' }}
                   >
-                    <ListItemIcon>{icon}</ListItemIcon>
-                    <ListItemText>{childId}</ListItemText>
-                  </ListItemButton>
-                </Link>
-              </ListItem>
-            ))}
-            <Divider sx={{ mt: 2 }} />
-          </Box>
-        ))}
-      </List>
+                    <ListItemButton
+                      selected={childId === selected}
+                      sx={item}
+                      onClick={() => {
+                        onClick();
+                      }}
+                    >
+                      <ListItemIcon>{icon}</ListItemIcon>
+                      <ListItemText>{childId}</ListItemText>
+                    </ListItemButton>
+                  </Link>
+                </ListItem>
+              ))}
+            </Box>
+          ))}
+        </List>
+        <List sx={{ paddingBottom: 2, borderTop: 1, borderColor: 'gray' }}>
+          {dashboardSettings.map(({ id, icon, onClick }) => (
+            <ListItem disablePadding key={id}>
+              <ListItemButton sx={item} onClick={() => onClick()}>
+                <ListItemIcon>{icon}</ListItemIcon>
+                <ListItemText>{id}</ListItemText>
+              </ListItemButton>
+            </ListItem>
+          ))}
+          <LogoutDialog open={openDialog} setOpen={setOpenDialog} />
+        </List>
+      </Stack>
     </Drawer>
   );
 }

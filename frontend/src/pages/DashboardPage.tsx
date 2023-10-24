@@ -280,7 +280,7 @@ export default function Paperbase() {
                     >
                       <StyledBadge
                         badgeContent={numberOfUnapprovedForms}
-                        color='secondary'
+                        color='error'
                       >
                         <NotificationsIcon sx={item} />
                       </StyledBadge>

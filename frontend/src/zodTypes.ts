@@ -16,21 +16,56 @@ export const validateRequestBody =
 
 // USER
 
-export const userSchema = z.object({
+export const userSchemaBase = z.object({
   id: z.number().int(),
-  firstName: z.string().optional(),
-  middleName: z.string().optional(),
-  lastName: z.string().optional(),
-  address: z.string().optional(),
-  phone: z.string().optional(),
+  firstName: z.string().optional().default(''),
+  middleName: z.string().optional().default(''),
+  lastName: z.string().optional().default(''),
+  address: z.string().optional().default(''),
+  phone: z.string().optional().default(''),
 
   isEmployee: z.boolean()
 });
 
-export const createUserSchema = userSchema.omit({ id: true });
-export type CreateUser = z.infer<typeof createUserSchema>;
-export type UpdateUser = z.infer<typeof userSchema>;
-export type UserRequest = ValidatedRequest<CreateUser>;
+const user = userSchemaBase;
+
+export const createUser = userSchemaBase.omit({ id: true }).refine(
+  ({
+    firstName,
+    middleName,
+    lastName
+  }: {
+    firstName?: string;
+    middleName?: string;
+    lastName?: string;
+  }) => firstName || middleName || lastName,
+  {
+    message: 'You need to have firstName, middleName, or lastName',
+    path: ['firstName']
+  }
+);
+
+export const updateUser = userSchemaBase.omit({ id: true }).refine(
+  ({
+    firstName,
+    middleName,
+    lastName
+  }: {
+    firstName?: string;
+    middleName?: string;
+    lastName?: string;
+  }) => firstName || middleName || lastName,
+  {
+    message: 'You need to have firstName, middleName, or lastName',
+    path: ['firstName']
+  }
+);
+
+export type User = z.infer<typeof user>;
+export type CreateUser = z.infer<typeof createUser>;
+export type UpdateUser = z.infer<typeof updateUser>;
+export type UserCreateRequest = ValidatedRequest<CreateUser>;
+export type UserUpdateRequest = ValidatedRequest<UpdateUser>;
 
 // LOGIN
 
