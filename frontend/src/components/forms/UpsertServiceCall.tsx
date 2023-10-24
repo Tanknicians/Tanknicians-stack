@@ -1,5 +1,5 @@
-import { format } from 'date-fns';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { format } from "date-fns";
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Box,
   Button,
@@ -10,28 +10,28 @@ import {
   DialogTitle,
   FormControlLabel,
   Grid,
-  TextField
-} from '@mui/material';
-import { Control, Controller, SubmitHandler, useForm } from 'react-hook-form';
+  TextField,
+} from "@mui/material";
+import { Control, Controller, SubmitHandler, useForm } from "react-hook-form";
 import {
   useCreateServiceCallMutation,
-  useUpdateServiceCallMutation
-} from '../../redux/slices/forms/servicecallApiSlice';
+  useUpdateServiceCallMutation,
+} from "../../redux/slices/forms/servicecallApiSlice";
 import {
   createServiceCall as createServiceCallSchema,
   CreateServiceCall,
-  ServiceCall
-} from '../../zodTypes';
-import { useSelector } from 'react-redux';
-import { selectCurrentUser } from '../../redux/slices/auth/authSlice';
-import UserSearchBar from '../UserSearchBar';
-import { useGetClientsQuery } from '../../redux/slices/users/userManagementSlice';
-import { useGetTankDataQuery } from '../../redux/slices/tanks/tankDataSlice';
-import LoadingOverlay from '../LoadingOverlay';
+  ServiceCall,
+} from "../../zodTypes";
+import { useSelector } from "react-redux";
+import { selectCurrentUser } from "../../redux/slices/auth/authSlice";
+import UserSearchBar from "../UserSearchBar";
+import { useGetClientsQuery } from "../../redux/slices/users/userManagementSlice";
+import { useGetTankDataQuery } from "../../redux/slices/tanks/tankDataSlice";
+import LoadingOverlay from "../LoadingOverlay";
 
 type FormProps = {
   name: keyof CreateServiceCall;
-  type: 'string' | 'number' | 'boolean' | 'date' | 'full' | 'phone';
+  type: "string" | "number" | "boolean" | "date" | "full" | "phone";
   control: Control<CreateServiceCall>;
   size?: number;
   multiline?: boolean;
@@ -40,9 +40,9 @@ type FormProps = {
 };
 function getType(input: string) {}
 function getLabel(input: string) {
-  if (!input) return '';
+  if (!input) return "";
   let result = input.charAt(0).toUpperCase() + input.slice(1);
-  result = result.replace(/(?<!^)([A-Z])/g, ' $1');
+  result = result.replace(/(?<!^)([A-Z])/g, " $1");
   result = result.replace(/\b(For|Or|And)\b/g, (match) => match.toLowerCase());
 
   return result;
@@ -55,13 +55,13 @@ export function CreateForm({
   size,
   multiline,
   required,
-  hidden
+  hidden,
 }: FormProps) {
   if (hidden) {
     return null;
   }
   const label = getLabel(name.toString());
-  if (type === 'boolean') {
+  if (type === "boolean") {
     return (
       <Grid item xs={size ?? 4}>
         <Controller
@@ -88,10 +88,10 @@ export function CreateForm({
         name={name}
         control={control}
         render={({ field, fieldState }) => {
-          if (type === 'date') {
+          if (type === "date") {
             if (!field.value) {
               field.value = new Date();
-            } else if (typeof field.value !== 'object') {
+            } else if (typeof field.value !== "object") {
               try {
                 field.value = new Date(field.value.toString());
               } catch (e) {
@@ -106,14 +106,14 @@ export function CreateForm({
               fullWidth
               multiline={!!multiline}
               type={
-                type === 'full' ? 'string' : type === 'phone' ? 'tel' : type
+                type === "full" ? "string" : type === "phone" ? "tel" : type
               }
               label={label}
-              InputLabelProps={{ shrink: type === 'date' ? true : undefined }}
+              InputLabelProps={{ shrink: type === "date" ? true : undefined }}
               {...field}
               value={
-                type === 'date' && typeof field.value === 'object'
-                  ? format(field.value, 'yyyy-MM-dd')
+                type === "date" && typeof field.value === "object"
+                  ? format(field.value, "yyyy-MM-dd")
                   : field.value
               }
             />
@@ -126,58 +126,58 @@ export function CreateForm({
 
 const createServiceCallFields: Record<
   keyof CreateServiceCall,
-  Omit<FormProps, 'name' | 'control'>
+  Omit<FormProps, "name" | "control">
 > = {
-  employeeId: { type: 'number', hidden: true },
-  tankId: { type: 'number', hidden: true },
-  createdOn: { type: 'date', required: true, size: 4 },
-  customerRequest: { type: 'string', size: 12 },
-  employeeNotes: { type: 'string', size: 12 },
+  employeeId: { type: "number", hidden: true },
+  tankId: { type: "number", hidden: true },
+  createdOn: { type: "date", required: true, size: 4 },
+  customerRequest: { type: "string", size: 12 },
+  employeeNotes: { type: "string", size: 12 },
 
-  notApprovedNotes: { type: 'string', multiline: true, size: 8 },
-  notesUpdated: { type: 'date', size: 4 },
-  alkalinity: { type: 'number', required: true },
-  calcium: { type: 'number', required: true },
-  nitrate: { type: 'number', required: true },
-  phosphate: { type: 'number', required: true },
+  notApprovedNotes: { type: "string", multiline: true, size: 8 },
+  notesUpdated: { type: "date", size: 4 },
+  alkalinity: { type: "number", required: true },
+  calcium: { type: "number", required: true },
+  nitrate: { type: "number", required: true },
+  phosphate: { type: "number", required: true },
 
-  ATOOperational: { type: 'boolean' },
-  ATOReservoirFilled: { type: 'boolean' },
-  chemFilterAdjusted: { type: 'boolean' },
-  doserAdjustementOrManualDosing: { type: 'boolean' },
-  dosingReservoirsFull: { type: 'boolean' },
-  floorsCheckedForSpillsOrDirt: { type: 'boolean' },
-  glassCleanedInside: { type: 'boolean' },
-  glassCleanedOutside: { type: 'boolean' },
-  mechFilterChanged: { type: 'boolean' },
-  pumpsClearedOfDebris: { type: 'boolean' },
-  saltCreepCleaned: { type: 'boolean' },
-  skimmerCleanedAndOperational: { type: 'boolean' },
-  waterChanged: { type: 'boolean' },
-  waterTestedRecordedDated: { type: 'boolean' },
+  ATOOperational: { type: "boolean" },
+  ATOReservoirFilled: { type: "boolean" },
+  chemFilterAdjusted: { type: "boolean" },
+  doserAdjustementOrManualDosing: { type: "boolean" },
+  dosingReservoirsFull: { type: "boolean" },
+  floorsCheckedForSpillsOrDirt: { type: "boolean" },
+  glassCleanedInside: { type: "boolean" },
+  glassCleanedOutside: { type: "boolean" },
+  mechFilterChanged: { type: "boolean" },
+  pumpsClearedOfDebris: { type: "boolean" },
+  saltCreepCleaned: { type: "boolean" },
+  skimmerCleanedAndOperational: { type: "boolean" },
+  waterChanged: { type: "boolean" },
+  waterTestedRecordedDated: { type: "boolean" },
 
-  pestAPresent: { type: 'boolean' },
-  pestBPresent: { type: 'boolean' },
-  pestCPresent: { type: 'boolean' },
-  pestDPresent: { type: 'boolean' },
-  isApproved: { type: 'boolean' }
+  pestAPresent: { type: "boolean" },
+  pestBPresent: { type: "boolean" },
+  pestCPresent: { type: "boolean" },
+  pestDPresent: { type: "boolean" },
+  isApproved: { type: "boolean" },
 };
 
 const defaultValues: CreateServiceCall = Object.fromEntries(
   Object.entries(createServiceCallFields).map(([key, { type }]) => {
     switch (type) {
-      case 'boolean':
+      case "boolean":
         return [key, false];
-      case 'date':
+      case "date":
         return [key, new Date()];
-      case 'string':
-        return [key, ''];
-      case 'number':
+      case "string":
+        return [key, ""];
+      case "number":
         return [key, 0];
-      case 'full':
-        return [key, ''];
-      case 'phone':
-        return [key, ''];
+      case "full":
+        return [key, ""];
+      case "phone":
+        return [key, ""];
     }
   })
 );
@@ -188,7 +188,7 @@ export default function CreateServiceCallModal({
   setOpen,
   tankId,
   employeeId: prevEmployeeId,
-  previousServiceCall
+  previousServiceCall,
 }: {
   open: boolean;
   setOpen: (open: boolean) => void;
@@ -202,7 +202,7 @@ export default function CreateServiceCallModal({
 
   const { data: employees } = useGetClientsQuery({
     includeTanks: true,
-    isEmployee: true
+    isEmployee: true,
   });
   const { data: tank } = useGetTankDataQuery(tankId);
 
@@ -221,10 +221,10 @@ export default function CreateServiceCallModal({
         ...defaultValues,
         ...previousValues,
         tankId,
-        employeeId: isEdit ? prevEmployeeId : loggedInUser.userId
-      }
+        employeeId: isEdit ? prevEmployeeId : loggedInUser.userId,
+      },
     });
-  const employeeId = watch('employeeId');
+  const employeeId = watch("employeeId");
   const employee =
     employees?.find((employee) => employee.id === employeeId) ?? null;
 
@@ -262,19 +262,19 @@ export default function CreateServiceCallModal({
 
   function checkAllCheckboxes(value: boolean) {
     fields.forEach((field) => {
-      if (field.type === 'boolean') {
+      if (field.type === "boolean") {
         setValue(field.name, value);
       }
     });
   }
 
   return (
-    <Dialog open={open} onClose={handleClose} maxWidth='lg'>
+    <Dialog open={open} onClose={handleClose} maxWidth="lg">
       {isLoading && <LoadingOverlay />}
       <DialogTitle>
         {previousServiceCall
           ? `Update Service Call ${previousServiceCall.id}`
-          : 'Create Service Call'}
+          : "Create Service Call"}
       </DialogTitle>
       <DialogContent>
         <Grid container spacing={2} paddingTop={1}>
@@ -284,9 +284,9 @@ export default function CreateServiceCallModal({
                 userList={employees ?? []}
                 selectedUser={employee}
                 handleUserSelected={(_, user) =>
-                  user?.id && setValue('employeeId', user.id)
+                  user?.id && setValue("employeeId", user.id)
                 }
-                label='Employee'
+                label="Employee"
               />
             ) : (
               <Box>Loading...</Box>
@@ -294,7 +294,7 @@ export default function CreateServiceCallModal({
           </Grid>
           <Grid item xs={4}>
             <TextField
-              value={tank?.description ?? 'Loading...'}
+              value={tank?.nickname ?? "Loading..."}
               disabled
               fullWidth
             />
@@ -305,8 +305,8 @@ export default function CreateServiceCallModal({
           <Grid item xs={4}>
             <Button
               onClick={(e) => checkAllCheckboxes(true)}
-              size='small'
-              variant='contained'
+              size="small"
+              variant="contained"
             >
               Check All Checkboxes
             </Button>
@@ -316,9 +316,9 @@ export default function CreateServiceCallModal({
       <DialogActions>
         <Button onClick={handleClose}>Cancel</Button>
         <Button
-          type='button'
+          type="button"
           onClick={handleSubmit(onValid)}
-          variant='contained'
+          variant="contained"
           disabled={isLoading}
         >
           Submit
