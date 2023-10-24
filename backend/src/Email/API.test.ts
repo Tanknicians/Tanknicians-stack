@@ -1,6 +1,6 @@
 import SMTPTransport from 'nodemailer/lib/smtp-transport';
 import '../config';
-import { resetPassword, sendEmail } from './API';
+import { emailResetPassword, sendEmail } from './API';
 
 jest.mock('nodemailer', () => ({
   // return Email sent:
@@ -34,7 +34,7 @@ describe('email service', () => {
     expect(res.includes('Email sent:'));
   });
   test('can send reset email', async () => {
-    const res = await resetPassword(testEmail);
+    const res = await emailResetPassword(testEmail);
     expect(res.includes('Email sent:'));
   });
 });

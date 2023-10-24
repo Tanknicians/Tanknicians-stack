@@ -1,6 +1,6 @@
 import express from 'express';
 import { validateRequestBody, emailSchema, EmailRequest } from '../zodTypes';
-import { resetPassword } from './API';
+import { emailResetPassword } from './API';
 
 const emailRouter = express.Router();
 
@@ -10,7 +10,7 @@ emailRouter.post(
   async (req: EmailRequest, res) => {
     try {
       const { email } = req.body;
-      const result = await resetPassword(email);
+      const result = await emailResetPassword(email);
       res.json(result);
     } catch (error) {
       const errorMessage =
