@@ -1,5 +1,4 @@
 import * as bcrypt from 'bcryptjs';
-import * as Prisma from '@prisma/client';
 
 import {
   generateToken,
@@ -140,42 +139,6 @@ export async function handleRegistration(
   const result = await register(registration);
 
   return res.status(result.status).json(result.data);
-}
-
-/**
- * Resets the password for the given email if it is valid and
- * sends email with the new password
- * @param email
- * @returns confirmation:string from smtp transaction
- */
-export async function resetPassword(email: string) {
-  // validate email
-  let login: Prisma.Login | null;
-
-  login = await loginDB.read(email);
-  if (!login) {
-    throw new Error(`login not found for email ${email}`);
-  }
-
-  // generate new password and attempt record update
-  const pw = generateRandomPassword(DEFAULT_PASSWORD_LENGTH);
-  login.password = await bcrypt.hash(pw, DEFAULT_SALT_LENGTH);
-  await loginDB.update(login);
-
-  // send email with new password
-  const emailText = `Your new password is: \n
-  PASSWORD: ${login.password} \n
-  
-  If you lose this password, please ask your admin to generate a reset email.
-  `;
-
-  const confirmation = await sendEmail(
-    login.email,
-    'Password Reset',
-    emailText
-  );
-  console.log(confirmation);
-  return confirmation;
 }
 
 // Generate a new access token using a refresh token
