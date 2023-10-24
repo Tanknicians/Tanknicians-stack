@@ -1,4 +1,5 @@
 import nodemailer from 'nodemailer';
+import { resetPassword } from '../Authentication/API';
 
 const fromEmail = process.env.EMAIL_USERNAME;
 const fromPassword = process.env.EMAIL_PASSWORD;
@@ -33,10 +34,8 @@ export async function sendEmail(to: string, subject: string, text: string) {
   });
 }
 
-export async function resetPassword(email: string) {
-  return sendEmail(
-    email,
-    'Reset Password',
-    'You have requested to reset your password.'
-  );
+// quick and dirty way to make the reset-password endpoint work
+export async function emailResetPassword(email: string) {
+  const response = resetPassword(email);
+  return response;
 }
