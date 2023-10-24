@@ -49,7 +49,6 @@ export async function sendEmail(to: string, subject: string, text: string) {
  */
 
 export async function resetPassword(email: string) {
-
   const login: Prisma.Login | null = await loginDB.read(email);
   if (!login) {
     throw new Error(`login not found for email ${email}`);

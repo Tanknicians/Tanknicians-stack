@@ -27,7 +27,7 @@ describe('authentication api', () => {
     }).toBeDefined();
   });
 
-  // Moving this testing functionality to EMAIL 
+  // Moving this testing functionality to EMAIL
   /*
   it('throws error when email not found on password reset', async () => {
     // Arrange
@@ -39,7 +39,6 @@ describe('authentication api', () => {
     }).rejects.toThrow(`login not found for email ${badEmail}`);
   });
   */
- 
 
   // Commented until i learn how to mock
   // it('returns email success response on reset flow completed', async () => {
