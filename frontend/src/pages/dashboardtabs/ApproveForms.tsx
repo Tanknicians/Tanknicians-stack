@@ -1,28 +1,25 @@
-import { useGetUnapprovedServiceCallsQuery } from '../../redux/slices/forms/servicecallApiSlice';
-import { useGetClientsQuery } from '../../redux/slices/users/userManagementSlice';
-import CreateServiceCallModal from '../../components/forms/UpsertServiceCall';
-import TableContainer from '@mui/material/TableContainer';
-import Typography from '@mui/material/Typography';
-import TableBody from '@mui/material/TableBody';
-import Container from '@mui/material/Container';
-import TableCell from '@mui/material/TableCell';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import CreateIcon from '@mui/icons-material/Create';
-import Button from '@mui/material/Button';
-import Table from '@mui/material/Table';
-import Paper from '@mui/material/Paper';
-import Grid from '@mui/material/Grid';
-import BorderColorIcon from '@mui/icons-material/BorderColor';
-import { useMemo, useState } from 'react';
-import OpenInNewIcon from '@mui/icons-material/OpenInNew';
-import { ServiceCall } from '../../zodTypes';
-import TankName from '../../components/TankName';
-import { GridRenderCellParams } from '@mui/x-data-grid';
-import { useNavigate } from 'react-router-dom';
-import ShowChartIcon from '@mui/icons-material/ShowChart';
-import { IconButton, Tooltip } from '@mui/material';
-import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import { useGetUnapprovedServiceCallsQuery } from "../../redux/slices/forms/servicecallApiSlice";
+import { useGetClientsQuery } from "../../redux/slices/users/userManagementSlice";
+import CreateServiceCallModal from "../../components/forms/UpsertServiceCall";
+import TableContainer from "@mui/material/TableContainer";
+import Typography from "@mui/material/Typography";
+import TableBody from "@mui/material/TableBody";
+import Container from "@mui/material/Container";
+import TableCell from "@mui/material/TableCell";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import CreateIcon from "@mui/icons-material/Create";
+import Button from "@mui/material/Button";
+import Table from "@mui/material/Table";
+import Paper from "@mui/material/Paper";
+import Grid from "@mui/material/Grid";
+import BorderColorIcon from "@mui/icons-material/BorderColor";
+import { useMemo, useState } from "react";
+import OpenInNewIcon from "@mui/icons-material/OpenInNew";
+import { ServiceCall, tankSchema } from "../../zodTypes";
+import TankName from "../../components/TankName";
+import { useNavigate } from "react-router-dom";
+import { Tooltip } from "@mui/material";
 
 const oneMinuteInMilliseconds = 60000;
 
@@ -30,7 +27,7 @@ export default function ApproveForms() {
   const navigate = useNavigate();
   //  Get Forms for table display
   const unapprovedForms = useGetUnapprovedServiceCallsQuery(undefined, {
-    pollingInterval: oneMinuteInMilliseconds
+    pollingInterval: oneMinuteInMilliseconds,
   }).data;
 
   const [serviceCallId, setServiceCallId] = useState<number | null>();
@@ -42,7 +39,7 @@ export default function ApproveForms() {
   // Get Clients list with tanks included to find Technician and Client name associated with the service record
   const { data: optionsList, error } = useGetClientsQuery({
     includeTanks: true,
-    isEmployee: undefined
+    isEmployee: undefined,
   });
 
   if (error) {
@@ -51,7 +48,7 @@ export default function ApproveForms() {
 
   function getEmployeeName(empId: number) {
     // get the name of the technician associated with the passed employee id
-    let ret = 'EMPLOYEE NAME NOT FOUND';
+    let ret = "EMPLOYEE NAME NOT FOUND";
     try {
       const matchedUserOption = optionsList?.find(
         (element) => element.id === empId
@@ -67,10 +64,10 @@ export default function ApproveForms() {
   }
 
   function getClientName(tankId: number) {
-    let ret = 'CLIENT NAME NOT FOUND';
+    let ret = "CLIENT NAME NOT FOUND";
     try {
       optionsList?.forEach(function (user) {
-        user.OwnedTanks?.forEach(function (tank) {
+        user.OwnedTanks?.forEach(function (tank: tankSchema) {
           if (tank.id === tankId) {
             ret = `${user.firstName} ${user.lastName}`;
           }
@@ -84,9 +81,9 @@ export default function ApproveForms() {
 
   function goToTankButton(tankId: number) {
     return (
-      <Tooltip title='Navigate to Tank'>
+      <Tooltip title="Navigate to Tank">
         <Button
-          size='small'
+          size="small"
           onClick={() => {
             navigate(`/dashboard/Tanks?tankId=${tankId}`);
           }}
@@ -103,9 +100,9 @@ export default function ApproveForms() {
 
   return (
     <Container>
-      <Grid container rowSpacing={4} alignItems='center' maxWidth={'100%'}>
+      <Grid container rowSpacing={4} alignItems="center" maxWidth={"100%"}>
         <Grid item xs={12}>
-          <Typography variant='h4' component='h1'>
+          <Typography variant="h4" component="h1">
             Approve Forms
           </Typography>
         </Grid>
@@ -114,16 +111,16 @@ export default function ApproveForms() {
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell align='center' sx={{ textAlign: 'center' }}>
+                  <TableCell align="center" sx={{ textAlign: "center" }}>
                     Technician
                   </TableCell>
-                  <TableCell align='center' sx={{ textAlign: 'center' }}>
+                  <TableCell align="center" sx={{ textAlign: "center" }}>
                     Client
                   </TableCell>
-                  <TableCell align='center' sx={{ textAlign: 'center' }}>
+                  <TableCell align="center" sx={{ textAlign: "center" }}>
                     Tank
                   </TableCell>
-                  <TableCell align='center' sx={{ textAlign: 'center' }}>
+                  <TableCell align="center" sx={{ textAlign: "center" }}>
                     Service Date
                   </TableCell>
                   <TableCell />
@@ -133,34 +130,34 @@ export default function ApproveForms() {
                 {unapprovedForms?.map((object, index) => (
                   <TableRow
                     key={object.id}
-                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                   >
                     <TableCell
-                      align='center'
-                      sx={{ textAlign: 'center' }}
-                      component='th'
-                      scope='row'
+                      align="center"
+                      sx={{ textAlign: "center" }}
+                      component="th"
+                      scope="row"
                     >
                       {getEmployeeName(object.employeeId)}
                     </TableCell>
-                    <TableCell align='center' sx={{ textAlign: 'center' }}>
+                    <TableCell align="center" sx={{ textAlign: "center" }}>
                       {getClientName(object.tankId)}
                     </TableCell>
-                    <TableCell align='center' sx={{ textAlign: 'center' }}>
+                    <TableCell align="center" sx={{ textAlign: "center" }}>
                       <TankName tankId={object.tankId} />
                     </TableCell>
-                    <TableCell align='center' sx={{ textAlign: 'center' }}>
+                    <TableCell align="center" sx={{ textAlign: "center" }}>
                       {`${new Date(object.createdOn).getMonth()}/${new Date(
                         object.createdOn
                       ).getDate()}/${new Date(object.createdOn).getFullYear()}`}
                     </TableCell>
-                    <TableCell align='center' sx={{ textAlign: 'center' }}>
+                    <TableCell align="center" sx={{ textAlign: "center" }}>
                       {/* </TableCell>
                     <TableCell align="center" sx={{ textAlign: "center" }}> */}
-                      <Tooltip title='Review Form'>
+                      <Tooltip title="Review Form">
                         <Button
                           onClick={() => handleModalOpen(object)}
-                          size={'small'}
+                          size={"small"}
                         >
                           <CreateIcon />
                         </Button>

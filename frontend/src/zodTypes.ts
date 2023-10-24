@@ -105,6 +105,7 @@ export const createTank = tankMetaDataSchema.omit({
   lastDateServiced: true,
 });
 export const updateTank = tankMetaDataSchema.omit({ id: true });
+export type tankSchema = z.infer<typeof tankMetaDataSchema>;
 export type CreateTankMetaData = z.infer<typeof createTank>;
 export type UpdateTankMetaData = z.infer<typeof updateTank>;
 export type TankMetaDataCreateRequest = ValidatedRequest<CreateTankMetaData>;
