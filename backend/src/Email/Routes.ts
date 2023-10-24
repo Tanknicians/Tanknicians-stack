@@ -1,16 +1,17 @@
 import express from 'express';
 import { validateRequestBody, emailSchema, EmailRequest } from '../zodTypes';
-import { emailResetPassword } from './API';
+import { authenticateRoleMiddleWare, resetPassword } from '../Authentication/API';
 
 const emailRouter = express.Router();
 
 emailRouter.post(
   '/reset-password',
+  authenticateRoleMiddleWare(['ADMIN']),
   validateRequestBody(emailSchema),
   async (req: EmailRequest, res) => {
     try {
       const { email } = req.body;
-      const result = await emailResetPassword(email);
+      const result = await resetPassword(email);
       res.json(result);
     } catch (error) {
       const errorMessage =
