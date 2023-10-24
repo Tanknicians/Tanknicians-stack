@@ -1,8 +1,10 @@
 import express from 'express';
 import { validateRequestBody, emailSchema, EmailRequest } from '../zodTypes';
-import { authenticateRoleMiddleWare, resetPassword } from '../Authentication/API';
+import { authenticateRoleMiddleWare } from '../Authentication/API';
+import { resetPassword } from './API';
 
 const emailRouter = express.Router();
+emailRouter.use(express.json());
 
 emailRouter.post(
   '/reset-password',
