@@ -1,4 +1,4 @@
-import { generateRandomPassword, resetPassword } from './API';
+import { generateRandomPassword } from './API';
 import { generateRefreshToken, verifyRefreshToken } from './../Token/Generator';
 
 describe('authentication api', () => {
@@ -27,6 +27,8 @@ describe('authentication api', () => {
     }).toBeDefined();
   });
 
+  // Moving this testing functionality to EMAIL 
+  /*
   it('throws error when email not found on password reset', async () => {
     // Arrange
     const badEmail = '';
@@ -36,6 +38,8 @@ describe('authentication api', () => {
       await resetPassword(badEmail);
     }).rejects.toThrow(`login not found for email ${badEmail}`);
   });
+  */
+ 
 
   // Commented until i learn how to mock
   // it('returns email success response on reset flow completed', async () => {
