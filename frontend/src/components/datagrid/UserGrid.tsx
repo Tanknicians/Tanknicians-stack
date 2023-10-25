@@ -34,6 +34,13 @@ const userColumns: GridColDef<UserData>[] = [
     align: 'center'
   },
   {
+    field: 'email',
+    headerName: 'Email',
+    flex: 1,
+    headerAlign: 'center',
+    align: 'center'
+  },
+  {
     field: 'address',
     headerName: 'Address',
     flex: 2,
