@@ -1,6 +1,6 @@
-import { Schema, z } from "zod";
-import { NextFunction, Response, Request } from "express";
-import { ParamsDictionary } from "express-serve-static-core";
+import { Schema, z } from 'zod';
+import { NextFunction, Response, Request } from 'express';
+import { ParamsDictionary } from 'express-serve-static-core';
 
 export type ValidatedRequest<T> = Request<ParamsDictionary, unknown, T>;
 
@@ -12,8 +12,8 @@ export const validateRequestBody =
     } catch (e) {
       return res.status(400).json({
         message:
-          "Request body does not fit expected Zod Schema. Check error for specifics.",
-        error: e,
+          'Request body does not fit expected Zod Schema. Check error for specifics.',
+        error: e
       });
     }
   };
@@ -24,25 +24,25 @@ const userNameRefine = [
   ({
     firstName,
     middleName,
-    lastName,
+    lastName
   }: {
     firstName?: string;
     middleName?: string;
     lastName?: string;
   }) => firstName || middleName || lastName,
-  { message: "You need to have firstName, middleName, or lastName" },
+  { message: 'You need to have firstName, middleName, or lastName' }
 ] as const;
 
 export const userSchemaBase = z.object({
   id: z.number().int(),
-  firstName: z.string().optional().default(""),
-  middleName: z.string().optional().default(""),
-  lastName: z.string().optional().default(""),
-  address: z.string().optional().default(""),
-  phone: z.string().optional().default(""),
-  email: z.string().optional().default(""),
+  firstName: z.string().optional().default(''),
+  middleName: z.string().optional().default(''),
+  lastName: z.string().optional().default(''),
+  address: z.string().optional().default(''),
+  phone: z.string().optional().default(''),
+  email: z.string().optional().default(''),
 
-  isEmployee: z.boolean(),
+  isEmployee: z.boolean()
 });
 
 export const createUser = userSchemaBase
@@ -63,16 +63,16 @@ export type UserUpdateRequest = ValidatedRequest<UpdateUser>;
 export const loginSchema = z
   .object({
     id: z.number().int(),
-    email: z.string({ required_error: "Email is required" }).email(),
-    password: z.string({ required_error: "Password is required" }),
-    role: z.enum(["ADMIN", "EMPLOYEE", "CUSTOMER"], {
+    email: z.string({ required_error: 'Email is required' }).email(),
+    password: z.string({ required_error: 'Password is required' }),
+    role: z.enum(['ADMIN', 'EMPLOYEE', 'CUSTOMER'], {
       errorMap: () => ({
-        message: "Role must be ADMIN, EMPLOYEE, or CUSTOMER",
-      }),
+        message: 'Role must be ADMIN, EMPLOYEE, or CUSTOMER'
+      })
     }),
     userId: z
-      .number({ required_error: "Must be a positive integer." })
-      .positive(),
+      .number({ required_error: 'Must be a positive integer.' })
+      .positive()
   })
   .strict();
 
@@ -87,22 +87,22 @@ export type LoginUpdateRequest = ValidatedRequest<UpdateLogin>;
 
 export const tankMetaDataSchema = z.object({
   id: z.number().int(),
-  nickname: z.string().default("nickname"),
+  nickname: z.string().default('nickname'),
   volume: z.number().int().positive(),
-  type: z.enum(["FRESH", "SALT", "BRACKISH"]),
+  type: z.enum(['FRESH', 'SALT', 'BRACKISH']),
 
   qrSymbol: z.number().int().positive(),
 
   tanknicianSourcedOnly: z.boolean(),
   lastDateServiced: z.coerce.date(),
 
-  customerId: z.number().int(),
+  customerId: z.number().int()
 });
 
 export const createTank = tankMetaDataSchema.omit({
   id: true,
   qrSymbol: true,
-  lastDateServiced: true,
+  lastDateServiced: true
 });
 export const updateTank = tankMetaDataSchema.omit({ id: true });
 export type tankSchema = z.infer<typeof tankMetaDataSchema>;
@@ -118,10 +118,10 @@ export const serviceCallSchema = z.object({
   isApproved: z.boolean(),
   createdOn: z.coerce.date(),
 
-  customerRequest: z.string().optional().default(""),
-  employeeNotes: z.string().optional().default(""),
+  customerRequest: z.string().optional().default(''),
+  employeeNotes: z.string().optional().default(''),
   // server use only for not-approved notes
-  notApprovedNotes: z.string().optional().default(""),
+  notApprovedNotes: z.string().optional().default(''),
   notesUpdated: z.coerce.date().optional().nullable().default(null),
 
   alkalinity: z.number(),
@@ -150,7 +150,7 @@ export const serviceCallSchema = z.object({
   pestDPresent: z.boolean(),
 
   employeeId: z.number().int(),
-  tankId: z.number().int(),
+  tankId: z.number().int()
 });
 
 export type ServiceCall = z.infer<typeof serviceCallSchema>;
@@ -160,7 +160,7 @@ export const updateServiceCall = serviceCallSchema.omit({ id: true });
 export const mobileServiceCall = serviceCallSchema.omit({
   id: true,
   isApproved: true,
-  notApprovedNotes: true,
+  notApprovedNotes: true
 });
 
 export type CreateServiceCall = z.infer<typeof createServiceCall>;
@@ -176,7 +176,7 @@ export type ServiceCallMobileRequest = ValidatedRequest<MobileServiceCall>;
 export const authLogin = loginSchema.omit({
   id: true,
   role: true,
-  userId: true,
+  userId: true
 });
 export type AuthLogin = z.infer<typeof authLogin>;
 export type AuthLoginRequest = ValidatedRequest<AuthLogin>;
@@ -198,14 +198,14 @@ const tokenData = loginSchema.extend({ id: z.number(), userId: z.number() });
 
 export const tokenSchema = z.object({
   data: tokenData,
-  isRefreshToken: z.literal(false),
+  isRefreshToken: z.literal(false)
 });
 
 export type Token = z.infer<typeof tokenSchema>;
 
 export const refreshTokenSchema = z.object({
   data: tokenData,
-  isRefreshToken: z.literal(true),
+  isRefreshToken: z.literal(true)
 });
 export type RefreshToken = z.infer<typeof refreshTokenSchema>;
 
@@ -233,15 +233,15 @@ export const searchSchema = z
     maxDate: z.date().optional(),
 
     // defined enums, most searches may opt to not use
-    searchRole: z.enum(["ADMIN", "EMPLOYEE", "CUSTOMER"]).optional(),
-    searchType: z.enum(["FRESH", "SALT", "BRACKISH"]).optional(),
+    searchRole: z.enum(['ADMIN', 'EMPLOYEE', 'CUSTOMER']).optional(),
+    searchType: z.enum(['FRESH', 'SALT', 'BRACKISH']).optional()
   })
   .refine(
     ({ searchString, searchBoolean, searchNum }) =>
       (searchString ?? searchBoolean ?? searchNum) !== undefined,
     {
       message:
-        "You need at least one of: searchString, searchBoolean, searchNum",
+        'You need at least one of: searchString, searchBoolean, searchNum'
     }
   );
 
