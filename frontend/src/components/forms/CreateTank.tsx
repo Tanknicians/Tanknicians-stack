@@ -46,7 +46,7 @@ function CreateTankForm({
     tanknicianSourcedOnly: false,
     type: 'BRACKISH',
     volume: 0,
-    description: ''
+    nickname: ''
   };
 
   // If previous tank is passed in, use it as default values for edit tank
@@ -54,7 +54,7 @@ function CreateTankForm({
     defaultValues.volume = previousTank.volume;
     defaultValues.type = previousTank.type;
     defaultValues.tanknicianSourcedOnly = previousTank.tanknicianSourcedOnly;
-    defaultValues.description = previousTank.description;
+    defaultValues.nickname = previousTank.nickname;
   }
 
   const {
@@ -165,16 +165,11 @@ function CreateTankForm({
             </Grid>
             <Grid item xs={12}>
               <Controller
-                name='description'
+                name='nickname'
                 control={control}
                 rules={{ required: true }}
                 render={({ field }) => (
-                  <TextField
-                    fullWidth
-                    multiline
-                    label='Description (Optional)'
-                    {...field}
-                  />
+                  <TextField fullWidth multiline label='Nickname' {...field} />
                 )}
               />
             </Grid>
