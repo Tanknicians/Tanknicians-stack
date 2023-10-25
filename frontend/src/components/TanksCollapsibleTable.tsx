@@ -9,7 +9,7 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
-import { Tank, UpdateTankMetaData } from "../zodTypes";
+import { tankSchema, UpdateTankMetaData } from "../zodTypes";
 import { useMemo, useState } from "react";
 import { Button, Menu, MenuItem, Stack, Typography } from "@mui/material";
 import QRCodeCard from "./QRCodeCard";
@@ -29,7 +29,7 @@ function Row(props: { row: UpdateTankMetaData; client: UserData }) {
     navigate(`/dashboard/Tanks?tankId=${tankId}`);
   }
 
-  const handleOpenUpdateTankModal = (tank: Tank) => {
+  const handleOpenUpdateTankModal = (tank: tankSchema) => {
     setTankId(tank.id);
     handleClose();
   };
@@ -99,6 +99,7 @@ function Row(props: { row: UpdateTankMetaData; client: UserData }) {
                   client={client}
                   tankId={row.id}
                   qrSymbol={row.qrSymbol}
+                  nickname={row.nickname}
                 />
               </Stack>
               <Stack
