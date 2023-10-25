@@ -51,7 +51,7 @@ export default function EditUserModal({
 
   const onValid: SubmitHandler<UserData> = async (data: UserData) => {
     try {
-      const response = await editUser({ ...data });
+      const response = await editUser({ ...data, id: userData?.id });
       // console.log("response", response);
 
       handleClose();
