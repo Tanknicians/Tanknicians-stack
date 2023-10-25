@@ -118,7 +118,7 @@ export default function ApproveForms() {
                     Client
                   </TableCell>
                   <TableCell align="center" sx={{ textAlign: "center" }}>
-                    Tank
+                    Tank Nickname
                   </TableCell>
                   <TableCell align="center" sx={{ textAlign: "center" }}>
                     Service Date
