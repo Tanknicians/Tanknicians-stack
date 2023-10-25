@@ -17,7 +17,7 @@ import { UserData } from '../redux/slices/users/userManagementSlice';
 import { ArrowCircleRight } from '@mui/icons-material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { useNavigate } from 'react-router-dom';
-import UpdateTankModal from './forms/CreateTank';
+import UpdateTankModal from './forms/Upsert';
 
 function Row(props: { row: UpdateTankMetaData; client: UserData }) {
   const { row, client } = props;
