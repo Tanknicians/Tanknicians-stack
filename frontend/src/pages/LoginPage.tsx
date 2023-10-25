@@ -95,6 +95,7 @@ export default function LoginPage() {
       dispatch(setCredentials({ token, user }));
       navigate('/dashboard/Approve Forms');
     } catch (unparsdError) {
+      // FIXME: api error response types please
       const errorSchema = z.object({
         status: z.coerce.number().optional(),
         data: z.object({ message: z.string().default('') })

@@ -3,9 +3,9 @@ import {
   fetchBaseQuery,
   BaseQueryFn
 } from '@reduxjs/toolkit/query/react';
-import { RefreshTokenData } from '../../zodTypes';
 import { setCredentials, logout } from '../slices/auth/authSlice';
 import { RootState } from '../store';
+import { AuthLoginResponse } from '../../zodTypes';
 
 let BASE_URL = 'http://localhost:5000/';
 if (process.env.NODE_ENV === 'production') {
@@ -36,7 +36,7 @@ const baseQueryWithReauth: BaseQueryFn = async (args, api, extraOptions) => {
     );
     if (refreshResult?.data) {
       const { token, savedCredentials: user } =
-        refreshResult.data as RefreshTokenData;
+        refreshResult.data as AuthLoginResponse;
       // store the new token
       api.dispatch(setCredentials({ token, user }));
       // retry the original query with new access token

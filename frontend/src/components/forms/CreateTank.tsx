@@ -19,7 +19,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import {
   CreateTankMetaData,
   UpdateTankMetaData,
-  createTank
+  createTank,
+  tankSchema
 } from '../../zodTypes';
 import LoadingOverlay from '../LoadingOverlay';
 import { useUpdateTankMutation } from '../../redux/slices/tanks/tankDataSlice';
@@ -33,7 +34,7 @@ function CreateTankForm({
   userId: number;
   open: boolean;
   setOpen: (open: boolean) => void;
-  previousTank?: UpdateTankMetaData;
+  previousTank?: tankSchema;
 }) {
   //API call to create/update tank
   const [addTankToUser, { isLoading: isCreateLoading }] =
@@ -70,7 +71,7 @@ function CreateTankForm({
     } as CreateTankMetaData
   });
 
-  // console.log('Create Tank Form RHF Errors: ', errors);
+  console.log('Create Tank Form RHF Errors: ', errors);
 
   const isLoading = isCreateLoading || isUpdateLoading;
 
