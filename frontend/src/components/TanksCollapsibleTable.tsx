@@ -1,23 +1,23 @@
-import Collapse from '@mui/material/Collapse';
-import IconButton from '@mui/material/IconButton';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import { Tank, UpdateTankMetaData } from '../zodTypes';
-import { useMemo, useState } from 'react';
-import { Button, Menu, MenuItem, Stack, Typography } from '@mui/material';
-import QRCodeCard from './QRCodeCard';
-import { UserData } from '../redux/slices/users/userManagementSlice';
-import { ArrowCircleRight } from '@mui/icons-material';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import { useNavigate } from 'react-router-dom';
-import UpdateTankModal from './forms/CreateTank';
+import Collapse from "@mui/material/Collapse";
+import IconButton from "@mui/material/IconButton";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import { Tank, UpdateTankMetaData } from "../zodTypes";
+import { useMemo, useState } from "react";
+import { Button, Menu, MenuItem, Stack, Typography } from "@mui/material";
+import QRCodeCard from "./QRCodeCard";
+import { UserData } from "../redux/slices/users/userManagementSlice";
+import { ArrowCircleRight } from "@mui/icons-material";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import { useNavigate } from "react-router-dom";
+import UpdateTankModal from "./forms/CreateTank";
 
 function Row(props: { row: UpdateTankMetaData; client: UserData }) {
   const { row, client } = props;
@@ -49,24 +49,24 @@ function Row(props: { row: UpdateTankMetaData; client: UserData }) {
   return (
     <>
       <TableRow onClick={() => setIsShowTankData(!isShowTankData)}>
-        <TableCell align='center' sx={{ flex: 1 }}>
-          {row.description}
+        <TableCell align="center" sx={{ flex: 1 }}>
+          {row.nickname}
         </TableCell>
-        <TableCell align='center' sx={{ flex: 1 }}>
+        <TableCell align="center" sx={{ flex: 1 }}>
           {row.volume}
         </TableCell>
-        <TableCell align='center' sx={{ flex: 1 }}>
+        <TableCell align="center" sx={{ flex: 1 }}>
           {row.type}
         </TableCell>
-        <TableCell align='center' sx={{ flex: 1 }}>
-          {row.tanknicianSourcedOnly ? 'Yes' : 'No'}
+        <TableCell align="center" sx={{ flex: 1 }}>
+          {row.tanknicianSourcedOnly ? "Yes" : "No"}
         </TableCell>
-        <TableCell align='center' sx={{ flex: 1 }}>
+        <TableCell align="center" sx={{ flex: 1 }}>
           {new Date(row.lastDateServiced).toLocaleDateString()}
         </TableCell>
 
-        <TableCell align='center' sx={{ flex: 1 }}>
-          <IconButton size='small'>
+        <TableCell align="center" sx={{ flex: 1 }}>
+          <IconButton size="small">
             {isShowTankData ? (
               <KeyboardArrowUpIcon />
             ) : (
@@ -77,22 +77,22 @@ function Row(props: { row: UpdateTankMetaData; client: UserData }) {
       </TableRow>
       <TableRow>
         <TableCell colSpan={12}>
-          <Collapse in={isShowTankData} timeout='auto' unmountOnExit>
+          <Collapse in={isShowTankData} timeout="auto" unmountOnExit>
             <Stack
-              alignItems='center'
+              alignItems="center"
               spacing={2}
-              direction='row'
-              justifyContent='space-around'
-              height='100%'
+              direction="row"
+              justifyContent="space-around"
+              height="100%"
             >
               <Stack
-                direction='column'
-                justifyContent='space-evenly'
-                alignItems='center'
+                direction="column"
+                justifyContent="space-evenly"
+                alignItems="center"
                 spacing={2}
-                width='100%'
+                width="100%"
               >
-                <Typography variant='h6' gutterBottom>
+                <Typography variant="h6" gutterBottom>
                   QR Code
                 </Typography>
                 <QRCodeCard
@@ -102,16 +102,16 @@ function Row(props: { row: UpdateTankMetaData; client: UserData }) {
                 />
               </Stack>
               <Stack
-                direction='column'
-                alignItems='center'
+                direction="column"
+                alignItems="center"
                 spacing={2}
-                width='100%'
+                width="100%"
               >
-                <Typography variant='h6' gutterBottom>
+                <Typography variant="h6" gutterBottom>
                   Analytics
                 </Typography>
                 <Button
-                  variant='outlined'
+                  variant="outlined"
                   endIcon={<ArrowCircleRight />}
                   onClick={() => gotoTank(row.id)}
                 >
@@ -119,17 +119,17 @@ function Row(props: { row: UpdateTankMetaData; client: UserData }) {
                 </Button>
               </Stack>
               <Stack
-                direction='row'
-                justifyContent='flex-end'
-                alignItems='flex-start'
-                height='100%'
+                direction="row"
+                justifyContent="flex-end"
+                alignItems="flex-start"
+                height="100%"
               >
                 <IconButton
-                  aria-label='more'
-                  id='long-button'
-                  aria-controls={openMenu ? 'long-menu' : undefined}
-                  aria-expanded={openMenu ? 'true' : undefined}
-                  aria-haspopup='true'
+                  aria-label="more"
+                  id="long-button"
+                  aria-controls={openMenu ? "long-menu" : undefined}
+                  aria-expanded={openMenu ? "true" : undefined}
+                  aria-haspopup="true"
                   onClick={handleClick}
                 >
                   <MoreVertIcon />
@@ -164,29 +164,29 @@ function Row(props: { row: UpdateTankMetaData; client: UserData }) {
 
 export default function TanksCollapsibleTable({
   client,
-  tanks
+  tanks,
 }: {
   client: UserData;
   tanks: UpdateTankMetaData[];
 }) {
   return (
-    <TableContainer component={Paper} sx={{ width: '100%' }}>
-      <Table stickyHeader size='small'>
+    <TableContainer component={Paper} sx={{ width: "100%" }}>
+      <Table stickyHeader size="small">
         <TableHead>
           <TableRow>
-            <TableCell align='center' sx={{ flex: 1 }}>
+            <TableCell align="center" sx={{ flex: 1 }}>
               Nickname
             </TableCell>
-            <TableCell align='center' sx={{ flex: 1 }}>
+            <TableCell align="center" sx={{ flex: 1 }}>
               Volume
             </TableCell>
-            <TableCell align='center' sx={{ flex: 1 }}>
+            <TableCell align="center" sx={{ flex: 1 }}>
               Tank Type
             </TableCell>
-            <TableCell align='center' sx={{ flex: 1 }}>
+            <TableCell align="center" sx={{ flex: 1 }}>
               Tanknicians-Sourced
             </TableCell>
-            <TableCell align='center' sx={{ flex: 1 }}>
+            <TableCell align="center" sx={{ flex: 1 }}>
               Last Serviced
             </TableCell>
             <TableCell />
