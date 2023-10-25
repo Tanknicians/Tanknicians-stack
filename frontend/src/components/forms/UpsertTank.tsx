@@ -122,7 +122,7 @@ function CreateTankForm({
                     type='number'
                     label='Volume'
                     value={value ?? ''}
-                    onChange={onChange}
+                    onChange={(event) => onChange(+event.target.value)}
                   />
                 )}
               />

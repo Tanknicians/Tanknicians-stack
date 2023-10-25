@@ -116,6 +116,11 @@ export function CreateForm({
                   ? format(field.value, 'yyyy-MM-dd')
                   : field.value
               }
+              onChange={
+                type === 'number'
+                  ? (event) => field.onChange(+event.target.value)
+                  : field.onChange
+              }
             />
           );
         }}

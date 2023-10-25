@@ -2,7 +2,7 @@ import {
   UserData,
   useGetClientsQuery
 } from '../../redux/slices/users/userManagementSlice';
-import CreateTankForm from '../../components/forms/Upsert';
+import CreateTankForm from '../../components/forms/UpsertTank';
 import UserSearchBar from '../../components/UserSearchBar';
 import type {} from '@mui/x-data-grid/themeAugmentation';
 import { useEffect, useMemo, useState } from 'react';
