@@ -1,14 +1,14 @@
 import {
   UserData,
-  useGetClientsQuery
-} from '../../redux/slices/users/userManagementSlice';
-import CreateTankForm from '../../components/forms/CreateTank';
-import UserSearchBar from '../../components/UserSearchBar';
-import type {} from '@mui/x-data-grid/themeAugmentation';
-import { useEffect, useMemo, useState } from 'react';
+  useGetClientsQuery,
+} from "../../redux/slices/users/userManagementSlice";
+import CreateTankForm from "../../components/forms/CreateTank";
+import UserSearchBar from "../../components/UserSearchBar";
+import type {} from "@mui/x-data-grid/themeAugmentation";
+import { useEffect, useMemo, useState } from "react";
 
-import CreateServiceCallModal from '../../components/forms/UpsertServiceCall';
-import { UpdateTankMetaData } from '../../zodTypes';
+import CreateServiceCallModal from "../../components/forms/UpsertServiceCall";
+import { UpdateTankMetaData } from "../../zodTypes";
 import {
   Button,
   Collapse,
@@ -22,21 +22,21 @@ import {
   FormControl,
   Box,
   Card,
-  IconButton
-} from '@mui/material';
-import SCDataGrid from '../../components/SCDataGrid';
-import TankGrid from '../../components/datagrid/TankGrid';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { Add } from '@mui/icons-material';
-import DefaultCharts from '../../components/chartjs/DefaultCharts';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+  IconButton,
+} from "@mui/material";
+import SCDataGrid from "../../components/SCDataGrid";
+import TankGrid from "../../components/datagrid/TankGrid";
+import { useLocation, useNavigate } from "react-router-dom";
+import { Add } from "@mui/icons-material";
+import DefaultCharts from "../../components/chartjs/DefaultCharts";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 
 export function TankTabs({
   tanks,
   employeeId,
   selectedTankId,
-  setSelectedTankId
+  setSelectedTankId,
 }: {
   tanks: UpdateTankMetaData[];
   employeeId: number;
@@ -77,33 +77,33 @@ export function TankTabs({
       {!selectedTank && (
         <Container
           sx={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            height: '100%'
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            height: "100%",
           }}
         >
           <Card
             elevation={3}
             sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
               maxWidth: 300,
               padding: 5,
               minHeight: 200,
-              marginTop: 10
+              marginTop: 10,
             }}
           >
-            <Typography variant='h6' sx={{ marginBottom: 1 }}>
+            <Typography variant="h6" sx={{ marginBottom: 1 }}>
               Client has no tanks.
             </Typography>
             <Button
-              size='small'
-              variant='contained'
+              size="small"
+              variant="contained"
               onClick={handleAddTank}
-              startIcon={<Add fontSize='inherit' />}
+              startIcon={<Add fontSize="inherit" />}
             >
               Add Tank
             </Button>
@@ -115,46 +115,46 @@ export function TankTabs({
           <Box>
             <Box
               sx={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                padding: '0 16'
+                display: "flex",
+                justifyContent: "space-between",
+                padding: "0 16",
               }}
             >
-              <FormControl variant='standard' sx={{ m: 1, minWidth: 160 }}>
+              <FormControl variant="standard" sx={{ m: 1, minWidth: 160 }}>
                 <Select
                   autoWidth
-                  variant='standard'
-                  labelId='tank-id-selector-label'
-                  id='tank-id-selector'
+                  variant="standard"
+                  labelId="tank-id-selector-label"
+                  id="tank-id-selector"
                   displayEmpty={true}
                   renderValue={() => {
-                    return selectedTank.description ?? selectedTank.id;
+                    return selectedTank.nickname ?? selectedTank.id;
                   }}
                   onChange={handleTankSelection}
-                  label='Tanks'
-                  sx={{ textAlign: 'center' }}
+                  label="Tanks"
+                  sx={{ textAlign: "center" }}
                 >
                   {tanks.map((tank) => {
                     return (
                       <MenuItem key={tank.id} value={tank.id}>
-                        {tank.description ?? tank.id}
+                        {tank.nickname ?? tank.id}
                       </MenuItem>
                     );
                   })}
                 </Select>
               </FormControl>
               <Button
-                variant='contained'
+                variant="contained"
                 onClick={handleAddTank}
-                startIcon={<Add fontSize='inherit' />}
+                startIcon={<Add fontSize="inherit" />}
                 sx={{ m: 1 }}
               >
                 Add Tank
               </Button>
             </Box>
             <Paper>
-              <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                <IconButton size='small' onClick={handleChartCollapse}>
+              <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+                <IconButton size="small" onClick={handleChartCollapse}>
                   {showCharts ? (
                     <KeyboardArrowUpIcon />
                   ) : (
@@ -170,17 +170,17 @@ export function TankTabs({
           <Paper elevation={3} sx={{ marginTop: 2 }}>
             <Container
               sx={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center'
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
               }}
             >
-              <Typography variant='h5'>Service Calls</Typography>
+              <Typography variant="h5">Service Calls</Typography>
               <Button
-                variant='contained'
+                variant="contained"
                 onClick={() => setCreateServiceCallOpen(true)}
-                startIcon={<Add fontSize='inherit' />}
-                sx={{ margin: '8 0' }}
+                startIcon={<Add fontSize="inherit" />}
+                sx={{ margin: "8 0" }}
               >
                 Add Service Form
               </Button>
@@ -203,11 +203,11 @@ export function TankTabs({
 export default function Tanks() {
   const { data: optionsList } = useGetClientsQuery({
     includeTanks: true,
-    isEmployee: false
+    isEmployee: false,
   });
   const location = useLocation();
   const urlTankId = useMemo(
-    () => new URLSearchParams(location.search).get('tankId'),
+    () => new URLSearchParams(location.search).get("tankId"),
     [location]
   );
   const [selectedTankId, setSelectedTankId] = useState<number | null>(
@@ -231,7 +231,7 @@ export default function Tanks() {
     if (userId) {
       selectCurrentUserId(userId);
     } else {
-      navigate('/Dashboard/tanks');
+      navigate("/Dashboard/tanks");
     }
   }, [selectedUserId, selectedTankId, optionsList]);
 
@@ -251,7 +251,7 @@ export default function Tanks() {
     selectCurrentUserId(customer?.id ?? null);
     setSelectedTankId(null);
     if (!customer?.id) {
-      navigate('/dashboard/Tanks');
+      navigate("/dashboard/Tanks");
     }
   };
 
@@ -259,9 +259,9 @@ export default function Tanks() {
 
   return (
     <Container>
-      <Grid container rowSpacing={1} alignItems='center' maxWidth={'100%'}>
+      <Grid container rowSpacing={1} alignItems="center" maxWidth={"100%"}>
         <Grid item xs={12} md={3}>
-          <Typography variant='h4' component='h1'>
+          <Typography variant="h4" component="h1">
             Tanks
           </Typography>
         </Grid>
@@ -270,7 +270,7 @@ export default function Tanks() {
             userList={optionsList}
             selectedUser={selectedUser}
             handleUserSelected={handleUserSelected}
-            label='Clients'
+            label="Clients"
           />
         </Grid>
         <Grid item xs={12} md={3} />
