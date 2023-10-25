@@ -83,13 +83,15 @@ export default function Clients() {
         </Grid>
         <Grid item xs={12} md={12}>
           <Collapse in={!!selectedClient} unmountOnExit>
-            <UserCard user={selectedClient} />
             {selectedClient && (
-              <CreateTankForm
-                userId={selectedClient.id}
-                open={tankModalOpen}
-                setOpen={handleOpenTankModal}
-              />
+              <>
+                <UserCard user={selectedClient} />
+                <CreateTankForm
+                  userId={selectedClient.id}
+                  open={tankModalOpen}
+                  setOpen={handleOpenTankModal}
+                />
+              </>
             )}
           </Collapse>
           <Collapse in={!selectedClient} unmountOnExit>
