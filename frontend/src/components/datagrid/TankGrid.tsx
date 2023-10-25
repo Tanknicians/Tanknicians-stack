@@ -1,72 +1,72 @@
-import { DataGrid, GridColDef, GridToolbar } from '@mui/x-data-grid';
-import { UpdateTankMetaData } from '../../zodTypes';
-import { useGetAllTanksQuery } from '../../redux/slices/tanks/tankDataSlice';
+import { DataGrid, GridColDef, GridToolbar } from "@mui/x-data-grid";
+import { UpdateTankMetaData } from "../../zodTypes";
+import { useGetAllTanksQuery } from "../../redux/slices/tanks/tankDataSlice";
 
 const tankColumns: GridColDef<UpdateTankMetaData>[] = [
   {
-    field: 'id',
-    headerName: 'ID',
+    field: "id",
+    headerName: "ID",
     flex: 2,
-    headerAlign: 'center',
-    align: 'center'
+    headerAlign: "center",
+    align: "center",
   },
   {
-    field: 'description',
-    headerName: 'Nickname',
+    field: "nickname",
+    headerName: "Nickname",
     flex: 4,
-    headerAlign: 'center',
-    align: 'center'
+    headerAlign: "center",
+    align: "center",
   },
   {
-    field: 'type',
-    headerName: 'Type',
+    field: "type",
+    headerName: "Type",
     flex: 4,
-    headerAlign: 'center',
-    align: 'center'
+    headerAlign: "center",
+    align: "center",
   },
   {
-    field: 'volume',
-    headerName: 'Volume',
+    field: "volume",
+    headerName: "Volume",
     flex: 2,
-    headerAlign: 'center',
-    align: 'center'
+    headerAlign: "center",
+    align: "center",
   },
   {
-    field: 'qrSymbol',
-    headerName: 'QR Symbol',
+    field: "qrSymbol",
+    headerName: "QR Symbol",
     flex: 2,
-    headerAlign: 'center',
-    align: 'center'
+    headerAlign: "center",
+    align: "center",
   },
   {
-    field: 'tanknicianSourcedOnly',
-    headerName: 'Tanknician-sourced Only',
+    field: "tanknicianSourcedOnly",
+    headerName: "Tanknician-sourced Only",
     flex: 4,
-    headerAlign: 'center',
-    align: 'center'
+    headerAlign: "center",
+    align: "center",
   },
   {
-    field: 'lastDateServiced',
+    field: "lastDateServiced",
     flex: 4,
-    headerAlign: 'center',
-    align: 'center',
-    headerName: 'Last Date Serviced',
+    headerAlign: "center",
+    align: "center",
+    headerName: "Last Date Serviced",
     valueGetter({ row }) {
       return new Date(row.lastDateServiced).toDateString();
-    }
+    },
   },
   {
-    field: 'customerId',
-    headerName: 'Customer ID',
+    field: "customerId",
+    headerName: "Customer ID",
     flex: 3,
-    headerAlign: 'center',
-    align: 'center'
-  }
+    headerAlign: "center",
+    align: "center",
+  },
 ];
 export default function TankGrid({
   hideToolbar,
   selectTankId,
-  selectUserId
+  selectUserId,
 }: {
   selectTankId?: (tankId: number) => void;
   selectUserId?: (userId: number) => void;
