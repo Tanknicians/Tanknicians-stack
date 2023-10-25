@@ -8,7 +8,7 @@ import type {} from "@mui/x-data-grid/themeAugmentation";
 import { useEffect, useMemo, useState } from "react";
 
 import CreateServiceCallModal from "../../components/forms/UpsertServiceCall";
-import { UpdateTankMetaData } from "../../zodTypes";
+import { UpdateTankMetaData, tankSchema } from "../../zodTypes";
 import {
   Button,
   Collapse,
@@ -38,7 +38,7 @@ export function TankTabs({
   selectedTankId,
   setSelectedTankId,
 }: {
-  tanks: UpdateTankMetaData[];
+  tanks: tankSchema[];
   employeeId: number;
   selectedTankId: number | null;
   setSelectedTankId(tankId: number | null): void;
@@ -226,7 +226,7 @@ export default function Tanks() {
     }
     const userId =
       optionsList.find((user) =>
-        user.OwnedTanks?.some((tank) => tank.id === selectedTankId)
+        user.OwnedTanks?.some((tank: tankSchema) => tank.id === selectedTankId)
       )?.id ?? null;
     if (userId) {
       selectCurrentUserId(userId);
