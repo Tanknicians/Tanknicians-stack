@@ -5,5 +5,5 @@ export default function TankName({ tankId }: { tankId: number }) {
   if (error) {
     return <>N/A</>;
   }
-  return <>{data?.description}</>;
+  return <>{data?.nickname}</>;
 }

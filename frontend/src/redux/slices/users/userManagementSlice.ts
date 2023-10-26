@@ -1,8 +1,8 @@
 import { apiSlice } from '../../api/apiSlice';
-import { CreateUser, UpdateTankMetaData, User } from '../../../zodTypes';
+import { CreateUser, User, tankSchema } from '../../../zodTypes';
 
 export type UserData = {
-  OwnedTanks?: UpdateTankMetaData[];
+  OwnedTanks?: tankSchema[];
 } & User;
 
 export type UserQueryArgs = {

@@ -7,14 +7,31 @@ export type ValidatedRequest<T> = Request<ParamsDictionary, unknown, T>;
 export const validateRequestBody =
   (schema: Schema) => (req: Request, res: Response, next: NextFunction) => {
     try {
-      schema.parse(req.body);
+      req.body = schema.parse(req.body);
       next();
     } catch (e) {
-      return res.status(400).json({ error: e });
+      return res.status(400).json({
+        message:
+          'Request body does not fit expected Zod Schema. Check error for specifics.',
+        error: e
+      });
     }
   };
 
 // USER
+
+const userNameRefine = [
+  ({
+    firstName,
+    middleName,
+    lastName
+  }: {
+    firstName?: string;
+    middleName?: string;
+    lastName?: string;
+  }) => firstName || middleName || lastName,
+  { message: 'You need to have firstName, middleName, or lastName' }
+] as const;
 
 export const userSchemaBase = z.object({
   id: z.number().int(),
@@ -23,45 +40,20 @@ export const userSchemaBase = z.object({
   lastName: z.string().optional().default(''),
   address: z.string().optional().default(''),
   phone: z.string().optional().default(''),
+  email: z.string().optional().default(''),
 
   isEmployee: z.boolean()
 });
 
-const user = userSchemaBase;
+export const createUser = userSchemaBase
+  .omit({ id: true })
+  .refine(...userNameRefine);
 
-export const createUser = userSchemaBase.omit({ id: true }).refine(
-  ({
-    firstName,
-    middleName,
-    lastName
-  }: {
-    firstName?: string;
-    middleName?: string;
-    lastName?: string;
-  }) => firstName || middleName || lastName,
-  {
-    message: 'You need to have firstName, middleName, or lastName',
-    path: ['firstName']
-  }
-);
+export const updateUser = userSchemaBase
+  .omit({ id: true })
+  .refine(...userNameRefine);
 
-export const updateUser = userSchemaBase.omit({ id: true }).refine(
-  ({
-    firstName,
-    middleName,
-    lastName
-  }: {
-    firstName?: string;
-    middleName?: string;
-    lastName?: string;
-  }) => firstName || middleName || lastName,
-  {
-    message: 'You need to have firstName, middleName, or lastName',
-    path: ['firstName']
-  }
-);
-
-export type User = z.infer<typeof user>;
+export type User = z.infer<typeof userSchemaBase>;
 export type CreateUser = z.infer<typeof createUser>;
 export type UpdateUser = z.infer<typeof updateUser>;
 export type UserCreateRequest = ValidatedRequest<CreateUser>;
@@ -86,30 +78,18 @@ export const loginSchema = z
   .strict();
 
 export const createLogin = loginSchema.omit({ id: true });
+export const updateLogin = loginSchema.omit({ id: true });
 export type CreateLogin = z.infer<typeof createLogin>;
-export type UpdateLogin = z.infer<typeof loginSchema>;
-export type LoginRequest = ValidatedRequest<CreateLogin>;
-
-// AUTH
-
-export const RefreshTokenData = z.object({
-  token: z.string(),
-  savedCredentials: loginSchema.pick({
-    id: true,
-    email: true,
-    role: true,
-    userId: true
-  })
-});
-
-export type RefreshTokenData = z.infer<typeof RefreshTokenData>;
+export type UpdateLogin = z.infer<typeof updateLogin>;
+export type LoginCreateRequest = ValidatedRequest<CreateLogin>;
+export type LoginUpdateRequest = ValidatedRequest<UpdateLogin>;
 
 // TANKMETADATA
 
 export const tankMetaDataSchema = z.object({
   id: z.number().int(),
-  description: z.string().optional(),
-  volume: z.coerce.number().int().positive(),
+  nickname: z.string().default('nickname'),
+  volume: z.number().int().positive(),
   type: z.enum(['FRESH', 'SALT', 'BRACKISH']),
 
   qrSymbol: z.number().int().positive(),
@@ -125,28 +105,30 @@ export const createTank = tankMetaDataSchema.omit({
   qrSymbol: true,
   lastDateServiced: true
 });
-export type Tank = z.infer<typeof tankMetaDataSchema>;
+export const updateTank = tankMetaDataSchema.omit({ id: true });
+export type tankSchema = z.infer<typeof tankMetaDataSchema>;
 export type CreateTankMetaData = z.infer<typeof createTank>;
-export type UpdateTankMetaData = z.infer<typeof tankMetaDataSchema>;
-export type TankMetaDataRequest = ValidatedRequest<CreateTankMetaData>;
+export type UpdateTankMetaData = z.infer<typeof updateTank>;
+export type TankMetaDataCreateRequest = ValidatedRequest<CreateTankMetaData>;
+export type TankMetaDataUpdateRequest = ValidatedRequest<UpdateTankMetaData>;
 
 // SERVICECALL
 
 export const serviceCallSchema = z.object({
   id: z.number().int(),
-  isApproved: z.boolean().optional(),
+  isApproved: z.boolean(),
   createdOn: z.coerce.date(),
 
-  customerRequest: z.string().optional(),
-  employeeNotes: z.string().optional(),
+  customerRequest: z.string().optional().default(''),
+  employeeNotes: z.string().optional().default(''),
   // server use only for not-approved notes
-  notApprovedNotes: z.string().optional(),
-  notesUpdated: z.coerce.date().optional(),
+  notApprovedNotes: z.string().optional().default(''),
+  notesUpdated: z.coerce.date().optional().nullable().default(null),
 
-  alkalinity: z.coerce.number(),
-  calcium: z.coerce.number(),
-  nitrate: z.coerce.number(),
-  phosphate: z.coerce.number(),
+  alkalinity: z.number(),
+  calcium: z.number(),
+  nitrate: z.number(),
+  phosphate: z.number(),
 
   ATOOperational: z.boolean(),
   ATOReservoirFilled: z.boolean(),
@@ -167,16 +149,28 @@ export const serviceCallSchema = z.object({
   pestBPresent: z.boolean(),
   pestCPresent: z.boolean(),
   pestDPresent: z.boolean(),
+
   employeeId: z.number().int(),
   tankId: z.number().int()
 });
 
 export type ServiceCall = z.infer<typeof serviceCallSchema>;
+
 export const createServiceCall = serviceCallSchema.omit({ id: true });
+export const updateServiceCall = serviceCallSchema.omit({ id: true });
+export const mobileServiceCall = serviceCallSchema.omit({
+  id: true,
+  isApproved: true,
+  notApprovedNotes: true
+});
+
 export type CreateServiceCall = z.infer<typeof createServiceCall>;
-export const updateServiceCall = serviceCallSchema;
-export type UpdateServiceCall = z.infer<typeof serviceCallSchema>;
-export type ServiceCallRequest = ValidatedRequest<CreateServiceCall>;
+export type UpdateServiceCall = z.infer<typeof updateServiceCall>;
+export type MobileServiceCall = z.infer<typeof mobileServiceCall>;
+
+export type ServiceCallCreateRequest = ValidatedRequest<CreateServiceCall>;
+export type ServiceCallUpdateRequest = ValidatedRequest<UpdateServiceCall>;
+export type ServiceCallMobileRequest = ValidatedRequest<MobileServiceCall>;
 
 // AUTH
 
@@ -185,8 +179,14 @@ export const authLogin = loginSchema.omit({
   role: true,
   userId: true
 });
+const savedCredentials = loginSchema.omit({ password: true });
+export const authLoginResponse = z.object({
+  token: z.string(),
+  savedCredentials
+});
 export type AuthLogin = z.infer<typeof authLogin>;
 export type AuthLoginRequest = ValidatedRequest<AuthLogin>;
+export type AuthLoginResponse = z.infer<typeof authLoginResponse>;
 
 // this will be used to register new Logins
 export const authRegister = loginSchema.omit({ id: true, password: true });
@@ -215,3 +215,41 @@ export const refreshTokenSchema = z.object({
   isRefreshToken: z.literal(true)
 });
 export type RefreshToken = z.infer<typeof refreshTokenSchema>;
+
+// Implemented so that searching is consistent and works universally for all Database types.
+export const searchSchema = z
+  .object({
+    // most of these values are optional, but will only return the first 25 values if page/size is not given
+
+    // pages go from 1-inf;
+    page: z.number().positive().optional().default(1),
+    // size of payload, defaults to 25
+    size: z.number().positive().optional().default(25),
+
+    // all optional, but should have at least one filled
+    searchString: z.string().optional(),
+    searchBoolean: z.boolean().optional(),
+    searchNum: z.number().optional(),
+
+    // for any min/max number search
+    minNum: z.number().optional(),
+    maxNum: z.number().optional(),
+
+    // for any min/max date search
+    minDate: z.date().optional(),
+    maxDate: z.date().optional(),
+
+    // defined enums, most searches may opt to not use
+    searchRole: z.enum(['ADMIN', 'EMPLOYEE', 'CUSTOMER']).optional(),
+    searchType: z.enum(['FRESH', 'SALT', 'BRACKISH']).optional()
+  })
+  .refine(
+    ({ searchString, searchBoolean, searchNum }) =>
+      (searchString ?? searchBoolean ?? searchNum) !== undefined,
+    {
+      message:
+        'You need at least one of: searchString, searchBoolean, searchNum'
+    }
+  );
+
+export type SearchSchema = z.infer<typeof searchSchema>;

@@ -116,6 +116,11 @@ export function CreateForm({
                   ? format(field.value, 'yyyy-MM-dd')
                   : field.value
               }
+              onChange={
+                type === 'number'
+                  ? (event) => field.onChange(+event.target.value)
+                  : field.onChange
+              }
             />
           );
         }}
@@ -294,7 +299,7 @@ export default function CreateServiceCallModal({
           </Grid>
           <Grid item xs={4}>
             <TextField
-              value={tank?.description ?? 'Loading...'}
+              value={tank?.nickname ?? 'Loading...'}
               disabled
               fullWidth
             />

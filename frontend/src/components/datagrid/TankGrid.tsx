@@ -11,7 +11,7 @@ const tankColumns: GridColDef<UpdateTankMetaData>[] = [
     align: 'center'
   },
   {
-    field: 'description',
+    field: 'nickname',
     headerName: 'Nickname',
     flex: 4,
     headerAlign: 'center',

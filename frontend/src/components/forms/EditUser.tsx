@@ -35,6 +35,7 @@ export default function EditUserModal({
       firstName: userData?.firstName,
       middleName: userData?.middleName,
       lastName: userData?.lastName,
+      email: userData?.email,
       address: userData?.address,
       phone: userData?.phone,
       isEmployee: userData?.isEmployee
@@ -50,7 +51,7 @@ export default function EditUserModal({
 
   const onValid: SubmitHandler<UserData> = async (data: UserData) => {
     try {
-      const response = await editUser({ ...data });
+      const response = await editUser({ ...data, id: userData?.id });
       // console.log("response", response);
 
       handleClose();
@@ -97,6 +98,15 @@ export default function EditUserModal({
               control={control}
               render={({ field }) => (
                 <TextField fullWidth label='Last Name' {...field} />
+              )}
+            />
+          </Grid>
+          <Grid item xs={4}>
+            <Controller
+              name='email'
+              control={control}
+              render={({ field }) => (
+                <TextField fullWidth label='Email' {...field} />
               )}
             />
           </Grid>
