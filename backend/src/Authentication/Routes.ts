@@ -5,8 +5,6 @@ import {
   AuthLoginRequest,
   authRegister,
   AuthRegisterRequest,
-  EmailRequest,
-  emailSchema,
   validateRequestBody
 } from '../zodTypes';
 
@@ -40,7 +38,8 @@ authRouter.post(
   async (req: AuthRegisterRequest, res) => {
     const data = req.body;
     try {
-      await AuthService.register(data, res);
+      // we use this new wrapper function to separate the registration function from Response
+      await AuthService.handleRegistration(data, res);
     } catch (error) {
       res
         .status(500)

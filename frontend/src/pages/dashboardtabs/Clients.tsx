@@ -2,7 +2,7 @@ import {
   UserData,
   useGetClientsQuery
 } from '../../redux/slices/users/userManagementSlice';
-import CreateTankForm from '../../components/forms/CreateTank';
+import CreateTankForm from '../../components/forms/UpsertTank';
 import UserSearchBar from '../../components/UserSearchBar';
 import Typography from '@mui/material/Typography';
 import UserCard from '../../components/UserCard';
@@ -83,13 +83,15 @@ export default function Clients() {
         </Grid>
         <Grid item xs={12} md={12}>
           <Collapse in={!!selectedClient} unmountOnExit>
-            <UserCard user={selectedClient} />
             {selectedClient && (
-              <CreateTankForm
-                userId={selectedClient.id}
-                open={tankModalOpen}
-                setOpen={handleOpenTankModal}
-              />
+              <>
+                <UserCard user={selectedClient} />
+                <CreateTankForm
+                  userId={selectedClient.id}
+                  open={tankModalOpen}
+                  setOpen={handleOpenTankModal}
+                />
+              </>
             )}
           </Collapse>
           <Collapse in={!selectedClient} unmountOnExit>

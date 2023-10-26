@@ -9,6 +9,7 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import PersonIcon from '@mui/icons-material/Person';
 import PhoneIcon from '@mui/icons-material/Phone';
 import AddressIcon from '@mui/icons-material/Home';
+import EmailIcon from '@mui/icons-material/Email';
 
 export interface UserCardProps {
   user: UserData | null;
@@ -45,7 +46,7 @@ export default function UserCard(props: UserCardProps) {
           alignItems={{ lg: 'center' }}
         >
           <Grid container item xs={10}>
-            <Grid item xs={12} md={4}>
+            <Grid item xs={12} md={3}>
               <Typography
                 padding={1}
                 variant='subtitle1'
@@ -57,7 +58,7 @@ export default function UserCard(props: UserCardProps) {
                 {`${user.firstName} ${user.middleName} ${user.lastName}`}
               </Typography>
             </Grid>
-            <Grid item xs={12} md={4}>
+            <Grid item xs={12} md={3}>
               <Typography
                 padding={1}
                 variant='subtitle1'
@@ -69,7 +70,7 @@ export default function UserCard(props: UserCardProps) {
                 {user.address}
               </Typography>
             </Grid>
-            <Grid item xs={12} md={4}>
+            <Grid item xs={12} md={3}>
               <Typography
                 padding={1}
                 variant='subtitle1'
@@ -80,6 +81,19 @@ export default function UserCard(props: UserCardProps) {
                 <PhoneIcon sx={{ marginRight: '5' }} />
 
                 {user.phone}
+              </Typography>
+            </Grid>
+            <Grid item xs={12} md={3}>
+              <Typography
+                padding={1}
+                variant='subtitle1'
+                component='h2'
+                sx={{ display: 'flex' }}
+                alignItems='center'
+              >
+                <EmailIcon sx={{ marginRight: '5' }} />
+
+                {user.email}
               </Typography>
             </Grid>
           </Grid>
@@ -108,12 +122,14 @@ export default function UserCard(props: UserCardProps) {
           </Grid>
         </Grid>
       </Paper>
-      <EditUserModal
-        open={userModalOpen}
-        setOpen={setUserModalOpen}
-        userData={user}
-        key={user?.id}
-      />
+      {userModalOpen && (
+        <EditUserModal
+          open={userModalOpen}
+          setOpen={setUserModalOpen}
+          userData={user}
+          key={user?.id}
+        />
+      )}
     </>
   );
 }

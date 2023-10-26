@@ -20,6 +20,8 @@ import { create, read, update, deleteOne, search } from './API';
 
 import { create as createUser, deleteOne as deleteUser } from './../User/API';
 
+import { read as readLogin, deleteOne as deleteLogin } from './../Login/API';
+
 import {
   create as createTank,
   deleteOne as deleteTank
@@ -36,6 +38,8 @@ import {
 // we need to keep track of the id of the creations to delete them later
 let createCustomerId: number;
 let createEmployeeId: number;
+let createEmployeeLoginId: number;
+
 let createTankId: number;
 let createServiceCallId: number;
 
@@ -74,7 +78,7 @@ const createServiceCall: CreateServiceCall = {
 
 const createTankMetadata: CreateTankMetaData = {
   type: 'FRESH',
-  description: 'SC_TEST',
+  nickname: 'SC_TEST',
   volume: 0,
   tanknicianSourcedOnly: false,
   customerId: 0
@@ -85,7 +89,8 @@ const commonUserData: Omit<CreateUser, 'isEmployee'> = {
   middleName: 'SC_TEST',
   lastName: 'SC_TEST',
   address: 'SC_TEST',
-  phone: '11111111111'
+  phone: '11111111111',
+  email: 'SC_TEST@email.com'
 };
 
 // ServiceCall CRUD testing suite can now be run:
@@ -105,6 +110,11 @@ describe('ServiceCall CRUD operations', () => {
         isEmployee: true
       });
       createEmployeeId = employeeResponse.id;
+    });
+
+    it('reads employee login and sets the employee login id', async () => {
+      const readEmployee = await readLogin(commonUserData.email);
+      createEmployeeLoginId = readEmployee.id;
     });
 
     it('set the tankMetaData customerId and create the tank; set tank global id', async () => {
@@ -165,6 +175,7 @@ describe('ServiceCall CRUD operations', () => {
     describe('Post-test cleanup:', () => {
       it('delete extraneous testing data', async () => {
         await deleteTank(createTankId);
+        await deleteLogin(createEmployeeLoginId);
         await deleteUser(createEmployeeId);
         await deleteUser(createCustomerId);
       });

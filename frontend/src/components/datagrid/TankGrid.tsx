@@ -1,8 +1,8 @@
 import { DataGrid, GridColDef, GridToolbar } from '@mui/x-data-grid';
-import { UpdateTankMetaData } from '../../zodTypes';
+import { tankSchema } from '../../zodTypes';
 import { useGetAllTanksQuery } from '../../redux/slices/tanks/tankDataSlice';
 
-const tankColumns: GridColDef<UpdateTankMetaData>[] = [
+const tankColumns: GridColDef<tankSchema>[] = [
   {
     field: 'id',
     headerName: 'ID',
@@ -11,7 +11,7 @@ const tankColumns: GridColDef<UpdateTankMetaData>[] = [
     align: 'center'
   },
   {
-    field: 'description',
+    field: 'nickname',
     headerName: 'Nickname',
     flex: 4,
     headerAlign: 'center',

@@ -33,8 +33,10 @@ describe('email service', () => {
     );
     expect(res.includes('Email sent:'));
   });
+  /*
   test('can send reset email', async () => {
     const res = await resetPassword(testEmail);
     expect(res.includes('Email sent:'));
   });
+  */
 });

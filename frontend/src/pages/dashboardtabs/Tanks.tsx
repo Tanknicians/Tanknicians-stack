@@ -2,13 +2,13 @@ import {
   UserData,
   useGetClientsQuery
 } from '../../redux/slices/users/userManagementSlice';
-import CreateTankForm from '../../components/forms/CreateTank';
+import CreateTankForm from '../../components/forms/UpsertTank';
 import UserSearchBar from '../../components/UserSearchBar';
 import type {} from '@mui/x-data-grid/themeAugmentation';
 import { useEffect, useMemo, useState } from 'react';
 
 import CreateServiceCallModal from '../../components/forms/UpsertServiceCall';
-import { UpdateTankMetaData } from '../../zodTypes';
+import { UpdateTankMetaData, tankSchema } from '../../zodTypes';
 import {
   Button,
   Collapse,
@@ -38,7 +38,7 @@ export function TankTabs({
   selectedTankId,
   setSelectedTankId
 }: {
-  tanks: UpdateTankMetaData[];
+  tanks: tankSchema[];
   employeeId: number;
   selectedTankId: number | null;
   setSelectedTankId(tankId: number | null): void;
@@ -128,7 +128,7 @@ export function TankTabs({
                   id='tank-id-selector'
                   displayEmpty={true}
                   renderValue={() => {
-                    return selectedTank.description ?? selectedTank.id;
+                    return selectedTank.nickname ?? selectedTank.id;
                   }}
                   onChange={handleTankSelection}
                   label='Tanks'
@@ -137,7 +137,7 @@ export function TankTabs({
                   {tanks.map((tank) => {
                     return (
                       <MenuItem key={tank.id} value={tank.id}>
-                        {tank.description ?? tank.id}
+                        {tank.nickname ?? tank.id}
                       </MenuItem>
                     );
                   })}
@@ -226,7 +226,7 @@ export default function Tanks() {
     }
     const userId =
       optionsList.find((user) =>
-        user.OwnedTanks?.some((tank) => tank.id === selectedTankId)
+        user.OwnedTanks?.some((tank: tankSchema) => tank.id === selectedTankId)
       )?.id ?? null;
     if (userId) {
       selectCurrentUserId(userId);

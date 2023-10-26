@@ -1,6 +1,12 @@
 import { User } from '@prisma/client';
 import { userDB } from '../../../prisma/db/User';
-import { CreateUser, SearchSchema, UpdateUser } from '../../zodTypes';
+import {
+  AuthRegister,
+  CreateUser,
+  SearchSchema,
+  UpdateUser
+} from '../../zodTypes';
+import { register } from '../../Authentication/API';
 
 export async function create(data: CreateUser) {
   // convert from Zod to Prisma
@@ -10,6 +16,22 @@ export async function create(data: CreateUser) {
 
   try {
     const createdId = await userDB.create(createUser);
+
+    if (data.isEmployee) {
+      const createEmployeeLogin: AuthRegister = {
+        email: data.email,
+        role: 'EMPLOYEE', // we always assume we're creating an employee
+        userId: createdId // from previously-created User
+      };
+
+      try {
+        await register(createEmployeeLogin);
+      } catch (e) {
+        const errorMessage = e instanceof Error ? e.message : 'Unknown error.';
+        console.error(errorMessage);
+        throw new Error(`An error occurred during create: ${errorMessage}`);
+      }
+    }
     return { message: 'User created successfully', id: createdId };
   } catch (e) {
     const errorMessage = e instanceof Error ? e.message : 'Unknown error.';

@@ -1,5 +1,4 @@
 import * as bcrypt from 'bcryptjs';
-import * as Prisma from '@prisma/client';
 
 import {
   generateToken,
@@ -87,28 +86,29 @@ export async function login(login: AuthLogin, res: Response) {
   }
 }
 
-export async function register(registration: AuthRegister, res: Response) {
-  // Generate password of character size 16; Saved to send in email after DB Login created.
-  const generatedPassword = generateRandomPassword(DEFAULT_PASSWORD_LENGTH);
-  const encryptedPassword = await bcrypt.hash(
-    generatedPassword,
-    DEFAULT_SALT_LENGTH
-  );
-
-  // move the data to a format with the encrypted password to be sent to the DB
-  const registerData = {
-    ...registration,
-    password: encryptedPassword
-  };
-
+export async function register(registration: AuthRegister) {
   try {
+    // Generate password of character size 16; Saved to send in email after DB Login created.
+    const generatedPassword = generateRandomPassword(DEFAULT_PASSWORD_LENGTH);
+    const encryptedPassword = await bcrypt.hash(
+      generatedPassword,
+      DEFAULT_SALT_LENGTH
+    );
+
+    // move the data to a format with the encrypted password to be sent to the DB
+    const registerData = {
+      ...registration,
+      password: encryptedPassword
+    };
+
     // Send password to db first
     await loginDB.create(registerData);
+
     // email the Registration data
     const emailText = `Your email and password combination is: \n
-    EMAIL: ${registerData.email} \n
-    PASSWORD: ${generatedPassword} \n
-    If you lose this password, please ask your admin to send a reset email.
+      EMAIL: ${registerData.email} \n
+      PASSWORD: ${generatedPassword} \n
+      If you lose this password, please ask your admin to send a reset email.
     `;
     const confirmation = await sendEmail(
       registerData.email,
@@ -116,51 +116,29 @@ export async function register(registration: AuthRegister, res: Response) {
       emailText
     );
     console.log(confirmation);
-    return res.status(200).json({ message: 'Registration successful' });
+
+    return { status: 200, data: { message: 'Registration successful' } };
   } catch (error) {
     console.error(error);
-    return res.status(500).json({
-      code: 'INTERNAL_SERVER_ERROR',
-      message: 'An error occurred during registration',
-      cause: error
-    });
+    return {
+      status: 500,
+      data: {
+        code: 'INTERNAL_SERVER_ERROR',
+        message: 'An error occurred during registration',
+        cause: error
+      }
+    };
   }
 }
 
-/**
- * Resets the password for the given email if it is valid and
- * sends email with the new password
- * @param email
- * @returns confirmation:string from smtp transaction
- */
-export async function resetPassword(email: string) {
-  // validate email
-  let login: Prisma.Login | null;
+// Wrapper function that takes care of the response for registration
+export async function handleRegistration(
+  registration: AuthRegister,
+  res: Response
+) {
+  const result = await register(registration);
 
-  login = await loginDB.read(email);
-  if (!login) {
-    throw new Error(`login not found for email ${email}`);
-  }
-
-  // generate new password and attempt record update
-  const pw = generateRandomPassword(DEFAULT_PASSWORD_LENGTH);
-  login.password = await bcrypt.hash(pw, DEFAULT_SALT_LENGTH);
-  await loginDB.update(login);
-
-  // send email with new password
-  const emailText = `Your new password is: \n
-  PASSWORD: ${login.password} \n
-  
-  If you lose this password, please ask your admin to generate a reset email.
-  `;
-
-  const confirmation = await sendEmail(
-    login.email,
-    'Password Reset',
-    emailText
-  );
-  console.log(confirmation);
-  return confirmation;
+  return res.status(result.status).json(result.data);
 }
 
 // Generate a new access token using a refresh token

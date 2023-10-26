@@ -112,9 +112,16 @@ export function CreateForm({
               InputLabelProps={{ shrink: type === 'date' ? true : undefined }}
               {...field}
               value={
-                type === 'date' && typeof field.value === 'object'
+                type === 'date' &&
+                typeof field.value === 'object' &&
+                field.value
                   ? format(field.value, 'yyyy-MM-dd')
                   : field.value
+              }
+              onChange={
+                type === 'number'
+                  ? (event) => field.onChange(+event.target.value)
+                  : field.onChange
               }
             />
           );
@@ -294,7 +301,7 @@ export default function CreateServiceCallModal({
           </Grid>
           <Grid item xs={4}>
             <TextField
-              value={tank?.description ?? 'Loading...'}
+              value={tank?.nickname ?? 'Loading...'}
               disabled
               fullWidth
             />
