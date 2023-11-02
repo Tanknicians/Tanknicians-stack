@@ -52,6 +52,12 @@ export async function readAll(isApproved?: boolean) {
     if (!serviceCalls) {
       throw new Error(`No service calls of isApproved = ${isApproved} found.`);
     }
+    // newest -> oldest
+    serviceCalls.sort((a, b) => {
+      const dateA = new Date(a.createdOn);
+      const dateB = new Date(b.createdOn);
+      return dateB.getTime() - dateA.getTime();
+    });
     return serviceCalls;
   } catch (e) {
     const errorMessage = e instanceof Error ? e.message : 'Unknown error.';
@@ -83,6 +89,7 @@ export async function readAllByDate(
       throw new Error(`Service Calls for id: ${tankId} not found.`);
     }
 
+    // oldest -> newest
     serviceCalls.sort((a, b) => {
       const dateA = new Date(a.createdOn);
       const dateB = new Date(b.createdOn);
@@ -128,6 +135,7 @@ export async function readAllByTankId(tankId: number, isApproved?: boolean) {
     }
 
     // sort by datetime (I hate typescript/javascript sorting)
+    // newest -> oldest
     serviceCalls.sort((a, b) => {
       const dateA = new Date(a.createdOn);
       const dateB = new Date(b.createdOn);
