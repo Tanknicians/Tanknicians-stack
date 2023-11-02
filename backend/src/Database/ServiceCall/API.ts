@@ -83,6 +83,12 @@ export async function readAllByDate(
       throw new Error(`Service Calls for id: ${tankId} not found.`);
     }
 
+    serviceCalls.sort((a, b) => {
+      const dateA = new Date(a.createdOn);
+      const dateB = new Date(b.createdOn);
+      return dateA.getTime() - dateB.getTime();
+    });
+
     const returnData: ReturnDataSchema = {
       tankId: tankId,
       alkalinity: [],
