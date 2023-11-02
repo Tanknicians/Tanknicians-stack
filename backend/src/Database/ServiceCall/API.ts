@@ -131,7 +131,7 @@ export async function readAllByTankId(tankId: number, isApproved?: boolean) {
     serviceCalls.sort((a, b) => {
       const dateA = new Date(a.createdOn);
       const dateB = new Date(b.createdOn);
-      return dateA.getTime() - dateB.getTime();
+      return dateB.getTime() - dateA.getTime();
     });
 
     return serviceCalls;
