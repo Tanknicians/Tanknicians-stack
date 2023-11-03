@@ -1,10 +1,10 @@
-import { CreateTankMetaData, UpdateTankMetaData } from '../../../zodTypes';
+import { CreateTankMetaData, tankSchema } from '../../../zodTypes';
 import { apiSlice } from '../../api/apiSlice';
 
 export const tankDataSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     // Query returns a list of all tanks
-    getAllTanks: builder.query<UpdateTankMetaData[], undefined>({
+    getAllTanks: builder.query<tankSchema[], undefined>({
       query: () => ({
         url: '/api/database/tank',
         method: 'GET'
@@ -18,7 +18,7 @@ export const tankDataSlice = apiSlice.injectEndpoints({
           : [{ type: 'TANKS', id: 'LIST' }]
     }),
     // Query returns tank data for a specific tank
-    getTankData: builder.query<UpdateTankMetaData, number>({
+    getTankData: builder.query<tankSchema, number>({
       query: (tankID) => {
         return {
           url: `/api/database/tank/${tankID}`,
@@ -38,7 +38,7 @@ export const tankDataSlice = apiSlice.injectEndpoints({
       ]
     }),
     // Mutation edits tank belonging to a user
-    updateTank: builder.mutation<void, UpdateTankMetaData>({
+    updateTank: builder.mutation<void, tankSchema>({
       query: ({ id, ...tankData }) => ({
         url: `/api/database/tank/${id}`,
         method: 'PUT',

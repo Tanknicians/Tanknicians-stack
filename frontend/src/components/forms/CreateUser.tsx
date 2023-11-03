@@ -31,6 +31,7 @@ export default function CreateUserModal({
       firstName: '',
       middleName: '',
       lastName: '',
+      email: '',
       address: '',
       phone: ''
     } as CreateUser
@@ -90,6 +91,15 @@ export default function CreateUserModal({
               control={control}
               render={({ field }) => (
                 <TextField fullWidth label='Last Name' {...field} />
+              )}
+            />
+          </Grid>
+          <Grid item xs={4}>
+            <Controller
+              name='email'
+              control={control}
+              render={({ field }) => (
+                <TextField fullWidth label='Email' {...field} />
               )}
             />
           </Grid>

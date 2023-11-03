@@ -20,7 +20,7 @@ import {
   useGetAllServiceCallsQuery,
   useGetServiceCallByTankIdQuery
 } from '../redux/slices/forms/servicecallApiSlice';
-import { UpdateTankMetaData, ServiceCall } from '../zodTypes';
+import { UpdateTankMetaData, ServiceCall, tankSchema } from '../zodTypes';
 import CreateServiceCallModal from './forms/UpsertServiceCall';
 import { Add, Edit as EditIcon } from '@mui/icons-material';
 import { useGetClientsQuery } from '../redux/slices/users/userManagementSlice';
@@ -33,7 +33,7 @@ export default function SCDataGrid({
   tank
 }: {
   employeeId: number | undefined;
-  tank: UpdateTankMetaData | undefined;
+  tank: tankSchema | undefined;
 }) {
   // STATIC
   //

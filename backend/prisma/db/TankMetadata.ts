@@ -62,7 +62,7 @@ export async function search(search: SearchSchema) {
     take: search.size,
     where: {
       OR: [
-        { description: { contains: search.searchString } },
+        { nickname: { contains: search.searchString } },
         { volume: { gte: search.minNum, lte: search.maxNum } },
         { type: search.searchType }
       ]

@@ -2,7 +2,6 @@ import express from 'express';
 import * as UserService from './API';
 import { authenticateRoleMiddleWare } from '../../Authentication/API';
 import {
-  UpdateUser,
   UserCreateRequest,
   UserUpdateRequest,
   createUser,

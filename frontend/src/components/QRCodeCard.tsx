@@ -8,17 +8,21 @@ function QRValue(tankId: number) {
   return `Tanknicians Tank ID: ${tankId}`;
 }
 
-function QRCodeFile(client: UserData, qrSymbol: number) {
-  return `${client.firstName}-${client.lastName}-Tank${qrSymbol}QRCode.png`;
+function QRCodeFile(client: UserData, nickname: string) {
+  return `${client.firstName}-${client.lastName}-${nickname}QRCode.png`;
 }
 
-function QRCodeTextCanvas(qrCanvas: HTMLCanvasElement, qrSymbol: number) {
+function QRCodeTextCanvas(
+  qrCanvas: HTMLCanvasElement,
+  qrSymbol: number,
+  nickname: string
+) {
   // Create a new canvas for combining QR code and text
   const combinedCanvas = document.createElement('canvas');
   const combinedContext = combinedCanvas.getContext('2d');
 
   if (qrCanvas && combinedCanvas && combinedContext) {
-    const text = `Tank ${qrSymbol}`;
+    const text = `${nickname} ${qrSymbol}`;
     const fontSize = 16;
     const lineHeight = 20;
     const canvasWidth = qrCanvas.width;
@@ -52,17 +56,19 @@ function QRCodeTextCanvas(qrCanvas: HTMLCanvasElement, qrSymbol: number) {
 export default function QRCodeCard({
   client,
   tankId,
-  qrSymbol
+  qrSymbol,
+  nickname
 }: {
   client: UserData;
   tankId: number;
   qrSymbol: number;
+  nickname: string;
 }) {
   const qrCodeRef = useRef<HTMLDivElement>(null);
 
   const downloadQRCode = () => {
     const qrCanvas = qrCodeRef.current?.children[0] as HTMLCanvasElement;
-    const combinedCanvas = QRCodeTextCanvas(qrCanvas, qrSymbol);
+    const combinedCanvas = QRCodeTextCanvas(qrCanvas, qrSymbol, nickname);
 
     if (combinedCanvas) {
       // Convert canvas to PNG data URL
@@ -73,7 +79,7 @@ export default function QRCodeCard({
       // Trigger download
       const downloadLink = document.createElement('a');
       downloadLink.href = pngUrl;
-      downloadLink.download = QRCodeFile(client, qrSymbol);
+      downloadLink.download = QRCodeFile(client, nickname);
       document.body.appendChild(downloadLink);
       downloadLink.click();
       document.body.removeChild(downloadLink);
@@ -90,7 +96,7 @@ export default function QRCodeCard({
           includeMargin={true}
         />
         <Typography textAlign='center' variant='body1' gutterBottom>
-          Tank {qrSymbol}
+          {nickname} {qrSymbol}
         </Typography>
       </div>
       <Button

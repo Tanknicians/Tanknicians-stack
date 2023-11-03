@@ -16,13 +16,10 @@ import Grid from '@mui/material/Grid';
 import BorderColorIcon from '@mui/icons-material/BorderColor';
 import { useMemo, useState } from 'react';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
-import { ServiceCall } from '../../zodTypes';
+import { ServiceCall, tankSchema } from '../../zodTypes';
 import TankName from '../../components/TankName';
-import { GridRenderCellParams } from '@mui/x-data-grid';
 import { useNavigate } from 'react-router-dom';
-import ShowChartIcon from '@mui/icons-material/ShowChart';
-import { IconButton, Tooltip } from '@mui/material';
-import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import { Tooltip } from '@mui/material';
 
 const oneMinuteInMilliseconds = 60000;
 
@@ -70,7 +67,7 @@ export default function ApproveForms() {
     let ret = 'CLIENT NAME NOT FOUND';
     try {
       optionsList?.forEach(function (user) {
-        user.OwnedTanks?.forEach(function (tank) {
+        user.OwnedTanks?.forEach(function (tank: tankSchema) {
           if (tank.id === tankId) {
             ret = `${user.firstName} ${user.lastName}`;
           }
@@ -121,7 +118,7 @@ export default function ApproveForms() {
                     Client
                   </TableCell>
                   <TableCell align='center' sx={{ textAlign: 'center' }}>
-                    Tank
+                    Tank Nickname
                   </TableCell>
                   <TableCell align='center' sx={{ textAlign: 'center' }}>
                     Service Date

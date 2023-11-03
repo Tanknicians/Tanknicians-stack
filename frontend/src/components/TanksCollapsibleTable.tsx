@@ -9,7 +9,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import { Tank, UpdateTankMetaData } from '../zodTypes';
+import { tankSchema } from '../zodTypes';
 import { useMemo, useState } from 'react';
 import { Button, Menu, MenuItem, Stack, Typography } from '@mui/material';
 import QRCodeCard from './QRCodeCard';
@@ -17,9 +17,9 @@ import { UserData } from '../redux/slices/users/userManagementSlice';
 import { ArrowCircleRight } from '@mui/icons-material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { useNavigate } from 'react-router-dom';
-import UpdateTankModal from './forms/CreateTank';
+import UpdateTankModal from './forms/UpsertTank';
 
-function Row(props: { row: UpdateTankMetaData; client: UserData }) {
+function Row(props: { row: tankSchema; client: UserData }) {
   const { row, client } = props;
   const [isShowTankData, setIsShowTankData] = useState(false);
   const [tankId, setTankId] = useState<number | null>();
@@ -29,7 +29,7 @@ function Row(props: { row: UpdateTankMetaData; client: UserData }) {
     navigate(`/dashboard/Tanks?tankId=${tankId}`);
   }
 
-  const handleOpenUpdateTankModal = (tank: Tank) => {
+  const handleOpenUpdateTankModal = (tank: tankSchema) => {
     setTankId(tank.id);
     handleClose();
   };
@@ -50,7 +50,7 @@ function Row(props: { row: UpdateTankMetaData; client: UserData }) {
     <>
       <TableRow onClick={() => setIsShowTankData(!isShowTankData)}>
         <TableCell align='center' sx={{ flex: 1 }}>
-          {row.description}
+          {row.nickname}
         </TableCell>
         <TableCell align='center' sx={{ flex: 1 }}>
           {row.volume}
@@ -99,6 +99,7 @@ function Row(props: { row: UpdateTankMetaData; client: UserData }) {
                   client={client}
                   tankId={row.id}
                   qrSymbol={row.qrSymbol}
+                  nickname={row.nickname}
                 />
               </Stack>
               <Stack
@@ -167,7 +168,7 @@ export default function TanksCollapsibleTable({
   tanks
 }: {
   client: UserData;
-  tanks: UpdateTankMetaData[];
+  tanks: tankSchema[];
 }) {
   return (
     <TableContainer component={Paper} sx={{ width: '100%' }}>

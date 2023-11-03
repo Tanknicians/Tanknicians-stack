@@ -2,10 +2,8 @@ import express from 'express';
 import * as TankMetadataService from './API';
 import { authenticateRoleMiddleWare } from '../../Authentication/API';
 import {
-  CreateTankMetaData,
   TankMetaDataCreateRequest,
   TankMetaDataUpdateRequest,
-  UpdateTankMetaData,
   createTank,
   searchSchema,
   updateTank,
