@@ -31,7 +31,7 @@ mobileRouter.post(
 );
 
 mobileRouter.post(
-  '/mobileRefresh',
+  '/refresh',
   async (req, res) => {
     try {
       const data = req.body.refreshToken;
