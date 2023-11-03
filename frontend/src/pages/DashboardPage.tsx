@@ -199,12 +199,11 @@ const oneMinuteInMilliseconds = 60000;
 export default function Paperbase() {
   // Get URL on render
   const urlArray = useLocation().pathname.split('/');
-  const selection = urlArray[urlArray.length - 1].replace('%20', ' ');
 
   // Set cleaned URL in state for tab highlight
   // Dashboard level component (bell icon) controlls highlight, so highlight
   // state must be accessanle here
-  const [activeNavItem, setActiveNavItem] = React.useState(selection);
+  const activeNavItem = urlArray[urlArray.length - 1].replace('%20', ' ');
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const isSmUp = useMediaQuery(theme.breakpoints.up('sm'));
 
@@ -232,7 +231,6 @@ export default function Paperbase() {
         >
           {isSmUp ? null : (
             <Navigator
-              setSelection={setActiveNavItem}
               selected={activeNavItem}
               PaperProps={{ style: { width: drawerWidth } }}
               variant='temporary'
@@ -241,7 +239,6 @@ export default function Paperbase() {
             />
           )}
           <Navigator
-            setSelection={setActiveNavItem}
             selected={activeNavItem}
             PaperProps={{ style: { width: drawerWidth } }}
             sx={{ display: { sm: 'block', xs: 'none' } }}
@@ -273,11 +270,7 @@ export default function Paperbase() {
                     to='Approve Forms'
                     style={{ textDecoration: 'none', color: 'white' }}
                   >
-                    <IconButton
-                      color='inherit'
-                      sx={{ p: 0.5 }}
-                      onClick={() => setActiveNavItem('Approve Forms')}
-                    >
+                    <IconButton color='inherit' sx={{ p: 0.5 }}>
                       <StyledBadge
                         badgeContent={numberOfUnapprovedForms}
                         color='error'
