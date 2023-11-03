@@ -9,7 +9,6 @@ import PeopleIcon from '@mui/icons-material/People';
 import LogoutIcon from '@mui/icons-material/Logout';
 import BadgeIcon from '@mui/icons-material/Badge';
 import ListItem from '@mui/material/ListItem';
-import Divider from '@mui/material/Divider';
 import LogoutDialog from '../LogoutDialog';
 import { Link } from 'react-router-dom';
 import Stack from '@mui/material/Stack';
@@ -34,11 +33,10 @@ const itemCategory = {
 
 interface NavProps extends Omit<DrawerProps, 'onClose'> {
   onClose?: (event: {}, reason: 'backdropClick' | 'escapeKeyDown') => void;
-  setSelection: Function;
   selected: string;
 }
 export default function Navigator(props: NavProps) {
-  const { onClose, setSelection, selected, ...drawerProps } = props;
+  const { onClose, selected, ...drawerProps } = props;
   const [openDialog, setOpenDialog] = useState(false);
 
   const dashboardFeatures = [
@@ -47,38 +45,23 @@ export default function Navigator(props: NavProps) {
       children: [
         {
           id: 'Approve Forms',
-          icon: <BorderColorIcon />,
-          onClick: () => {
-            setSelection('Approve Forms');
-          }
+          icon: <BorderColorIcon />
         },
         {
           id: 'Clients',
-          icon: <PeopleIcon />,
-          onClick: () => {
-            setSelection('Clients');
-          }
+          icon: <PeopleIcon />
         },
         {
           id: 'Tanks',
-          icon: <ShowChartIcon />,
-          onClick: () => {
-            setSelection('Tanks');
-          }
+          icon: <ShowChartIcon />
         },
         {
           id: 'Employees',
-          icon: <BadgeIcon />,
-          onClick: () => {
-            setSelection('Employees');
-          }
+          icon: <BadgeIcon />
         },
         {
           id: 'Data Export',
-          icon: <ContentCopyIcon />,
-          onClick: () => {
-            setSelection('Data Export');
-          }
+          icon: <ContentCopyIcon />
         }
       ]
     }
@@ -128,19 +111,13 @@ export default function Navigator(props: NavProps) {
               {/* <ListItem sx={{ py: 2, px: 3 }}>
                 <ListItemText sx={{ color: '#fff' }}>{id}</ListItemText>
               </ListItem> */}
-              {children.map(({ id: childId, icon, onClick }) => (
+              {children.map(({ id: childId, icon }) => (
                 <ListItem disablePadding key={childId} sx={{ px: 0, py: 0.3 }}>
                   <Link
                     to={childId}
                     style={{ textDecoration: 'none', minWidth: '100%' }}
                   >
-                    <ListItemButton
-                      selected={childId === selected}
-                      sx={item}
-                      onClick={() => {
-                        onClick();
-                      }}
-                    >
+                    <ListItemButton selected={childId === selected} sx={item}>
                       <ListItemIcon>{icon}</ListItemIcon>
                       <ListItemText>{childId}</ListItemText>
                     </ListItemButton>
