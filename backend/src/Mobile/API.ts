@@ -3,9 +3,11 @@ import { serviceCallDB } from '../../prisma/db/ServiceCall';
 import {
   CreateServiceCall,
   MobileServiceCall,
-  tankMetaDataSchema
+  RefreshToken,
 } from '../zodTypes';
-import { ServiceCall, TankMetadata } from '@prisma/client';
+import { ServiceCall } from '@prisma/client';
+import { generateToken, verifyRefreshToken } from '../Token/Generator';
+import { loginDB } from 'prisma/db/Login';
 
 const paramLimits = {
   /*
@@ -86,4 +88,29 @@ function checkParameterLimits(serviceCall: CreateServiceCall) {
   }
 }
 
-// removed unused code
+export async function mobileRefresh(refreshToken: string) {
+
+  let decryptToken: RefreshToken;
+
+  try {
+    decryptToken = verifyRefreshToken(refreshToken);
+  } catch (e) {
+    const errorMessage = e instanceof Error ? e.message : 'Unknown error.';
+    console.error(errorMessage);
+    throw new Error(`An error occurred during decrypt token: ${errorMessage}`);
+  }
+
+  const foundCredentials = await loginDB.read(decryptToken.data.email);
+
+  if (!foundCredentials) {
+    throw new Error(`Credentials not found.`);
+  }
+
+  try {
+    return generateToken(foundCredentials);
+  } catch (e) {
+    const errorMessage = e instanceof Error ? e.message : 'Unknown error.';
+    console.error(errorMessage);
+    throw new Error(`An error occurred during generate token: ${errorMessage}`);
+  }
+}
