@@ -38,7 +38,6 @@ type FormProps = {
   required?: boolean;
   hidden?: boolean;
 };
-function getType(input: string) {}
 function getLabel(input: string) {
   if (!input) return '';
   let result = input.charAt(0).toUpperCase() + input.slice(1);
@@ -93,7 +92,9 @@ export function CreateForm({
               field.value = new Date();
             } else if (typeof field.value !== 'object') {
               try {
-                field.value = new Date(field.value.toString());
+                field.value = new Date(
+                  `${field.value.toString().split('T')[0]}T12:00:00.000Z`
+                );
               } catch (e) {
                 field.value = new Date();
               }
