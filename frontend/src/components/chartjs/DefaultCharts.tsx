@@ -1,6 +1,5 @@
 import { Container, Grid } from '@mui/material';
 import { useGetAllServiceCallsByTankIdAndDateRangeQuery } from '../../redux/slices/forms/servicecallApiSlice';
-import { ChartData } from 'chart.js';
 import LineChart from './LineChart';
 
 export default function DefaultCharts({
@@ -21,7 +20,11 @@ export default function DefaultCharts({
   serviceCalls?.alkalinity.forEach((datapoint) => {
     const date = new Date(datapoint[1]);
     alkVals.push(datapoint[0]);
-    alkDates.push(`${date.getMonth()}/${date.getDate()}/${date.getFullYear()}`);
+
+    // months 0 indexed btw
+    alkDates.push(
+      `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`
+    );
   });
 
   const alk = {
@@ -43,7 +46,9 @@ export default function DefaultCharts({
     const date = new Date(datapoint[1]);
 
     calVals.push(datapoint[0]);
-    calDates.push(`${date.getMonth()}/${date.getDate()}/${date.getFullYear()}`);
+    calDates.push(
+      `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`
+    );
   });
 
   const cal = {
@@ -65,7 +70,9 @@ export default function DefaultCharts({
     const date = new Date(datapoint[1]);
 
     nitVals.push(datapoint[0]);
-    nitDates.push(`${date.getMonth()}/${date.getDate()}/${date.getFullYear()}`);
+    nitDates.push(
+      `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`
+    );
   });
 
   const nit = {
@@ -87,7 +94,9 @@ export default function DefaultCharts({
     const date = new Date(datapoint[1]);
 
     phoVals.push(datapoint[0]);
-    phoDates.push(`${date.getMonth()}/${date.getDate()}/${date.getFullYear()}`);
+    phoDates.push(
+      `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`
+    );
   });
 
   const pho = {
