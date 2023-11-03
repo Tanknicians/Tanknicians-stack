@@ -7,7 +7,7 @@ import {
 } from '../zodTypes';
 import { ServiceCall } from '@prisma/client';
 import { generateToken, verifyRefreshToken } from '../Token/Generator';
-import { loginDB } from 'prisma/db/Login';
+import { loginDB } from '../../prisma/db/Login';
 
 const paramLimits = {
   /*
