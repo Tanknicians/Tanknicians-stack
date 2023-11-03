@@ -75,7 +75,8 @@ export async function login(login: AuthLogin, res: Response) {
       secure: true,
       maxAge: 24 * 60 * 60 * 1000
     });
-    res.status(200).json({ token, savedCredentials });
+    // added refreshToken to body for MOBILE auth
+    res.status(200).json({ token, refreshToken, savedCredentials });
     return;
   } catch (error) {
     console.error('Error generating tokens:', error);
