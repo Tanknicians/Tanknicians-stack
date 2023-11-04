@@ -29,15 +29,7 @@ export const authLogin = loginSchema.omit({
   userId: true
 });
 
-export const RefreshTokenData = z.object({
-  token: z.string(),
-  savedCredentials: loginSchema.omit({
-    password: true
-  })
-});
-
 export type AuthLogin = z.infer<typeof authLogin>;
-export type RefreshTokenData = z.infer<typeof RefreshTokenData>;
 
 // ERROR RESPONSE
 

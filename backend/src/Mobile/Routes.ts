@@ -1,8 +1,7 @@
 import express from 'express';
-import { uploadServiceCall } from './API';
+import { uploadServiceCall, mobileRefresh } from './API';
 import { authenticateRoleMiddleWare } from '../Authentication/API';
 import {
-  createServiceCall,
   mobileServiceCall,
   ServiceCallMobileRequest,
   validateRequestBody
@@ -30,5 +29,19 @@ mobileRouter.post(
     }
   }
 );
+
+mobileRouter.post('/refresh', async (req, res) => {
+  try {
+    const data = req.body.refreshToken;
+    const token = await mobileRefresh(data);
+    res.status(200).json({ token: token });
+  } catch (error) {
+    const errorMessage =
+      error instanceof Error
+        ? error.message
+        : 'Unknown Error: Failed to refresh mobile token.';
+    res.status(500).json({ error: errorMessage });
+  }
+});
 
 export default mobileRouter;

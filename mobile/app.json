@@ -16,7 +16,7 @@
       [
         "expo-barcode-scanner",
         {
-          "cameraPermission": "Allow $(PRODUCT_NAME) to access camera."
+          "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera."
         }
       ]
     ],
@@ -27,6 +27,9 @@
       "userInterfaceStyle": "light",
       "infoPlist": {
         "NSCameraUsageDescription": "This app uses the camera to let a user scan QR codes ."
+      },
+      "config": {
+        "usesNonExemptEncryption": false
       }
     },
     "android": {
