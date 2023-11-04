@@ -3,20 +3,21 @@ import {
   fetchBaseQuery,
   BaseQueryFn
 } from '@reduxjs/toolkit/query/react';
-import { setCredentials, logout } from '../slices/auth/authSlice';
+import { logout, setToken } from '../slices/auth/authSlice';
 import { RootState } from '../store';
-import { RefreshTokenData } from '../../types/zodTypes';
+import { getRefreshToken } from '../slices/auth/authRefresh';
 
 // ! CHANGE THIS FOR PRODUCTION
 // This URL works for android emulator when "npm start" is executed
 // const BASE_URL = 'http://10.0.2.2:5000';
 // This URL works for physical device when "npm start" is executed
 // ! The url will be given by ngrok after running the command ngrok http 5000
-const BASE_URL = 'https://tanknicians.xyz';
+// const BASE_URL = 'https://tanknicians.xyz';
+const BASE_URL =
+  'https://70d8-2603-9001-2e00-1465-4153-ff89-2bc2-3623.ngrok.io';
 
 const baseQuery = fetchBaseQuery({
   baseUrl: BASE_URL,
-  credentials: 'include',
   prepareHeaders: (headers, { getState }) => {
     const token = (getState() as RootState).auth.token;
 
@@ -30,17 +31,25 @@ const baseQuery = fetchBaseQuery({
 const baseQueryWithReauth: BaseQueryFn = async (args, api, extraOptions) => {
   let result = await baseQuery(args, api, extraOptions);
   if (result?.error?.status === 403) {
+    // refresh token
+    const refreshToken = await getRefreshToken();
+
+    if (!refreshToken) {
+      api.dispatch(logout());
+    }
+
     // send refresh token to get new access token
     const refreshResult = await baseQuery(
-      '/api/auth/refresh',
+      { url: '/api/mobile/refresh', method: 'POST', body: { refreshToken } },
       api,
       extraOptions
     );
+
     if (refreshResult?.data) {
-      const { token, savedCredentials: user } =
-        refreshResult.data as RefreshTokenData;
+      const data = refreshResult.data as { token: string };
+      const token = data.token;
       // store the new token
-      api.dispatch(setCredentials({ token, user }));
+      api.dispatch(setToken(token));
       // retry the original query with new access token
       result = await baseQuery(args, api, extraOptions);
     } else {

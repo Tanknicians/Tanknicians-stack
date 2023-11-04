@@ -2,13 +2,14 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { View, TouchableOpacity, Platform, Keyboard } from 'react-native';
 import { useForm, SubmitHandler, Controller } from 'react-hook-form';
 import { useLoginMutation } from '../redux/slices/auth/authApiSlice';
-import { setCredentials } from '../redux/slices/auth/authSlice';
+import { PRIMARY_COLOR, getScreenDimensions } from '../types/Styling';
 import { AuthLogin, errorSchema, authLogin } from '../types/zodTypes';
+import { setCredentials } from '../redux/slices/auth/authSlice';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { storeToken } from '../redux/slices/auth/authRefresh';
 import LoadingSpinner from '../components/LoadingSpinner';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Text, TextInput } from 'react-native-paper';
-import { PRIMARY_COLOR, getScreenDimensions } from '../types/Styling';
 import { StatusBar } from 'expo-status-bar';
 import { useDispatch } from 'react-redux';
 import React, { useState } from 'react';
@@ -18,7 +19,6 @@ import styles from '../styles/login';
 const LOGINERRORMESSAGE = 'Incorrect email/password combination';
 
 const LoginScreen = () => {
-  const { SCREEN_HEIGHT, SCREEN_WIDTH } = getScreenDimensions();
   const [login, { isLoading }] = useLoginMutation();
   const [loginErrorMessage, setLoginErrorMessage] = useState('');
 
@@ -38,9 +38,16 @@ const LoginScreen = () => {
   console.log(errors);
 
   const onSubmit: SubmitHandler<AuthLogin> = async (loginData) => {
-    // console.log(loginData);
     try {
-      const { token, savedCredentials: user } = await login(loginData).unwrap();
+      const {
+        token,
+        refreshToken,
+        savedCredentials: user
+      } = await login(loginData).unwrap();
+
+      // Save refresh token to AsyncStorage
+      await storeToken(refreshToken);
+
       // No need to navigate to QRScannerScreen, as the user will be redirected to it
       // automatically by the App component
       dispatch(setCredentials({ token, user }));
