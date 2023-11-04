@@ -3,7 +3,7 @@ import { serviceCallDB } from '../../prisma/db/ServiceCall';
 import {
   CreateServiceCall,
   MobileServiceCall,
-  RefreshToken,
+  RefreshToken
 } from '../zodTypes';
 import { ServiceCall } from '@prisma/client';
 import { generateToken, verifyRefreshToken } from '../Token/Generator';
@@ -89,7 +89,6 @@ function checkParameterLimits(serviceCall: CreateServiceCall) {
 }
 
 export async function mobileRefresh(refreshToken: string) {
-
   let decryptToken: RefreshToken;
 
   try {
@@ -103,7 +102,7 @@ export async function mobileRefresh(refreshToken: string) {
   const foundCredentials = await loginDB.read(decryptToken.data.email);
 
   if (!foundCredentials) {
-    throw new Error(`Credentials not found.`);
+    throw new Error('Credentials not found.');
   }
 
   try {

@@ -30,21 +30,18 @@ mobileRouter.post(
   }
 );
 
-mobileRouter.post(
-  '/refresh',
-  async (req, res) => {
-    try {
-      const data = req.body.refreshToken;
-      const token = await mobileRefresh(data);
-      res.status(200).json({ token: token });
-    } catch (error) {
-        const errorMessage =
-        error instanceof Error
-          ? error.message
-          : 'Unknown Error: Failed to refresh mobile token.';
-      res.status(500).json({ error: errorMessage });
-      }
-    }
-);
+mobileRouter.post('/refresh', async (req, res) => {
+  try {
+    const data = req.body.refreshToken;
+    const token = await mobileRefresh(data);
+    res.status(200).json({ token: token });
+  } catch (error) {
+    const errorMessage =
+      error instanceof Error
+        ? error.message
+        : 'Unknown Error: Failed to refresh mobile token.';
+    res.status(500).json({ error: errorMessage });
+  }
+});
 
 export default mobileRouter;
