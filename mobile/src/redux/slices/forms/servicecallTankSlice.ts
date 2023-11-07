@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from '../../store';
 
 const initialState = {
-  tankId: null as number | null
+  tankId: -1 as number
 };
 
 const servicecallTankSlice = createSlice({
@@ -14,7 +14,7 @@ const servicecallTankSlice = createSlice({
       state.tankId = parseInt(action.payload.tankId);
     },
     clearTankId: (state) => {
-      state.tankId = null;
+      state.tankId = -1;
     }
   }
 });

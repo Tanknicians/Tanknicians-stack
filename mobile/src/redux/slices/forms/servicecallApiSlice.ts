@@ -13,3 +13,6 @@ export const servicecallApiSlice = apiSlice.injectEndpoints({
 });
 
 export const { useUploadServiceCallMutation } = servicecallApiSlice;
+export type UploadServiceCallMutation = ReturnType<
+  typeof useUploadServiceCallMutation
+>;

@@ -31,11 +31,11 @@ export const authLogin = loginSchema.omit({
 
 export type AuthLogin = z.infer<typeof authLogin>;
 
-// ERROR RESPONSE
+// LOGIN ERROR RESPONSE
 
 export const errorSchema = z.object({
-  status: z.coerce.number().optional(),
-  data: z.object({ message: z.string().default('') })
+  status: z.number().optional(),
+  data: z.object({ message: z.string().default('') }).optional()
 });
 
 // SERVICE CALL FORM
@@ -92,15 +92,16 @@ const textQuestions = z.object({
 export const serviceFormSchema = numericQuestions.merge(
   booleanQuestions.merge(textQuestions)
 );
+export type ServiceFormData = z.infer<typeof serviceFormSchema>;
 
-type NumericQuestions = z.infer<typeof numericQuestions>;
-type BooleanQuestions = z.infer<typeof booleanQuestions>;
-type TextQuestions = z.infer<typeof textQuestions>;
+const serviceCall = serviceFormSchema.extend({
+  employeeId: z.number().int(),
+  tankId: z.number().int(),
+  createdOn: z.coerce.date()
+});
+export type ServiceCall = z.infer<typeof serviceCall>;
 
-export type ServiceFormData = NumericQuestions &
-  BooleanQuestions &
-  TextQuestions;
-
+// default values for service form
 export const defaultServiceFormValues: Partial<ServiceFormData> = {
   ATOOperational: false,
   ATOReservoirFilled: false,

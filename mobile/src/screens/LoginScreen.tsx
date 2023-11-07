@@ -52,16 +52,21 @@ const LoginScreen = () => {
       // automatically by the App component
       dispatch(setCredentials({ token, user }));
     } catch (unparsedError) {
-      const err = errorSchema.parse(unparsedError);
-      if (!err?.status) {
+      const error = errorSchema.parse(unparsedError);
+      // if error is not a zod error, it is a server error
+      if (error instanceof Error) {
+        console.log('Login error', error);
+        return;
+      }
+
+      if (!error?.status) {
         // isLoading: true until timeout occurs
         setLoginErrorMessage('No Server Response');
-      } else if (err?.status === 400) {
-        console.log(`Login error ${err.status}: `, err.data?.message);
+      } else if (error?.status === 400) {
+        console.log(`Login error ${error.status}: `, error.data?.message);
         setLoginErrorMessage(LOGINERRORMESSAGE);
       } else {
-        console.log(`Login error ${err.status}: `, err.data?.message);
-        setLoginErrorMessage(err.data?.message);
+        console.log('Login error', error);
       }
     }
   };

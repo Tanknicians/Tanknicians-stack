@@ -20,16 +20,17 @@ import { StatusBar } from 'expo-status-bar';
 import {
   ServiceFormData,
   serviceFormSchema,
-  defaultServiceFormValues,
-  errorSchema
+  defaultServiceFormValues
 } from '../types/zodTypes';
 import { Text, Button } from 'react-native-paper';
-import React, { useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { TERTIARY_COLOR } from '../types/Styling';
 import { Platform, TouchableOpacity, View } from 'react-native';
 import styles from '../styles/servicecall';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import ServiceCallFormQuestions from '../components/ServiceCallFormQuestions';
+import NoInternet from '../components/NoInternet';
+import { storeServiceCallOfflineData } from '../redux/slices/forms/servicecallOffline';
 
 type Props = NativeStackScreenProps<Routes, typeof SERVICECALLFORMSCREEN>;
 
@@ -38,7 +39,7 @@ const ServiceCallForm = ({ navigation }: Props) => {
   const clientTankId = useSelector(selectCurrentClientTank);
   const employeeId = useSelector(selectCurrentUser);
   const dispatch = useDispatch();
-
+  const [isConnected, setIsConnected] = useState<boolean | null>(true);
   // Used to scroll to the top of the screen when there are errors
   const scrollViewRef = useRef<KeyboardAwareScrollView>(null);
 
@@ -63,8 +64,17 @@ const ServiceCallForm = ({ navigation }: Props) => {
       ...data,
       employeeId: employeeId?.userId,
       tankId: clientTankId,
-      createdOn: new Date().toISOString()
+      createdOn: new Date()
     };
+
+    // If there is no internet connection, do not attempt to upload service call
+    // store service call in local storage
+    if (isConnected) {
+      console.log('No Internet Connection');
+      await storeServiceCallOfflineData(dataWithEmployeeandTankId);
+      navigation.replace(QRSCANNERSCREEN);
+      return;
+    }
 
     try {
       const response = await uploadServiceCall(
@@ -73,21 +83,8 @@ const ServiceCallForm = ({ navigation }: Props) => {
       console.log('Service Call Form Response: ', response);
       dispatch(clearTankId());
       navigation.replace(QRSCANNERSCREEN);
-    } catch (unparsedError) {
-      const err = errorSchema.parse(unparsedError);
-      if (!err?.status) {
-        console.log('No Server Response');
-      } else if (err?.status === 400) {
-        console.log(
-          `Service Call Screen error ${err.status}: `,
-          err.data?.message
-        );
-      } else {
-        console.log(
-          `Service Call Screen error ${err.status}: `,
-          err.data?.message
-        );
-      }
+    } catch (error) {
+      console.log('Service Call Form Error: ', error);
     }
   };
 
@@ -97,6 +94,7 @@ const ServiceCallForm = ({ navigation }: Props) => {
       <SafeAreaView style={styles.container}>
         <StatusBar style='light' />
         <View style={styles.headerContainer}>
+          {/* {isConnected && <NoInternet />} */}
           <Button
             icon={() => (
               <Icon name='chevron-left' size={26} color={TERTIARY_COLOR} />
