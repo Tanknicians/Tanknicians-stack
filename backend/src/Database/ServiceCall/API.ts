@@ -4,7 +4,7 @@ import { tankDB } from '../../../prisma/db/TankMetadata';
 import {
   CreateServiceCall,
   SearchSchema,
-  UpdateServiceCall,
+  UpdateServiceCall
 } from '../../zodTypes';
 
 export async function create(data: CreateServiceCall) {
@@ -23,12 +23,12 @@ export async function create(data: CreateServiceCall) {
 
     const createdId = await serviceCallDB.create(createServiceCall);
 
-    // We only want to update the tank's lastDateServiced if the serviceCall.createdOn is the newest date. 
+    // We only want to update the tank's lastDateServiced if the serviceCall.createdOn is the newest date.
     if (createServiceCall.createdOn > updateTank.lastDateServiced) {
       updateTank.lastDateServiced = createServiceCall.createdOn;
       await tankDB.update(updateTank);
     }
-    
+
     return { message: 'Service Call created successfully', id: createdId };
   } catch (e) {
     const errorMessage = e instanceof Error ? e.message : 'Unknown error.';
