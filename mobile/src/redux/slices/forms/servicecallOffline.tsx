@@ -48,10 +48,12 @@ export async function uploadOfflineStoredServiceCalls(
     MutationDefinition<any, BaseQueryFn, never, any, 'api'>
   >
 ) {
+  let successfulUploads = 0;
+
   try {
     // get servicecall form data from local storage
     let serviceCalls = await getServiceCallOfflineData();
-    if (serviceCalls === null) return;
+    if (serviceCalls === null || serviceCalls.length === 0) return null;
     // parse servicecall form data
     // upload each servicecall to server
     while (serviceCalls.length > 0) {
@@ -63,6 +65,7 @@ export async function uploadOfflineStoredServiceCalls(
           serviceCalls,
           idx: 0
         });
+        successfulUploads++;
       } catch (error) {
         console.log('Error uploading service call form', error);
       }
@@ -72,6 +75,7 @@ export async function uploadOfflineStoredServiceCalls(
   }
   const formsremaining = await getServiceCallOfflineData();
   console.log('Forms remaining: ', formsremaining.length);
+  return successfulUploads;
 }
 
 // delete servicecall form data from local storage
@@ -90,7 +94,6 @@ export async function deleteServiceCallOfflineData({
       SERVICECALLOFFLINE,
       JSON.stringify(serviceCallsFiltered)
     );
-    console.log('Service call form deleted from local storage: ', idx);
     return serviceCallsFiltered;
   } catch (error) {
     console.log(error);

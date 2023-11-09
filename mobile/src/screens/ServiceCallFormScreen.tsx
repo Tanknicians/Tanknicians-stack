@@ -22,10 +22,18 @@ import {
   serviceFormSchema,
   defaultServiceFormValues
 } from '../types/zodTypes';
-import { Text, Button } from 'react-native-paper';
-import React, { useEffect, useRef, useState } from 'react';
-import { TERTIARY_COLOR } from '../types/Styling';
-import { Platform, TouchableOpacity, View } from 'react-native';
+import {
+  Text,
+  Button,
+  Portal,
+  Modal,
+  ProgressBar,
+  MD3Colors,
+  ActivityIndicator
+} from 'react-native-paper';
+import React, { useRef, useState } from 'react';
+import { PRIMARY_COLOR, TERTIARY_COLOR } from '../types/Styling';
+import { Keyboard, Platform, TouchableOpacity, View } from 'react-native';
 import styles from '../styles/servicecall';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import ServiceCallFormQuestions from '../components/ServiceCallFormQuestions';
@@ -72,7 +80,10 @@ const ServiceCallForm = ({ navigation }: Props) => {
     if (isConnected) {
       console.log('No Internet Connection');
       await storeServiceCallOfflineData(dataWithEmployeeandTankId);
-      navigation.replace(QRSCANNERSCREEN);
+      dispatch(clearTankId());
+
+      // display modal for 3 seconds
+      showModal();
       return;
     }
 
@@ -82,16 +93,51 @@ const ServiceCallForm = ({ navigation }: Props) => {
       ).unwrap();
       console.log('Service Call Form Response: ', response);
       dispatch(clearTankId());
-      navigation.replace(QRSCANNERSCREEN);
+      showModal();
     } catch (error) {
       console.log('Service Call Form Error: ', error);
     }
   };
 
+  // Set timeout to navigate to QR Scanner Screen after a time delay of modal being visible
+  const [visible, setVisible] = useState(false);
+
+  const showModal = () => {
+    setVisible(true);
+    Keyboard.dismiss();
+
+    const delayTime = 2500;
+    setTimeout(() => {
+      setVisible(false);
+      navigation.replace(QRSCANNERSCREEN);
+    }, delayTime);
+  };
+
+  const modalErrorText = 'Form Will Submit When Connected To Internet\n';
+  const modalSuccessText = 'Form Submitted Successfully\n';
+
   return (
     <>
-      {isLoading && <LoadingSpinner />}
       <SafeAreaView style={styles.container}>
+        <Portal>
+          <Modal
+            visible={visible}
+            dismissable={false}
+            contentContainerStyle={styles.responseModalContainer}
+          >
+            <Text variant='headlineMedium' style={styles.responseModalHeader}>
+              {!isConnected ? modalSuccessText : modalErrorText}
+              <Text variant='titleLarge' style={styles.responseModalText}>
+                Navigating to QR Scanner...
+              </Text>
+            </Text>
+            <ActivityIndicator
+              size='large'
+              animating={true}
+              color={PRIMARY_COLOR}
+            />
+          </Modal>
+        </Portal>
         <StatusBar style='light' />
         <View style={styles.headerContainer}>
           {/* {isConnected && <NoInternet />} */}

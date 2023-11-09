@@ -14,7 +14,7 @@ import { getRefreshToken } from '../slices/auth/authRefresh';
 // ! The url will be given by ngrok after running the command ngrok http 5000
 // const BASE_URL = 'https://tanknicians.xyz';
 const BASE_URL =
-  'https://8b83-2603-9001-2e00-1465-61f9-fe13-9164-3cc2.ngrok.io';
+  'https://fd34-2603-9001-2e00-1465-2c18-48ab-99b7-d42e.ngrok.io';
 
 const baseQuery = fetchBaseQuery({
   baseUrl: BASE_URL,

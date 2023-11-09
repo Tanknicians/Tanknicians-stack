@@ -75,6 +75,23 @@ const styles = StyleSheet.create({
   submitButtonText: {
     color: TERTIARY_COLOR,
     fontSize: 20
+  },
+  responseModalContainer: {
+    backgroundColor: 'white',
+    padding: 10,
+    paddingVertical: 12,
+    margin: 12,
+    borderRadius: 5,
+    borderWidth: 1.5
+  },
+  responseModalHeader: {
+    color: PRIMARY_COLOR,
+    fontWeight: 'bold',
+    textAlign: 'center'
+  },
+  responseModalText: {
+    textAlign: 'center',
+    color: SECONDARY_COLOR
   }
 });
 
