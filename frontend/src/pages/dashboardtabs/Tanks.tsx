@@ -3,12 +3,13 @@ import {
   useGetClientsQuery
 } from '../../redux/slices/users/userManagementSlice';
 import CreateTankForm from '../../components/forms/UpsertTank';
+import UpdateTankForm from '../../components/forms/UpsertTank';
 import UserSearchBar from '../../components/UserSearchBar';
 import type {} from '@mui/x-data-grid/themeAugmentation';
 import { useEffect, useMemo, useState } from 'react';
 
 import CreateServiceCallModal from '../../components/forms/UpsertServiceCall';
-import { UpdateTankMetaData, tankSchema } from '../../zodTypes';
+import { tankSchema } from '../../zodTypes';
 import {
   Button,
   Collapse,
@@ -22,12 +23,14 @@ import {
   FormControl,
   Box,
   Card,
-  IconButton
+  IconButton,
+  Menu,
+  ListItemIcon
 } from '@mui/material';
 import SCDataGrid from '../../components/SCDataGrid';
 import TankGrid from '../../components/datagrid/TankGrid';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Add } from '@mui/icons-material';
+import { Add, Edit } from '@mui/icons-material';
 import DefaultCharts from '../../components/chartjs/DefaultCharts';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
@@ -43,10 +46,15 @@ export function TankTabs({
   selectedTankId: number | null;
   setSelectedTankId(tankId: number | null): void;
 }) {
+  const [tankId, setTankId] = useState<number | null>();
   const selectedTank = useMemo(
     () => tanks.find((tank) => tank.id === selectedTankId) ?? null,
     [selectedTankId, tanks]
   );
+
+  console.log('Selected tank:', selectedTank);
+
+  const tank = useMemo(() => selectedTank?.id === tankId ?? null, [tankId]);
 
   const [createTankOpen, setCreateTankOpen] = useState(false);
   const [createServiceCallOpen, setCreateServiceCallOpen] = useState(false);
@@ -66,6 +74,21 @@ export function TankTabs({
     setCreateTankOpen(true);
   };
 
+  const handleUpdateTank = (tank: tankSchema) => {
+    setTankId(tank.id);
+    handleTankMenuClose();
+  };
+
+  // Add and Edit Tank Menu
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const tankMenuOpen = Boolean(anchorEl);
+  const handleTankMenuOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleTankMenuClose = () => {
+    setAnchorEl(null);
+  };
+
   // Switch to grid
   return (
     <>
@@ -74,6 +97,7 @@ export function TankTabs({
         open={createTankOpen}
         setOpen={setCreateTankOpen}
       />
+
       {!selectedTank && (
         <Container
           sx={{
@@ -112,6 +136,20 @@ export function TankTabs({
       )}
       {selectedTank && (
         <>
+          {tank && (
+            <UpdateTankForm
+              userId={selectedTank.customerId}
+              open={!!tank}
+              setOpen={
+                (open: boolean) =>
+                  !open &&
+                  setTankId(
+                    null
+                  ) /*FIX: This is a hack to get the modal to close*/
+              }
+              previousTank={selectedTank}
+            />
+          )}
           <Box>
             <Box
               sx={{
@@ -144,13 +182,62 @@ export function TankTabs({
                 </Select>
               </FormControl>
               <Button
-                variant='contained'
-                onClick={handleAddTank}
-                startIcon={<Add fontSize='inherit' />}
+                variant='outlined'
+                onClick={handleTankMenuOpen}
                 sx={{ m: 1 }}
               >
-                Add Tank
+                Tank Options
               </Button>
+              <Menu
+                id='basic-menu'
+                anchorEl={anchorEl}
+                open={tankMenuOpen}
+                onClose={handleTankMenuClose}
+                MenuListProps={{
+                  'aria-labelledby': 'basic-button'
+                }}
+                PaperProps={{
+                  elevation: 0,
+                  sx: {
+                    overflow: 'visible',
+                    filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
+                    mt: 1.5,
+                    '& .MuiAvatar-root': {
+                      width: 32,
+                      height: 32,
+                      ml: -0.5,
+                      mr: 1
+                    },
+                    '&:before': {
+                      content: '""',
+                      display: 'block',
+                      position: 'absolute',
+                      top: 0,
+                      right: 14,
+                      width: 10,
+                      height: 10,
+                      bgcolor: 'background.paper',
+                      transform: 'translateY(-50%) rotate(45deg)',
+                      zIndex: 0
+                    }
+                  }
+                }}
+                transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+                anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+              >
+                <MenuItem onClick={handleAddTank}>
+                  <ListItemIcon>
+                    <Add fontSize='small' />
+                  </ListItemIcon>
+                  Add Tank
+                </MenuItem>
+                <MenuItem onClick={() => handleUpdateTank(selectedTank)}>
+                  <ListItemIcon>
+                    <Edit fontSize='small' />
+                  </ListItemIcon>
+                  Edit Tank
+                </MenuItem>
+              </Menu>
             </Box>
             <Paper>
               <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
