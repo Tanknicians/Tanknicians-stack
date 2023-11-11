@@ -42,6 +42,7 @@ export async function getServiceCallOfflineData() {
 }
 
 // upload servicecall form data to server when online
+// returns number of successful uploads
 export async function uploadOfflineStoredServiceCalls(
   uploadServiceCall: MutationTrigger<
     // rome-ignore lint/suspicious/noExplicitAny: <explanation>
@@ -49,7 +50,6 @@ export async function uploadOfflineStoredServiceCalls(
   >
 ) {
   let successfulUploads = 0;
-
   try {
     // get servicecall form data from local storage
     let serviceCalls = await getServiceCallOfflineData();
@@ -73,8 +73,6 @@ export async function uploadOfflineStoredServiceCalls(
   } catch (error) {
     console.log('Error retrieving forms from local storage', error);
   }
-  const formsremaining = await getServiceCallOfflineData();
-  console.log('Forms remaining: ', formsremaining.length);
   return successfulUploads;
 }
 

@@ -19,9 +19,11 @@ const AuthNavigator = () => {
   const isSignedIn = !!useSelector(selectCurrentToken);
   const initialRouteName = isSignedIn ? QRSCANNERSCREEN : LOGINSCREEN;
 
+  // if signed in, show offline upload modal notification
+  const offlineFormSubmitNotification = isSignedIn && <OfflineSCUpload />;
   return (
     <NavigationContainer>
-      <OfflineSCUpload />
+      {offlineFormSubmitNotification}
       <Stack.Navigator
         screenOptions={{
           headerShown: false,

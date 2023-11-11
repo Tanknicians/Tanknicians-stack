@@ -13,8 +13,7 @@ import { getRefreshToken } from '../slices/auth/authRefresh';
 // This URL works for physical device when "npm start" is executed
 // ! The url will be given by ngrok after running the command ngrok http 5000
 // const BASE_URL = 'https://tanknicians.xyz';
-const BASE_URL =
-  'https://fd34-2603-9001-2e00-1465-2c18-48ab-99b7-d42e.ngrok.io';
+const BASE_URL = 'https://0a53-97-100-138-146.ngrok.io';
 
 const baseQuery = fetchBaseQuery({
   baseUrl: BASE_URL,

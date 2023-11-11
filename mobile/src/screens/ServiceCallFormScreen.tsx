@@ -4,7 +4,6 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { selectCurrentUser } from '../redux/slices/auth/authSlice';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import LoadingSpinner from '../components/LoadingSpinner';
 import {
   QRSCANNERSCREEN,
   SERVICECALLFORMSCREEN,
@@ -27,8 +26,6 @@ import {
   Button,
   Portal,
   Modal,
-  ProgressBar,
-  MD3Colors,
   ActivityIndicator
 } from 'react-native-paper';
 import React, { useRef, useState } from 'react';
@@ -39,15 +36,19 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import ServiceCallFormQuestions from '../components/ServiceCallFormQuestions';
 import NoInternet from '../components/NoInternet';
 import { storeServiceCallOfflineData } from '../redux/slices/forms/servicecallOffline';
+import { useNetInfo } from '@react-native-community/netinfo';
 
 type Props = NativeStackScreenProps<Routes, typeof SERVICECALLFORMSCREEN>;
 
 const ServiceCallForm = ({ navigation }: Props) => {
   const [uploadServiceCall, { isLoading }] = useUploadServiceCallMutation();
+  const { isConnected } = useNetInfo();
+  const dispatch = useDispatch();
+
+  // Get tankId and employeeId from redux store to add to service call form data
   const clientTankId = useSelector(selectCurrentClientTank);
   const employeeId = useSelector(selectCurrentUser);
-  const dispatch = useDispatch();
-  const [isConnected, setIsConnected] = useState<boolean | null>(true);
+
   // Used to scroll to the top of the screen when there are errors
   const scrollViewRef = useRef<KeyboardAwareScrollView>(null);
 
@@ -55,18 +56,17 @@ const ServiceCallForm = ({ navigation }: Props) => {
     defaultValues: defaultServiceFormValues,
     resolver: zodResolver(serviceFormSchema)
   });
+  const { errors } = formState;
 
+  // Scroll to top of screen when there are errors
   const scrollToTop = () => {
     if (scrollViewRef.current) {
       scrollViewRef.current.scrollToPosition(0, 0, true);
     }
   };
-  const { errors } = formState;
-
-  // Scroll to top if there are errors
   if (errors && Object.keys(errors).length > 0) scrollToTop();
 
-  const onSubmit: SubmitHandler<ServiceFormData> = async (data) => {
+  const onValid: SubmitHandler<ServiceFormData> = async (data) => {
     // Add employeeId, tankId, and date service call was created to data object
     const dataWithEmployeeandTankId = {
       ...data,
@@ -77,109 +77,123 @@ const ServiceCallForm = ({ navigation }: Props) => {
 
     // If there is no internet connection, do not attempt to upload service call
     // store service call in local storage
-    if (isConnected) {
+    if (!isConnected) {
       console.log('No Internet Connection');
       await storeServiceCallOfflineData(dataWithEmployeeandTankId);
-      dispatch(clearTankId());
 
-      // display modal for 3 seconds
-      showModal();
+      // display modal prompt to user that form will submit when connected to internet
+      showModal(false);
       return;
     }
 
+    // ! Make sure to start ngrok before testing this functionality
+    // ! SyntaxError when trying to upload service call
     try {
       const response = await uploadServiceCall(
         dataWithEmployeeandTankId
       ).unwrap();
       console.log('Service Call Form Response: ', response);
       dispatch(clearTankId());
-      showModal();
+      showModal(true);
     } catch (error) {
       console.log('Service Call Form Error: ', error);
     }
   };
 
   // Set timeout to navigate to QR Scanner Screen after a time delay of modal being visible
-  const [visible, setVisible] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
 
-  const showModal = () => {
-    setVisible(true);
+  // isConnected will determine how long the modal is visible for
+  const showModal = (isConnected: boolean) => {
+    setIsSuccess(true);
     Keyboard.dismiss();
 
-    const delayTime = 2500;
-    setTimeout(() => {
-      setVisible(false);
-      navigation.replace(QRSCANNERSCREEN);
-    }, delayTime);
+    const onlineDelayTime = 2500;
+    const offlineDelayTime = 3500;
+
+    setTimeout(
+      () => {
+        setIsSuccess(false);
+        dispatch(clearTankId());
+        navigation.replace(QRSCANNERSCREEN);
+      },
+      isConnected ? onlineDelayTime : offlineDelayTime
+    );
   };
 
+  // Text to display in modal when form is submitted
+  // isConnected will determine the text displayed
+  // isLoading from api call and isVisible when api call is complete will determine if modal is visible
   const modalErrorText = 'Form Will Submit When Connected To Internet\n';
   const modalSuccessText = 'Form Submitted Successfully\n';
+  const isShowingModal = isLoading || isSuccess;
 
   return (
-    <>
-      <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container}>
+      {isShowingModal && (
         <Portal>
           <Modal
-            visible={visible}
+            visible={isShowingModal}
             dismissable={false}
             contentContainerStyle={styles.responseModalContainer}
           >
-            <Text variant='headlineMedium' style={styles.responseModalHeader}>
-              {!isConnected ? modalSuccessText : modalErrorText}
-              <Text variant='titleLarge' style={styles.responseModalText}>
-                Navigating to QR Scanner...
-              </Text>
-            </Text>
             <ActivityIndicator
               size='large'
               animating={true}
               color={PRIMARY_COLOR}
             />
+            {isSuccess && (
+              <Text variant='headlineMedium' style={styles.responseModalHeader}>
+                {isConnected ? modalSuccessText : modalErrorText}
+                <Text variant='titleLarge' style={styles.responseModalText}>
+                  Navigating to QR Scanner...
+                </Text>
+              </Text>
+            )}
           </Modal>
         </Portal>
-        <StatusBar style='light' />
-        <View style={styles.headerContainer}>
-          {/* {isConnected && <NoInternet />} */}
-          <Button
-            icon={() => (
-              <Icon name='chevron-left' size={26} color={TERTIARY_COLOR} />
-            )}
-            onPress={() => navigation.replace(QRSCANNERSCREEN)}
-            rippleColor='transparent'
-            children={undefined}
-          />
-          <Text style={styles.header}>Service Call Form</Text>
+      )}
+      <StatusBar style='light' />
+      {!isConnected && <NoInternet />}
+      <View style={styles.headerContainer}>
+        <Button
+          icon={() => (
+            <Icon name='chevron-left' size={26} color={TERTIARY_COLOR} />
+          )}
+          onPress={() => navigation.replace(QRSCANNERSCREEN)}
+          rippleColor='transparent'
+          children={undefined}
+        />
+        <Text style={styles.header}>Service Call Form</Text>
+      </View>
+      <KeyboardAwareScrollView
+        ref={scrollViewRef}
+        style={styles.keyboardAwareContainer}
+        contentContainerStyle={styles.keyboardAwareContent}
+        keyboardDismissMode='on-drag'
+        keyboardOpeningTime={0}
+        keyboardShouldPersistTaps={'handled'}
+        enableOnAndroid={true}
+        enableAutomaticScroll={true}
+        enableResetScrollToCoords={false}
+        // Values below are not finalized
+        extraScrollHeight={Platform.select({
+          ios: 200,
+          android: 120
+        })}
+      >
+        <ServiceCallFormQuestions control={control} />
+        <View style={styles.submitButtonContainer}>
+          <TouchableOpacity
+            onPress={handleSubmit(onValid)}
+            style={styles.submitButton}
+            disabled={isLoading}
+          >
+            <Text style={styles.submitButtonText}>Submit</Text>
+          </TouchableOpacity>
         </View>
-        <KeyboardAwareScrollView
-          ref={scrollViewRef}
-          style={styles.keyboardAwareContainer}
-          contentContainerStyle={styles.keyboardAwareContent}
-          keyboardDismissMode='on-drag'
-          keyboardOpeningTime={0}
-          keyboardShouldPersistTaps={'handled'}
-          enableOnAndroid={true}
-          enableAutomaticScroll={true}
-          enableResetScrollToCoords={false}
-          // Values below are not finalized
-          extraScrollHeight={Platform.select({
-            ios: 200,
-            android: 120
-          })}
-        >
-          <ServiceCallFormQuestions control={control} />
-          <View style={styles.submitButtonContainer}>
-            <TouchableOpacity
-              onPress={handleSubmit(onSubmit)}
-              style={styles.submitButton}
-              disabled={isLoading}
-            >
-              <Text style={styles.submitButtonText}>Submit</Text>
-            </TouchableOpacity>
-          </View>
-        </KeyboardAwareScrollView>
-      </SafeAreaView>
-    </>
+      </KeyboardAwareScrollView>
+    </SafeAreaView>
   );
 };
 
