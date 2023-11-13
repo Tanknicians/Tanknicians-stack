@@ -1,25 +1,25 @@
 import {
   UserData,
-  useGetClientsQuery
-} from '../../redux/slices/users/userManagementSlice';
-import UserSearchBar from '../../components/UserSearchBar';
-import Typography from '@mui/material/Typography';
-import UserCard from '../../components/UserCard';
-import Collapse from '@mui/material/Collapse';
-import Button from '@mui/material/Button';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import { useMemo, useState } from 'react';
-import CreateUserModal from '../../components/forms/CreateUser';
-import UserGrid from '../../components/datagrid/UserGrid';
-import { CircularProgress, Container, Paper } from '@mui/material';
-import SCDataGrid from '../../components/SCDataGrid';
-import { Add } from '@mui/icons-material';
+  useGetClientsQuery,
+} from "../../redux/slices/users/userManagementSlice";
+import UserSearchBar from "../../components/UserSearchBar";
+import Typography from "@mui/material/Typography";
+import UserCard from "../../components/UserCard";
+import Collapse from "@mui/material/Collapse";
+import Button from "@mui/material/Button";
+import Grid from "@mui/material/Grid";
+import Box from "@mui/material/Box";
+import { useMemo, useState } from "react";
+import CreateUserModal from "../../components/forms/CreateUser";
+import UserGrid from "../../components/datagrid/UserGrid";
+import { CircularProgress, Container, Paper } from "@mui/material";
+import SCDataGrid from "../../components/SCDataGrid";
+import { Add } from "@mui/icons-material";
 
 export default function Employees() {
   const { data: optionsList, error: clientsError } = useGetClientsQuery({
     includeTanks: false,
-    isEmployee: true
+    isEmployee: true,
   });
 
   const [employeeModalOpen, setEmployeeModalOpen] = useState(false);
@@ -48,9 +48,15 @@ export default function Employees() {
   if (!optionsList) return <CircularProgress />;
   return (
     <Container>
-      <Grid container rowSpacing={2} alignItems='center' maxWidth={'100%'}>
+      <Grid
+        container
+        rowSpacing={2}
+        alignItems="center"
+        maxWidth={"800px"}
+        margin={"auto"}
+      >
         <Grid item xs={12} md={3}>
-          <Typography variant='h4' component='h1'>
+          <Typography variant="h4" component="h1">
             Employees
           </Typography>
         </Grid>
@@ -59,22 +65,22 @@ export default function Employees() {
             userList={optionsList}
             selectedUser={selectedEmployee}
             handleUserSelected={handleUserSelected}
-            label='Employees'
+            label="Employees"
           />
         </Grid>
         <Grid item xs={12} md={3}>
           <Box
             sx={{
-              display: 'flex',
+              display: "flex",
               justifyContent: {
-                md: 'flex-end'
-              }
+                md: "flex-end",
+              },
             }}
           >
             <Button
-              variant='contained'
+              variant="contained"
               onClick={handleOpenUserModal}
-              startIcon={<Add fontSize='inherit' />}
+              startIcon={<Add fontSize="inherit" />}
             >
               Add Employee
             </Button>
@@ -98,9 +104,9 @@ export default function Employees() {
         {selectedEmployeeId && (
           <>
             <Grid item xs={12} md={12}>
-              <Box display={'flex'} justifyContent={'space-between'}>
-                <Typography variant='h6' component='h1'>
-                  {`${selectedEmployee?.firstName} ${selectedEmployee?.lastName}'s`}{' '}
+              <Box display={"flex"} justifyContent={"space-between"}>
+                <Typography variant="h6" component="h1">
+                  {`${selectedEmployee?.firstName} ${selectedEmployee?.lastName}'s`}{" "}
                   Service Calls
                 </Typography>
               </Box>
