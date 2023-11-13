@@ -1,14 +1,15 @@
 import {
   UserData,
-  useGetClientsQuery
-} from '../../redux/slices/users/userManagementSlice';
-import CreateTankForm from '../../components/forms/UpsertTank';
-import UserSearchBar from '../../components/UserSearchBar';
-import type {} from '@mui/x-data-grid/themeAugmentation';
-import { useEffect, useMemo, useState } from 'react';
+  useGetClientsQuery,
+} from "../../redux/slices/users/userManagementSlice";
+import CreateTankForm from "../../components/forms/UpsertTank";
+import UpdateTankForm from "../../components/forms/UpsertTank";
+import UserSearchBar from "../../components/UserSearchBar";
+import type {} from "@mui/x-data-grid/themeAugmentation";
+import { useEffect, useMemo, useState } from "react";
 
-import CreateServiceCallModal from '../../components/forms/UpsertServiceCall';
-import { UpdateTankMetaData, tankSchema } from '../../zodTypes';
+import CreateServiceCallModal from "../../components/forms/UpsertServiceCall";
+import { tankSchema } from "../../zodTypes";
 import {
   Button,
   Collapse,
@@ -22,33 +23,41 @@ import {
   FormControl,
   Box,
   Card,
-  IconButton
-} from '@mui/material';
-import SCDataGrid from '../../components/SCDataGrid';
-import TankGrid from '../../components/datagrid/TankGrid';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { Add } from '@mui/icons-material';
-import DefaultCharts from '../../components/chartjs/DefaultCharts';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+  IconButton,
+  Menu,
+  ListItemIcon,
+} from "@mui/material";
+import SCDataGrid from "../../components/SCDataGrid";
+import TankGrid from "../../components/datagrid/TankGrid";
+import { useLocation, useNavigate } from "react-router-dom";
+import { Add, Edit } from "@mui/icons-material";
+import DefaultCharts from "../../components/chartjs/DefaultCharts";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 
 export function TankTabs({
   tanks,
   employeeId,
   selectedTankId,
-  setSelectedTankId
+  setSelectedTankId,
 }: {
   tanks: tankSchema[];
   employeeId: number;
   selectedTankId: number | null;
   setSelectedTankId(tankId: number | null): void;
 }) {
+  const [tankId, setTankId] = useState<number | null>();
   const selectedTank = useMemo(
     () => tanks.find((tank) => tank.id === selectedTankId) ?? null,
     [selectedTankId, tanks]
   );
 
+  console.log("Selected tank:", selectedTank);
+
+  const tank = useMemo(() => selectedTank?.id === tankId ?? null, [tankId]);
+
   const [createTankOpen, setCreateTankOpen] = useState(false);
+  const [updateTankOpen, setUpdateTankOpen] = useState(false);
   const [createServiceCallOpen, setCreateServiceCallOpen] = useState(false);
   const [showCharts, setShowCharts] = useState<boolean>(true);
 
@@ -66,6 +75,22 @@ export function TankTabs({
     setCreateTankOpen(true);
   };
 
+  const handleUpdateTank = (tank: tankSchema) => {
+    setTankId(tank.id);
+    setUpdateTankOpen(true);
+    handleTankMenuClose();
+  };
+
+  // Add and Edit Tank Menu
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const tankMenuOpen = Boolean(anchorEl);
+  const handleTankMenuOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleTankMenuClose = () => {
+    setAnchorEl(null);
+  };
+
   // Switch to grid
   return (
     <>
@@ -74,36 +99,37 @@ export function TankTabs({
         open={createTankOpen}
         setOpen={setCreateTankOpen}
       />
+
       {!selectedTank && (
         <Container
           sx={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            height: '100%'
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            height: "100%",
           }}
         >
           <Card
             elevation={3}
             sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
               maxWidth: 300,
               padding: 5,
               minHeight: 200,
-              marginTop: 10
+              marginTop: 10,
             }}
           >
-            <Typography variant='h6' sx={{ marginBottom: 1 }}>
+            <Typography variant="h6" sx={{ marginBottom: 1 }}>
               Client has no tanks.
             </Typography>
             <Button
-              size='small'
-              variant='contained'
+              size="small"
+              variant="contained"
               onClick={handleAddTank}
-              startIcon={<Add fontSize='inherit' />}
+              startIcon={<Add fontSize="inherit" />}
             >
               Add Tank
             </Button>
@@ -112,27 +138,41 @@ export function TankTabs({
       )}
       {selectedTank && (
         <>
+          {tank && (
+            <UpdateTankForm
+              userId={selectedTank.customerId}
+              open={updateTankOpen}
+              setOpen={
+                (open: boolean) =>
+                  !open &&
+                  setTankId(
+                    null
+                  ) /*FIX: This is a hack to get the modal to close*/
+              }
+              previousTank={selectedTank}
+            />
+          )}
           <Box>
             <Box
               sx={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                padding: '0 16'
+                display: "flex",
+                justifyContent: "space-between",
+                padding: "0 16",
               }}
             >
-              <FormControl variant='standard' sx={{ m: 1, minWidth: 160 }}>
+              <FormControl variant="standard" sx={{ m: 1, minWidth: 160 }}>
                 <Select
                   autoWidth
-                  variant='standard'
-                  labelId='tank-id-selector-label'
-                  id='tank-id-selector'
+                  variant="standard"
+                  labelId="tank-id-selector-label"
+                  id="tank-id-selector"
                   displayEmpty={true}
                   renderValue={() => {
                     return selectedTank.nickname ?? selectedTank.id;
                   }}
                   onChange={handleTankSelection}
-                  label='Tanks'
-                  sx={{ textAlign: 'center' }}
+                  label="Tanks"
+                  sx={{ textAlign: "center" }}
                 >
                   {tanks.map((tank) => {
                     return (
@@ -144,17 +184,71 @@ export function TankTabs({
                 </Select>
               </FormControl>
               <Button
-                variant='contained'
-                onClick={handleAddTank}
-                startIcon={<Add fontSize='inherit' />}
+                variant="outlined"
+                onClick={handleTankMenuOpen}
                 sx={{ m: 1 }}
               >
-                Add Tank
+                Tank Options
               </Button>
+              <Menu
+                id="basic-menu"
+                anchorEl={anchorEl}
+                open={tankMenuOpen}
+                onClose={handleTankMenuClose}
+                MenuListProps={{
+                  "aria-labelledby": "basic-button",
+                }}
+                PaperProps={{
+                  elevation: 0,
+                  sx: {
+                    overflow: "visible",
+                    filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
+                    mt: 1.5,
+                    "& .MuiAvatar-root": {
+                      width: 32,
+                      height: 32,
+                      ml: -0.5,
+                      mr: 1,
+                    },
+                    "&:before": {
+                      content: '""',
+                      display: "block",
+                      position: "absolute",
+                      top: 0,
+                      right: 14,
+                      width: 10,
+                      height: 10,
+                      bgcolor: "background.paper",
+                      transform: "translateY(-50%) rotate(45deg)",
+                      zIndex: 0,
+                    },
+                  },
+                }}
+                transformOrigin={{ horizontal: "right", vertical: "top" }}
+                anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+              >
+                <MenuItem onClick={handleAddTank}>
+                  <ListItemIcon>
+                    <Add fontSize="small" />
+                  </ListItemIcon>
+                  Add Tank
+                </MenuItem>
+                <MenuItem onClick={() => handleUpdateTank(selectedTank)}>
+                  <ListItemIcon>
+                    <Edit fontSize="small" />
+                  </ListItemIcon>
+                  Edit Tank
+                </MenuItem>
+              </Menu>
             </Box>
             <Paper>
-              <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                <IconButton size='small' onClick={handleChartCollapse}>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                }}
+              >
+                <IconButton size="small" onClick={handleChartCollapse}>
                   {showCharts ? (
                     <KeyboardArrowUpIcon />
                   ) : (
@@ -170,17 +264,17 @@ export function TankTabs({
           <Paper elevation={3} sx={{ marginTop: 2 }}>
             <Container
               sx={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center'
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
               }}
             >
-              <Typography variant='h5'>Service Calls</Typography>
+              <Typography variant="h5">Service Calls</Typography>
               <Button
-                variant='contained'
+                variant="contained"
                 onClick={() => setCreateServiceCallOpen(true)}
-                startIcon={<Add fontSize='inherit' />}
-                sx={{ margin: '8 0' }}
+                startIcon={<Add fontSize="inherit" />}
+                sx={{ margin: "8 0" }}
               >
                 Add Service Form
               </Button>
@@ -203,11 +297,11 @@ export function TankTabs({
 export default function Tanks() {
   const { data: optionsList } = useGetClientsQuery({
     includeTanks: true,
-    isEmployee: false
+    isEmployee: false,
   });
   const location = useLocation();
   const urlTankId = useMemo(
-    () => new URLSearchParams(location.search).get('tankId'),
+    () => new URLSearchParams(location.search).get("tankId"),
     [location]
   );
   const [selectedTankId, setSelectedTankId] = useState<number | null>(
@@ -231,7 +325,7 @@ export default function Tanks() {
     if (userId) {
       selectCurrentUserId(userId);
     } else {
-      navigate('/Dashboard/tanks');
+      navigate("/Dashboard/tanks");
     }
   }, [selectedUserId, selectedTankId, optionsList]);
 
@@ -251,7 +345,7 @@ export default function Tanks() {
     selectCurrentUserId(customer?.id ?? null);
     setSelectedTankId(null);
     if (!customer?.id) {
-      navigate('/dashboard/Tanks');
+      navigate("/dashboard/Tanks");
     }
   };
 
@@ -259,9 +353,9 @@ export default function Tanks() {
 
   return (
     <Container>
-      <Grid container rowSpacing={1} alignItems='center' maxWidth={'100%'}>
+      <Grid container rowSpacing={1} alignItems="center" maxWidth={"100%"}>
         <Grid item xs={12} md={3}>
-          <Typography variant='h4' component='h1'>
+          <Typography variant="h4" component="h1">
             Tanks
           </Typography>
         </Grid>
@@ -270,7 +364,7 @@ export default function Tanks() {
             userList={optionsList}
             selectedUser={selectedUser}
             handleUserSelected={handleUserSelected}
-            label='Clients'
+            label="Clients"
           />
         </Grid>
         <Grid item xs={12} md={3} />
