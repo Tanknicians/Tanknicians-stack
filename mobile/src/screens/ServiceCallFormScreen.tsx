@@ -84,7 +84,7 @@ const ServiceCallForm = ({ navigation }: Props) => {
 
     // If there is no internet connection, do not attempt to upload service call
     // store service call in local storage
-    if (!isConnected) {
+    if (!isConnected && !isLoading) {
       console.log('No Internet Connection');
       await storeServiceCallOfflineData(dataWithEmployeeandTankId);
 
