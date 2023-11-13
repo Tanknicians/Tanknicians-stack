@@ -362,7 +362,9 @@ export default function SCDataGrid({
       return {
         ...s,
         clientName: getClientName(s.tankId),
-        date: new Date(s.createdOn).toLocaleDateString(),
+        date: new Date(
+          `${s.createdOn.toString().split('T')[0]}T12:00:00.000Z` //created on is already a string, not a date
+        ).toLocaleDateString(),
         customerNotes: s.customerRequest,
         employeeNotes: s.employeeNotes,
         unapprovedNotes: s.notApprovedNotes
@@ -608,14 +610,18 @@ export default function SCDataGrid({
       }
     ];
 
-    rows = serviceCallsForTankID.map((s: ServiceCall) => ({
-      employeeName: getEmployeeName(s.employeeId),
-      ...s,
-      date: new Date(s.createdOn).toLocaleDateString(),
-      customerNotes: s.customerRequest,
-      employeeNotes: s.employeeNotes,
-      unapprovedNotes: s.notApprovedNotes
-    }));
+    rows = serviceCallsForTankID.map((s: ServiceCall) => {
+      return {
+        employeeName: getEmployeeName(s.employeeId),
+        ...s,
+        date: new Date(
+          `${s.createdOn.toString().split('T')[0]}T12:00:00.000Z` //created on is already a string, not a date
+        ).toLocaleDateString(),
+        customerNotes: s.customerRequest,
+        employeeNotes: s.employeeNotes,
+        unapprovedNotes: s.notApprovedNotes
+      };
+    });
   } else {
     return <div>error</div>;
   }

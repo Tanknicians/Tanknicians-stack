@@ -32,7 +32,8 @@ export const servicecallApiSlice = apiSlice.injectEndpoints({
         url: `/api/database/servicecall/range/${tankId}`,
         method: 'GET',
         params: { start, end }
-      })
+      }),
+      providesTags: (result) => [{ type: 'SERVICECALL', id: 'LIST' }]
     }),
     createServiceCall: builder.mutation<void, CreateServiceCall>({
       query: (serviceCall) => ({
@@ -52,7 +53,8 @@ export const servicecallApiSlice = apiSlice.injectEndpoints({
         return [
           { type: 'SERVICECALL', id: serviceCall.id },
           { type: 'UNAPPROVEDSERVICECALL', id: serviceCall.id },
-          { type: 'TANKS', id: serviceCall.tankId }
+          { type: 'TANKS', id: serviceCall.tankId },
+          { type: 'SERVICECALL', id: 'LIST' }
         ];
       }
     }),

@@ -31,7 +31,7 @@ export default function DefaultCharts({
     alkVals.push(datapoint[0]);
 
     // months 0 indexed btw
-    alkDates.push(`${date.getMonth() + 1}/${date.getDate()}`);
+    alkDates.push(`${date.getMonth() + 1}/${date.getDate() + 1}`);
   });
 
   const alk = {
@@ -57,7 +57,7 @@ export default function DefaultCharts({
     const date = new Date(datapoint[1]);
 
     calVals.push(datapoint[0]);
-    calDates.push(`${date.getMonth() + 1}/${date.getDate()}`);
+    calDates.push(`${date.getMonth() + 1}/${date.getDate() + 1}`);
   });
 
   const cal = {
@@ -83,7 +83,7 @@ export default function DefaultCharts({
     const date = new Date(datapoint[1]);
 
     nitVals.push(datapoint[0]);
-    nitDates.push(`${date.getMonth() + 1}/${date.getDate()}`);
+    nitDates.push(`${date.getMonth() + 1}/${date.getDate() + 1}`);
   });
 
   const nit = {
@@ -109,7 +109,7 @@ export default function DefaultCharts({
     const date = new Date(datapoint[1]);
 
     phoVals.push(datapoint[0]);
-    phoDates.push(`${date.getMonth() + 1}/${date.getDate()}`);
+    phoDates.push(`${date.getMonth() + 1}/${date.getDate() + 1}`);
   });
 
   const pho = {
