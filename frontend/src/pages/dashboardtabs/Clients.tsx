@@ -49,7 +49,13 @@ export default function Clients() {
 
   return (
     <Container>
-      <Grid container rowSpacing={2} maxWidth={'100%'} alignItems='center'>
+      <Grid
+        container
+        rowSpacing={2}
+        maxWidth={'800px'}
+        margin={'auto'}
+        alignItems='center'
+      >
         <Grid item xs={12} md={3}>
           <Typography variant='h4' component='h1'>
             Clients

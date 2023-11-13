@@ -100,7 +100,13 @@ export default function ApproveForms() {
 
   return (
     <Container>
-      <Grid container rowSpacing={4} alignItems='center' maxWidth={'100%'}>
+      <Grid
+        container
+        rowSpacing={4}
+        alignItems='center'
+        maxWidth={'800px'}
+        margin={'auto'}
+      >
         <Grid item xs={12}>
           <Typography variant='h4' component='h1'>
             Approve Forms
