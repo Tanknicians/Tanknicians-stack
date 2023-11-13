@@ -1,12 +1,12 @@
-import { Box, Container, Grid } from "@mui/material";
-import { useGetAllServiceCallsByTankIdAndDateRangeQuery } from "../../redux/slices/forms/servicecallApiSlice";
-import LineChart from "./LineChart";
-import { LinearScaleOptions } from "chart.js";
+import { Box, Container, Grid } from '@mui/material';
+import { useGetAllServiceCallsByTankIdAndDateRangeQuery } from '../../redux/slices/forms/servicecallApiSlice';
+import LineChart from './LineChart';
+import { LinearScaleOptions } from 'chart.js';
 
 export default function DefaultCharts({
   tankId,
   start,
-  end,
+  end
 }: {
   tankId: number;
   start?: Date;
@@ -14,7 +14,7 @@ export default function DefaultCharts({
 }) {
   const { data: serviceCalls } = useGetAllServiceCallsByTankIdAndDateRangeQuery(
     {
-      tankId: tankId,
+      tankId: tankId
     }
   );
 
@@ -23,7 +23,7 @@ export default function DefaultCharts({
   const alkVals: number[] = [];
   const aScale: Partial<LinearScaleOptions> = {
     max: 11,
-    min: 6.5,
+    min: 6.5
   };
 
   serviceCalls?.alkalinity.forEach((datapoint) => {
@@ -38,11 +38,11 @@ export default function DefaultCharts({
     labels: alkDates,
     datasets: [
       {
-        label: "Alkalinity",
+        label: 'Alkalinity',
         data: alkVals,
-        borderColor: "blue",
-      },
-    ],
+        borderColor: 'blue'
+      }
+    ]
   };
 
   // CALCIUM
@@ -50,7 +50,7 @@ export default function DefaultCharts({
   const calVals: number[] = [];
   const cScale: Partial<LinearScaleOptions> = {
     max: 500,
-    min: 400,
+    min: 400
   };
 
   serviceCalls?.calcium.forEach((datapoint) => {
@@ -64,11 +64,11 @@ export default function DefaultCharts({
     labels: calDates,
     datasets: [
       {
-        label: "Calcium",
+        label: 'Calcium',
         data: calVals,
-        borderColor: "red",
-      },
-    ],
+        borderColor: 'red'
+      }
+    ]
   };
 
   // NITRATE
@@ -76,7 +76,7 @@ export default function DefaultCharts({
   const nitVals: number[] = [];
   const nScale: Partial<LinearScaleOptions> = {
     max: 20,
-    min: 1,
+    min: 1
   };
 
   serviceCalls?.nitrate.forEach((datapoint) => {
@@ -90,11 +90,11 @@ export default function DefaultCharts({
     labels: nitDates,
     datasets: [
       {
-        label: "Nitrate",
+        label: 'Nitrate',
         data: nitVals,
-        borderColor: "orange",
-      },
-    ],
+        borderColor: 'orange'
+      }
+    ]
   };
 
   // PHOSPHATE
@@ -102,7 +102,7 @@ export default function DefaultCharts({
   const phoVals: number[] = [];
   const pScale: Partial<LinearScaleOptions> = {
     max: 0.24,
-    min: 0.03,
+    min: 0.03
   };
 
   serviceCalls?.phosphate.forEach((datapoint) => {
@@ -116,34 +116,34 @@ export default function DefaultCharts({
     labels: phoDates,
     datasets: [
       {
-        label: "Phosphate",
+        label: 'Phosphate',
         data: phoVals,
-        borderColor: "green",
-      },
-    ],
+        borderColor: 'green'
+      }
+    ]
   };
 
   return (
-    <Box sx={{ paddingBottom: "30px" }}>
-      <Grid container maxWidth={"100%"} alignItems="center">
+    <Box sx={{ paddingBottom: '30px' }}>
+      <Grid container maxWidth={'100%'} alignItems='center'>
         <Grid item xs={12} md={6}>
-          <Container sx={{ alignItems: "center" }}>
-            <LineChart data={alk} yscale={aScale} title={"Alkalinity"} />
+          <Container sx={{ alignItems: 'center' }}>
+            <LineChart data={alk} yscale={aScale} title={'Alkalinity'} />
           </Container>
         </Grid>
         <Grid item xs={12} md={6}>
-          <Container sx={{ alignItems: "center" }}>
-            <LineChart data={cal} yscale={cScale} title={"Calcium"} />
+          <Container sx={{ alignItems: 'center' }}>
+            <LineChart data={cal} yscale={cScale} title={'Calcium'} />
           </Container>
         </Grid>
         <Grid item xs={12} md={6}>
-          <Container sx={{ alignItems: "center" }}>
-            <LineChart data={nit} yscale={nScale} title={"Nitrate"} />
+          <Container sx={{ alignItems: 'center' }}>
+            <LineChart data={nit} yscale={nScale} title={'Nitrate'} />
           </Container>
         </Grid>
         <Grid item xs={12} md={6}>
-          <Container sx={{ alignItems: "center" }}>
-            <LineChart data={pho} yscale={pScale} title={"Phosphate"} />
+          <Container sx={{ alignItems: 'center' }}>
+            <LineChart data={pho} yscale={pScale} title={'Phosphate'} />
           </Container>
         </Grid>
       </Grid>
