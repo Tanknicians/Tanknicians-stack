@@ -353,7 +353,13 @@ export default function Tanks() {
 
   return (
     <Container>
-      <Grid container rowSpacing={1} alignItems="center" maxWidth={"100%"}>
+      <Grid
+        container
+        rowSpacing={1}
+        alignItems="center"
+        maxWidth={"800px"}
+        margin={"auto"}
+      >
         <Grid item xs={12} md={3}>
           <Typography variant="h4" component="h1">
             Tanks
