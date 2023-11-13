@@ -57,6 +57,7 @@ export function TankTabs({
   const tank = useMemo(() => selectedTank?.id === tankId ?? null, [tankId]);
 
   const [createTankOpen, setCreateTankOpen] = useState(false);
+  const [updateTankOpen, setUpdateTankOpen] = useState(false);
   const [createServiceCallOpen, setCreateServiceCallOpen] = useState(false);
   const [showCharts, setShowCharts] = useState<boolean>(true);
 
@@ -76,6 +77,7 @@ export function TankTabs({
 
   const handleUpdateTank = (tank: tankSchema) => {
     setTankId(tank.id);
+    setUpdateTankOpen(true);
     handleTankMenuClose();
   };
 
@@ -139,7 +141,7 @@ export function TankTabs({
           {tank && (
             <UpdateTankForm
               userId={selectedTank.customerId}
-              open={!!tank}
+              open={updateTankOpen}
               setOpen={
                 (open: boolean) =>
                   !open &&
