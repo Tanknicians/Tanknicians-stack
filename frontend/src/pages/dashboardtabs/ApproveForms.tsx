@@ -152,7 +152,7 @@ export default function ApproveForms() {
                     <TableCell align='center' sx={{ textAlign: 'center' }}>
                       <TankName tankId={object.tankId} />
                     </TableCell>
-                    <TableCell align="center" sx={{ textAlign: "center" }}>
+                    <TableCell align='center' sx={{ textAlign: 'center' }}>
                       {`${new Date(object.createdOn).getMonth() + 1}/${new Date(
                         object.createdOn
                       ).getDate()}/${new Date(object.createdOn).getFullYear()}`}
