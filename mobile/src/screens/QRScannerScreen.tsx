@@ -19,6 +19,7 @@ import { useDispatch } from 'react-redux';
 import { TERTIARY_COLOR, getScreenDimensions } from '../types/Styling';
 import styles from '../styles/qrscreen';
 import { StatusBar } from 'expo-status-bar';
+import NoInternet from '../components/NoInternet';
 
 // Allows to scan QR code only if in mask area
 const finderWidth: number = 280;
@@ -125,6 +126,7 @@ const QRScannerScreen = ({ navigation }: Props) => {
       style={android ? styles.androidcontainer : styles.ioscontainer}
     >
       <StatusBar style='light' />
+      <NoInternet />
       <View style={styles.barcodeContainer}>
         <View style={android ? styles.androidoverlay : styles.iosoverlay}>
           <TouchableOpacity onPress={toggleCameraType}>

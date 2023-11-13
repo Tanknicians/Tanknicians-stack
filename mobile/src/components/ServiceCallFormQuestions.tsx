@@ -5,7 +5,7 @@ import {
   SECONDARY_COLOR,
   TERTIARY_COLOR
 } from '../types/Styling';
-import { Controller, Control, UseFormSetValue } from 'react-hook-form';
+import { Controller, Control } from 'react-hook-form';
 import {
   Text,
   HelperText,

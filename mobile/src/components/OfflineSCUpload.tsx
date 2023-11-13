@@ -38,7 +38,7 @@ export const OfflineSCUpload = () => {
     });
     setUploadComplete(true);
     // Unsubscribe
-    return unsubscribe();
+    return unsubscribe;
   }, []);
   return (
     uploadComplete && (

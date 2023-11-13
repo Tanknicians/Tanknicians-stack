@@ -5,7 +5,6 @@ const styles = StyleSheet.create({
   ioscontainer: {
     flex: 1,
     backgroundColor: SECONDARY_COLOR,
-    paddingTop: 20,
     paddingBottom: 30
   },
   androidcontainer: {
@@ -77,9 +76,10 @@ const styles = StyleSheet.create({
   header: {
     fontStyle: 'italic',
     fontWeight: 'bold',
-    fontSize: 34,
+    fontSize: 32,
     color: TERTIARY_COLOR,
-    paddingBottom: 15
+    marginTop: 15,
+    marginBottom: 15
   }
 });
 

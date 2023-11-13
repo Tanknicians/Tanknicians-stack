@@ -161,7 +161,7 @@ const ServiceCallForm = ({ navigation }: Props) => {
         </Portal>
       )}
       <StatusBar style='light' />
-      {!isConnected && <NoInternet />}
+      <NoInternet />
       <View style={styles.headerContainer}>
         <Button
           icon={() => (
