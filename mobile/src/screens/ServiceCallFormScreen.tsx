@@ -17,9 +17,9 @@ import {
 } from '../redux/slices/forms/servicecallTankSlice';
 import { StatusBar } from 'expo-status-bar';
 import {
-  ServiceFormData,
-  serviceFormSchema,
-  defaultServiceFormValues
+  MobileServiceCallQuestions,
+  CreateServiceCall,
+  mobileServiceCallQuestions
 } from '../types/zodTypes';
 import {
   Text,
@@ -37,6 +37,7 @@ import ServiceCallFormQuestions from '../components/ServiceCallFormQuestions';
 import NoInternet from '../components/NoInternet';
 import { storeServiceCallOfflineData } from '../redux/slices/forms/servicecallOffline';
 import { useNetInfo } from '@react-native-community/netinfo';
+import { defaultValues } from '../components/ServiceCallFormQuestions';
 
 type Props = NativeStackScreenProps<Routes, typeof SERVICECALLFORMSCREEN>;
 
@@ -47,16 +48,20 @@ const ServiceCallForm = ({ navigation }: Props) => {
 
   // Get tankId and employeeId from redux store to add to service call form data
   const clientTankId = useSelector(selectCurrentClientTank);
-  const employeeId = useSelector(selectCurrentUser);
+  const loggedInUser = useSelector(selectCurrentUser);
 
   // Used to scroll to the top of the screen when there are errors
   const scrollViewRef = useRef<KeyboardAwareScrollView>(null);
 
-  const { control, handleSubmit, formState } = useForm<ServiceFormData>({
-    defaultValues: defaultServiceFormValues,
-    resolver: zodResolver(serviceFormSchema)
-  });
+  const { control, handleSubmit, formState } =
+    useForm<MobileServiceCallQuestions>({
+      defaultValues,
+      mode: 'onSubmit',
+      reValidateMode: 'onSubmit',
+      resolver: zodResolver(mobileServiceCallQuestions)
+    });
   const { errors } = formState;
+  console.log('Service Call Form Errors: ', errors);
 
   // Scroll to top of screen when there are errors
   const scrollToTop = () => {
@@ -66,11 +71,13 @@ const ServiceCallForm = ({ navigation }: Props) => {
   };
   if (errors && Object.keys(errors).length > 0) scrollToTop();
 
-  const onValid: SubmitHandler<ServiceFormData> = async (data) => {
+  const onValid: SubmitHandler<MobileServiceCallQuestions> = async (
+    data: MobileServiceCallQuestions
+  ) => {
     // Add employeeId, tankId, and date service call was created to data object
-    const dataWithEmployeeandTankId = {
+    const dataWithEmployeeandTankId: CreateServiceCall = {
       ...data,
-      employeeId: employeeId?.userId,
+      employeeId: loggedInUser.userId,
       tankId: clientTankId,
       createdOn: new Date()
     };
