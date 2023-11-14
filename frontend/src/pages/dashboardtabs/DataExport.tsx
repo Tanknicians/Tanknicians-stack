@@ -38,7 +38,7 @@ export default function DataExport() {
         container
         rowSpacing={1}
         alignItems='center'
-        maxWidth={'800px'}
+        maxWidth={'900px'}
         margin={'auto'}
       >
         <Grid item xs={12}>

@@ -52,7 +52,7 @@ export default function Clients() {
       <Grid
         container
         rowSpacing={2}
-        maxWidth={'800px'}
+        maxWidth={'900px'}
         margin={'auto'}
         alignItems='center'
       >

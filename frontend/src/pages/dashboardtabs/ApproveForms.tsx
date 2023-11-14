@@ -104,7 +104,7 @@ export default function ApproveForms() {
         container
         rowSpacing={4}
         alignItems='center'
-        maxWidth={'800px'}
+        maxWidth={'900px'}
         margin={'auto'}
       >
         <Grid item xs={12}>
@@ -153,7 +153,7 @@ export default function ApproveForms() {
                       <TankName tankId={object.tankId} />
                     </TableCell>
                     <TableCell align='center' sx={{ textAlign: 'center' }}>
-                      {`${new Date(object.createdOn).getMonth()}/${new Date(
+                      {`${new Date(object.createdOn).getMonth() + 1}/${new Date(
                         object.createdOn
                       ).getDate()}/${new Date(object.createdOn).getFullYear()}`}
                     </TableCell>

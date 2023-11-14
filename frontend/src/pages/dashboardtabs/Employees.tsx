@@ -52,7 +52,7 @@ export default function Employees() {
         container
         rowSpacing={2}
         alignItems='center'
-        maxWidth={'800px'}
+        maxWidth={'900px'}
         margin={'auto'}
       >
         <Grid item xs={12} md={3}>
