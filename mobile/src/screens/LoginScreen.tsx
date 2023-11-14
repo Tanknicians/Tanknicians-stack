@@ -2,7 +2,6 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { View, TouchableOpacity, Platform, Keyboard } from 'react-native';
 import { useForm, SubmitHandler, Controller } from 'react-hook-form';
 import { useLoginMutation } from '../redux/slices/auth/authApiSlice';
-import { PRIMARY_COLOR, getScreenDimensions } from '../types/Styling';
 import { AuthLogin, errorSchema, authLogin } from '../types/zodTypes';
 import { setCredentials } from '../redux/slices/auth/authSlice';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -10,6 +9,7 @@ import { storeToken } from '../redux/slices/auth/authRefresh';
 import LoadingSpinner from '../components/LoadingSpinner';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Text, TextInput } from 'react-native-paper';
+import { PRIMARY_COLOR } from '../types/Styling';
 import { StatusBar } from 'expo-status-bar';
 import { useDispatch } from 'react-redux';
 import React, { useState } from 'react';
@@ -60,7 +60,6 @@ const LoginScreen = () => {
       }
 
       if (!error?.status) {
-        // isLoading: true until timeout occurs
         setLoginErrorMessage('No Server Response');
       } else if (error?.status === 400) {
         console.log(`Login error ${error.status}: `, error.data?.message);

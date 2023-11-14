@@ -2,7 +2,7 @@
   Store servicecall form data in local storage when offline
   upload to server when online
 */
-import { ServiceCall } from '../../../types/zodTypes';
+import { CreateServiceCall } from '../../../types/zodTypes';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MutationTrigger } from '@reduxjs/toolkit/dist/query/react/buildHooks';
 import { BaseQueryFn, MutationDefinition } from '@reduxjs/toolkit/dist/query';
@@ -11,7 +11,7 @@ const SERVICECALLOFFLINE = 'SERVICECALLOFFLINE';
 
 // Store servicecall form data in local storage
 // Retrieve any existing data and add new data to it
-export async function storeServiceCallOfflineData(data: ServiceCall) {
+export async function storeServiceCallOfflineData(data: CreateServiceCall) {
   console.log('Data to be stored: ', data);
   try {
     // Retrieve existing data
@@ -52,47 +52,40 @@ export async function uploadOfflineStoredServiceCalls(
   let successfulUploads = 0;
   try {
     // get servicecall form data from local storage
-    let serviceCalls = await getServiceCallOfflineData();
+    const serviceCalls = await getServiceCallOfflineData();
+
     if (serviceCalls === null || serviceCalls.length === 0) return null;
     // parse servicecall form data
     // upload each servicecall to server
-    while (serviceCalls.length > 0) {
+    for (let i = serviceCalls.length - 1; i >= 0; i--) {
       try {
-        const response = await uploadServiceCall(serviceCalls[0]).unwrap();
+        const response = await uploadServiceCall(serviceCalls[i]).unwrap();
         console.log(`Offline upload response: ${JSON.stringify(response)}\n`);
+        serviceCalls.splice(i, 1);
         // remove uploaded servicecall from local storage
-        serviceCalls = await deleteServiceCallOfflineData({
-          serviceCalls,
-          idx: 0
-        });
         successfulUploads++;
       } catch (error) {
         console.log('Error uploading service call form', error);
       }
     }
+    await deleteServiceCallOfflineData(serviceCalls);
   } catch (error) {
     console.log('Error retrieving forms from local storage', error);
   }
+
   return successfulUploads;
 }
 
 // delete servicecall form data from local storage
 export async function deleteServiceCallOfflineData({
-  serviceCalls,
-  idx
-}: { serviceCalls: ServiceCall[]; idx: number }) {
+  serviceCalls
+}: { serviceCalls: CreateServiceCall[] }) {
   try {
-    const serviceCallsFiltered = serviceCalls.filter(
-      (_serviceCall: ServiceCall, index: number) => {
-        return index !== idx;
-      }
-    );
     // update local storage
     await AsyncStorage.setItem(
       SERVICECALLOFFLINE,
-      JSON.stringify(serviceCallsFiltered)
+      JSON.stringify(serviceCalls)
     );
-    return serviceCallsFiltered;
   } catch (error) {
     console.log(error);
   }

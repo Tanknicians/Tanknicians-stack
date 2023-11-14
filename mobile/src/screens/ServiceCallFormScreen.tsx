@@ -74,12 +74,16 @@ const ServiceCallForm = ({ navigation }: Props) => {
   const onValid: SubmitHandler<MobileServiceCallQuestions> = async (
     data: MobileServiceCallQuestions
   ) => {
+    const createdOnDate = new Date(
+      `${new Date().toISOString().split('T')[0]}T00:00:00.000Z`
+    );
+
     // Add employeeId, tankId, and date service call was created to data object
     const dataWithEmployeeandTankId: CreateServiceCall = {
       ...data,
       employeeId: loggedInUser.userId,
       tankId: clientTankId,
-      createdOn: new Date()
+      createdOn: createdOnDate
     };
 
     // If there is no internet connection, do not attempt to upload service call

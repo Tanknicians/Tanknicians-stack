@@ -1,5 +1,5 @@
 import { Animated, Easing, StatusBar, StyleSheet, Text } from 'react-native';
-import React, { useState } from 'react';
+import React from 'react';
 import { useNetInfo } from '@react-native-community/netinfo';
 
 const styles = StyleSheet.create({
