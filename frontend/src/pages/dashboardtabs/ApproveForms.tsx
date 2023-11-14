@@ -104,7 +104,7 @@ export default function ApproveForms() {
         container
         rowSpacing={4}
         alignItems='center'
-        maxWidth={'800px'}
+        maxWidth={'900px'}
         margin={'auto'}
       >
         <Grid item xs={12}>
