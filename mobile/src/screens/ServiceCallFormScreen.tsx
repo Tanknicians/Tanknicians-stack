@@ -46,6 +46,8 @@ const ServiceCallForm = ({ navigation }: Props) => {
   const { isConnected } = useNetInfo();
   const dispatch = useDispatch();
 
+  const [ERROR, setERROR] = useState<String | null>(null);
+
   // Get tankId and employeeId from redux store to add to service call form data
   const clientTankId = useSelector(selectCurrentClientTank);
   const loggedInUser = useSelector(selectCurrentUser);
@@ -106,7 +108,9 @@ const ServiceCallForm = ({ navigation }: Props) => {
       console.log('Service Call Form Response: ', response);
       dispatch(clearTankId());
       showModal(true);
-    } catch (error) {
+      // rome-ignore lint/suspicious/noExplicitAny: <explanation>
+    } catch (error: any) {
+      setERROR(JSON.parse(error));
       console.log('Service Call Form Error: ', error);
     }
   };
@@ -194,6 +198,7 @@ const ServiceCallForm = ({ navigation }: Props) => {
         })}
       >
         <ServiceCallFormQuestions control={control} />
+        {ERROR && <Text>{ERROR}</Text>}
         <View style={styles.submitButtonContainer}>
           <TouchableOpacity
             onPress={handleSubmit(onValid)}

@@ -11,7 +11,7 @@ import {
   Routes,
   SERVICECALLFORMSCREEN
 } from '../types/Routes';
-// import OfflineSCUpload from '../components/OfflineSCUpload';
+import OfflineSCUpload from '../components/OfflineSCUpload';
 
 const Stack = createNativeStackNavigator<Routes>();
 
@@ -20,10 +20,10 @@ const AuthNavigator = () => {
   const initialRouteName = isSignedIn ? QRSCANNERSCREEN : LOGINSCREEN;
 
   // if signed in, show offline upload modal notification
-  // const offlineFormSubmitNotification = isSignedIn && <OfflineSCUpload />;
+  const offlineFormSubmitNotification = isSignedIn && <OfflineSCUpload />;
   return (
     <NavigationContainer>
-      {/* {offlineFormSubmitNotification} */}
+      {offlineFormSubmitNotification}
       <Stack.Navigator
         screenOptions={{
           headerShown: false,

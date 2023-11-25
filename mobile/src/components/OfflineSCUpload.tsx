@@ -1,13 +1,18 @@
-import { uploadOfflineStoredServiceCalls } from '../redux/slices/forms/servicecallOffline';
+import {
+  deleteAllServiceCallOfflineData,
+  getServiceCallOfflineData,
+  uploadOfflineStoredServiceCalls
+} from '../redux/slices/forms/servicecallOffline';
 import { useUploadServiceCallMutation } from '../redux/slices/forms/servicecallApiSlice';
 import OfflineSCUploadModal from './OfflineSCUploadModal';
 import NetInfo from '@react-native-community/netinfo';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 
 // FIXME - If app crashes while reloading on expo go, offline forms are lost
 export const OfflineSCUpload = () => {
   const [uploadServiceCall] = useUploadServiceCallMutation();
+  const [isOffline, setOfflineStatus] = useState(false);
   const [offlineFormSubmitTotal, setOfflineFormSubmitTotal] = useState<
     number | null
   >(0);
@@ -22,24 +27,36 @@ export const OfflineSCUpload = () => {
   // If there is, upload any stored servicecall form data
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener((state) => {
-      console.log('Connection type', state.type);
-      console.log('Is connected?', state.isConnected);
-
-      if (state.isConnected) {
-        const uploadOfflineData = async () => {
-          const response = await uploadOfflineStoredServiceCalls(
-            uploadServiceCall
-          );
-          setOfflineFormSubmitTotal(response);
-        };
-
-        uploadOfflineData();
-      }
+      const offline = !(state.isConnected && state.isInternetReachable);
+      setOfflineStatus(offline);
     });
-    setUploadComplete(true);
+
+    uploadForms();
+
     // Unsubscribe
     return unsubscribe;
-  }, []);
+  }, [isOffline]);
+
+  const uploadForms = useCallback(async () => {
+    setUploadComplete(false);
+    // TODO - Add loading prompt while uploading
+    // Check if there are forms to upload
+    const serviceCalls = await getServiceCallOfflineData();
+    const offlineFormsTotal = serviceCalls ? serviceCalls.length : 0;
+
+    if (offlineFormsTotal === 0) return null;
+
+    await uploadOfflineStoredServiceCalls(uploadServiceCall)
+      .then((result) => {
+        setOfflineFormSubmitTotal(result);
+      })
+      .finally(() => {
+        setUploadComplete(true);
+      });
+
+    setUploadComplete(true);
+  }, [isOffline]);
+
   return (
     uploadComplete && (
       <OfflineSCUploadModal formTotal={offlineFormSubmitTotal} />
