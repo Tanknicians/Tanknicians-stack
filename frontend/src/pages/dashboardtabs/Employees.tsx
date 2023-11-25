@@ -48,7 +48,13 @@ export default function Employees() {
   if (!optionsList) return <CircularProgress />;
   return (
     <Container>
-      <Grid container rowSpacing={2} alignItems='center' maxWidth={'100%'}>
+      <Grid
+        container
+        rowSpacing={2}
+        alignItems='center'
+        maxWidth={'900px'}
+        margin={'auto'}
+      >
         <Grid item xs={12} md={3}>
           <Typography variant='h4' component='h1'>
             Employees

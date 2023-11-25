@@ -34,7 +34,13 @@ export default function DataExport() {
   };
   return (
     <Container>
-      <Grid container rowSpacing={1} alignItems='center' maxWidth={'100%'}>
+      <Grid
+        container
+        rowSpacing={1}
+        alignItems='center'
+        maxWidth={'900px'}
+        margin={'auto'}
+      >
         <Grid item xs={12}>
           <Typography variant='h4' component='h1'>
             Data Export

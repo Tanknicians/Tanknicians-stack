@@ -251,7 +251,7 @@ export default function Paperbase() {
             flexDirection: 'column'
           }}
         >
-          <AppBar color='primary' position='sticky' elevation={0}>
+          <AppBar color='primary' position='fixed' elevation={0}>
             <Toolbar>
               <Grid container spacing={1} alignItems='center'>
                 <Grid sx={{ display: { sm: 'none', xs: 'block' } }} item>
@@ -290,7 +290,13 @@ export default function Paperbase() {
           </AppBar>
           <Box
             component='main'
-            sx={{ flex: 1, py: 6, px: 4, bgcolor: '#eaeff1' }}
+            sx={{
+              flex: 1,
+              py: 6,
+              px: 4,
+              bgcolor: '#eaeff1',
+              paddingTop: 10
+            }}
           >
             <Content />
           </Box>
